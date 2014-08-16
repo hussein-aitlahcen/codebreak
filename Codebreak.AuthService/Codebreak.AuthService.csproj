@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4835C2C-E53F-4009-A286-9B06A813B65D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Codebreak.AuthService</RootNamespace>
+    <AssemblyName>Codebreak.AuthService</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\Lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuthConfig.cs" />
+    <Compile Include="Auth\AuthClient.cs" />
+    <Compile Include="Auth\AuthMessage.cs" />
+    <Compile Include="Auth\AuthService.cs" />
+    <Compile Include="Auth\Database\Repository\AccountRepository.cs" />
+    <Compile Include="Auth\Database\Structure\AccountDAO.cs" />
+    <Compile Include="Auth\Handler\AuthentificationFrame.cs" />
+    <Compile Include="Auth\Handler\VersionFrame.cs" />
+    <Compile Include="Auth\Handler\WorldSelectionFrame.cs" />
+    <Compile Include="Auth\Manager\AccountManager.cs" />
+    <Compile Include="Auth\Manager\WorldManager.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPC\AuthServiceRPC.cs" />
+    <Compile Include="RPC\AuthServiceRPCClient.cs" />
+    <Compile Include="Auth\Database\AuthDbMgr.cs" />
+    <Compile Include="Auth\Manager\AuthManager.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codebreak.Framework\Codebreak.Framework.csproj">
+      <Project>{21207640-4ce2-4ed4-8bf1-8b85fd1c4228}</Project>
+      <Name>Codebreak.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codebreak.RPCMessage\Codebreak.RPCMessage.csproj">
+      <Project>{7df95e24-ba1a-4dba-a169-a7038e0bd6b6}</Project>
+      <Name>Codebreak.RPCMessage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codebreak.RPCService\Codebreak.RPCService.csproj">
+      <Project>{b7f4df35-7319-46b1-92b4-dc44d5446412}</Project>
+      <Name>Codebreak.RPCService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
