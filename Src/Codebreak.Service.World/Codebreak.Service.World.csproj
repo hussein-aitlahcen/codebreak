@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{46EAE51D-7753-4B18-9E67-8D2768F57C87}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Codebreak.Service.World</RootNamespace>
+    <AssemblyName>Codebreak.Service.World</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Database\Repositories\AreaRepository.cs" />
+    <Compile Include="Database\Repositories\CharacterAlignmentRepository.cs" />
+    <Compile Include="Database\Repositories\CharacterRepository.cs" />
+    <Compile Include="Database\Repositories\ExperienceTemplateRepository.cs" />
+    <Compile Include="Database\Repositories\InventoryItemRepository.cs" />
+    <Compile Include="Database\Repositories\ItemTemplateRepository.cs" />
+    <Compile Include="Database\Repositories\MapRepository.cs" />
+    <Compile Include="Database\Repositories\MapTriggerRepository.cs" />
+    <Compile Include="Database\Repositories\NpcInstanceRepository.cs" />
+    <Compile Include="Database\Repositories\NpcTemplateRepository.cs" />
+    <Compile Include="Database\Repositories\OLD_REPOSITORIES.cs" />
+    <Compile Include="Database\Repositories\SpellBookEntryRepository.cs" />
+    <Compile Include="Database\Structures\AreaDAO.cs" />
+    <Compile Include="Database\Structures\CharacterAlignmentDAO.cs" />
+    <Compile Include="Database\Structures\CharacterDAO.cs" />
+    <Compile Include="Database\Structures\ExperienceTemplateDAO.cs" />
+    <Compile Include="Database\Structures\InventoryItemDAO.cs" />
+    <Compile Include="Database\Structures\ItemTemplateDAO.cs" />
+    <Compile Include="Database\Structures\MapTemplateDAO.cs" />
+    <Compile Include="Database\Structures\MapTriggerDAO.cs" />
+    <Compile Include="Database\Structures\NpcInstanceDAO.cs" />
+    <Compile Include="Database\Structures\NpcTemplateDAO.cs" />
+    <Compile Include="Database\Structures\OLD_DATAS.cs" />
+    <Compile Include="Database\Structures\SpellBookEntryDAO.cs" />
+    <Compile Include="Database\Structures\SubAreaDAO.cs" />
+    <Compile Include="Database\Structures\SuperAreaDAO.cs" />
+    <Compile Include="Database\WorldDbMgr.cs" />
+    <Compile Include="Game\Action\GameActionBase.cs" />
+    <Compile Include="Game\Action\GameActionTypeEnum.cs" />
+    <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
+    <Compile Include="Game\Action\GameExchangeActionBase.cs" />
+    <Compile Include="Game\Action\GameFightActionBase.cs" />
+    <Compile Include="Game\Action\GameFightMovementAction.cs" />
+    <Compile Include="Game\Action\GameFightSpellAction.cs" />
+    <Compile Include="Game\Action\GameMapMovementAction.cs" />
+    <Compile Include="Game\Action\GameMapTeleportAction.cs" />
+    <Compile Include="Game\Action\GamePlayerExchangeAction.cs" />
+    <Compile Include="Game\Action\GameShopExchangeAction.cs" />
+    <Compile Include="Game\Area\AreaInstance.cs" />
+    <Compile Include="Game\Area\SubAreaInstance.cs" />
+    <Compile Include="Game\Area\SuperAreaInstance.cs" />
+    <Compile Include="Game\Entity\CharacterEntity.cs" />
+    <Compile Include="Game\Entity\CharacterInventory.cs" />
+    <Compile Include="Game\Entity\EntityBase.cs" />
+    <Compile Include="Game\Entity\InventoryBag.cs" />
+    <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
+    <Compile Include="Game\Exchange\ExchangeBase.cs" />
+    <Compile Include="Game\Exchange\PlayerExchange.cs" />
+    <Compile Include="Game\Exchange\ShopExchange.cs" />
+    <Compile Include="Game\Fight\BuffEffectManager.cs" />
+    <Compile Include="Game\Fight\ChallengerFight.cs" />
+    <Compile Include="Game\Fight\Effect\BuffBase.cs" />
+    <Compile Include="Game\Fight\Effect\CastInfos.cs" />
+    <Compile Include="Game\Fight\Effect\EffectBase.cs" />
+    <Compile Include="Game\Fight\Effect\EffectManager.cs" />
+    <Compile Include="Game\Fight\Effect\Type\APDodgeSubstractBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\APDodgeSubstractEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\ArmorBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\ArmorEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\BuffRemoveEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\DamageBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\DamageDodgeBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\DamageDodgeEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\DamageEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\HealBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\HealEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\IncreaseSpellJetBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\IncreaseSpellJetEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\LifeStealEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\MPDodgeSubstractBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\MPDodgeSubstractEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PandaCarriedBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PandaCarrierBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PandaCarrierEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PandaLaunchEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PunishmentBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PunishmentEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PushEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\SacrificeBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\SacrificeEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\SkinChangeBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\SkinChangeEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\StateAddEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\StateBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\StateRemoveEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\StatsBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\StatsEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\StatsStealEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\TeleportEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\TransposeEffect.cs" />
+    <Compile Include="Game\Fight\FightBase.cs" />
+    <Compile Include="Game\Fight\FighterBase.cs" />
+    <Compile Include="Game\Fight\FighterStateManager.cs" />
+    <Compile Include="Game\Fight\FightTeam.cs" />
+    <Compile Include="Game\Fight\FightTurnProcessor.cs" />
+    <Compile Include="Game\Fight\IFightObstacle.cs" />
+    <Compile Include="Game\Fight\SpellCastManager.cs" />
+    <Compile Include="Game\Map\CellZone.cs" />
+    <Compile Include="Game\Map\IMovementHandler.cs" />
+    <Compile Include="Game\Map\MapCell.cs" />
+    <Compile Include="Game\Map\MapInstance.cs" />
+    <Compile Include="Game\Map\Pathfinding.cs" />
+    <Compile Include="Game\Spell\SpellBook.cs" />
+    <Compile Include="Game\Spell\SpellEffect.cs" />
+    <Compile Include="Game\Spell\SpellLevel.cs" />
+    <Compile Include="Game\Spell\SpellTemplate.cs" />
+    <Compile Include="Game\Stats\GenericStats.cs" />
+    <Compile Include="Frames\AuthentificationFrame.cs" />
+    <Compile Include="Frames\BasicFrame.cs" />
+    <Compile Include="Frames\CharacterSelectionFrame.cs" />
+    <Compile Include="Frames\ExchangeFrame.cs" />
+    <Compile Include="Frames\GameActionFrame.cs" />
+    <Compile Include="Frames\GameCreationFrame.cs" />
+    <Compile Include="Frames\GameFightFrame.cs" />
+    <Compile Include="Frames\GameFightPlacementFrame.cs" />
+    <Compile Include="Frames\GameInformationFrame.cs" />
+    <Compile Include="Frames\GameMapFrame.cs" />
+    <Compile Include="Frames\InventoryFrame.cs" />
+    <Compile Include="Frames\SpellFrame.cs" />
+    <Compile Include="Manager\AccountManager.cs" />
+    <Compile Include="Manager\AreaManager.cs" />
+    <Compile Include="Manager\EntityManager.cs" />
+    <Compile Include="Manager\ExperienceManager.cs" />
+    <Compile Include="Manager\FightManager.cs" />
+    <Compile Include="Manager\MapManager.cs" />
+    <Compile Include="Manager\NpcManager.cs" />
+    <Compile Include="Manager\SpellManager.cs" />
+    <Compile Include="Network\MessageDispatcher.cs" />
+    <Compile Include="Network\Util.cs" />
+    <Compile Include="Network\WorldClient.cs" />
+    <Compile Include="Network\WorldMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPC\AuthServiceRPCConnection.cs" />
+    <Compile Include="RPC\RPCManager.cs" />
+    <Compile Include="WorldConfig.cs" />
+    <Compile Include="WorldService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codebreak.DofusProtocol\Codebreak.DofusProtocol.csproj">
+      <Project>{88b9b04c-efcb-43eb-891a-002dd5e00b37}</Project>
+      <Name>Codebreak.DofusProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codebreak.Framework\Codebreak.Framework.csproj">
+      <Project>{f1d9ce36-7f30-43c2-9027-af08a539c525}</Project>
+      <Name>Codebreak.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codebreak.RPC.Protocol\Codebreak.RPC.Protocol.csproj">
+      <Project>{6d8a667c-17b0-4564-b628-782656ee711b}</Project>
+      <Name>Codebreak.RPC.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codebreak.RPC.Service\Codebreak.RPC.Service.csproj">
+      <Project>{a809bfc9-3f6b-4d1a-b6d1-ad299e8f5193}</Project>
+      <Name>Codebreak.RPC.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Activez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est le suivant : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
