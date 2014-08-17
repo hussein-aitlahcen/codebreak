@@ -29,5 +29,21 @@ namespace Codebreak.Service.World.Database
 
             base.LoadAll(DbConnection);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void BeginTransaction()
+        {
+            SqlManager.Instance.BeginTransaction();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CommitTransaction()
+        {
+            SqlManager.Instance.CommitTransaction();
+        }
     }
 }

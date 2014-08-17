@@ -27,7 +27,6 @@ namespace Codebreak.Framework.Generic
             get;
             private set;
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -49,23 +48,39 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        public bool Running
+        public bool IsRunning
         {
-            get;
-            private set;
+            get
+            {
+                return _running;
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private Stopwatch queueTimer;
+        public bool IsPaused
+        {
+            get
+            {
+                return _paused;
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        private LockFreeQueue<Action> messageQueue;
-        private List<Updatable> updatableObjects;
-        private List<Timer> timerList;
+        public volatile bool Blocked;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Stopwatch _queueTimer;
+        private LockFreeQueue<Action> _messageQueue;
+        private List<Updatable> _updatableObjects;
+        private List<Timer> _timerList;
+        private volatile bool _paused;
+        private volatile bool _running;
 
         /// <summary>
         /// 
@@ -76,10 +91,12 @@ namespace Codebreak.Framework.Generic
             UpdateInterval = updateInterval;
             Name = name;
 
-            messageQueue = new LockFreeQueue<Action>();
-            updatableObjects = new List<Updatable>();
-            timerList = new List<Timer>();
-            queueTimer = new Stopwatch();
+            _running = false;
+            _paused = true;
+            _messageQueue = new LockFreeQueue<Action>();
+            _updatableObjects = new List<Updatable>();
+            _timerList = new List<Timer>();
+            _queueTimer = new Stopwatch();
 
             Start();
         }
@@ -89,8 +106,10 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         public void Start()
         {
-            Running = true;
-            queueTimer.Start();
+            _paused = false;
+            _running = true;
+            _queueTimer.Start();
+
             ThreadPool.QueueUserWorkItem(InternalUpdate);
 
             Logger.Info("TaskQueue[" + Name + "] started.");
@@ -103,8 +122,8 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                Running = false;
-                queueTimer.Reset();
+                _running = false;
+                _queueTimer.Reset();
                 LastUpdate = 0;
 
                 Logger.Info("TaskQueue[" + Name + "] stopped.");
@@ -117,7 +136,7 @@ namespace Codebreak.Framework.Generic
         /// <param name="message"></param>
         public void AddMessage(Action message)
         {
-            messageQueue.Enqueue(message);
+            _messageQueue.Enqueue(message);
         }
 
         /// <summary>
@@ -128,7 +147,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                updatableObjects.Add(updatable);
+                _updatableObjects.Add(updatable);
             });
         }
 
@@ -140,7 +159,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                updatableObjects.Remove(updatable);
+                _updatableObjects.Remove(updatable);
             });
         }
 
@@ -154,7 +173,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                timerList.Add(new Timer(delay, callback, oneshot));
+                _timerList.Add(new Timer(delay, callback, oneshot));
             });
         }
 
@@ -166,7 +185,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                timerList.Add(timer);
+                _timerList.Add(timer);
             });
         }
 
@@ -178,7 +197,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                timerList.Remove(timer);
+                _timerList.Remove(timer);
             });
         }
 
@@ -187,67 +206,83 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         private void InternalUpdate(object state)
         {
-            if (!Running)
+            if (!_running)
                 return;
-
-            try
+            
+            if (Blocked)
             {
-                var timeStart = queueTimer.ElapsedMilliseconds;
-                var updateDelta = timeStart - LastUpdate;
-                LastUpdate = timeStart;
+                _paused = true;
+                _queueTimer.Stop();
 
-                foreach (var timer in timerList)
+                Logger.Warn("TaskQueue[" + Name + "] paused.");
+
+                while (Blocked)
+                    Thread.Sleep(1);
+
+                Logger.Warn("TaskQueue[" + Name + "] resumed.");
+
+                _paused = false;
+                _queueTimer.Start();
+            }
+
+            var timeStart = _queueTimer.ElapsedMilliseconds;
+            var updateDelta = timeStart - LastUpdate;
+            LastUpdate = timeStart;
+
+            foreach (var timer in _timerList)
+            {
+                if ((LastUpdate - timer.LastActivated) >= timer.Delay)
                 {
-                    if ((LastUpdate - timer.LastActivated) >= timer.Delay)
+                    try
                     {
                         timer.Tick(LastUpdate);
-                        if (timer.OneShot)
-                        {
-                            RemoveTimer(timer);
-                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.Error("TaskQueue[" + Name + "] failed to update timer [" + timer.GetType().Name + "] : " + ex.ToString());
+                    }
+                    if (timer.OneShot)
+                    {
+                        RemoveTimer(timer);
                     }
                 }
-
-                foreach (var updatableObject in updatableObjects)
-                {
-                    try
-                    {
-                        updatableObject.Update(updateDelta);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error("TaskQueue[" + Name + "] failed to update UpdatableObject[" + GetType().Name + "] : " + ex.ToString());
-                    }
-                }
-
-                Action msg = null;
-                while (messageQueue.TryDequeue(out msg))
-                {
-                    try
-                    {
-                        msg();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error("TaskQueue[" + Name + "] failed to process message: " + ex.ToString());
-                    }
-                }
-
-                var timeStop = queueTimer.ElapsedMilliseconds;
-                var updateTime = timeStop - timeStart;
-                var updateLagged = updateTime >= UpdateInterval;
-
-                if (!updateLagged)
-                {
-                    Thread.Sleep(1 + (int)(UpdateInterval - updateTime));
-                }
-
-                ThreadPool.QueueUserWorkItem(InternalUpdate);
             }
-            catch (Exception ex)
+
+            foreach (var updatableObject in _updatableObjects)
             {
-                Logger.Error("TaskQueue[" + Name + "] unknow error : " + ex.ToString());
+                try
+                {
+                    updatableObject.Update(updateDelta);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("TaskQueue[" + Name + "] failed to update object [" + updatableObject.GetType().Name + "] : " + ex.ToString());
+                }
             }
+
+            Action msg = null;
+            while (_messageQueue.TryDequeue(out msg))
+            {
+                try
+                {
+                    msg();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("TaskQueue[" + Name + "] failed to process message: " + ex.ToString());
+                }
+            }
+
+            var timeStop = _queueTimer.ElapsedMilliseconds;
+            var updateTime = timeStop - timeStart;
+            var updateLagged = updateTime >= UpdateInterval;
+
+            if (!updateLagged)
+            {
+                Thread.Sleep(1 + (int)(UpdateInterval - updateTime));
+            }
+
+            ThreadPool.QueueUserWorkItem(InternalUpdate);
         }
     }
 }

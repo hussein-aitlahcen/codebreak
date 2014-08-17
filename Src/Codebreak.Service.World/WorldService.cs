@@ -131,6 +131,8 @@ namespace Codebreak.Service.World
             {
                 WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING));
 
+                AreaManager.Instance.BlockQueues();
+                
                 WorldService.Instance.AddMessage(() =>
                 {
                     CharacterRepository.Instance.UpdateAll();
@@ -146,9 +148,11 @@ namespace Codebreak.Service.World
                             WorldService.Instance.AddMessage(() =>
                             {
                                 InventoryItemRepository.Instance.UpdateAll();
-
+                                
                                 WorldService.Instance.AddMessage(() =>
                                 {
+                                    AreaManager.Instance.ResumeQueues();
+
                                     WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING_FINISHED));
                                 });
                             });

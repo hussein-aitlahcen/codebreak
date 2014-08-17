@@ -26,6 +26,11 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        public static object SyncLock = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public SqlConnection Connection
         {
             get

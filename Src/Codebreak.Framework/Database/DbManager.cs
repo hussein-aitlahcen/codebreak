@@ -42,6 +42,9 @@ namespace Codebreak.Framework.Database
             repositories.Add(repository);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void UpdateAll()
         {
             foreach(var repository in repositories)

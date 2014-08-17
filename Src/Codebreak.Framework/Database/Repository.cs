@@ -39,6 +39,11 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        private static object _syncLock = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected List<TDataObject> _dataObjects;
 
         /// <summary>
@@ -54,10 +59,17 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public virtual void Initialize()
         {
-            _dataObjects.AddRange(SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName));
+            IEnumerable<TDataObject> objects = new List<TDataObject>();
 
-            foreach (var obj in _dataObjects)
-                OnObjectAdded(obj);
+            lock (SqlManager.SyncLock)
+                objects = SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName);
+
+            lock (_syncLock)
+            {
+                _dataObjects.AddRange(objects);
+                foreach (var obj in _dataObjects)
+                        OnObjectAdded(obj);
+            }
         }
 
         /// <summary>
@@ -77,16 +89,23 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual List<TDataObject> LoadMultiple(string query, dynamic param = null)
         {
-            var objects = SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
+            IEnumerable<TDataObject> objects = new List<TDataObject>();
+
+            lock(SqlManager.SyncLock)
+                objects = SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
+
             foreach (var obj in objects)
             {
                 if (obj != null)
                 {
-                    _dataObjects.Add(obj);
-
-                    OnObjectAdded(obj);
+                    lock (_syncLock)
+                    {
+                        _dataObjects.Add(obj);
+                        OnObjectAdded(obj);
+                    }
                 }
             }
+
             return objects.ToList();
         }
 
@@ -95,7 +114,8 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public virtual bool Update(TDataObject obj)
         {
-            return SqlManager.Instance.Connection.Update<TDataObject>(obj);
+            lock(SqlManager.SyncLock)
+                return SqlManager.Instance.Connection.Update<TDataObject>(obj);
         }
 
         /// <summary>
@@ -104,14 +124,22 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Remove(TDataObject obj)
         {
-            var result = SqlManager.Instance.Remove<TDataObject>(obj);
+            var result = false;
+            lock (SqlManager.SyncLock)
+                result = SqlManager.Instance.Remove<TDataObject>(obj);
+
             if (result)
             {
-                _dataObjects.Remove(obj);
-
-                OnObjectRemoved(obj);
+                lock (_syncLock)
+                {
+                    if (_dataObjects.Contains(obj))
+                    {
+                        _dataObjects.Remove(obj);
+                        OnObjectRemoved(obj);
+                    }
+                }
             }
-            return result;
+            return result;                   
         }
 
         /// <summary>
@@ -120,13 +148,20 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Insert(TDataObject obj)
         {
-            var result = SqlManager.Instance.Insert<TDataObject>(obj);
+            var result = false;
+            lock (SqlManager.Instance)            
+                result = SqlManager.Instance.Insert<TDataObject>(obj);
+
             if (result)
             {
-                _dataObjects.Add(obj);
-                OnObjectAdded(obj);
+                lock (_syncLock)
+                {
+                    _dataObjects.Add(obj);
+                    OnObjectAdded(obj);
+                }
             }
-            return result;
+
+            return result;            
         }
         
         /// <summary>
@@ -136,7 +171,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public TDataObject Find(Predicate<TDataObject> match)
         {
-            return _dataObjects.Find(match);
+            lock(_syncLock)
+                return _dataObjects.Find(match);
         }
 
         /// <summary>
@@ -146,7 +182,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public IEnumerable<TDataObject> FindAll(Predicate<TDataObject> match)
         {
-            return _dataObjects.FindAll(match);
+            lock (_syncLock)
+                return _dataObjects.FindAll(match);
         }
 
         /// <summary>
@@ -155,7 +192,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public IEnumerable<TDataObject> GetAll()
         {
-            return _dataObjects;
+            lock (_syncLock)
+                return _dataObjects.ToArray();
         }
 
         /// <summary>
@@ -163,9 +201,12 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public virtual void UpdateAll()
         {
-            foreach (var obj in _dataObjects)
+            lock (_syncLock)
             {
-                Update(obj);
+                foreach (var obj in _dataObjects)
+                {
+                    Update(obj);
+                }
             }
         }
 
