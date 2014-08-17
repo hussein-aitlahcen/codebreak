@@ -18,6 +18,7 @@ namespace Codebreak.WorldService.World.Database
         /// </summary>
         public void Initialize()
         {
+            base.AddRepository(ExperienceTemplateRepository.Instance);
             base.AddRepository(SubAreaRepository.Instance);
             base.AddRepository(AreaRepository.Instance);
             base.AddRepository(SuperAreaRepository.Instance);
@@ -31,9 +32,6 @@ namespace Codebreak.WorldService.World.Database
             base.AddRepository(NpcTemplateRepository.Instance);
             base.AddRepository(NpcInstanceRepository.Instance);
             
-            // DESIGNED TO MIGRATE DATAS FROM SQL TO .data
-            //base.AddRepository(SortsRepository.Instance);
-
             base.LoadAll(WorldConfig.DB_CONNECTION);
         }
     }

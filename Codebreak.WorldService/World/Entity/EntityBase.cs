@@ -419,12 +419,20 @@ namespace Codebreak.WorldService.World.Entity
                                         Inventory.AddItem(instance);
                                 }
                             }
+                            else if(message.StartsWith(".200"))
+                            {
+                                while(Level != 200)
+                                {
+                                    ((CharacterEntity)this).LevelUp();
+                                }
+                                
+                                base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
+                                base.Dispatch(WorldMessage.SPELLS_LIST(Spells));
+                                base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)this));
+                            }
                             else if(message.StartsWith(".save"))
                             {
-                                Database.Repository.CharacterRepository.Instance.UpdateAll();
-                                Database.Repository.CharacterAlignmentRepository.Instance.UpdateAll();
-                                Database.Repository.SpellBookEntryRepository.Instance.UpdateAll();
-                                Database.Repository.InventoryItemRepository.Instance.UpdateAll();
+                                WorldManager.Instance.UpdateWorld();
 
                                 base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Sauvegarde terminée"));
                             }

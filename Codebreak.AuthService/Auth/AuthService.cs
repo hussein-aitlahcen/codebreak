@@ -48,13 +48,6 @@ namespace Codebreak.AuthService.Auth
 
         protected override void OnDataReceived(AuthClient client, byte[] buffer, int offset, int count)
         {
-            if(client.FrameManager.IsEmpty)
-            {
-                Logger.Debug("AuthClient network frame is empty.");
-                client.Disconnect();
-                return;
-            }
-
             foreach (var message in client.Receive(buffer, offset, count))
             {
                 AddMessage(() =>

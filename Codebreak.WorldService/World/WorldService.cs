@@ -10,14 +10,23 @@ using System.Threading.Tasks;
 
 namespace Codebreak.WorldService.World
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class WorldService : TcpServerBase<WorldService, WorldClient>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public MessageDispatcher Dispatcher
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public WorldService()
         {
             Dispatcher = new MessageDispatcher();
@@ -25,6 +34,10 @@ namespace Codebreak.WorldService.World
             AddUpdatable(Dispatcher);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         protected override void OnClientConnected(WorldClient client)
         {
             AddMessage(() =>
@@ -34,6 +47,10 @@ namespace Codebreak.WorldService.World
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         protected override void OnClientDisconnected(WorldClient client)
         {
             AddMessage(() =>
@@ -49,15 +66,15 @@ namespace Codebreak.WorldService.World
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         protected override void OnDataReceived(WorldClient client, byte[] buffer, int offset, int count)
         {
-            if ((client.FrameManager.IsEmpty && client.CurrentCharacter == null) || (client.CurrentCharacter != null && client.CurrentCharacter.FrameManager.IsEmpty))
-            {
-                Logger.Debug("WorldClient network fram is empty.");
-                client.Disconnect();
-                return;
-            }
-
             foreach (var message in client.Receive(buffer, offset, count))
             {
                 AddMessage(() =>
@@ -66,7 +83,10 @@ namespace Codebreak.WorldService.World
 
                         if (client.CurrentCharacter != null)
                         {
-                            client.CurrentCharacter.FrameManager.ProcessMessage(message);
+                            client.CurrentCharacter.AddMessage(() =>
+                                {
+                                    client.CurrentCharacter.FrameManager.ProcessMessage(message);
+                                });
                         }
                         else
                         {
@@ -76,6 +96,10 @@ namespace Codebreak.WorldService.World
             }        
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void SendToAll(string message)
         {
             base.SendToAll(Encoding.Default.GetBytes(message + (char)0x00));

@@ -27,7 +27,14 @@ namespace Codebreak.WorldService.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        [Key]
+        public long CharacterId
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
         public int SpellId
         {
             get;
@@ -70,7 +77,7 @@ namespace Codebreak.WorldService.World.Database.Structure
         /// </summary>
         public SpellLevel GetSpellLevel()
         {
-            if (_level == null)
+            if (_level == null || Level != _level.Level)
             {
                 _level = GetTemplate().GetLevel(Level);
             }

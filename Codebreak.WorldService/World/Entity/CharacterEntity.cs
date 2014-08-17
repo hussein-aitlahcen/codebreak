@@ -3,6 +3,7 @@ using Codebreak.WorldService.World.Database.Repository;
 using Codebreak.WorldService.World.Database.Structure;
 using Codebreak.WorldService.World.Exchange;
 using Codebreak.WorldService.World.Fight;
+using Codebreak.WorldService.World.Manager;
 using Codebreak.WorldService.World.Spell;
 using Codebreak.WorldService.World.Stats;
 using System;
@@ -241,7 +242,7 @@ namespace Codebreak.WorldService.World.Entity
         {
             get
             {
-                return 0;
+                return ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.CHARACTER);
             }
         }
 
@@ -252,7 +253,7 @@ namespace Codebreak.WorldService.World.Entity
         {
             get
             {
-                return 0;
+                return ExperienceManager.Instance.GetFloor(Level + 1, ExperienceTypeEnum.CHARACTER); 
             }
         }
 
@@ -393,6 +394,9 @@ namespace Codebreak.WorldService.World.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int SpellPoint
         {
             get
@@ -420,18 +424,27 @@ namespace Codebreak.WorldService.World.Entity
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool TurnReady
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool TurnPass
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private CharacterDAO _characterRecord;
         private CharacterAlignmentDAO _alignmentRecord;
 
@@ -480,6 +493,57 @@ namespace Codebreak.WorldService.World.Entity
             CurrentAction = new GameShopExchangeAction(this, entity);
 
             StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="experience"></param>
+        public void AddExperience(long experience)
+        {
+            Experience += experience;
+
+            var currentLevel = Level;
+
+            if (Experience > ExperienceFloorNext)
+            {
+                do
+                {
+                    LevelUp();
+                }
+                while (Experience > ExperienceFloorNext && ExperienceFloorNext != -1);
+
+                base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
+            }
+
+            if (Level != currentLevel)
+            {
+                base.Dispatch(WorldMessage.SPELLS_LIST(Spells));
+                base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void LevelUp()
+        {
+            Level++;
+            SpellPoint++;
+            CaractPoints += 5;
+            Life = MaxLife;
+
+            if (Level == 100)
+            {
+                _characterRecord.Ap += 1;
+                Statistics.AddBase(EffectEnum.AddAP, 1);
+            }
+
+            if (Spells != null)
+            {
+                Spells.GenerateLevelUpSpell(Breed, Level);
+            }
         }
 
         /// <summary>

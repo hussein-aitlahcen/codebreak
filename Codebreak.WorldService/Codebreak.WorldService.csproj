@@ -66,6 +66,7 @@
     <Compile Include="World\Area\AreaInstance.cs" />
     <Compile Include="World\Area\SubAreaInstance.cs" />
     <Compile Include="World\Area\SuperAreaInstance.cs" />
+    <Compile Include="World\Database\Repository\ExperienceTemplateRepository.cs" />
     <Compile Include="World\Database\Repository\ItemTemplateRepository.cs" />
     <Compile Include="World\Database\Repository\MapRepository.cs" />
     <Compile Include="World\Database\Repository\MapTriggerRepository.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="World\Database\Structure\CharacterDAO.cs" />
     <Compile Include="World\Database\Repository\CharacterRepository.cs" />
     <Compile Include="World\Database\Repository\InventoryItemRepository.cs" />
+    <Compile Include="World\Database\Structure\ExperienceTemplateDAO.cs" />
     <Compile Include="World\Database\Structure\InventoryItemDAO.cs" />
     <Compile Include="World\Database\Structure\ItemTemplateDAO.cs" />
     <Compile Include="World\Database\Structure\MapTemplateDAO.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="World\Manager\AccountManager.cs" />
     <Compile Include="World\Manager\AreaManager.cs" />
     <Compile Include="World\Manager\EntityManager.cs" />
+    <Compile Include="World\Manager\ExperienceManager.cs" />
     <Compile Include="World\Manager\FightManager.cs" />
     <Compile Include="World\Manager\MapManager.cs" />
     <Compile Include="World\Manager\NpcManager.cs" />

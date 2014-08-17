@@ -55,7 +55,7 @@ namespace Codebreak.WorldService.World.Spell
         {
             if (!HasSpell(spellId))
             {
-                var spellBookEntry = new SpellBookEntryDAO() { Id = _entityId, SpellId = spellId, Level = level, Position = position };
+                var spellBookEntry = new SpellBookEntryDAO() { CharacterId = _entityId, SpellId = spellId, Level = level, Position = position };
                 if(SpellBookEntryRepository.Instance.Insert(spellBookEntry))
                     _spellEntries.Add(spellId, spellBookEntry);
             }

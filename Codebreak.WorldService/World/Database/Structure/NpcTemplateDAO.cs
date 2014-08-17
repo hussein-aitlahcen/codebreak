@@ -14,6 +14,7 @@ namespace Codebreak.WorldService.World.Database.Structure
     [Table("NpcTemplate")]
     public sealed class NpcTemplateDAO : DataAccessObject<NpcTemplateDAO>
     {
+        [Key]
         public int Id
         {
             get;

@@ -802,6 +802,7 @@ namespace Codebreak.WorldService.World.Fight
             {
                 case GameActionTypeEnum.FIGHT:
                     Fight.RemoveUpdatable(this);
+                    WorldService.Instance.AddUpdatable(this);
                     FrameManager.AddFrame(GameCreationFrame.Instance);
                     FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
                     FrameManager.RemoveFrame(GameFightFrame.Instance);

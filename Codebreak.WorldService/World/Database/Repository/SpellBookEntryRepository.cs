@@ -19,21 +19,21 @@ namespace Codebreak.WorldService.World.Database.Repository
 
         public override void OnObjectAdded(SpellBookEntryDAO spellBookEntry)
         {
-            if (!_spellBookEntriesByOwner.ContainsKey(spellBookEntry.Id))
-                _spellBookEntriesByOwner.Add(spellBookEntry.Id, new List<SpellBookEntryDAO>());
-            _spellBookEntriesByOwner[spellBookEntry.Id].Add(spellBookEntry);
+            if (!_spellBookEntriesByOwner.ContainsKey(spellBookEntry.CharacterId))
+                _spellBookEntriesByOwner.Add(spellBookEntry.CharacterId, new List<SpellBookEntryDAO>());
+            _spellBookEntriesByOwner[spellBookEntry.CharacterId].Add(spellBookEntry);
         }
 
         public override void OnObjectRemoved(SpellBookEntryDAO spellBookEntry)
         {
-            _spellBookEntriesByOwner[spellBookEntry.Id].Remove(spellBookEntry);
+            _spellBookEntriesByOwner[spellBookEntry.CharacterId].Remove(spellBookEntry);
         }
 
         public List<SpellBookEntryDAO> GetSpellEntries(long ownerId)
         {
             if (_spellBookEntriesByOwner.ContainsKey(ownerId))
                 return _spellBookEntriesByOwner[ownerId];
-            return base.LoadMultiple("Id = @OwnerId", new { OwnerId = ownerId });
+            return base.LoadMultiple("CharacterId = @OwnerId", new { OwnerId = ownerId });
         }
     }
 }
