@@ -1,4 +1,5 @@
-﻿using Codebreak.Framework.Generic;
+﻿using Codebreak.Framework.Configuration;
+using Codebreak.Framework.Generic;
 using Codebreak.RPC.Protocol;
 using Codebreak.RPC.Service;
 using Codebreak.Service.World.Manager;
@@ -8,6 +9,15 @@ namespace Codebreak.Service.World.RPC
 {
     public sealed class RPCManager : TaskProcessor<RPCManager>
     {
+        [Configurable("RPCPassword")]
+        public static string RPCPassword = "smarken";
+
+        [Configurable("RPCIP")]
+        public static string RPCIP = "25.214.133.179";
+
+        [Configurable("RPCPort")]
+        public static int RPCPort = 4321;
+
         private AuthServiceRPCConnection _rpcConnection;
         
         public AuthState AuthState
@@ -43,7 +53,7 @@ namespace Codebreak.Service.World.RPC
         {
             Logger.Info("RPCManager connecting...");
 
-            _rpcConnection.Connect(WorldConfig.RPC_IP, WorldConfig.RPC_PORT);
+            _rpcConnection.Connect(RPCIP, RPCPort);
         }
 
         private void OnConnected()
@@ -52,7 +62,7 @@ namespace Codebreak.Service.World.RPC
 
             AuthState = AuthState.NEGOTIATING;
 
-            _rpcConnection.Send(new AuthentificationMessage(WorldConfig.RPC_PASSWORD));
+            _rpcConnection.Send(new AuthentificationMessage(RPCPassword));
         }
 
         private void OnDisconnected()

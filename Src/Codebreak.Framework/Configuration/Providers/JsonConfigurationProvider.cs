@@ -44,11 +44,33 @@ namespace Codebreak.Framework.Configuration.Providers
 
         public void Load(bool canCreate = true)
         {
+
             if (File.Exists(Path))
             {
                 using (var inputStream = new FileStream(Path, FileMode.Open))
                 {
-                    _entries = JsonConvert.DeserializeObject<Dictionary<string, object>>(new StreamReader(inputStream).ReadToEnd());
+                    var reader = new JsonTextReader(new StreamReader(inputStream));
+                    var serializer = new JsonSerializer();
+                    var entries = new Dictionary<string, object>();
+                    reader.Read();
+                    reader.Read(); // ??
+                    while (reader.TokenType == JsonToken.PropertyName)
+                    {
+                        string propertyName = reader.Value as string;
+                        reader.Read();
+                        
+                        object value;
+                        if (reader.TokenType == JsonToken.Integer)
+                            value = Convert.ToInt32(reader.Value);
+                        else
+                            value = serializer.Deserialize(reader);
+                        entries.Add(propertyName, value);
+
+                        reader.Read();
+                    }
+
+                    _entries = entries;
+
                 }
             }
             else
@@ -84,8 +106,16 @@ namespace Codebreak.Framework.Configuration.Providers
 
         internal void GenerateFile(Stream outputStream)
         {
-            var outputWriter = new StreamWriter(outputStream);
-            outputWriter.Write(JsonConvert.SerializeObject(_entries, Formatting.Indented));
+            var outputWriter = new JsonTextWriter(new StreamWriter(outputStream));
+            outputWriter.Formatting = Formatting.Indented;
+
+            outputWriter.WriteStartObject();
+            foreach (var entry in _entries)
+            {
+                outputWriter.WritePropertyName(entry.Key);
+                outputWriter.WriteValue(entry.Value);
+            }
+            outputWriter.WriteEndObject();
 
             outputWriter.Flush();
         }
