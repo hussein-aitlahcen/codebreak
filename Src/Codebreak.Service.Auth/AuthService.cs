@@ -33,6 +33,7 @@ namespace Codebreak.Service.Auth
             ConfigurationManager = new ConfigurationManager();
             ConfigurationManager.RegisterAttributes();
             ConfigurationManager.Add(new JsonConfigurationProvider(configPath), true);
+            ConfigurationManager.Load();
 
             AuthDbMgr.Instance.Initialize();
             AuthRPCService.Instance.Start();

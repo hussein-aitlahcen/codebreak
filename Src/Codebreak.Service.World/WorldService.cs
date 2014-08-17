@@ -41,6 +41,7 @@ namespace Codebreak.Service.World
             ConfigurationManager = new ConfigurationManager();
             ConfigurationManager.RegisterAttributes();
             ConfigurationManager.Add(new JsonConfigurationProvider(configPath), true);
+            ConfigurationManager.Load();
 
             Dispatcher = new MessageDispatcher();
             AddUpdatable(Dispatcher);
