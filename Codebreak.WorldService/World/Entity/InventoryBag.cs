@@ -88,6 +88,12 @@ namespace Codebreak.WorldService.World.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="merge"></param>
+        /// <returns></returns>
         public bool AddItem(InventoryItemDAO item, bool merge = true)
         {
             Logger.Debug("InventoryBad::AddItem adding item to inventory : " + Entity.Name);
@@ -97,6 +103,8 @@ namespace Codebreak.WorldService.World.Entity
 
             item.OwnerId = Entity.Id;
 
+            InventoryItemRepository.Instance.Update(item);
+
             Items.Add(item);
 
             base.Dispatch(WorldMessage.OBJECT_ADD_SUCCESS(item));
@@ -104,6 +112,11 @@ namespace Codebreak.WorldService.World.Entity
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool TryMerge(InventoryItemDAO item)
         {
             var sameItem = Items.Find(
@@ -123,6 +136,13 @@ namespace Codebreak.WorldService.World.Entity
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="quantity"></param>
+        /// <param name="slot"></param>
+        /// <returns></returns>
         public InventoryItemDAO MoveQuantity(InventoryItemDAO item, int quantity, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
         {
             if(quantity >= item.Quantity)
@@ -140,17 +160,32 @@ namespace Codebreak.WorldService.World.Entity
             return item.Clone(quantity);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
         public bool IsEquipedOf(long guid, int templateId)
         {
             return Items.Any(item => item.Id != guid && item.IsEquiped() && item.TemplateId == templateId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
         public bool HasTemplateEquiped(int templateId)
         {
             return Items.Any(item => item.TemplateId == templateId && item.IsEquiped());
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="slot"></param>
         public void MoveItem(InventoryItemDAO item, ItemSlotEnum slot)
         {
             if (slot == item.GetSlot())
@@ -269,6 +304,10 @@ namespace Codebreak.WorldService.World.Entity
             return item;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void SerializeAs_BagContent(StringBuilder message)
         {
             foreach (var item in Items)
@@ -277,6 +316,10 @@ namespace Codebreak.WorldService.World.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void SerializeAs_ActorLookMessage(StringBuilder message)
         {
             if (_entityLookRefresh || _entityLookCache == null)

@@ -111,7 +111,7 @@ namespace Codebreak.WorldService.World.Fight.Effect
         }
 
         /// <summary>
-        /// Constructeur
+        /// 
         /// </summary>
         /// <param name="Effect"></param>
         public BuffBase(CastInfos castInfos, FighterBase target, ActiveType activeType, DecrementType decrementType)
@@ -149,7 +149,7 @@ namespace Codebreak.WorldService.World.Fight.Effect
                                                                            CastInfos.SpellId.ToString()));
                     break;
 
-                case EffectEnum.PandaCarry:
+                case EffectEnum.PandaCarrier:
                     Target.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
                                                                           Caster.Id,
                                                                           CastInfos.Value1.ToString(),
@@ -174,7 +174,7 @@ namespace Codebreak.WorldService.World.Fight.Effect
         }
 
         /// <summary>
-        /// Methode appellé pour verifié si le persos est mort
+        /// 
         /// </summary>
         /// <param name="ActiveType"></param>
         public virtual FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
@@ -183,7 +183,7 @@ namespace Codebreak.WorldService.World.Fight.Effect
         }
 
         /// <summary>
-        /// Fin du buff
+        /// 
         /// </summary>
         /// <returns></returns>
         public virtual FightActionResultEnum RemoveEffect()
@@ -192,7 +192,7 @@ namespace Codebreak.WorldService.World.Fight.Effect
         }
 
         /// <summary>
-        /// Decrement le buff
+        /// 
         /// </summary>
         public int DecrementDuration()
         {

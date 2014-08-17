@@ -333,30 +333,22 @@ namespace Codebreak.WorldService.World.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int Skin
+        public override int SkinBase
         {
             get
             {
                 return _characterRecord.Skin;
-            }
-            set
-            {
-                _characterRecord.SkinSize = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinSize
+        public override int SkinSizeBase
         {
             get
             {
                 return _characterRecord.SkinSize;
-            }
-            set
-            {
-                _characterRecord.SkinSize = value;
             }
         }
 
@@ -438,14 +430,6 @@ namespace Codebreak.WorldService.World.Entity
         {
             get;
             set;
-        }
-
-        public override int SkinBase
-        {
-            get
-            {
-                return Skin;
-            }
         }
 
         private CharacterDAO _characterRecord;
@@ -531,8 +515,8 @@ namespace Codebreak.WorldService.World.Entity
                         message.Append(Id).Append(';');
                         message.Append(Name).Append(';');
                         message.Append((int)Breed).Append(';');
-                        message.Append(Skin).Append('^');
-                        message.Append(SkinSize).Append(';');
+                        message.Append(SkinBase).Append('^');
+                        message.Append(SkinSizeBase).Append(';');
                         message.Append(Sex).Append(';');
                         message.Append("0,0,0,0"); // AlignmentInfos
                         message.Append(';');

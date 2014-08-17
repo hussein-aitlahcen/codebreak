@@ -9,12 +9,18 @@ using System.Threading.Tasks;
 
 namespace Codebreak.WorldService.World.Manager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AreaManager : Singleton<AreaManager>
     {
         private Dictionary<int, SuperAreaInstance> _superAreaById;
         private Dictionary<int, AreaInstance> _areaById;
         private Dictionary<int, SubAreaInstance> _subAreaById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AreaManager()
         {
             _superAreaById = new Dictionary<int, SuperAreaInstance>();
@@ -22,6 +28,9 @@ namespace Codebreak.WorldService.World.Manager
             _subAreaById = new Dictionary<int, SubAreaInstance>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Initialize()
         {
             foreach(var superAreaDAO in SuperAreaRepository.Instance.GetAll())
@@ -36,7 +45,6 @@ namespace Codebreak.WorldService.World.Manager
             foreach(var areaDAO in AreaRepository.Instance.GetAll())
             {
                 var instance =  new AreaInstance(areaDAO);
-                instance.SuperArea.AddUpdatable(instance);
                 instance.SuperArea.AddHandler(instance.Dispatch);
 
                 _areaById.Add(areaDAO.Id, instance);
@@ -52,16 +60,31 @@ namespace Codebreak.WorldService.World.Manager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public SuperAreaInstance GetSuperArea(int id)
         {
             return _superAreaById[id];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public AreaInstance GetArea(int id)
         {
             return _areaById[id];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public SubAreaInstance GetSubArea(int id)
         {
             return _subAreaById[id];

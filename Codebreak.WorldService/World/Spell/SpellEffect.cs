@@ -177,7 +177,7 @@ namespace Codebreak.WorldService.World.Spell
         SubReduceDamageFire = 248,
         SubReduceDamageNeutral = 249,
 
-        PandaCarry = 50,
+        PandaCarrier = 50,
         PandaLaunch = 51,
         Perception = 202,
         ChangeSkin = 149,

@@ -125,7 +125,15 @@ namespace Codebreak.WorldService.World.Fight
         /// <summary>
         /// 
         /// </summary>
-        public abstract int SkinSize
+        public abstract int SkinSizeBase
+        {
+            get;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Skin
         {
             get;
             set;
@@ -134,7 +142,7 @@ namespace Codebreak.WorldService.World.Fight
         /// <summary>
         /// 
         /// </summary>
-        public abstract int Skin
+        public int SkinSize
         {
             get;
             set;
@@ -392,6 +400,8 @@ namespace Codebreak.WorldService.World.Fight
             SpellManager = new SpellCastManager();
 
             Orientation = 1;
+            Skin = SkinBase;
+            SkinSize = SkinSizeBase;
             UsedAP = 0;
             UsedMP = 0;
 
@@ -452,13 +462,14 @@ namespace Codebreak.WorldService.World.Fight
             {
                 switch (Fight.Type)
                 {
+                        // On rend la vie aux joueur en pvp
                     case FightTypeEnum.TYPE_CHALLENGE:
                         Life = MaxLife;
                         break;
 
                     case FightTypeEnum.TYPE_PVM:
                         if (Type == EntityTypEnum.TYPE_CHARACTER)
-                            Life = MaxLife;
+                            Life = MaxLife; // 
                         break;
                 }
 
@@ -768,6 +779,7 @@ namespace Codebreak.WorldService.World.Fight
             {
                 case GameActionTypeEnum.FIGHT:
                     StopAction(GameActionTypeEnum.MAP);
+                    Fight.AddUpdatable(this);
                     FrameManager.AddFrame(GameFightPlacementFrame.Instance);
                     break;
 
@@ -789,6 +801,7 @@ namespace Codebreak.WorldService.World.Fight
             switch(actionType)
             {
                 case GameActionTypeEnum.FIGHT:
+                    Fight.RemoveUpdatable(this);
                     FrameManager.AddFrame(GameCreationFrame.Instance);
                     FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
                     FrameManager.RemoveFrame(GameFightFrame.Instance);

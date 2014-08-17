@@ -692,7 +692,7 @@ namespace Codebreak.WorldService.World.Map
                 case 6:
                     return cellId - (((map.Width * 2) - 1) * length);
                 case 7:
-                    return cellId - ((map.Width + 1) * length);
+                    return cellId - ((map.Width - 1) * length);
                 default:
                     return -1;
             }

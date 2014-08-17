@@ -15,9 +15,9 @@ namespace Codebreak.WorldService.World.Fight.Effect.Type
 
         public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
-            var damage = CastInfos.RandomJet;
+            var damageJet = CastInfos.RandomJet;
 
-            return DamageEffect.ApplyDamages(CastInfos, Target, ref damage);
+            return DamageEffect.ApplyDamages(CastInfos, Target, ref damageJet);
         }
     }
 }

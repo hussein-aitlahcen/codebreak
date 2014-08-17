@@ -298,6 +298,7 @@ namespace Codebreak.WorldService.World.Map
 
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
                     base.AddHandler(entity.Dispatch);
+                    base.AddUpdatable(entity);
 
                     entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
                     entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
@@ -316,6 +317,7 @@ namespace Codebreak.WorldService.World.Map
                 entityById.Remove(entity.Id);
                 entityByName.Remove(entity.Name.ToLower());
 
+                base.RemoveUpdatable(entity);
                 base.RemoveHandler(entity.Dispatch);
                 base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, entity));
             }
@@ -356,23 +358,20 @@ namespace Codebreak.WorldService.World.Map
         /// <param name="cellId"></param>
         public void MovementFinish(EntityBase entity, MovementPath path, int cellId)
         {
-            AddMessage(() =>
-                {
-                    entity.Orientation = path.GetDirection(path.LastStep);
-                    entity.CellId = cellId;
+            entity.Orientation = path.GetDirection(path.LastStep);
+            entity.CellId = cellId;
 
-                    if (entity.Type == EntityTypEnum.TYPE_CHARACTER)
+            if (entity.Type == EntityTypEnum.TYPE_CHARACTER)
+            {
+                var cell = GetCell(cellId);
+                if (cell != null)
+                {
+                    if (cell.NextMap != 0 && cell.NextCell != 0)
                     {
-                        var cell = GetCell(cellId);
-                        if (cell != null)
-                        {
-                            if (cell.NextMap != 0 && cell.NextCell != 0)
-                            {
-                               entity.Teleport(cell.NextMap, cell.NextCell);
-                            }
-                        }
+                        entity.Teleport(cell.NextMap, cell.NextCell);
                     }
-                });
+                }
+            }
         }
     }    
 }

@@ -103,7 +103,7 @@ namespace Codebreak.WorldService.World.Fight
         /// 
         /// </summary>
         /// <param name="Buff"></param>
-        public void DelState(BuffBase Buff)
+        public void RemoveState(BuffBase Buff)
         {
             if (Buff.Caster.Fight.State == FightStateEnum.STATE_FIGHTING)
             {

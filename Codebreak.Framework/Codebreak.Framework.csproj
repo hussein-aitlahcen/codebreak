@@ -48,7 +48,9 @@
     <Compile Include="Database\SqlManager.cs" />
     <Compile Include="Database\SqlMapper.cs" />
     <Compile Include="Database\SqlMapperExtensions.cs" />
+    <Compile Include="Generic\BasicTaskProcessor.cs" />
     <Compile Include="Generic\FastActivator.cs" />
+    <Compile Include="Generic\TaskProcessorBase.cs" />
     <Compile Include="Generic\Timer.cs" />
     <Compile Include="IO\BinaryStack.cs" />
     <Compile Include="IO\BufferManager.cs" />

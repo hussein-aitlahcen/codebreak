@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.WorldService.World.Fight.Effect
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class CastInfos
     {
         /// <summary>

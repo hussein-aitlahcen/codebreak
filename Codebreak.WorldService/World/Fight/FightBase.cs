@@ -208,7 +208,7 @@ namespace Codebreak.WorldService.World.Fight
         {
             get
             {
-                return FightObjects.All(obj => obj.CanGoThrough);
+                return Walkable && FightObjects.All(obj => obj.CanGoThrough);
             }
         }
 
@@ -1200,22 +1200,7 @@ namespace Codebreak.WorldService.World.Fight
                     {
                         if (CurrentSubAction != null)
                         {
-                            var result = CurrentSubAction();
-                            switch (result)
-                            {
-                                case FightActionResultEnum.RESULT_END:
-                                    Logger.Debug("FightBase::Update end of fight after an action.");
-                                    break;
-
-                                case FightActionResultEnum.RESULT_DEATH:
-                                    if (CurrentFighter.IsFighterDead)
-                                        CurrentFighter.TurnPass = true;
-                                    break;
-                            }
-                        }
-
-                        if(LoopState == FightLoopStateEnum.STATE_WAIT_SUBACTION)
-                        {
+                            LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;
                             Logger.Debug("FightBase::Update waiting for subaction");
                             break;
                         }
@@ -1239,7 +1224,27 @@ namespace Codebreak.WorldService.World.Fight
                     break;
 
                 case FightLoopStateEnum.STATE_WAIT_SUBACTION:
-                    // Process sub action
+                    if(SubActionTimedout)
+                    {
+                        var currentAction = CurrentSubAction;
+                        var result = currentAction();
+                        switch (result)
+                        {
+                            case FightActionResultEnum.RESULT_END:
+                                Logger.Debug("FightBase::Update end of fight after subAction.");
+                                break;
+
+                            case FightActionResultEnum.RESULT_DEATH:
+                                if (CurrentFighter.IsFighterDead)
+                                    CurrentFighter.TurnPass = true;
+                                break;
+                        }
+
+                        if (CurrentSubAction == currentAction)                        
+                            CurrentSubAction = null;
+
+                        LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
+                    }
                     break;
 
                 case FightLoopStateEnum.STATE_WAIT_AI:

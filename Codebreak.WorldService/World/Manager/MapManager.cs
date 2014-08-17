@@ -9,15 +9,24 @@ using System.Threading.Tasks;
 
 namespace Codebreak.WorldService.World.Manager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class MapManager : Singleton<MapManager>
     {
         private Dictionary<int, MapInstance> _mapById;
         
+        /// <summary>
+        /// 
+        /// </summary>
         public MapManager()
         {
             _mapById = new Dictionary<int, MapInstance>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Initialize()
         {
             foreach(var mapDAO in MapRepository.Instance.GetAll())
@@ -33,6 +42,11 @@ namespace Codebreak.WorldService.World.Manager
             Logger.Info("MapManager : " + _mapById.Count + " MapInstance loaded.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public MapInstance GetById(int id)
         {
             if (_mapById.ContainsKey(id))

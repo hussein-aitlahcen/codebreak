@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.WorldService.World.Manager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AccountTicket
     {
         public long Id;
@@ -21,6 +24,9 @@ namespace Codebreak.WorldService.World.Manager
         public long Time;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AccountManager : Singleton<AccountManager>
     {
 
@@ -28,17 +34,33 @@ namespace Codebreak.WorldService.World.Manager
         private Dictionary<string, AccountTicket> _accountByTicket;
         public const int TICKET_TIMEOUT = 5000; // 5 sec
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AccountManager()
         {
             _accountByTicket = new Dictionary<string, AccountTicket>();
             _clientByAccount = new Dictionary<long, WorldClient>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Initialize()
         {
             WorldService.Instance.AddTimer(1000, UpdateTickets);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="name"></param>
+        /// <param name="power"></param>
+        /// <param name="remainingSub"></param>
+        /// <param name="lastConnection"></param>
+        /// <param name="lastIp"></param>
+        /// <param name="ticket"></param>
         public void AddTicket(long accountId, string name, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
         {
             Logger.Info("GameTicket : account=" + name + " ticket=" + ticket);
@@ -55,6 +77,11 @@ namespace Codebreak.WorldService.World.Manager
             }));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns></returns>
         public AccountTicket GetAccountTicket(string ticket)
         {
             AccountTicket account = null;
@@ -66,11 +93,19 @@ namespace Codebreak.WorldService.World.Manager
             return account;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void ClientAuthentified(WorldClient client)
         {
             _clientByAccount.Add(client.Account.Id, client);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void ClientDisconnected(WorldClient client)
         {
             if(client.Account != null)
@@ -84,6 +119,9 @@ namespace Codebreak.WorldService.World.Manager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void UpdateTickets()
         {
             if (_accountByTicket.Count > 0)

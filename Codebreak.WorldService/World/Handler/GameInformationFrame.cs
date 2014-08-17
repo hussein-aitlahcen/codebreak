@@ -44,6 +44,8 @@ namespace Codebreak.WorldService.World.Handler
                 return;
             }
 
+            WorldService.Instance.RemoveUpdatable(entity);
+
             entity.StartAction(Action.GameActionTypeEnum.MAP);
         }
     }

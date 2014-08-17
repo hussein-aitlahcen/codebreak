@@ -555,6 +555,7 @@ namespace Codebreak.WorldService.World.Entity
                     Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
                     StopAction(GameActionTypeEnum.MAP);
                     StopAction(GameActionTypeEnum.MAP_TELEPORT);
+                    Map.AddUpdatable(this);
                     break;
             }
         }
@@ -612,14 +613,12 @@ namespace Codebreak.WorldService.World.Entity
 
             switch(actionType)
             {
-                case GameActionTypeEnum.MAP_TELEPORT:
-                    break;
-
                 case GameActionTypeEnum.MAP:
                     FrameManager.RemoveFrame(GameMapFrame.Instance);
                     FrameManager.RemoveFrame(InventoryFrame.Instance);
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
+                    Map.RemoveUpdatable(this);
                     Map.DestroyEntity(this);
                     break;
 

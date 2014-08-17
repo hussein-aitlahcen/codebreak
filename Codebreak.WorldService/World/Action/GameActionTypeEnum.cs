@@ -26,7 +26,10 @@ namespace Codebreak.WorldService.World.Action
         FIGHT_ARMOR = 105,
         FIGHT_PA_LOST = 102,
         FIGHT_PM_LOST = 129,
+
         FIGHT_DAMAGE = 100,
+        FIGHT_HEAL = FIGHT_DAMAGE,
+
         FIGHT_SPELL_LAUNCH = 300,
         FIGHT_SPELL_CRITIC = 301,
         FIGHT_SPELL_ECHEC = 302,

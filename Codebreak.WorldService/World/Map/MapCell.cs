@@ -27,8 +27,8 @@ namespace Codebreak.WorldService.World.Map
             Id = id;
             NextMap = nextMap;
             NextCell = nextCell;
-            Walkable = ((data[1] & 56) >> 3) > 0;
-            if (!Walkable && ((data[1] & 56) >> 3) != 0)
+            Walkable = ((data[2] & 56) >> 3) > 0;
+            if (!Walkable && ((data[2] & 56) >> 3) != 0)
             {
                 return;
             }

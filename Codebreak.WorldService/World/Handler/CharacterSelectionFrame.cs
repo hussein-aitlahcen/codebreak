@@ -334,7 +334,7 @@ namespace Codebreak.WorldService.World.Handler
                 client.Send(WorldMessage.CHARACTER_SELECTION_ERROR());
                 return;
             }
-
+            
             WorldService.Instance.AddMessage(() =>
                 {
                     CharacterSelectExecute(client, character);
@@ -351,6 +351,9 @@ namespace Codebreak.WorldService.World.Handler
             client.FrameManager.RemoveFrame(CharacterSelectionFrame.Instance);
 
             client.CurrentCharacter = EntityManager.Instance.CreateCharacter(character);
+
+            WorldService.Instance.AddUpdatable(client.CurrentCharacter);
+
             client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
             client.CurrentCharacter.FrameManager.AddFrame(SpellFrame.Instance);
             client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);

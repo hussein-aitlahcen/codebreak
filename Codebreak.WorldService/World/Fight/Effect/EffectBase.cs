@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.WorldService.World.Fight.Effect
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class EffectBase
     {
         /// <summary>
