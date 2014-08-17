@@ -19,7 +19,7 @@ namespace Codebreak.Service.World
         public static int WorldSaveInternal = 60 * 1000;
 
         [Configurable("WorldServiceIP")]
-        public static string WorldServiceIP = "25.214.133.179";
+        public static string WorldServiceIP = "127.0.0.1";
 
         [Configurable("WorldServicePort")]
         public static int WorldServicePort = 5555;

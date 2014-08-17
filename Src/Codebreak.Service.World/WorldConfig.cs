@@ -33,8 +33,5 @@ namespace Codebreak.WorldService
 
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);
         public const int GAME_ID = 1; // Jiva ? guess so;
-        public const string GAME_BIND_IP = "25.214.133.179";
-        public const int GAME_BIND_PORT = 5555;
-        public const string DB_CONNECTION = "Data Source=SMARKEN;Initial Catalog=codebreak_world;Integrated Security=True;Pooling=False";
     }
 }

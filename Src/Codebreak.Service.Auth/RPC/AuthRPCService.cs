@@ -4,11 +4,10 @@ using Codebreak.RPC.Service;
 
 namespace Codebreak.Service.Auth.RPC
 {
-// ReSharper disable once InconsistentNaming
     public sealed class AuthRPCService : RPCService<AuthRPCService, AuthRPCServiceClient, AuthMessageBuilder>
     {
         [Configurable("RPCServiceIP")]
-        public static string RPCServiceIP = "25.214.133.179";
+        public static string RPCServiceIP = "127.0.0.1";
 
         [Configurable("RPCServicePort")]
         public static int RPCServicePort = 4321;

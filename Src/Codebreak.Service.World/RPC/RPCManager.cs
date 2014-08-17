@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.RPC
         public static string RPCPassword = "smarken";
 
         [Configurable("RPCIP")]
-        public static string RPCIP = "25.214.133.179";
+        public static string RPCIP = "127.0.0.1";
 
         [Configurable("RPCPort")]
         public static int RPCPort = 4321;
