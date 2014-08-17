@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Game
         CHANNEL_GUILD = '%',
         CHANNEL_ALIGNMENT = '!',
         CHANNEL_PRIVATE_SEND = 'T',
-        CHANNEL_PRIVATE_RECIEVE = 'F',
+        CHANNEL_PRIVATE_RECEIVE = 'F',
     }
 
     /// <summary>
@@ -273,6 +273,14 @@ namespace Codebreak.Service.World.Game
             return "pong";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string BASIC_QPONG()
+        {
+            return "qpong";
+        }
 
         /// <summary>
         /// 

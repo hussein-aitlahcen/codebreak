@@ -52,6 +52,7 @@ namespace Codebreak.Service.World.Frames
 
                         case 'T':
                             return BasicTime;
+
                         case 'M':
                             return BasicMessage;
                     }
@@ -60,6 +61,11 @@ namespace Codebreak.Service.World.Frames
                 case 'p':
                     if (message == "ping")
                         return BasicPong;
+                    break;
+
+                case 'q':
+                    if (message == "qping")
+                        return BasicQPong;
                     break;
             }
 
@@ -72,6 +78,16 @@ namespace Codebreak.Service.World.Frames
         /// <param name="entity"></param>
         /// <param name="message"></param>
         private void BasicPong(EntityBase entity, string message)
+        {
+            entity.Dispatch(WorldMessage.BASIC_PONG());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void BasicQPong(EntityBase entity, string message)
         {
             entity.Dispatch(WorldMessage.BASIC_PONG());
         }
@@ -120,7 +136,7 @@ namespace Codebreak.Service.World.Frames
                     if (remoteEntity != null)
                     {
                         entity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity);
-                        remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECIEVE, messageContent, entity);
+                        remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, entity);
                     }
                 }
             });

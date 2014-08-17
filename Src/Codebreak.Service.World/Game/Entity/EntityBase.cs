@@ -347,7 +347,7 @@ namespace Codebreak.Service.World.Game.Entity
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => Fight == null ? default(Action<string>) : ((FighterBase)this).Team.Dispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECIEVE, () => this.Dispatch);
+            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => this.Dispatch);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => this.Dispatch);
 
             if (HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
@@ -400,7 +400,7 @@ namespace Codebreak.Service.World.Game.Entity
                     switch (channel)
                     {
                         case ChatChannelEnum.CHANNEL_PRIVATE_SEND:
-                        case ChatChannelEnum.CHANNEL_PRIVATE_RECIEVE:
+                        case ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE:
                             chan(WorldMessage.CHAT_MESSAGE(channel, remoteEntity.Id, remoteEntity.Name, message));
                             break;
 

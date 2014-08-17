@@ -14,10 +14,10 @@ namespace Codebreak.Service.Auth
     public sealed class AuthService : TcpServerBase<AuthService, AuthClient>
     {
         [Configurable("AuthServiceIP")]
-        public static string AuthServiceIP = "127.0.0.1";
+        public static string AuthServiceIP = "25.214.133.179";
 
         [Configurable("AuthServicePort")]
-        public static int AuthServicePort = 443;
+        public static int AuthServicePort = 444;
 
         [Configurable("AuthMaxClient")]
         public static int AuthMaxClient = 500;

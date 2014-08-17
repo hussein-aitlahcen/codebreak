@@ -8,11 +8,9 @@ namespace Codebreak.Service.Auth.RPC
     public sealed class AuthRPCService : RPCService<AuthRPCService, AuthRPCServiceClient, AuthMessageBuilder>
     {
         [Configurable("RPCServiceIP")]
-// ReSharper disable once InconsistentNaming
-        public static string RPCServiceIP = "127.0.0.1";
+        public static string RPCServiceIP = "25.214.133.179";
 
         [Configurable("RPCServicePort")]
-// ReSharper disable once InconsistentNaming
         public static int RPCServicePort = 4321;
 
         public AuthRPCService()
@@ -92,6 +90,8 @@ namespace Codebreak.Service.Auth.RPC
             Logger.Info(string.Format("AuthServiceRPC [{0}][{1}] GameState updated to {2}", client.Ip, client.GameId, state));
 
             client.GameState = state;
+
+            AuthService.Instance.RefreshWorldList();
         }
 
         private void HandleGameAccountDisconnected(AuthRPCServiceClient client, RPCMessageBase message)
