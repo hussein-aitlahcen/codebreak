@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Generic;
+using Codebreak.WorldService.World.Fight.Effect.Type;
 using Codebreak.WorldService.World.Spell;
 using System;
 using System.Collections.Generic;
@@ -25,11 +26,11 @@ namespace Codebreak.WorldService.World.Fight.Effect
         {
             _effects = new Dictionary<EffectEnum, EffectBase>();
 
-            //_effects.Add(EffectEnum.DamageEarth, new DamageEffect());
-            //_effects.Add(EffectEnum.DamageNeutral, new DamageEffect());
-            //_effects.Add(EffectEnum.DamageFire, new DamageEffect());
-            //_effects.Add(EffectEnum.DamageWater, new DamageEffect());
-            //_effects.Add(EffectEnum.DamageAir, new DamageEffect());
+            _effects.Add(EffectEnum.DamageEarth, new DamageEffect());
+            _effects.Add(EffectEnum.DamageNeutral, new DamageEffect());
+            _effects.Add(EffectEnum.DamageFire, new DamageEffect());
+            _effects.Add(EffectEnum.DamageWater, new DamageEffect());
+            _effects.Add(EffectEnum.DamageAir, new DamageEffect());
             //_effects.Add(EffectEnum.StealNeutral, new LifeStealEffect());
             //_effects.Add(EffectEnum.StealEarth, new LifeStealEffect());
             //_effects.Add(EffectEnum.StealFire, new LifeStealEffect());

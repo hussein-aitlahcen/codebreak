@@ -539,12 +539,7 @@ namespace Codebreak.WorldService.World.Entity
                     }
                     Map.SpawnEntity(this);
                     break;
-
-                case GameActionTypeEnum.FIGHT:
-                    StopAction(GameActionTypeEnum.MAP);
-                    FrameManager.AddFrame(GameFightPlacementFrame.Instance);
-                    break;
-
+                    
                 case GameActionTypeEnum.EXCHANGE:
                 case GameActionTypeEnum.GUILD_CREATE:
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
@@ -574,7 +569,8 @@ namespace Codebreak.WorldService.World.Entity
             {
                 if (!CurrentAction.IsFinished)
                     CurrentAction.Stop(args);
-                CurrentAction = null;
+                if(CurrentAction != null && CurrentAction.Type == actionType)
+                    CurrentAction = null;
             }
             
             switch(actionType)
@@ -597,12 +593,6 @@ namespace Codebreak.WorldService.World.Entity
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
                     Map.DestroyEntity(this);
                     break;
-
-                case GameActionTypeEnum.FIGHT:
-                    FrameManager.AddFrame(GameCreationFrame.Instance);
-                    FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
-                    FrameManager.RemoveFrame(GameFightFrame.Instance);
-                    break;
             }
         }
          
@@ -616,7 +606,8 @@ namespace Codebreak.WorldService.World.Entity
             {
                 if (!CurrentAction.IsFinished)
                     CurrentAction.Abort(args);
-                CurrentAction = null;
+                if (CurrentAction != null && CurrentAction.Type == actionType)
+                    CurrentAction = null;
             }
 
             switch(actionType)

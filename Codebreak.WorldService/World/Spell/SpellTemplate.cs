@@ -18,7 +18,6 @@ namespace Codebreak.WorldService.World.Spell
         public string Description;
         public int Sprite;
         public string SpriteInfos;
-        public string Targets;
         public List<SpellLevel> Levels;
 
         /// <summary>

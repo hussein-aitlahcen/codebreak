@@ -1,5 +1,6 @@
 ﻿using Codebreak.WorldService.World.Action;
 using Codebreak.WorldService.World.Entity;
+using Codebreak.WorldService.World.Handler;
 using Codebreak.WorldService.World.Manager;
 using Codebreak.WorldService.World.Map;
 using Codebreak.WorldService.World.Spell;
@@ -367,6 +368,23 @@ namespace Codebreak.WorldService.World.Fight
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="spellId"></param>
+        /// <param name="spellLevel"></param>
+        /// <param name="sprite"></param>
+        /// <param name="spriteInfos"></param>
+        /// <param name="duration"></param>
+        /// <param name="callback"></param>
+        public void LaunchSpell(int cellId, int spellId, int spellLevel, string sprite, string spriteInfos, long duration, System.Action callback)
+        {
+            CurrentAction = new GameFightSpellAction(this, cellId, spellId, spellLevel, sprite, spriteInfos, duration, callback);
+
+            StartAction(GameActionTypeEnum.FIGHT_SPELL_LAUNCH);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void JoinFight(FightBase fight, FightTeam team)
         {
             BuffManager = new BuffEffectManager(this);
@@ -726,15 +744,10 @@ namespace Codebreak.WorldService.World.Fight
             if (Cell != null)
             {
                 var moveResult = Cell.AddObject(this);
-
                 if (moveResult != FightActionResultEnum.RESULT_NOTHING)
                     return moveResult;
 
-                if (IsFighterDead)                
-                    return FightActionResultEnum.RESULT_DEATH;                
-
                 var buffResult = BuffManager.EndMove();
-
                 if (buffResult != FightActionResultEnum.RESULT_NOTHING)
                     return buffResult;
             }
@@ -745,6 +758,51 @@ namespace Codebreak.WorldService.World.Fight
             return Fight.TryKillFighter(this, Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionType"></param>
+        public override void StartAction(GameActionTypeEnum actionType)
+        {
+            switch(actionType)
+            {
+                case GameActionTypeEnum.FIGHT:
+                    StopAction(GameActionTypeEnum.MAP);
+                    FrameManager.AddFrame(GameFightPlacementFrame.Instance);
+                    break;
+
+                case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
+                    Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_LAUNCH, Id, CurrentAction.SerializeAs_GameAction()));
+                    break;
+            }
+
+            base.StartAction(actionType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionType"></param>
+        /// <param name="args"></param>
+        public override void StopAction(GameActionTypeEnum actionType, params object[] args)
+        {
+            switch(actionType)
+            {
+                case GameActionTypeEnum.FIGHT:
+                    FrameManager.AddFrame(GameCreationFrame.Instance);
+                    FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
+                    FrameManager.RemoveFrame(GameFightFrame.Instance);
+                    break;
+            }
+
+            base.StopAction(actionType, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionType"></param>
+        /// <param name="args"></param>
         public override void AbortAction(GameActionTypeEnum actionType, params object[] args)
         {
             switch(actionType)

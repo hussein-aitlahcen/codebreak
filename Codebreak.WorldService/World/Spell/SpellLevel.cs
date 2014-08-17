@@ -30,6 +30,7 @@ namespace Codebreak.WorldService.World.Spell
         public int Cooldown;
         public int RequiredLevel;
         public string RangeType;
+        public int Targets;
         public List<SpellEffect> Effects;
         public List<SpellEffect> CriticalEffects;
     }

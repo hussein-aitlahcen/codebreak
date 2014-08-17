@@ -58,6 +58,7 @@
     <Compile Include="World\Action\GameExchangeActionBase.cs" />
     <Compile Include="World\Action\GameFightActionBase.cs" />
     <Compile Include="World\Action\GameFightMovementAction.cs" />
+    <Compile Include="World\Action\GameFightSpellAction.cs" />
     <Compile Include="World\Action\GameMapMovementAction.cs" />
     <Compile Include="World\Action\GameMapTeleportAction.cs" />
     <Compile Include="World\Action\GamePlayerExchangeAction.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="World\Database\Repository\MapTriggerRepository.cs" />
     <Compile Include="World\Database\Repository\NpcInstanceRepository.cs" />
     <Compile Include="World\Database\Repository\NpcTemplateRepository.cs" />
+    <Compile Include="World\Database\Repository\OLD_REPOSITORIES.cs" />
     <Compile Include="World\Database\Repository\SpellBookEntryRepository.cs" />
     <Compile Include="World\Database\Structure\AreaDAO.cs" />
     <Compile Include="World\Database\Repository\AreaRepository.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="World\Database\Structure\MapTriggerDAO.cs" />
     <Compile Include="World\Database\Structure\NpcInstanceDAO.cs" />
     <Compile Include="World\Database\Structure\NpcTemplateDAO.cs" />
+    <Compile Include="World\Database\Structure\OLD_DATAS.cs" />
     <Compile Include="World\Database\Structure\SpellBookEntryDAO.cs" />
     <Compile Include="World\Database\Structure\SubAreaDAO.cs" />
     <Compile Include="World\Database\Structure\SuperAreaDAO.cs" />
@@ -102,6 +105,8 @@
     <Compile Include="World\Fight\Effect\CastInfos.cs" />
     <Compile Include="World\Fight\Effect\EffectBase.cs" />
     <Compile Include="World\Fight\Effect\EffectManager.cs" />
+    <Compile Include="World\Fight\Effect\Type\DamageBuff.cs" />
+    <Compile Include="World\Fight\Effect\Type\DamageEffect.cs" />
     <Compile Include="World\Fight\FightBase.cs" />
     <Compile Include="World\Fight\FighterBase.cs" />
     <Compile Include="World\Fight\FighterStateManager.cs" />
@@ -168,9 +173,7 @@
       <Name>Codebreak.RPCService</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="World\Fight\Effect\Type\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

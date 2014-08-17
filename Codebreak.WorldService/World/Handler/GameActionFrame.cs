@@ -133,19 +133,8 @@ namespace Codebreak.WorldService.World.Handler
                         //}
                         break;
 
-                    case GameActionTypeEnum.FIGHT_LAUNCHSPELL:
-
-                        //if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
-                        //    return;
-
-                        //var fightAction = (GameFight)entity.GetAction(GameActionTypeEnum.FIGHT);
-
-                        //var spellData = message.Substring(5).Split(';');
-                        //var spellId = int.Parse(spellData[0]);
-                        //var cellId = int.Parse(spellData[1]);
-
-                        //fightAction.Fight.LaunchSpell((BaseFighter)entity, spellId, cellId);
-
+                    case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
+                        GameFightSpellLaunch(entity, message);
                         break;
                 }
             }); 
@@ -156,7 +145,57 @@ namespace Codebreak.WorldService.World.Handler
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        public void GameChallengeDeny(EntityBase entity, string message)
+        private void GameFightSpellLaunch(EntityBase entity, string message)
+        {
+            if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
+            {
+                Logger.Debug("GameActionFrame::SpellLaunch entity is not in fight : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if(!message.Contains(';'))
+            {
+                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var spellData = message.Substring(5).Split(';');
+            if(spellData.Length < 2)
+            {
+                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var spellId = -1;
+            if(!int.TryParse(spellData[0], out spellId))
+            {
+                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var cellId = -1;
+            if(!int.TryParse(spellData[1], out cellId))
+            {
+                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var fighter = (FighterBase)entity;
+
+            fighter.Fight.LaunchSpell(fighter, spellId, cellId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GameChallengeDeny(EntityBase entity, string message)
         {
             entity.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST, entity.Id);
         }
@@ -166,7 +205,7 @@ namespace Codebreak.WorldService.World.Handler
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        public void GameChallengeAccept(EntityBase entity, string message)
+        private void GameChallengeAccept(EntityBase entity, string message)
         {
             entity.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST, entity.Id);
         }
@@ -264,7 +303,20 @@ namespace Codebreak.WorldService.World.Handler
         /// <param name="message"></param>
         private void GameActionAbort(EntityBase entity, string message)
         {
-            var abortData = message.Split('|'); var actionId = -1;
+            if(!message.Contains('|'))
+            {
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var abortData = message.Split('|');
+            if (abortData.Length < 2)
+            {
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var actionId = -1;
             if (!int.TryParse(abortData[0].Substring(3), out actionId))
             {
                 Logger.Debug("GameActionFrame::Abort unable to finish action, unknow id : " + entity.Name);

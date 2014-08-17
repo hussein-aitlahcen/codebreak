@@ -28,9 +28,54 @@ namespace Codebreak.WorldService.World.Manager
             {
                 _templateById = Serializer.Deserialize<Dictionary<int, SpellTemplate>>(stream);
             }
-
+            
             Logger.Info("SpellManager : " + _templateById.Count + " SpellTemplate loaded.");
         }
+
+        // <summary>
+        
+        // </summary>
+        //public void Save()
+        //{
+        //    var templates = new Dictionary<int, SpellTemplate>();
+        //    foreach(var sort in SortsRepository.Instance.GetAll())
+        //    {
+        //        var newTemplate = new SpellTemplate();
+        //        var oldTemplate = GetTemplate(sort.id);
+
+        //        newTemplate.Id = oldTemplate.Id;
+        //        newTemplate.Name = oldTemplate.Name;
+        //        newTemplate.Description = oldTemplate.Description;
+        //        newTemplate.Sprite = sort.sprite;
+        //        newTemplate.SpriteInfos = sort.spriteInfos;
+        //        newTemplate.Levels = oldTemplate.Levels;
+        //        var targets = sort.effectTarget == "" ? new int[] { -1, -1, -1, -1, -1, -1 } : sort.effectTarget.Contains(',') ? sort.effectTarget.Split(',').Select(x => int.Parse(x)).ToArray() : sort.effectTarget.Split(';').Select(x => int.Parse(x)).ToArray();
+        //        int lvl = 0;
+        //        foreach(var level in newTemplate.Levels)
+        //        {
+        //            if (level.CriticalEffects == null)
+        //                level.CriticalEffects = new List<SpellEffect>();
+        //            if (level.Effects == null)
+        //                level.Effects = new List<SpellEffect>();
+        //            level.SpellId = newTemplate.Id;
+        //            if (targets.Length > lvl)
+        //                level.Targets = targets[lvl];
+        //            else
+        //                level.Targets = -1;
+        //            level.Level = ++lvl;
+        //            foreach(var effect in level.Effects.Concat(level.CriticalEffects))
+        //            {
+        //                effect.SpellId = newTemplate.Id;
+        //                effect.SpellLevel = level.Level;
+        //            }
+        //        }
+        //        templates.Add(newTemplate.Id, newTemplate);
+        //    }
+        //    using (var stream = File.OpenWrite("Resources/data/spells.bin"))
+        //    {
+        //         Serializer.Serialize<Dictionary<int, SpellTemplate>>(stream, templates);
+        //    }
+        //}
 
         /// <summary>
         /// 

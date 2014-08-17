@@ -566,6 +566,32 @@ namespace Codebreak.WorldService.World.Fight
                 return CurrentAction.Timeout <= UpdateTime;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool SynchronizationTimedout
+        {
+            get
+            {
+                return NextSynchroTimeout <= UpdateTime;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long NextSynchroTimeout
+        {
+            get
+            {
+                return _synchronizationTimeout;
+            }
+            set
+            {
+                _synchronizationTimeout = UpdateTime + value;
+            }
+        }
         
         /// <summary>
         /// 
@@ -652,7 +678,7 @@ namespace Codebreak.WorldService.World.Fight
         /// 
         /// </summary>
         protected FightTeam _winnerTeam, _loserTeam;
-        private long _loopTimeout, _turnTimeout, _subActionTimeout;
+        private long _loopTimeout, _turnTimeout, _subActionTimeout, _synchronizationTimeout;
                 
         /// <summary>
         /// 
@@ -884,7 +910,7 @@ namespace Codebreak.WorldService.World.Fight
                 }
                 else
                 {
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_KILLFIGHTER, killerId, fighter.Id.ToString()));
+                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_KILL, killerId, fighter.Id.ToString()));
                 }
 
                 fighter.OnDeath();
@@ -1081,7 +1107,7 @@ namespace Codebreak.WorldService.World.Fight
             LoopState = FightLoopStateEnum.STATE_WAIT_READY;
 
             // turn ready timeout : synchronize players
-            NextLoopTimeout = 5000;
+            NextSynchroTimeout = 5000;
         }
 
         /// <summary>
@@ -1096,6 +1122,9 @@ namespace Codebreak.WorldService.World.Fight
                 _loserTeam = _winnerTeam.OpponentTeam;
 
                 LoopState = FightLoopStateEnum.STATE_WAIT_END;
+
+                if(CurrentAction != null)
+                    base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
 
                 return true;
             }
@@ -1147,7 +1176,7 @@ namespace Codebreak.WorldService.World.Fight
                         MiddleTurn();
                         BeginTurn();
                     }
-                    else if (LoopTimedout)
+                    else if (SynchronizationTimedout)
                     {
                         var fighters = AliveFighters.Where(fighter => !fighter.TurnReady);
                         var fightersName = string.Join(", ", fighters.Select(fighter => fighter.Name));
@@ -1260,7 +1289,7 @@ namespace Codebreak.WorldService.World.Fight
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
             }
 
-            if (!fighter.CanGameAction(GameActionTypeEnum.FIGHT_LAUNCHSPELL))
+            if (!fighter.CanGameAction(GameActionTypeEnum.FIGHT_SPELL_LAUNCH))
             {
                 Logger.Debug("Fight::CanLaunchSpell fighter cannot game action : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
@@ -1343,7 +1372,7 @@ namespace Codebreak.WorldService.World.Fight
                     Logger.Debug("Fight::LaunchSpell unable to launch spell : " + fighter.Name);
                     return;
                 }
-                
+
                 fighter.UsedAP += spellLevel.APCost;
 
                 var isEchec = false;
@@ -1357,8 +1386,8 @@ namespace Codebreak.WorldService.World.Fight
 
                 if (isEchec)
                 {
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LAUNCHSPELL_ECHEC, fighter.Id, spellId.ToString()));
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LOSTPA, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
+                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_ECHEC, fighter.Id, spellId.ToString()));
+                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
 
                     if (spellLevel.IsECSEndTurn == 1)
                     {
@@ -1385,12 +1414,11 @@ namespace Codebreak.WorldService.World.Fight
                             isCritic = true;
                     }
 
-
                     base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
-                                        
+
                     if (isCritic)
                     {
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LAUNCHSPELL_CRITIC, fighter.Id, spellId.ToString()));
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_CRITIC, fighter.Id, spellId.ToString()));
                     }
 
                     var effects = isCritic ? spellLevel.CriticalEffects : spellLevel.Effects;
@@ -1402,7 +1430,7 @@ namespace Codebreak.WorldService.World.Fight
 
                         if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
                         {
-                            foreach (var currentCellId in CellZone.GetCells(Map, castCellId, fighter.Cell.Id, effect.Level.RangeType))
+                            foreach (var currentCellId in CellZone.GetCells(Map, castCellId, fighter.Cell.Id, spellLevel.RangeType))
                             {
                                 var fightCell = GetCell(currentCellId);
                                 if (fightCell != null)
@@ -1416,73 +1444,79 @@ namespace Codebreak.WorldService.World.Fight
                         }
                     }
 
-                    // TODO : CREATE GameFightSpellAction AND PROCESS THIS BELOW ON GAMEACTION STOP
+                    LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
 
-                    var actualChance = 0;
+                    var template = SpellManager.Instance.GetTemplate(spellId);
 
-                    foreach (var effect in effects)
+                    fighter.LaunchSpell(castCellId, spellId, spellLevel.Level, template.Sprite.ToString(), template.SpriteInfos, actionTime, () =>
                     {
-                        if (effect.Chance > 0)
+                        var actualChance = 0;
+
+                        foreach (var effect in effects)
                         {
-                            if (Util.Next(1, 101) > (effect.Chance + actualChance))
+                            if (effect.Chance > 0)
                             {
-                                actualChance += effect.Chance;
-                                continue;
+                                if (Util.Next(1, 101) > (effect.Chance + actualChance))
+                                {
+                                    actualChance += effect.Chance;
+                                    continue;
+                                }
+
+                                actualChance -= 100;
                             }
 
-                            actualChance -= 100;
-                        }
+                            targetLists[effect].RemoveAll(affectedTarget => affectedTarget.IsFighterDead);
 
-                        targetLists[effect].RemoveAll(affectedTarget => affectedTarget.IsFighterDead);
-
-                        if (targetLists[effect].Count == 0)
-                        {
-                            var effectResult = EffectManager.Instance.TryApplyEffect(
-                                    new CastInfos(
-                                                    effect.TypeEnum,
-                                                    spellId,
-                                                    castCellId,
-                                                    effect.Value1,
-                                                    effect.Value2,
-                                                    effect.Value3,
-                                                    effect.Chance,
-                                                    effect.Duration,
-                                                    fighter,
-                                                    null,
-                                                    effect.Level.RangeType)
-                                                 );
-                            if (effectResult == FightActionResultEnum.RESULT_END)
-                                return;
-                        }
-                        else
-                        {
-                            foreach (var effectTarget in targetLists[effect])
+                            if (targetLists[effect].Count == 0)
                             {
                                 var effectResult = EffectManager.Instance.TryApplyEffect(
-                                    new CastInfos(
-                                                    effect.TypeEnum,
-                                                    spellId,
-                                                    castCellId,
-                                                    effect.Value1,
-                                                    effect.Value2,
-                                                    effect.Value3,
-                                                    effect.Chance,
-                                                    effect.Duration,
-                                                    fighter,
-                                                    effectTarget,
-                                                    effect.Level.RangeType)
-                                                 );
-
+                                        new CastInfos(
+                                                        effect.TypeEnum,
+                                                        spellId,
+                                                        castCellId,
+                                                        effect.Value1,
+                                                        effect.Value2,
+                                                        effect.Value3,
+                                                        effect.Chance,
+                                                        effect.Duration,
+                                                        fighter,
+                                                        null,
+                                                        spellLevel.RangeType)
+                                                     );
                                 if (effectResult == FightActionResultEnum.RESULT_END)
                                     return;
                             }
-                        }
-                    }
+                            else
+                            {
+                                foreach (var effectTarget in targetLists[effect])
+                                {
+                                    var effectResult = EffectManager.Instance.TryApplyEffect(
+                                        new CastInfos(
+                                                        effect.TypeEnum,
+                                                        spellId,
+                                                        castCellId,
+                                                        effect.Value1,
+                                                        effect.Value2,
+                                                        effect.Value3,
+                                                        effect.Chance,
+                                                        effect.Duration,
+                                                        fighter,
+                                                        effectTarget,
+                                                        spellLevel.RangeType)
+                                                     );
 
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LOSTPA, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
+                                    if (effectResult == FightActionResultEnum.RESULT_END)
+                                        return;
+                                }
+                            }
+                        }
+
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
+                    });
                 }
             });
         }
+        
 
         // <summary>
         /// 
@@ -1641,7 +1675,7 @@ namespace Codebreak.WorldService.World.Fight
 
                     fighter.UsedAP += lostAP;
 
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LOSTPA, fighter.Id, fighter.Id + ",-" + lostAP));
+                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + lostAP));
 
                     if (lostMP < 0)
                         lostMP = 1;
@@ -1651,7 +1685,7 @@ namespace Codebreak.WorldService.World.Fight
 
                     fighter.UsedMP += lostMP;
 
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LOSTPM, fighter.Id, fighter.Id + ",-" + lostMP));
+                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + lostMP));
 
                     return;
                 }
@@ -1676,7 +1710,7 @@ namespace Codebreak.WorldService.World.Fight
 
             fighter.UsedMP += movementPath.MovementLength;
 
-            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_LOSTPM, fighter.Id, fighter.Id + ",-" + movementPath.MovementLength));
+            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + movementPath.MovementLength));
 
             entity.Orientation = movementPath.GetDirection(movementPath.LastStep);
             fighter.SetCell(GetCell(movementPath.EndCell));

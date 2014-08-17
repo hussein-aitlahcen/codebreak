@@ -549,7 +549,7 @@ namespace Codebreak.WorldService.World
             {
                 case GameActionTypeEnum.CHANGE_MAP:
                 case GameActionTypeEnum.MAP_MOVEMENT:
-                case GameActionTypeEnum.FIGHT_LAUNCHSPELL:
+                case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
                     message.Append((int)type);
                     break;
             }

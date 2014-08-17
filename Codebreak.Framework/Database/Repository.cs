@@ -169,7 +169,12 @@ namespace Codebreak.Framework.Database
             }
         }
 
-        public abstract void OnObjectAdded(TDataObject obj);
-        public abstract void OnObjectRemoved(TDataObject obj);
+        public virtual void OnObjectAdded(TDataObject obj)
+        {
+        }
+
+        public virtual void OnObjectRemoved(TDataObject obj)
+        {
+        }
     }
 }

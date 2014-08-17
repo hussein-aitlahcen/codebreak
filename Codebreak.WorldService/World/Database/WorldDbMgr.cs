@@ -30,6 +30,9 @@ namespace Codebreak.WorldService.World.Database
             base.AddRepository(MapRepository.Instance);
             base.AddRepository(NpcTemplateRepository.Instance);
             base.AddRepository(NpcInstanceRepository.Instance);
+            
+            // DESIGNED TO MIGRATE DATAS FROM SQL TO .data
+            base.AddRepository(SortsRepository.Instance);
 
             base.LoadAll(WorldConfig.DB_CONNECTION);
         }
