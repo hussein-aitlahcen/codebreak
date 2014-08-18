@@ -6,6 +6,9 @@ using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Manager
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class EntityManager : Singleton<EntityManager>
     {
         private Dictionary<long, CharacterEntity> _characterById;

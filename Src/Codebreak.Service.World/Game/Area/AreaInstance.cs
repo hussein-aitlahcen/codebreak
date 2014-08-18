@@ -57,7 +57,7 @@ namespace Codebreak.Service.World.Game.Area
         /// <param name="method"></param>
         public override void AddHandler(Action<string> method)
         {
-            IOQueue.AddMessage(() => AddMessage(() => base.AddHandler(method)));
+            IOQueue.AddMessage(() => base.AddHandler(method));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Codebreak.Service.World.Game.Area
         /// <param name="method"></param>
         public override void RemoveHandler(Action<string> method)
         {
-            IOQueue.AddMessage(() => AddMessage(() => base.RemoveHandler(method)));
+            IOQueue.AddMessage(() => base.RemoveHandler(method));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Codebreak.Service.World.Game.Area
         /// <param name="message"></param>
         public override void Dispatch(string message)
         {
-            IOQueue.AddMessage(() => AddMessage(() => base.Dispatch(message)));
+            IOQueue.AddMessage(() => base.Dispatch(message));
         }
     }
 }

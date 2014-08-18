@@ -21,11 +21,11 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            var PorteurInfos = new CastInfos(castInfos.EffectType, castInfos.SpellId, 0, 0, 0, (int)FighterStateEnum.STATE_CARRIER, 0, 0, castInfos.Caster, null);
-            var PorterInfos = new CastInfos(castInfos.EffectType, castInfos.SpellId, 0, 0, 0, (int)FighterStateEnum.STATE_CARRIED, 0, 0, castInfos.Caster, null);
+            var carrierInfos = new CastInfos(castInfos.EffectType, castInfos.SpellId, 0, 0, 0, (int)FighterStateEnum.STATE_CARRIER, 0, int.MaxValue - 1, castInfos.Caster, null);
+            var carriedInfos = new CastInfos(castInfos.EffectType, castInfos.SpellId, 0, 0, 0, (int)FighterStateEnum.STATE_CARRIED, 0, int.MaxValue - 1, castInfos.Caster, null);
 
-            castInfos.Caster.BuffManager.AddBuff(new PandaCarrierBuff(PorteurInfos, castInfos.Target));
-            castInfos.Target.BuffManager.AddBuff(new PandaCarriedBuff(PorterInfos, castInfos.Target));
+            castInfos.Caster.BuffManager.AddBuff(new PandaCarrierBuff(carrierInfos, castInfos.Target));
+            castInfos.Target.BuffManager.AddBuff(new PandaCarriedBuff(carriedInfos, castInfos.Target));
 
             return FightActionResultEnum.RESULT_NOTHING;
         }

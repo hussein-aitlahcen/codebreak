@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Generic
 {
-    public abstract class Updatable
+    public abstract class Updatable : IDisposable
     {
         /// <summary>
         /// 
@@ -17,8 +17,8 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        private LockFreeQueue<Action> messageQueue = new LockFreeQueue<Action>();
-        private List<Updatable> subUpdatableObject = new List<Updatable>();
+        private LockFreeQueue<Action> _messagesQueue = new LockFreeQueue<Action>();
+        private List<Updatable> _subUpdatableObjects = new List<Updatable>();
 
         /// <summary>
         /// 
@@ -32,9 +32,36 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
+        public int MessageCount
+        {
+            get
+            {
+                return _messagesQueue.Count + _subUpdatableObjects.Sum(updatable => updatable.MessageCount);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Dispose()
+        {
+            foreach (var subUpdatableObj in _subUpdatableObjects)
+                subUpdatableObj.Dispose();
+            _subUpdatableObjects.Clear();
+
+            _messagesQueue.Clear();
+            _messagesQueue = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void ClearMessages()
         {
-            messageQueue.Clear();
+            AddMessage(() =>
+                {
+                    _messagesQueue.Clear();
+                });
         }
 
         /// <summary>
@@ -43,7 +70,7 @@ namespace Codebreak.Framework.Generic
         /// <param name="message"></param>
         public void AddMessage(Action message)
         {
-            messageQueue.Enqueue(message);
+            _messagesQueue.Enqueue(message);
         }
 
         /// <summary>
@@ -54,7 +81,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
                 {
-                    subUpdatableObject.Add(updatable);
+                    _subUpdatableObjects.Add(updatable);
                 });
         }
 
@@ -66,7 +93,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                subUpdatableObject.Remove(updatable);
+                _subUpdatableObjects.Remove(updatable);
             });
         }
 
@@ -78,7 +105,7 @@ namespace Codebreak.Framework.Generic
         {
             UpdateTime += updateDelta;
             
-            foreach (var updatableObject in subUpdatableObject)
+            foreach (var updatableObject in _subUpdatableObjects)
             {
                 try
                 {
@@ -91,7 +118,7 @@ namespace Codebreak.Framework.Generic
             }
 
             Action msg = null;
-            while (messageQueue.TryDequeue(out msg))
+            while (_messagesQueue.TryDequeue(out msg))
             {
                 try
                 {

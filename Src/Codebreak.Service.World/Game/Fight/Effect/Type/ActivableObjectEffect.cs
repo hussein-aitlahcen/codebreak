@@ -24,21 +24,26 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             switch(castInfos.EffectType)
             {
                 case EffectEnum.UseGlyph:
-                    if (!castInfos.Caster.Fight.CanPutObject(FightObstacleTypeEnum.TYPE_GLYPH, castInfos.CellId))
+                    if (castInfos.Caster.Fight.HasObjectOnCell(FightObstacleTypeEnum.TYPE_FIGHTER, castInfos.CellId))
+                    {
                         return FightActionResultEnum.RESULT_NOTHING;
+                    }
 
                     obj = new FightGlyph(castInfos.Caster.Fight, castInfos.Caster, castInfos, castInfos.CellId, castInfos.Duration);
                     break;
 
                 case EffectEnum.UseTrap:
-                    if (!castInfos.Caster.Fight.CanPutObject(FightObstacleTypeEnum.TYPE_TRAP, castInfos.CellId))
+                    if (!castInfos.Caster.Fight.CanPutObject(castInfos.CellId))
+                    {
                         return FightActionResultEnum.RESULT_NOTHING;
+                    }
 
                     obj = new FightTrap(castInfos.Caster.Fight, castInfos.Caster, castInfos, castInfos.CellId);
                     break;
             }
 
-            castInfos.Caster.Fight.AddActivableObject(castInfos.Caster, obj);
+            if(obj != null)
+                castInfos.Caster.Fight.AddActivableObject(castInfos.Caster, obj);
 
             return FightActionResultEnum.RESULT_NOTHING;
         }

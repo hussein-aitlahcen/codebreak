@@ -104,10 +104,7 @@ namespace Codebreak.Service.World
 
                     if (client.CurrentCharacter != null)
                     {
-                        client.CurrentCharacter.AddMessage(() =>
-                        {
-                            client.CurrentCharacter.FrameManager.ProcessMessage(message);
-                        });
+                        client.CurrentCharacter.FrameManager.ProcessMessage(message);
                     }
                     else
                     {

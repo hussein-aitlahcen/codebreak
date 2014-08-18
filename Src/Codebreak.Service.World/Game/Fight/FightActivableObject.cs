@@ -27,6 +27,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public int Priority
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActiveType ActivationType
         {
             get;
@@ -117,6 +126,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public FightCell Cell
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public List<FighterBase> Targets
         {
             get;
@@ -131,7 +149,6 @@ namespace Codebreak.Service.World.Game.Fight
         protected SpellTemplate _actionSpell;
         protected SpellLevel _actionEffect;
         protected int _spellId;
-        protected FightCell _cell;
 
         /// <summary>
         /// 
@@ -166,8 +183,8 @@ namespace Codebreak.Service.World.Game.Fight
             _spellId = castInfos.SpellId;
             _actionSpell = SpellManager.Instance.GetTemplate(castInfos.Value1);
             _actionEffect = _actionSpell.GetLevel(castInfos.Value2);
-            _cell = fight.GetCell(cell);
 
+            Cell = fight.GetCell(cell);
             ObstacleType = type;
             ActivationType = activeType;
             CanGoThrough = canGoThrough;
@@ -179,6 +196,14 @@ namespace Codebreak.Service.World.Game.Fight
             Duration = duration;
             ActionId = actionId;
             Hide = hide;
+                        
+            foreach(var effect in _actionEffect.Effects)
+            {
+                if(CastInfos.IsDamageEffect(effect.TypeEnum))
+                {
+                    Priority--;
+                }
+            }
 
             // On ajout l'objet a toutes les cells qu'il affecte
             foreach (var cellId in CellZone.GetCircleCells(fight.Map, cell, Length))
@@ -227,7 +252,7 @@ namespace Codebreak.Service.World.Game.Fight
             Activated = true;
 
             _fight.CurrentProcessingFighter = activator;
-            _fight.Dispatch(WorldMessage.GAME_ACTION(ActionId, activator.Id, _spellId + "," + _cell.Id + "," + _actionSpell.Sprite + "," + _actionEffect.Level + ",1," + _caster.Id));
+            _fight.Dispatch(WorldMessage.GAME_ACTION(ActionId, activator.Id, _spellId + "," + Cell.Id + "," + _actionSpell.Sprite + "," + _actionEffect.Level + ",1," + _caster.Id));
 
             foreach (var target in Targets)
             {
@@ -238,14 +263,14 @@ namespace Codebreak.Service.World.Game.Fight
                         _fight.AddProcessingTarget(new CastInfos(
                                             effect.TypeEnum,
                                             _spellId,
-                                            _cell.Id,
+                                            Cell.Id,
                                             effect.Value1,
                                             effect.Value2,
                                             effect.Value3,
                                             effect.Chance,
                                             effect.Duration,
                                             _caster,
-                                            target,
+                                            target,targetKnownCellId: target.Cell.Id,
                                             isTrap: ObstacleType == FightObstacleTypeEnum.TYPE_TRAP)
                                          );
                     }
@@ -280,6 +305,16 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 cell.RemoveObject(this);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        int IComparable<IFightObstacle>.CompareTo(IFightObstacle obj)
+        {
+            return Priority.CompareTo(obj.Priority);
         }
     }
 }

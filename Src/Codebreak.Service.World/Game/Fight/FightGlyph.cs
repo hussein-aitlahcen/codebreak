@@ -30,8 +30,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void AppearForAll()
         {
-            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, _cell.Id, Length, Color));
-            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(_cell.Id));
+            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, Cell.Id, Length, Color));
+            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void DisappearForAll()
         {
-            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, _cell.Id, Length, Color));
-            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(_cell.Id));
+            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, Cell.Id, Length, Color));
+            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
         }
     }
 }

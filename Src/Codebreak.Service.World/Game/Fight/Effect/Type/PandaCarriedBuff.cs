@@ -19,8 +19,6 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         public PandaCarriedBuff(CastInfos castInfos, FighterBase target)
             : base(castInfos, target, ActiveType.ACTIVE_ENDMOVE, DecrementType.TYPE_ENDMOVE)
         {
-            Duration = int.MaxValue;
-            
             Target.StateManager.AddState(this);
 
             Target.SetCell(Caster.Cell);

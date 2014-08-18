@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SpellCastManager
+    public sealed class SpellCastManager : IDisposable
     {
         private Dictionary<int, List<SpellTarget>> _targets = new Dictionary<int, List<SpellTarget>>();
         private Dictionary<int, SpellCooldown> _cooldowns = new Dictionary<int, SpellCooldown>();
@@ -22,6 +22,17 @@ namespace Codebreak.Service.World.Game.Fight
         {
             _targets.Clear();
             _cooldowns.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _targets.Clear();
+            _cooldowns.Clear();
+            _targets = null;
+            _cooldowns = null;
         }
         
         /// <summary>

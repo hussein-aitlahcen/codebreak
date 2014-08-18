@@ -63,6 +63,11 @@ namespace Codebreak.Service.World.Frames
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeRequest(EntityBase entity, string message)
         {
             var exchangeData = message.Substring(2).Split('|');
@@ -71,8 +76,11 @@ namespace Codebreak.Service.World.Frames
 
             if (!Enum.IsDefined(typeof(ExchangeTypeEnum), exchangeTypeId))
             {
-                Logger.Debug("ExchangeFrame::Request unknow exchangeType : " + exchangeTypeId + " " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("ExchangeFrame::Request unknow exchangeType : " + exchangeTypeId + " " + entity.Name); 
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
@@ -114,6 +122,11 @@ namespace Codebreak.Service.World.Frames
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeAccept(EntityBase entity, string message)
         {            
             entity.AddMessage(() =>
@@ -121,6 +134,7 @@ namespace Codebreak.Service.World.Frames
                 if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
                     Logger.Debug("ExchangeFrame:Accept entity not in an exchange request : " + entity.Name);
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
@@ -159,6 +173,11 @@ namespace Codebreak.Service.World.Frames
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeValidate(EntityBase entity, string message)
         {      
             entity.AddMessage(() =>
@@ -189,11 +208,19 @@ namespace Codebreak.Service.World.Frames
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeSell(EntityBase entity, string message)
         {
             if (!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
@@ -201,21 +228,30 @@ namespace Codebreak.Service.World.Frames
 
             if(data.Length != 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
-            {                
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+            {
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
             
@@ -232,11 +268,19 @@ namespace Codebreak.Service.World.Frames
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeBuy(EntityBase entity, string message)
         {
             if(!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
@@ -244,21 +288,30 @@ namespace Codebreak.Service.World.Frames
 
             if(data.Length != 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
             int templateId = -1;
             if (!int.TryParse(data[0], out templateId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
-            {                
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+            {
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
@@ -275,12 +328,20 @@ namespace Codebreak.Service.World.Frames
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeMoveGold(EntityBase entity, string message)
         {
             long kamas = -1;
             if(!long.TryParse(message.Substring(3), out kamas))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
             
@@ -297,11 +358,19 @@ namespace Codebreak.Service.World.Frames
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeMoveObject(EntityBase entity, string message)
         {
             if (!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
@@ -309,7 +378,10 @@ namespace Codebreak.Service.World.Frames
 
             if (data.Length != 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 

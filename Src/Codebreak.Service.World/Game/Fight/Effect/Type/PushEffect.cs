@@ -59,9 +59,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         public static FightActionResultEnum ApplyPush(CastInfos castInfos, FighterBase target, int direction, int length)
         {
             var currentCell = target.Cell;
-
-            // TODO : Ajout de l'action sur le joueur !
-
+            
             for (int i = 0; i < length; i++)
             {
                 var nextCell = target.Fight.GetCell(Pathfinding.NextCell(target.Fight.Map, currentCell.Id, direction));
@@ -75,7 +73,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                         target.Fight.SetSubAction(() =>
                         {
                             return target.SetCell(nextCell);
-                        }, 1 + length * 200);
+                        }, 1 + length * 180);
 
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
@@ -87,18 +85,17 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                         target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + currentCell.Id));
                     }
 
-                    // Application des dommages
-                        target.Fight.SetSubAction(() =>
+                    target.Fight.SetSubAction(() =>
+                    {
+                        if (castInfos.EffectType == EffectEnum.PushBack)
                         {
-                            if (castInfos.EffectType == EffectEnum.PushBack)
-                            {
-                                var pushResult = PushEffect.ApplyPushBackDamages(castInfos, target, length, i);
-                                if (pushResult != FightActionResultEnum.RESULT_NOTHING)
-                                    return pushResult;
-                            }
+                            var pushResult = PushEffect.ApplyPushBackDamages(castInfos, target, length, i);
+                            if (pushResult != FightActionResultEnum.RESULT_NOTHING)
+                                return pushResult;
+                        }
 
-                            return target.SetCell(currentCell);
-                        }, 1 + length * 130);
+                        return target.SetCell(currentCell);
+                    }, 1 + (i * 180));
 
                     return FightActionResultEnum.RESULT_NOTHING;
                 }
@@ -111,7 +108,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             target.Fight.SetSubAction(() =>
             {
                 return target.SetCell(currentCell);
-            }, 1 + length * 200);
+            }, 1 + length * 180);
 
             return FightActionResultEnum.RESULT_NOTHING;
         }
@@ -121,16 +118,16 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
-        /// <param name="Length"></param>
-        /// <param name="CurrentLength"></param>
+        /// <param name="length"></param>
+        /// <param name="currentLength"></param>
         /// <returns></returns>
-        private static FightActionResultEnum ApplyPushBackDamages(CastInfos castInfos, FighterBase target, int Length, int CurrentLength)
+        private static FightActionResultEnum ApplyPushBackDamages(CastInfos castInfos, FighterBase target, int length, int currentLength)
         {
-            var damageCoef = Util.Next(8, 17);
+            var damageCoef = Util.Next(9, 16);
             double levelCoef = castInfos.Caster.Level / 50;
             if (levelCoef < 0.1)
                 levelCoef = 0.1;
-            int damageValue = (int)Math.Floor(damageCoef * levelCoef) * (Length - CurrentLength + 1);
+            int damageValue = (int)Math.Floor(damageCoef * levelCoef) * (length - currentLength);
             var subInfos = new CastInfos(EffectEnum.DamageBrut, castInfos.SpellId, castInfos.CellId, 0, 0, 0, 0, 0, castInfos.Caster, null);
 
             return DamageEffect.ApplyDamages(subInfos, target, ref damageValue);

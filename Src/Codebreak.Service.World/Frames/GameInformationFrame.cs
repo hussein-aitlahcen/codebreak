@@ -27,22 +27,22 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void GameInformation(EntityBase entity, string message)
         {
-            entity.FrameManager.RemoveFrame(GameInformationFrame.Instance);
+            entity.AddMessage(() =>
+                {
+                    entity.FrameManager.RemoveFrame(GameInformationFrame.Instance);
 
-            if(entity.HasGameAction(GameActionTypeEnum.FIGHT))
-            {
-                entity.AddMessage(() =>
+                    if (entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
                         entity.CachedBuffer = true;
                         entity.Fight.JoinFight((FighterBase)entity, null);
                         entity.CachedBuffer = false;
-                    });
-                return;
-            }
+                        return;
+                    }
 
-            WorldService.Instance.RemoveUpdatable(entity);
+                    WorldService.Instance.RemoveUpdatable(entity);
 
-            entity.StartAction(Game.Action.GameActionTypeEnum.MAP);
+                    entity.StartAction(Game.Action.GameActionTypeEnum.MAP);
+                });
         }
     }
 }

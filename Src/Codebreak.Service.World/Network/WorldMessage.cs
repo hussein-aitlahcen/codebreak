@@ -442,8 +442,8 @@ namespace Codebreak.Service.World.Game
                 .Append(character.ExperienceFloorNext).Append('|');// NextExperience
 
             message.Append(character.Kamas).Append('|');
-            message.Append(character.CaractPoints).Append('|');
-            message.Append(character.SpellPoints).Append('|');
+            message.Append(character.CaractPoint).Append('|');
+            message.Append(character.SpellPoint).Append('|');
 
             message
                 .Append(character.AlignmentId).Append('~')
@@ -607,6 +607,19 @@ namespace Codebreak.Service.World.Game
         public static string CHAT_MESSAGE(ChatChannelEnum channel, long entityId, string entityName, string message)
         {
             return "cMK" + (char)channel + '|' + entityId + '|' + entityName + '|' + message;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="entityId"></param>
+        /// <param name="entityName"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string CHAT_MESSAGE_ERROR_PLAYER_OFFLINE()
+        {
+            return "cMEf";
         }
 
         /// <summary>
@@ -1079,7 +1092,7 @@ namespace Codebreak.Service.World.Game
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static string FIGHT_COUNT(int count)
+        public static string FIGHT_COUNT(long count)
         {
             return "fC" + count;
         }

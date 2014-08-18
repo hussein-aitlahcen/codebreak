@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Name;
+                return DatabaseRecord.Name;
             }
         }
 
@@ -35,11 +35,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.MapId;
+                return DatabaseRecord.MapId;
             }
             set
             {
-                _characterRecord.MapId = value;
+                DatabaseRecord.MapId = value;
             }
         }
 
@@ -51,11 +51,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.CellId;
+                return DatabaseRecord.CellId;
             }
             set
             {
-                _characterRecord.CellId = value;
+                DatabaseRecord.CellId = value;
             }
         }
 
@@ -67,11 +67,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Level;
+                return DatabaseRecord.Level;
             }
             set
             {
-                _characterRecord.Level = value;
+                DatabaseRecord.Level = value;
             }
         }
 
@@ -82,11 +82,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Restriction;
+                return DatabaseRecord.Restriction;
             }
             set
             {
-                _characterRecord.Restriction = value;
+                DatabaseRecord.Restriction = value;
             }
         }
 
@@ -127,7 +127,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.GetItems();
+                return DatabaseRecord.GetItems();
             }
         }
 
@@ -183,41 +183,41 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Kamas;
+                return DatabaseRecord.Kamas;
             }
             set
             {
-                _characterRecord.Kamas = value;
+                DatabaseRecord.Kamas = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int CaractPoints
+        public int CaractPoint
         {
             get
             {
-                return _characterRecord.CaracPoint;
+                return DatabaseRecord.CaracPoint;
             }
             set
             {
-                _characterRecord.CaracPoint = value;
+                DatabaseRecord.CaracPoint = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int SpellPoints
+        public int SpellPoint
         {
             get
             {
-                return _characterRecord.SpellPoint;
+                return DatabaseRecord.SpellPoint;
             }
             set
             {
-                _characterRecord.SpellPoint = value;
+                DatabaseRecord.SpellPoint = value;
             }
         }
 
@@ -228,11 +228,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Experience;
+                return DatabaseRecord.Experience;
             }
             set
             {
-                _characterRecord.Experience = value;
+                DatabaseRecord.Experience = value;
             }
         }
 
@@ -265,11 +265,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Life;
+                return DatabaseRecord.Life;
             }
             set
             {
-                _characterRecord.Life = value;
+                DatabaseRecord.Life = value;
             }
         }
 
@@ -280,11 +280,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Energy;
+                return DatabaseRecord.Energy;
             }
             set
             {
-                _characterRecord.Energy = value;
+                DatabaseRecord.Energy = value;
             }
         }
 
@@ -306,7 +306,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.GetHexColor1();
+                return DatabaseRecord.GetHexColor1();
             }
         }
 
@@ -317,7 +317,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.GetHexColor2();
+                return DatabaseRecord.GetHexColor2();
             }
         }
 
@@ -328,7 +328,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.GetHexColor3();
+                return DatabaseRecord.GetHexColor3();
             }
         }
 
@@ -339,7 +339,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Skin;
+                return DatabaseRecord.Skin;
             }
         }
 
@@ -350,7 +350,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.SkinSize;
+                return DatabaseRecord.SkinSize;
             }
         }
 
@@ -361,7 +361,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return (CharacterBreedEnum)_characterRecord.Breed;
+                return (CharacterBreedEnum)DatabaseRecord.Breed;
             }
         }
 
@@ -372,11 +372,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Sex ? 1 : 0;
+                return DatabaseRecord.Sex ? 1 : 0;
             }
             set
             {
-                _characterRecord.Sex = value == 1 ? true : false;
+                DatabaseRecord.Sex = value == 1 ? true : false;
             }
         }
 
@@ -387,29 +387,23 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _characterRecord.Dead;
+                return DatabaseRecord.Dead;
             }
             set
             {
-                _characterRecord.Dead = value;
+                DatabaseRecord.Dead = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int SpellPoint
+        public CharacterDAO DatabaseRecord
         {
-            get
-            {
-                return _characterRecord.SpellPoint;
-            }
-            set
-            {
-                _characterRecord.SpellPoint = value;
-            }
+            get;
+            private set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -446,16 +440,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private CharacterDAO _characterRecord;
         private CharacterAlignmentDAO _alignmentRecord;
 
         public CharacterEntity(CharacterDAO characterDAO)
             : base(EntityTypEnum.TYPE_CHARACTER, characterDAO.Id)
         {
-            _characterRecord = characterDAO;
             _alignmentRecord = characterDAO.GetAlignment();
 
-            Statistics = new GenericStats(_characterRecord);
+            DatabaseRecord = characterDAO;
+            Statistics = new GenericStats(characterDAO);
             Inventory = new CharacterInventory(this);
         }
 
@@ -532,12 +525,12 @@ namespace Codebreak.Service.World.Game.Entity
         {
             Level++;
             SpellPoint++;
-            CaractPoints += 5;
+            CaractPoint += 5;
             Life = MaxLife;
 
             if (Level == 100)
             {
-                _characterRecord.Ap += 1;
+                DatabaseRecord.Ap += 1;
                 Statistics.AddBase(EffectEnum.AddAP, 1);
             }
 

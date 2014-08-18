@@ -240,6 +240,12 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             set;
         }
 
+        public int TargetKnownCellId
+        {
+            get;
+            set;
+        }
+
         public CastInfos(EffectEnum effectType,
             int spellId,
             int cellId,
@@ -251,11 +257,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             FighterBase caster,
             FighterBase target,
             string rangeType = "",
+            int targetKnownCellId = 0,
             bool isMelee = false,
             bool isTrap = false,
             EffectEnum subEffect = EffectEnum.None,
-            int damageValue = 0)
+            int damageValue = 0, int fakeValue = 0)
         {
+            TargetKnownCellId = targetKnownCellId;
+            FakeValue = fakeValue;
             RangeType = rangeType;
             EffectType = effectType;
             SpellId = spellId;

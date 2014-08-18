@@ -64,6 +64,7 @@
     <Compile Include="Generic\IPoolable.cs" />
     <Compile Include="Generic\LockFreeQueue.cs" />
     <Compile Include="Generic\ObjectPool.cs" />
+    <Compile Include="Generic\PriorityQueueNode.cs" />
     <Compile Include="Generic\Singleton.cs" />
     <Compile Include="Generic\TaskProcessor.cs" />
     <Compile Include="Generic\TaskProcessorBase.cs" />

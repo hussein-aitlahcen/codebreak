@@ -20,8 +20,10 @@ namespace Codebreak.Service.World.Game.Fight
     {
 
         #region IFightObstacle
-
-        public FightObstacleTypeEnum ObstacleType
+        /// <summary>
+        /// 
+        /// </summary>
+        public FightObstacleTypeEnum  ObstacleType
         {
             get
             {
@@ -29,6 +31,20 @@ namespace Codebreak.Service.World.Game.Fight
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Priority
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool CanGoThrough
         {
             get
@@ -37,6 +53,9 @@ namespace Codebreak.Service.World.Game.Fight
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool CanStack
         {
             get
@@ -441,12 +460,15 @@ namespace Codebreak.Service.World.Game.Fight
             else
             {
                 Team.RemoveFighter(this);
+
                 if (!kicked)
                 {
                     Fight.Result.AddResult(this, false, true);
                 }
-            }
 
+                Fight.TurnProcessor.RemoveFighter(this);
+            }
+            
             EndFight();
         }
 
@@ -474,22 +496,29 @@ namespace Codebreak.Service.World.Game.Fight
                         break;
                 }
 
-                Fight.TurnProcessor.RemoveFighter(this);
                 Statistics.ClearBoosts();
             }
 
             if (Disconnected)
             {
-                EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
+                WorldService.Instance.AddMessage(() =>
+                    {
+                        EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
+                    });
             }
 
             SetCell(null);
             Team = null;
-            Fight = null;
-
+            Fight = null;            
             Spectating = false;
             Disconnected = false;
             Invocator = null;
+            SpellManager.Dispose();
+            SpellManager = null;
+            StateManager.Dispose();
+            StateManager = null;
+            BuffManager.Dispose();
+            BuffManager = null;
         }
 
         /// <summary>
@@ -548,7 +577,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         /// <summary>
-        /// Calcul damages
+        /// 
         /// </summary>
         /// <param name="effect"></param>
         /// <param name="jet"></param>
@@ -585,7 +614,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         /// <summary>
-        /// Calcul reuced damages
+        /// 
         /// </summary>
         /// <param name="Effect"></param>
         /// <param name="Damages"></param>
@@ -626,7 +655,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         /// <summary>
-        /// Calcul heal
+        /// 
         /// </summary>
         /// <param name="Heal"></param>
         public void CalculHeal(ref int Heal)
@@ -635,7 +664,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         /// <summary>
-        /// Calcul armor vs damage
+        /// 
         /// </summary>
         /// <param name="DamageEffect"></param>
         public int CalculArmor(EffectEnum DamageEffect)
@@ -670,7 +699,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         /// <summary>
-        /// Calcul ap or mp dodged
+        /// 
         /// </summary>
         /// <param name="Caster"></param>
         /// <param name="lostPoint"></param>
@@ -877,5 +906,15 @@ namespace Codebreak.Service.World.Game.Fight
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        int IComparable<IFightObstacle>.CompareTo(IFightObstacle obj)
+        {
+            return Priority.CompareTo(obj.Priority);
+        }   
     }
 }

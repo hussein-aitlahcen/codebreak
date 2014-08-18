@@ -150,7 +150,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
                     break;
 
                 case EffectEnum.PandaCarrier:
-                    Target.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
+                    Caster.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
                                                                           Caster.Id,
                                                                           CastInfos.Value1.ToString(),
                                                                           "",

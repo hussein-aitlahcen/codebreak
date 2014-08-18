@@ -912,7 +912,6 @@ namespace Codebreak.Service.World.Game.Map
                         if (!ennemy.IsFighterDead)
                             ennemies.Add(ennemy);
             }
-
             return ennemies;
         }
 

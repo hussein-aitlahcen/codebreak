@@ -31,6 +31,15 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        public FightManager FightManager
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Id
         {
             get;
@@ -127,6 +136,9 @@ namespace Codebreak.Service.World.Game.Map
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SubAreaInstance SubArea
         {
             get
@@ -182,6 +194,11 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        private bool _initialized;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="subArea"></param>
         /// <param name="id"></param>
         /// <param name="x"></param>
@@ -193,6 +210,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="createTime"></param>
         public MapInstance(int subAreaId, int id, int x, int y, int width, int height, string data, string dataKey, string createTime, List<int> f0teamCells, List<int> f1teamCells)
         {
+            _initialized = false;
             Id = id;
             SubAreaId = subAreaId;
             X = x;
@@ -204,8 +222,7 @@ namespace Codebreak.Service.World.Game.Map
             CreateTime = createTime;
             FightTeam0Cells = f0teamCells;
             FightTeam1Cells = f1teamCells;
-            
-            Initialize();
+            FightManager = new FightManager(this);            
         }
         
         /// <summary>
@@ -242,6 +259,8 @@ namespace Codebreak.Service.World.Game.Map
                 cellById.Add(id, cell);
                 cells.Add(cell);
             }
+
+            _initialized = true;
         }
 
         /// <summary>
@@ -291,17 +310,22 @@ namespace Codebreak.Service.World.Game.Map
         {
             AddMessage(() =>
             {
+                if (!_initialized)
+                    Initialize();
+
                 if (!entityById.ContainsKey(entity.Id))
                 {
                     entityById.Add(entity.Id, entity);
                     entityByName.Add(entity.Name.ToLower(), entity);
 
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
+
                     base.AddHandler(entity.Dispatch);
                     base.AddUpdatable(entity);
 
                     entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
                     entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
+                    entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
                 }
             });
         }

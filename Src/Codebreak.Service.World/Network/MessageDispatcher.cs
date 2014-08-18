@@ -7,11 +7,21 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MessageDispatcher : Updatable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private event Action<string> OnMessage;
         private bool _cached = false;
         private StringBuilder _cachedBuffer = null;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public bool CachedBuffer
         {
             get
@@ -37,26 +47,59 @@ namespace Codebreak.Service.World.Game
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            if (_cachedBuffer != null)
+                _cachedBuffer.Clear();
+            OnMessage = null;
+            _cachedBuffer = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
         public virtual void AddHandler(Action<string> method)
         {
-            OnMessage += method;
+            AddMessage(() =>
+                {
+                    OnMessage += method;
+                });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
         public virtual void RemoveHandler(Action<string> method)
         {
-            OnMessage -= method;
+            AddMessage(() =>
+                {
+                    OnMessage -= method;
+                });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public virtual void Dispatch(string message)
         {
-            if(CachedBuffer)
-            {
-                _cachedBuffer.Append(message + (char)0x00);
-            }
-            else if (OnMessage != null)
-            {
-                OnMessage(message);
-            }
+            AddMessage(() =>
+                {
+                    if (CachedBuffer)
+                    {
+                        _cachedBuffer.Append(message + (char)0x00);
+                    }
+                    else if (OnMessage != null)
+                    {
+                        OnMessage(message);
+                    }
+                });
         }
     }
 }

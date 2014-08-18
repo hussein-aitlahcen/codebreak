@@ -62,7 +62,7 @@ namespace Codebreak.Service.World.Game.Action
             Entity.Dispatch(message);
             Defender.Dispatch(message);
 
-            FightManager.Instance.CreateChallenger(Entity.Map, (CharacterEntity)Entity, Defender);
+            Entity.Map.FightManager.StartChallenge((CharacterEntity)Entity, Defender);
         }
 
         /// <summary>

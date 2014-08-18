@@ -6,8 +6,16 @@ using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Frames
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class InventoryFrame : FrameBase<InventoryFrame, EntityBase, string>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override Action<EntityBase, string> GetHandler(string message)
         {
             if (message.Length < 2)
@@ -36,6 +44,11 @@ namespace Codebreak.Service.World.Frames
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ObjectMove(EntityBase entity, string message)
         {            
             var data = message.Substring(2).Split('|');
@@ -43,20 +56,29 @@ namespace Codebreak.Service.World.Frames
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                });
                 return;
             }
 
             int slotId = -1;
             if(!int.TryParse(data[1], out slotId))
             {
-                entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                });
                 return;
             }
 
             if(!Enum.IsDefined(typeof(ItemSlotEnum), slotId))
             {
-                entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                });
                 return;
             }
 
@@ -73,11 +95,21 @@ namespace Codebreak.Service.World.Frames
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ObjectUse(EntityBase entity, string message)
         {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ObjectDelete(EntityBase entity, string message)
         {
            

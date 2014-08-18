@@ -20,11 +20,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         public PandaCarrierBuff(CastInfos castInfos, FighterBase target)
             : base(castInfos, target, ActiveType.ACTIVE_ENDMOVE, DecrementType.TYPE_ENDMOVE)
         {
-            Duration = int.MaxValue;
-
             Caster.StateManager.AddState(this);
-           
-            target.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.PandaCarrier, castInfos.Caster.Id, target.Id.ToString()));          
+
+            Caster.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.PandaCarrier, castInfos.Caster.Id, target.Id.ToString()));          
         }
 
         /// <summary>

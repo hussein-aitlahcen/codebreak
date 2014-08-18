@@ -5,6 +5,8 @@ using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Game.Stats;
+using Codebreak.Service.World.Database.Structures;
 
 namespace Codebreak.Service.World.Frames
 {
@@ -13,7 +15,7 @@ namespace Codebreak.Service.World.Frames
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, EffectEnum> statById = new Dictionary<int, EffectEnum>()
+        private Dictionary<int, EffectEnum> _statById = new Dictionary<int, EffectEnum>()
         {
             {10, EffectEnum.AddStrength},
             {11, EffectEnum.AddVitality},
@@ -35,12 +37,27 @@ namespace Codebreak.Service.World.Frames
 
             switch (message[0])
             {
+                case 'P':
+                    switch(message[1])
+                    {
+                        case 'I':
+                            break;
+
+                        case 'A': 
+                            break;
+                        
+                        case 'R':
+                            break;
+
+                        case 'V':
+                            break;
+                    }
+                    break;
                 case 'A':
                     switch (message[1])
                     {
                         case 'B':
-                            //return BoostStats;
-                            return null;
+                            return BoostStats;
                     }
                     break;
 
@@ -77,9 +94,82 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
+        private void BoostStats(EntityBase entity, string message)
+        {
+            var character = (CharacterEntity)entity;
+            var statId = 0;
+
+            if (!int.TryParse(message.Substring(2), out statId))
+            {
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var effect = EffectEnum.DoNothing;
+
+            if (!_statById.ContainsKey(statId))
+            {
+                entity.AddMessage(() =>
+                    {
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    });
+                return;
+            }
+
+            entity.AddMessage(() =>
+            {
+                var actualValue = entity.Statistics.GetEffect(effect).Base;
+                var requiredPoint = GenericStats.GetRequiredStatsPoint(character.Breed, statId, actualValue);
+
+                if (character.CaractPoint < requiredPoint)
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var boostValue = statId == 11 && character.Breed == CharacterBreedEnum.BREED_SACRIEUR ? 2 : 1;
+
+                character.CaractPoint -= requiredPoint;
+
+                switch (effect)
+                {
+                    case EffectEnum.AddStrength:
+                        character.DatabaseRecord.Strength += boostValue;
+                        break;
+
+                    case EffectEnum.AddVitality:
+                        character.DatabaseRecord.Vitality += boostValue;
+                        break;
+
+                    case EffectEnum.AddWisdom:
+                        character.DatabaseRecord.Wisdom += boostValue;
+                        break;
+
+                    case EffectEnum.AddIntelligence:
+                        character.DatabaseRecord.Intelligence += boostValue;
+                        break;
+
+                    case EffectEnum.AddAgility:
+                        character.DatabaseRecord.Agility += boostValue;
+                        break;
+                }
+
+                character.Statistics.AddBase(effect, boostValue);
+                character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void BasicPong(EntityBase entity, string message)
         {
-            entity.Dispatch(WorldMessage.BASIC_PONG());
+            entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_PONG());
+                });
         }
 
         /// <summary>
@@ -89,7 +179,10 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicQPong(EntityBase entity, string message)
         {
-            entity.Dispatch(WorldMessage.BASIC_QPONG());
+            entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_QPONG());
+                });
         }
 
         /// <summary>
@@ -99,7 +192,10 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicDate(EntityBase entity, string message)
         {
-            entity.Dispatch(WorldMessage.BASIC_DATE());
+            entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_DATE());
+                });
         }
 
         /// <summary>
@@ -109,7 +205,10 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicTime(EntityBase entity, string message)
         {
-            entity.Dispatch(WorldMessage.BASIC_TIME());
+            entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_TIME());
+                });
         }
 
         /// <summary>
@@ -123,23 +222,36 @@ namespace Codebreak.Service.World.Frames
             var channel = messageData[0];
             var messageContent = messageData[1];
 
-            entity.AddMessage(() =>
+            if (channel.Length == 1)
             {
-                if (channel.Length == 1)
-                {
-                    entity.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent);
-                }
-                else
-                {
-                    var remoteEntity = EntityManager.Instance.GetCharacter(channel);
-
-                    if (remoteEntity != null)
+                entity.AddMessage(() =>
                     {
-                        entity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity);
-                        remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, entity);
-                    }
+                        entity.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent);
+                    });
+            }
+            else
+            {
+                var remoteEntity = EntityManager.Instance.GetCharacter(channel);
+
+                if (remoteEntity == null)
+                {
+                    entity.AddMessage(() =>
+                    {
+                        entity.Dispatch(WorldMessage.CHAT_MESSAGE_ERROR_PLAYER_OFFLINE());
+                    });
+                    return;
                 }
-            });
+
+                entity.AddMessage(() =>
+                {
+                    entity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity);
+                });
+
+                remoteEntity.AddMessage(() =>
+                {
+                    remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, entity);
+                });
+            }
         }
     }
 }

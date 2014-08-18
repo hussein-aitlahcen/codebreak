@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class FighterStateManager
+    public sealed class FighterStateManager : IDisposable
     {
         private FighterBase _fighter;
         private Dictionary<FighterStateEnum, BuffBase> _state = new Dictionary<FighterStateEnum, BuffBase>();
@@ -150,6 +150,16 @@ namespace Codebreak.Service.World.Game.Fight
                 state.RemoveEffect();
 
             _state.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _state.Clear();
+            _state = null;
+            _fighter = null;
         }
     }
 }

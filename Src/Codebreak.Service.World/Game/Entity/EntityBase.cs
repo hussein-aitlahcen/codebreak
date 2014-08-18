@@ -626,7 +626,6 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.RemoveFrame(InventoryFrame.Instance);
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
-                    Map.RemoveUpdatable(this);
                     Map.DestroyEntity(this);
                     break;
 

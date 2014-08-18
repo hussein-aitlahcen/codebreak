@@ -344,5 +344,22 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buffList in DecrementBuffs.Values)
                 buffList.Clear();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            DecrementBuffs[DecrementType.TYPE_BEGINTURN].Clear();
+            DecrementBuffs[DecrementType.TYPE_ENDTURN].Clear();
+            DecrementBuffs[DecrementType.TYPE_ENDMOVE].Clear();
+            DecrementBuffs.Clear();
+            DecrementBuffs = null;
+
+            foreach (var activeBuffList in ActiveBuffs)
+                activeBuffList.Value.Clear();
+            ActiveBuffs.Clear();
+            ActiveBuffs = null;
+        }
     }
 }

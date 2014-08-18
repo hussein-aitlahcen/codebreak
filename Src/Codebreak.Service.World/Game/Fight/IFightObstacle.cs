@@ -17,9 +17,13 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public interface IFightObstacle
+    public interface IFightObstacle : IComparable<IFightObstacle>
     {
         FightObstacleTypeEnum ObstacleType
+        {
+            get;
+        }
+        int Priority
         {
             get;
         }
@@ -28,6 +32,13 @@ namespace Codebreak.Service.World.Game.Fight
             get;
         }
         bool CanStack
+        {
+            get;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        FightCell Cell
         {
             get;
         }

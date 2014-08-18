@@ -55,15 +55,21 @@ namespace Codebreak.Service.World.Frames
             var actionId = -1;
             if (!int.TryParse(message.Substring(2, 3), out actionId))
             {
-                Logger.Debug("GameActionFrame::Start failed to parse actionId : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::Start failed to parse actionId : " + entity.Name); 
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 
             if(!Enum.IsDefined(typeof(GameActionTypeEnum), actionId))
             {
-                Logger.Debug("GameActionFrame::Start unknow action id  : " + actionId + " : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::Start unknow action id  : " + actionId + " : " + entity.Name); 
+                entity.AddMessage(() =>
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                });
                 return;
             }
 

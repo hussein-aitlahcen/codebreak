@@ -3,6 +3,7 @@ using Codebreak.Framework.Network;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Fight;
+using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Frames
 {
@@ -57,14 +58,17 @@ namespace Codebreak.Service.World.Frames
         {
             var fighter = (FighterBase)entity;
 
-            if (!fighter.IsLeader)
-            {
-                Logger.Debug("GameFight::Option non leader player wants to lock : " + entity.Name);
-                fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+            fighter.AddMessage(() =>
+                {
+                    if (!fighter.IsLeader)
+                    {
+                        Logger.Debug("GameFight::Option non leader player wants to lock : " + entity.Name);
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            fighter.Team.OptionLock(FightOptionTypeEnum.TYPE_SPECTATOR);
+                    fighter.Team.OptionLock(FightOptionTypeEnum.TYPE_SPECTATOR);
+                });
         }
 
         /// <summary>
@@ -76,14 +80,23 @@ namespace Codebreak.Service.World.Frames
         {
             var fighter = (FighterBase)entity;
 
-            if (fighter.Spectating)
+            fighter.AddMessage(() =>
             {
-                Logger.Debug("GameFight::TurnReady spectator player cant be ready : " + entity.Name);            
-                fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());                
-                return;
-            }
+                if(!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
 
-            fighter.TurnReady = true;
+                if (fighter.Spectating)
+                {
+                    Logger.Debug("GameFight::TurnReady spectator player cant be ready : " + entity.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                fighter.TurnReady = true;
+            });
         }
 
         /// <summary>
@@ -95,21 +108,30 @@ namespace Codebreak.Service.World.Frames
         {
             var fighter = (FighterBase)entity;
 
-            if (fighter.Spectating)
+            fighter.AddMessage(() =>
             {
-                Logger.Debug("GameFight::TurnPass spectator player cant pass turn : " + entity.Name);
-                fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());  
-                return;
-            }
-                
-            if(fighter.Fight.CurrentFighter != fighter)
-            {
-                Logger.Debug("GameFight::TurnPass not the turn of this player : " + entity.Name);
-                fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());  
-                return;
-            }
+                if (!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
 
-            fighter.TurnPass = true;
+                if (fighter.Spectating)
+                {
+                    Logger.Debug("GameFight::TurnPass spectator player cant pass turn : " + entity.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                if (fighter.Fight.CurrentFighter != fighter)
+                {
+                    Logger.Debug("GameFight::TurnPass not the turn of this player : " + entity.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                fighter.TurnPass = true;
+            });
         }
 
         /// <summary>
@@ -121,7 +143,16 @@ namespace Codebreak.Service.World.Frames
         {
             var fighter = (FighterBase)entity;
 
-            fighter.Fight.AddMessage(() => fighter.Fight.FightQuit(fighter));
+            fighter.AddMessage(() =>
+            {
+                if (!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                fighter.Fight.AddMessage(() => fighter.Fight.FightQuit(fighter));
+            });
         }        
     }
 }

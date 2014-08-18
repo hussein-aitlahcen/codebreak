@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="effect"></param>
         /// <param name="cell"></param>
         public FightTrap(FightBase fight, FighterBase caster, CastInfos effect, int cell)
-            : base(FightObstacleTypeEnum.TYPE_TRAP, ActiveType.ACTIVE_ENDMOVE, fight, caster, effect, cell, 0, 306, true, true, true)
+            : base(FightObstacleTypeEnum.TYPE_TRAP, ActiveType.ACTIVE_ENDMOVE, fight, caster, effect, cell, 0, 306, true, false, true)
         {
         }
         
@@ -31,8 +31,8 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Hide = false;
 
-            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, _cell.Id, Length, Color));
-            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(_cell.Id, ";Haaaaaaaaz3005;"));
+            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, Cell.Id, Length, Color));
+            _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id, ";Haaaaaaaaz3005;"));
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="dispatcher"></param>
         public override void Appear(MessageDispatcher dispatcher)
         {
-            dispatcher.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, _cell.Id, Length, Color));
-            dispatcher.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(_cell.Id, ";Haaaaaaaaz3005;"));
+            dispatcher.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, Cell.Id, Length, Color));
+            dispatcher.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id, ";Haaaaaaaaz3005;"));
         }
 
         /// <summary>
@@ -52,13 +52,13 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (Hide)
             {
-                _caster.Team.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, _cell.Id, Length, Color));
-                _caster.Team.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(_cell.Id));
+                _caster.Team.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, Cell.Id, Length, Color));
+                _caster.Team.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
             }
             else
             {
-                _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, _cell.Id, Length, Color));
-                _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(_cell.Id));
+                _fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, Cell.Id, Length, Color));
+                _fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
             }
         }
     }
