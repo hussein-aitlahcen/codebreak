@@ -204,7 +204,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="target"></param>
         public void LoadTargets(FighterBase target)
         {
-            Targets.Add(target);
+            if(!Targets.Contains(target))
+                Targets.Add(target);
 
             switch (ActivationType)
             {

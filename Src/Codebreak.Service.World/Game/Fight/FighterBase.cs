@@ -789,10 +789,13 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
 
                 case GameActionTypeEnum.MAP:
-                    if (StateManager.HasState(FighterStateEnum.STATE_STEALTH))
+                    if (HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        Team.Dispatch(WorldMessage.GAME_ACTION(actionType, Id, CurrentAction.SerializeAs_GameAction()));
-                        return;
+                        if (StateManager.HasState(FighterStateEnum.STATE_STEALTH))
+                        {
+                            Team.Dispatch(WorldMessage.GAME_ACTION(actionType, Id, CurrentAction.SerializeAs_GameAction()));
+                            return;
+                        }
                     }
                     break;
             }

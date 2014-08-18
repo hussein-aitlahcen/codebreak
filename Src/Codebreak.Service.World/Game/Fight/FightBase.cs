@@ -776,10 +776,16 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="infos"></param>
         public void AddProcessingTarget(CastInfos infos)
         {
-            if (infos.Target == CurrentProcessingFighter || infos.Target == CurrentFighter)
+            if (CurrentProcessingFighter == infos.Target || CurrentFighter == infos.Target)
+            {
+                Logger.Debug("AddProcessingTarget first : " + infos.Target.Name);
                 _processingTargets.AddFirst(infos);
+            }
             else
+            {
+                Logger.Debug("AddProcessingTarget last : " + infos.Target.Name);
                 _processingTargets.AddLast(infos);
+            }
         }
 
          /// <summary>
@@ -1232,6 +1238,8 @@ namespace Codebreak.Service.World.Game.Fight
 
                         CurrentProcessingFighter = castInfos.Target;
 
+                        Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
+
                         var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
                         if (effectResult == FightActionResultEnum.RESULT_END)
                             break;
@@ -1240,6 +1248,7 @@ namespace Codebreak.Service.World.Game.Fight
                     }
                     else
                     {
+                        CurrentProcessingFighter = null;
                         LoopState = NextLoopState;
                     }
                     break;
@@ -1359,6 +1368,12 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public FightSpellLaunchResultEnum CanLaunchSpell(FighterBase fighter, SpellLevel spellLevel, int spellId, int cellId, int castCell)
         {
+            if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN)
+            {
+                Logger.Debug("Fight::CanLaunchSpell trying to cast spell withouth being in turn wait phase : " + fighter.Name);
+                return FightSpellLaunchResultEnum.RESULT_ERROR;
+            }
+
             if (CurrentFighter != fighter)
             {
                 Logger.Debug("Fight::CanLaunchSpell fighter try to launch a spell but its not his turn : " + fighter.Name);

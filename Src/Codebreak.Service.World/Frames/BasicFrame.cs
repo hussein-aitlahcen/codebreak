@@ -89,7 +89,7 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicQPong(EntityBase entity, string message)
         {
-            entity.Dispatch(WorldMessage.BASIC_PONG());
+            entity.Dispatch(WorldMessage.BASIC_QPONG());
         }
 
         /// <summary>
