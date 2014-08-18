@@ -48,10 +48,14 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static IEnumerable<int> GetCircleCells(MapInstance map, int currentCell, int radius)
         {
-            yield return currentCell;
-            for (int i = 1; i < radius + 1; i++)            
-                for (int j = 1; j < 8; j++)
-                    yield return Pathfinding.NextCell(map, currentCell, j, i);            
+            var cells = new List<int>() { currentCell };
+            for (int i = 0; i < radius; i++)
+            {
+                var copy = cells.ToArray();
+                foreach (var cell in copy)
+                    cells.AddRange(GetAdjacentCells(map, cell).Where(x => !cells.Contains(x)));
+            }
+            return cells;           
         }
 
         /// <summary>

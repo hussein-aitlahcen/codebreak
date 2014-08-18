@@ -1074,11 +1074,6 @@ namespace Codebreak.Service.World.Game
             return "GV";
         }
 
-        //public static string FightEnd(FightEndResult fightResult)
-        //{
-        //    return fightResult.Message;
-        //}
-
         /// <summary>
         /// 
         /// </summary>

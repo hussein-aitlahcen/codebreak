@@ -75,6 +75,7 @@ namespace Codebreak.Service.World.Manager
             _fightByMap[fight.Map.Id].Add(fight);
 
             fight.Map.AddUpdatable(fight);
+            WorldService.Instance.Dispatcher.AddHandler(fight.Dispatch);
             fight.Map.Dispatch(WorldMessage.FIGHT_COUNT(_fightByMap[fight.Map.Id].Count));
         }
 
@@ -89,6 +90,7 @@ namespace Codebreak.Service.World.Manager
 
             fight.ClearMessages();
             fight.Map.RemoveUpdatable(fight);
+            WorldService.Instance.Dispatcher.RemoveHandler(fight.Dispatch);
             fight.Map.Dispatch(WorldMessage.FIGHT_COUNT(_fightByMap[fight.Map.Id].Count));
         }
     }

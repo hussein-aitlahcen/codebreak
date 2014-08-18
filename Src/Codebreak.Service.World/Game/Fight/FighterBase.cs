@@ -682,14 +682,14 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (!mp)
             {
-                var dodgeAPCaster = caster.APDodge + 1;
-                var dodgeAPTarget = APDodge + 1;
+                var dodgeAPCaster = caster.APDodge + 1.1;
+                var dodgeAPTarget = APDodge + 1.1;
 
                 for (int i = 0; i < lostPoint; i++)
                 {
                     var actualAP = AP - RealLostPoint;
                     var percentLastAP = actualAP / AP;
-                    var chance = 0.5 * ((1 + dodgeAPCaster) / (1 + dodgeAPTarget)) * percentLastAP;
+                    var chance = 0.5 * (dodgeAPCaster / dodgeAPTarget) * percentLastAP;
                     var percentChance = chance * 100;
 
                     if (percentChance > 100) percentChance = 90;
@@ -700,14 +700,14 @@ namespace Codebreak.Service.World.Game.Fight
             }
             else
             {
-                var dodgeMPCaster = caster.MPDodge;
-                var dodgeMPTarget = MPDodge;
+                var dodgeMPCaster = caster.MPDodge + 1.1;
+                var dodgeMPTarget = MPDodge + 1.1;
 
                 for (int i = 0; i < lostPoint; i++)
                 {
                     var actualMP = MP - RealLostPoint;
                     var percentLastMP = actualMP / MP;
-                    var chance = 0.5 * ((1 + dodgeMPCaster) / (1 + dodgeMPTarget)) * percentLastMP;
+                    var chance = 0.5 * (dodgeMPCaster / dodgeMPTarget) * percentLastMP;
                     var percentChance = chance * 100;
 
                     if (percentChance > 100) percentChance = 90;
@@ -786,6 +786,14 @@ namespace Codebreak.Service.World.Game.Fight
 
                 case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
                     Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_LAUNCH, Id, CurrentAction.SerializeAs_GameAction()));
+                    break;
+
+                case GameActionTypeEnum.MAP:
+                    if (StateManager.HasState(FighterStateEnum.STATE_STEALTH))
+                    {
+                        Team.Dispatch(WorldMessage.GAME_ACTION(actionType, Id, CurrentAction.SerializeAs_GameAction()));
+                        return;
+                    }
                     break;
             }
 

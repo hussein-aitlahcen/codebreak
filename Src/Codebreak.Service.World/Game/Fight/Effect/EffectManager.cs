@@ -157,8 +157,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.PandaCarrier, new PandaCarrierEffect());
             _effects.Add(EffectEnum.PandaLaunch, new PandaLaunchEffect());
 
-            //_effects.Add(EffectEnum.UseGlyph, new ActivableObjectEffect());
-            //_effects.Add(EffectEnum.UseTrap, new ActivableObjectEffect());
+            _effects.Add(EffectEnum.UseGlyph, new ActivableObjectEffect());
+            _effects.Add(EffectEnum.UseTrap, new ActivableObjectEffect());
         }
 
         /// <summary>

@@ -102,6 +102,8 @@
     <Compile Include="Game\Fight\Effect\CastInfos.cs" />
     <Compile Include="Game\Fight\Effect\EffectBase.cs" />
     <Compile Include="Game\Fight\Effect\EffectManager.cs" />
+    <Compile Include="Game\Fight\FightGlyph.cs" />
+    <Compile Include="Game\Fight\Effect\Type\ActivableObjectEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\APDodgeSubstractBuff.cs" />
     <Compile Include="Game\Fight\Effect\Type\APDodgeSubstractEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\ArmorBuff.cs" />
@@ -137,10 +139,12 @@
     <Compile Include="Game\Fight\Effect\Type\StatsStealEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\TeleportEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\TransposeEffect.cs" />
+    <Compile Include="Game\Fight\FightActivableObject.cs" />
     <Compile Include="Game\Fight\FightBase.cs" />
     <Compile Include="Game\Fight\FighterBase.cs" />
     <Compile Include="Game\Fight\FighterStateManager.cs" />
     <Compile Include="Game\Fight\FightTeam.cs" />
+    <Compile Include="Game\Fight\FightTrap.cs" />
     <Compile Include="Game\Fight\FightTurnProcessor.cs" />
     <Compile Include="Game\Fight\IFightObstacle.cs" />
     <Compile Include="Game\Fight\SpellCastManager.cs" />

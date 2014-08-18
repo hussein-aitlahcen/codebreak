@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            castInfos.Target.BuffManager.AddBuff(new IncreaseSpellJetBuff(castInfos, castInfos.Target));
+            castInfos.Target.BuffManager.AddBuff(new IncreaseSpellJetBuff(castInfos, castInfos.Caster));
 
             return FightActionResultEnum.RESULT_NOTHING;
         }
