@@ -678,46 +678,64 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public int CalculDodgeAPMP(FighterBase caster, int lostPoint, bool mp = false)
         {
-            var RealLostPoint = 0;
+            var reality = 0;
 
             if (!mp)
             {
-                var dodgeAPCaster = caster.APDodge + 1.1;
-                var dodgeAPTarget = APDodge + 1.1;
+                var dodgeAPCaster = caster.APDodge;
+                var dodgeAPTarget = APDodge;
+                if (dodgeAPTarget == 0)
+                    dodgeAPTarget = 1;
 
                 for (int i = 0; i < lostPoint; i++)
                 {
-                    var actualAP = AP - RealLostPoint;
-                    var percentLastAP = actualAP / AP;
+                    var actualAP = AP - reality;
+                    var realAP = AP;
+                    if (realAP == 0)
+                        realAP = 1;
+
+                    var percentLastAP = actualAP / realAP;
                     var chance = 0.5 * (dodgeAPCaster / dodgeAPTarget) * percentLastAP;
                     var percentChance = chance * 100;
 
-                    if (percentChance > 100) percentChance = 90;
-                    if (percentChance < 10) percentChance = 10;
+                    if (percentChance > 100) 
+                        percentChance = 90;
+                    else if (percentChance < 10)
+                        percentChance = 10;
 
-                    if (Util.Next(0, 100) < percentChance) RealLostPoint++;
+                    if (Util.Next(0, 100) < percentChance)
+                        reality++;
                 }
             }
             else
             {
-                var dodgeMPCaster = caster.MPDodge + 1.1;
-                var dodgeMPTarget = MPDodge + 1.1;
+                var dodgeMPCaster = caster.MPDodge;
+                var dodgeMPTarget = MPDodge;
+                if (dodgeMPTarget == 0)
+                    dodgeMPTarget = 1;
 
                 for (int i = 0; i < lostPoint; i++)
                 {
-                    var actualMP = MP - RealLostPoint;
-                    var percentLastMP = actualMP / MP;
+                    var actualMP = MP - reality; 
+                    var realMP = MP;
+                    if (realMP == 0)
+                        realMP = 1;
+
+                    var percentLastMP = actualMP / realMP;
                     var chance = 0.5 * (dodgeMPCaster / dodgeMPTarget) * percentLastMP;
                     var percentChance = chance * 100;
 
-                    if (percentChance > 100) percentChance = 90;
-                    if (percentChance < 10) percentChance = 10;
+                    if (percentChance > 100) 
+                        percentChance = 90;
+                    else if (percentChance < 10)
+                        percentChance = 10;
 
-                    if (Util.Next(0, 100) < percentChance) RealLostPoint++;
+                    if (Util.Next(0, 100) < percentChance)
+                        reality++;
                 }
             }
 
-            return RealLostPoint;
+            return reality;
         }
 
         /// <summary>
@@ -788,7 +806,7 @@ namespace Codebreak.Service.World.Game.Fight
                     Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_LAUNCH, Id, CurrentAction.SerializeAs_GameAction()));
                     break;
 
-                case GameActionTypeEnum.MAP:
+                case GameActionTypeEnum.MAP_MOVEMENT:
                     if (HasGameAction(GameActionTypeEnum.FIGHT))
                     {
                         if (StateManager.HasState(FighterStateEnum.STATE_STEALTH))

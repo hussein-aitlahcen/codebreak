@@ -397,7 +397,7 @@ namespace Codebreak.Service.World.Game.Fight
         public FighterBase CurrentProcessingFighter
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -776,9 +776,14 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="infos"></param>
         public void AddProcessingTarget(CastInfos infos)
         {
-            if (CurrentProcessingFighter == infos.Target || CurrentFighter == infos.Target)
+            if (CurrentProcessingFighter == infos.Target)
             {
-                Logger.Debug("AddProcessingTarget first : " + infos.Target.Name);
+                Logger.Debug("AddProcessingTarget first (CurrentProcessingFighter) : " + infos.Target.Name);
+                _processingTargets.AddFirst(infos);
+            }
+            else if (CurrentProcessingFighter == null && CurrentFighter == infos.Target)
+            {
+                Logger.Debug("AddProcessingTarget first (CurrentFighter) : " + infos.Target.Name);
                 _processingTargets.AddFirst(infos);
             }
             else
@@ -1726,11 +1731,9 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 if (LoopState != FightLoopStateEnum.STATE_WAIT_TURN)
                 {
-                    Logger.Debug("Fight::Move cannot move out of waiting turn state.");
-                    return;
+                    Logger.Debug("Fight::Move trying to move withouth being in turn wait phase : " + entity.Name);
                 }
 
-                // Pas a lui de jouer
                 if (entity != CurrentFighter)
                 {
                     Logger.Debug("Fight::Move not his turn : " + entity.Name);
@@ -1738,7 +1741,7 @@ namespace Codebreak.Service.World.Game.Fight
                 }
 
                 var fighter = (FighterBase)entity;
-                var movementPath = Pathfinding.IsValidPath(Map, fighter.Cell.Id, path); // Pathfinding.IsValidPath(this, fighter, fighter.Cell.Id, path);
+                var movementPath = Pathfinding.IsValidPath(this, fighter, fighter.Cell.Id, path);
 
                 //
                 if (movementPath == null)
@@ -1754,10 +1757,10 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
-                var tacledChance = -1; // Pathfinding.TryTacle(fighter);
+                var tacledChance = Pathfinding.TryTacle(fighter);
 
                 // Si tacle
-                if (tacledChance != -1 && !CurrentFighter.StateManager.HasState(FighterStateEnum.STATE_ROOT))
+                if (tacledChance != -1 && !CurrentFighter.StateManager.HasState(FighterStateEnum.STATE_ROOTED))
                 {
                     // XX A été taclé
                     base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_TACLE, fighter.Id));

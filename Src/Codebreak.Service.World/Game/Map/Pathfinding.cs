@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Framework.Utils;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Fight;
+using Codebreak.Service.World.Game.Spell;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -731,40 +733,40 @@ namespace Codebreak.Service.World.Game.Map
             return DecodedPath;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fight"></param>
-        /// <param name="fighter"></param>
-        /// <param name="currentCell"></param>
-        /// <param name="encodedPath"></param>
-        /// <returns></returns>
-        //public static MovementPath IsValidPath(BaseFight fight, BaseFighter fighter, int currentCell, string encodedPath)
-        //{
-        //    if (encodedPath == "")
-        //        return null;
+         //<summary>
+         
+         //</summary>
+         //<param name="fight"></param>
+         //<param name="fighter"></param>
+         //<param name="currentCell"></param>
+         //<param name="encodedPath"></param>
+         //<returns></returns>
+        public static MovementPath IsValidPath(FightBase fight, FighterBase fighter, int currentCell, string encodedPath)
+        {
+            if (encodedPath == "")
+                return null;
 
-        //    var decodedPath = DecodePath(fight.map.Template, currentCell, encodedPath);
+            var decodedPath = DecodePath(fight.Map, currentCell, encodedPath);
 
-        //    var finalPath = new MovementPath();
+            var finalPath = new MovementPath();
 
-        //    var index = 0;
-        //    int transitCell = 0;
-        //    do
-        //    {
-        //        transitCell = decodedPath.TransitCells[index];
-        //        var length = Pathfinding.IsValidLine(fight, fighter, finalPath, transitCell, decodedPath.GetDirection(transitCell), decodedPath.TransitCells[index + 1]);
-        //        if (length == -1)
-        //            return null;
-        //        else if (length == -2)
-        //            break;
-        //        index++;
+            var index = 0;
+            int transitCell = 0;
+            do
+            {
+                transitCell = decodedPath.TransitCells[index];
+                var length = Pathfinding.IsValidLine(fight, fighter, finalPath, transitCell, decodedPath.GetDirection(transitCell), decodedPath.TransitCells[index + 1]);
+                if (length == -1)
+                    return null;
+                else if (length == -2)
+                    break;
+                index++;
 
-        //    }
-        //    while (transitCell != decodedPath.LastStep);
+            }
+            while (transitCell != decodedPath.LastStep);
 
-        //    return finalPath;
-        //}
+            return finalPath;
+        }
 
         /// <summary>
         /// 
@@ -806,50 +808,50 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="direction"></param>
         ///// <param name="endCell"></param>
         ///// <returns></returns>
-        //public static int IsValidLine(BaseFight fight, BaseFighter fighter, MovementPath path, int beginCell, int direction, int endCell)
-        //{
-        //    var length = -1;
-        //    var actualCell = beginCell;
+        public static int IsValidLine(FightBase fight, FighterBase fighter, MovementPath path, int beginCell, int direction, int endCell)
+        {
+            var length = -1;
+            var actualCell = beginCell;
 
-        //    if (!Pathfinding.InLine(fight.map.Template, beginCell, endCell))
-        //        return length;
+            if (!Pathfinding.InLine(fight.Map, beginCell, endCell))
+                return length;
 
-        //    length = (int)GoalDistance(fight.map.Template, beginCell, endCell);
+            length = (int)GoalDistance(fight.Map, beginCell, endCell);
 
-        //    path.AddCell(actualCell, direction);
+            path.AddCell(actualCell, direction);
 
-        //    for (int i = 0; i < length; i++)
-        //    {
-        //        actualCell = Pathfinding.NextCell(fight.map.Template, actualCell, direction);
+            for (int i = 0; i < length; i++)
+            {
+                actualCell = Pathfinding.NextCell(fight.Map, actualCell, direction);
 
-        //        if (fight.GetFighterOnCell(actualCell) != null)
-        //            return -2;
+                if (fight.GetFighterOnCell(actualCell) != null)
+                    return -2;
 
-        //        path.AddCell(actualCell, direction);
+                path.AddCell(actualCell, direction);
 
-        //        path.MovementLength++;
+                path.MovementLength++;
 
-        //        if (Pathfinding.IsStopCell(fighter.Fight, fighter.Team, actualCell))
-        //            return -2;
-        //    }
+                if (Pathfinding.IsStopCell(fighter.Fight, fighter.Team, actualCell))
+                    return -2;
+            }
 
-        //    return length;
-        //}
+            return length;
+        }
 
         ///// <summary>
         ///// 
         ///// </summary>
         ///// <param name="fighter"></param>
         ///// <returns></returns>
-        //public static int TryTacle(BaseFighter fighter)
-        //{
-        //    var ennemies = Pathfinding.GetEnnemyNear(fighter.Fight, fighter.Team, fighter.FightCell.Id);
+        public static int TryTacle(FighterBase fighter)
+        {
+            var ennemies = Pathfinding.GetEnnemyNear(fighter.Fight, fighter.Team, fighter.Cell.Id);
 
-        //    if (ennemies.Count == 0 || ennemies.All(ennemy => ennemy.StateManager.HasState(FighterStateEnum.STATE_ENRACINER)))
-        //        return -1;
+            if (ennemies.Count == 0 || ennemies.All(ennemy => ennemy.StateManager.HasState(FighterStateEnum.STATE_ROOTED)))
+                return -1;
 
-        //    return Pathfinding.TryTacle(fighter, ennemies);
-        //}
+            return Pathfinding.TryTacle(fighter, ennemies);
+        }
 
         ///// <summary>
         ///// 
@@ -857,40 +859,40 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="fighter"></param>
         ///// <param name="nearestEnnemies"></param>
         ///// <returns></returns>
-        //private static int TryTacle(BaseFighter fighter, IEnumerable<BaseFighter> nearestEnnemies)
-        //{
-        //    var fighterAgility = fighter.Statistics.GetTotal(EffectEnum.AddAgility);
-        //    int ennemiesAgility = 0;
+        private static int TryTacle(FighterBase fighter, IEnumerable<FighterBase> nearestEnnemies)
+        {
+            var fighterAgility = fighter.Statistics.GetTotal(EffectEnum.AddAgility);
+            int ennemiesAgility = 0;
 
-        //    foreach (var ennemy in nearestEnnemies)
-        //        if (!ennemy.StateManager.HasState(FighterStateEnum.STATE_ENRACINER)) // Etat enraciner, ne peu pas etre taclé et ne tacle pas
-        //            ennemiesAgility += ennemy.Statistics.GetTotal(EffectEnum.AddAgility);
+            foreach (var ennemy in nearestEnnemies)
+                if (!ennemy.StateManager.HasState(FighterStateEnum.STATE_ROOTED))
+                    ennemiesAgility += ennemy.Statistics.GetTotal(EffectEnum.AddAgility);
 
-        //    var A = fighterAgility + 25;
-        //    var B = fighterAgility + ennemiesAgility + 50;
-        //    var chance = (int)((long)(300 * A / B) - 100);
-        //    var rand = Pathfinding.PATHFIND_RANDOM.Next(0, 99);
+            var A = fighterAgility + 25;
+            var B = fighterAgility + ennemiesAgility + 50;
+            if (B == 0)
+                B = 1;
+            var chance = (int)((long)(300 * A / B) - 100);
+            var rand = Pathfinding.PATHFIND_RANDOM.Next(0, 99);
 
-        //    return rand > chance ? rand : -1;
-        //}
+            return rand > chance ? rand : -1;
+        }
 
         ///// <summary>
-        ///// Le persos doit s'arrêter ? Uniquement en combat
+        ///// 
         ///// </summary>
         ///// <param name="cellId"></param>
         ///// <returns></returns>
-        //public static bool IsStopCell(BaseFight fight, FightTeam team, int cellId)
-        //{
-        //    // Un piege etc ?
-        //    if (fight.GetCell(cellId).HasObject(FightObjectTypeEnum.TYPE_TRAP))
-        //        return true;
+        public static bool IsStopCell(FightBase fight, FightTeam team, int cellId)
+        {
+            if (fight.GetCell(cellId).HasObject(FightObstacleTypeEnum.TYPE_TRAP))
+                return true;
 
-        //    // Un enemis pas loin
-        //    if (GetEnnemyNear(fight, team, cellId).Count > 0)
-        //        return true;
+            if (GetEnnemyNear(fight, team, cellId).Count > 0)
+                return true;
 
-        //    return false;
-        //}
+            return false;
+        }
 
         ///// <summary>
         ///// 
@@ -899,21 +901,20 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="team"></param>
         ///// <param name="cellId"></param>
         ///// <returns></returns>
-        //public static List<BaseFighter> GetEnnemyNear(BaseFight fight, FightTeam team, int cellId)
-        //{
-        //    List<BaseFighter> ennemies = new List<BaseFighter>();
+        public static List<FighterBase> GetEnnemyNear(FightBase fight, FightTeam team, int cellId)
+        {
+            List<FighterBase> ennemies = new List<FighterBase>();
+            foreach (var direction in Pathfinding.FIGHT_DIRECTIONS)
+            {
+                var ennemy = fight.GetFighterOnCell(Pathfinding.NextCell(fight.Map, cellId, direction));
+                if (ennemy != null)
+                    if (ennemy.Team != team)
+                        if (!ennemy.IsFighterDead)
+                            ennemies.Add(ennemy);
+            }
 
-        //    foreach (var direction in Pathfinding.FIGHT_DIRECTIONS)
-        //    {
-        //        var ennemy = fight.GetFighterOnCell(Pathfinding.NextCell(fight.map.Template, cellId, direction));
-        //        if (ennemy != null)
-        //            if (ennemy.Team != team)
-        //                if (!ennemy.Dead)
-        //                    ennemies.Add(ennemy);
-        //    }
-
-        //    return ennemies;
-        //}
+            return ennemies;
+        }
 
         ///// <summary>
         ///// 

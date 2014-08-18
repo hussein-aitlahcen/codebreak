@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Game.Fight
     {
         STATE_DRUNK = 1,
         STATE_CARRIER = 3,
-        STATE_ROOT = 6,
+        STATE_ROOTED = 6,
         STATE_GRAVITY = 7,
         STATE_CARRIED = 8,
         STATE_WEAKENED = 42,

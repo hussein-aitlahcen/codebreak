@@ -226,6 +226,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Activated = true;
 
+            _fight.CurrentProcessingFighter = activator;
             _fight.Dispatch(WorldMessage.GAME_ACTION(ActionId, activator.Id, _spellId + "," + _cell.Id + "," + _actionSpell.Sprite + "," + _actionEffect.Level + ",1," + _caster.Id));
 
             foreach (var target in Targets)
