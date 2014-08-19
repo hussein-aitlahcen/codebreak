@@ -31,10 +31,7 @@ namespace Codebreak.Service.World.Manager
         public NonPlayerCharacterEntity CreateNpc(NpcInstanceDAO npcDAO, long id)
         {
             var npc = new NonPlayerCharacterEntity(npcDAO, id);
-
             _npcById.Add(npc.Id, npc);
-
-            WorldService.Instance.AddUpdatable(npc);
 
             return npc;
         }
@@ -47,7 +44,6 @@ namespace Codebreak.Service.World.Manager
         public CharacterEntity CreateCharacter(CharacterDAO characterDAO)
         {
             var character = new CharacterEntity(characterDAO);
-
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
             

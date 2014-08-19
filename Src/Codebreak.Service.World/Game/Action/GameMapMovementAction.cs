@@ -56,6 +56,7 @@ namespace Codebreak.Service.World.Game.Action
                 stopCell = Entity.CellId;
             }
 
+            // Cas d'une deconnexion
             if (stopCell == Entity.Id)
                 stopCell = Entity.CellId;
 

@@ -88,7 +88,7 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
                         fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
-                        fighter.LeaveFight();
+                        fighter.LeaveFight(kick);
                         fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;
@@ -97,7 +97,7 @@ namespace Codebreak.Service.World.Game.Fight
                 case FightStateEnum.STATE_FIGHTING:
                     if (fighter.IsSpectating)
                     {
-                        fighter.LeaveFight();
+                        fighter.LeaveFight(kick);
                         fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;

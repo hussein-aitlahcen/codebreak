@@ -170,10 +170,8 @@ namespace Codebreak.Service.World.Frames
                 }
 
                 var selectedFighter = fighter.Team.GetFighter(fighterId);
-
                 if (selectedFighter == null)
                 {
-                    Logger.Debug("FightPlacement::Quit unknow fighter : " + entity.Name);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }

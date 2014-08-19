@@ -1067,7 +1067,7 @@ namespace Codebreak.Service.World.Game.Fight
                 if (State == FightStateEnum.STATE_PLACEMENT)
                 {
                     Logger.Debug("Fight::Disconnect fighter left during fight placement : " + fighter.Name);
-                    FightQuit(fighter);
+                    FightQuit(fighter, true);
                     return;
                 }
 
@@ -1075,7 +1075,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 if (fighter.IsSpectating)
                 {
-                    FightQuit(fighter);
+                    FightQuit(fighter, true);
                     return;
                 }
 
