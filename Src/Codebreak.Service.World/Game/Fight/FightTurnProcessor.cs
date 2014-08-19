@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class FightTurnProcessor
+    public sealed class FightTurnProcessor : IDisposable
     {
         private List<FighterBase> _fighterTurns = new List<FighterBase>();
         private FighterBase _currentFighter;
@@ -105,6 +105,16 @@ namespace Codebreak.Service.World.Game.Fight
 
                 return _currentFighter;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _fighterTurns.Clear();
+            _fighterTurns = null;
+            _currentFighter = null;
         }
     }
 }

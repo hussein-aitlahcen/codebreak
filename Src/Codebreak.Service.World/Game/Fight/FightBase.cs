@@ -1838,6 +1838,15 @@ namespace Codebreak.Service.World.Game.Fight
 
             Cells.Clear();
             Cells = null;
+            Team0.Dispose();
+            Team1.Dispose();
+            SpectatorTeam.Dispose();
+            CurrentFighter = null;
+            CurrentProcessingFighter = null;
+            CurrentSubAction = null;
+            TurnProcessor.Dispose();
+            TurnProcessor = null;
+            Map = null;
 
             base.Dispose();
         }

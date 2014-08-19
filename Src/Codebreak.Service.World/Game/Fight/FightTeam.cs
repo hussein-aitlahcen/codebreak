@@ -86,6 +86,18 @@ namespace Codebreak.Service.World.Game.Fight
         {
             _spectators.Remove(fighter);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            _fight = null;
+            _spectators.Clear();
+            _spectators = null;
+
+            base.Dispose();
+        }
     }
 
     /// <summary>
@@ -345,6 +357,24 @@ namespace Codebreak.Service.World.Game.Fight
         public bool IsOptionLocked(FightOptionTypeEnum toggle)
         {
             return _blockedOption[toggle];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            Fight = null;
+            OpponentTeam = null;
+
+            _places.Clear();
+            _places = null;
+            _fighters.Clear();
+            _fighters = null;
+            _blockedOption.Clear();
+            _blockedOption = null;
+
+            base.Dispose();
         }
     }
 }
