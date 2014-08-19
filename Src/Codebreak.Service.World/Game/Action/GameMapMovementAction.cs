@@ -48,13 +48,16 @@ namespace Codebreak.Service.World.Game.Action
         {
             int stopCell = 0;
             if (args.Length > 0)
-            {
+            {                
                 stopCell = int.Parse(args[0].ToString());
             }
             else
             {
                 stopCell = Entity.CellId;
             }
+
+            if (stopCell == Entity.Id)
+                stopCell = Entity.CellId;
 
             Entity.MovementHandler.MovementFinish(Entity, Path, stopCell);
 
