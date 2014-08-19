@@ -1097,7 +1097,7 @@ namespace Codebreak.Service.World.Game
         /// <returns></returns>
         public static string FIGHT_OPTION(FightOptionTypeEnum type , bool blocked, long teamId)
         {
-            return "Go" + (blocked ? "-" : "+") + (char)type + teamId;
+            return "Go" + (blocked ? "+" : "-") + (char)type + teamId;
         }
 
         /// <summary>

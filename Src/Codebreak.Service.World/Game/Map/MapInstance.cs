@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Game.Fight;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -320,12 +321,21 @@ namespace Codebreak.Service.World.Game.Map
 
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
 
-                    base.AddHandler(entity.Dispatch);
                     base.AddUpdatable(entity);
 
-                    entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
-                    entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
-                    entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
+                    if (entity.Type == EntityTypEnum.TYPE_CHARACTER)
+                    {
+                        base.AddHandler(entity.Dispatch);
+                        entity.CachedBuffer = true;
+                        entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
+                        entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
+                        entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
+                        foreach (var fight in FightManager.Fights)
+                        {
+                            fight.SendMapFightInfos(entity);
+                        }
+                        entity.CachedBuffer = false;
+                    }
                 }
             });
         }

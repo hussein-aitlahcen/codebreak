@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -227,7 +228,7 @@ namespace Codebreak.Service.World.Game.Fight
             _places = places;
             _blockedOption = new Dictionary<FightOptionTypeEnum, bool>()
             {            
-                { FightOptionTypeEnum.TYPE_NEW_PLAYER, false },
+                { FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS, false },
                 { FightOptionTypeEnum.TYPE_HELP, false },
                 { FightOptionTypeEnum.TYPE_PARTY, false },
                 { FightOptionTypeEnum.TYPE_SPECTATOR, false },
@@ -273,7 +274,7 @@ namespace Codebreak.Service.World.Game.Fight
                 return false;
 
             // No more fighter accepted
-            if (FreePlace == null || IsOptionLocked(FightOptionTypeEnum.TYPE_NEW_PLAYER))
+            if (FreePlace == null || IsOptionLocked(FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS))
             {
                 fighter.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, fighter.Id, "f"));
                 return false;
@@ -298,6 +299,9 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
                 {
+                    if (type == FightOptionTypeEnum.TYPE_NEW_PLAYER)
+                        type = FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS;
+
                     _blockedOption[type] = _blockedOption[type] == false;
 
                     var value = _blockedOption[type];
@@ -306,7 +310,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if (Fight.State == FightStateEnum.STATE_PLACEMENT)
                     {
-                        Fight.Map.Dispatch(WorldMessage.FIGHT_OPTION((type == FightOptionTypeEnum.TYPE_NEW_PLAYER ? FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS : type), value, LeaderId));
+                        Fight.Map.Dispatch(WorldMessage.FIGHT_OPTION(type, value, LeaderId));
                     }
 
                     switch (type)
@@ -318,7 +322,7 @@ namespace Codebreak.Service.World.Game.Fight
                                 infoType = InformationEnum.INFO_FIGHT_UNTOGGLE_HELP;
                             break;
 
-                        case FightOptionTypeEnum.TYPE_NEW_PLAYER:
+                        case FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS:
                             if (value)
                                 infoType = InformationEnum.INFO_FIGHT_TOGGLE_PLAYER;
                             else
@@ -347,6 +351,19 @@ namespace Codebreak.Service.World.Game.Fight
 
                     base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, infoType));
                 });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendMapFightInfos(EntityBase entity)
+        {
+            entity.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, LeaderId, Fighters.ToArray()));
+            foreach (var option in _blockedOption)
+            {
+                entity.Dispatch(WorldMessage.FIGHT_OPTION(option.Key, option.Value, LeaderId));
+            }
         }
 
         /// <summary>

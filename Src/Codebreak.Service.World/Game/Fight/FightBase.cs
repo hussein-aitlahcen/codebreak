@@ -2013,6 +2013,19 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public void SendMapFightInfos(EntityBase entity)
+        {
+            if(State == FightStateEnum.STATE_PLACEMENT)
+            {
+                entity.Dispatch(WorldMessage.FIGHT_FLAG_DISPLAY(this));
+                Team0.SendMapFightInfos(entity);
+                Team1.SendMapFightInfos(entity);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="actor"></param>
         /// <returns></returns>
         public abstract bool CanJoin(FighterBase fighter);
