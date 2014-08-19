@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CharacterCommand.cs" />
+    <Compile Include="Commands\WorldCommandContext.cs" />
     <Compile Include="Database\Repositories\AreaRepository.cs" />
     <Compile Include="Database\Repositories\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repositories\CharacterRepository.cs" />

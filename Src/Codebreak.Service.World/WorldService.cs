@@ -1,8 +1,10 @@
 ﻿using System.Text;
 using System.Threading;
+using Codebreak.Framework.Command;
 using Codebreak.Framework.Configuration;
 using Codebreak.Framework.Configuration.Providers;
 using Codebreak.Framework.Network;
+using Codebreak.Service.World.Commands;
 using Codebreak.Service.World.Database;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Frames;
@@ -30,6 +32,12 @@ namespace Codebreak.Service.World
             private set;
         }
 
+        public CommandManager<WorldCommandContext> CommandManager
+        {
+            get;
+            private set;
+        }
+
         public MessageDispatcher Dispatcher
         {
             get;
@@ -42,6 +50,9 @@ namespace Codebreak.Service.World
             ConfigurationManager.RegisterAttributes();
             ConfigurationManager.Add(new JsonConfigurationProvider(configPath), true);
             ConfigurationManager.Load();
+
+            CommandManager = new CommandManager<WorldCommandContext>();
+            CommandManager.RegisterCommands();
 
             Dispatcher = new MessageDispatcher();
             AddUpdatable(Dispatcher);
