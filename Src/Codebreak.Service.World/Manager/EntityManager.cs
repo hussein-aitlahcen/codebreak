@@ -14,6 +14,7 @@ namespace Codebreak.Service.World.Manager
         private Dictionary<long, CharacterEntity> _characterById;
         private Dictionary<string, CharacterEntity> _characterByName;
         private Dictionary<long, NonPlayerCharacterEntity> _npcById;
+        private long _onlinePlayer = 0;
 
         public EntityManager()
         {
@@ -46,6 +47,9 @@ namespace Codebreak.Service.World.Manager
             var character = new CharacterEntity(characterDAO);
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
+            _onlinePlayer++;
+
+            Logger.Debug("EntityManager online players : " + _onlinePlayer);
             
             return character;
         }
@@ -54,7 +58,7 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public void RemoveCharacter(CharacterEntity character)
+        public void CharacterDisconnect(CharacterEntity character)
         {
             character.AddMessage(() =>
             {                
@@ -63,16 +67,12 @@ namespace Codebreak.Service.World.Manager
                     if (character.CurrentAction != null)
                         character.AbortAction(character.CurrentAction.Type);
                     character.AbortAction(GameActionTypeEnum.FIGHT);
-                }
-
-                // disconnected meanwhile fighting
-                if (character.HasGameAction(GameActionTypeEnum.FIGHT))
                     return;
+                }
 
                 WorldService.Instance.AddMessage(() =>
                     {
-                        _characterById.Remove(character.Id);
-                        _characterByName.Remove(character.Name.ToLower());
+                        RemoveCharacter(character);
                     });
 
                 
@@ -81,6 +81,19 @@ namespace Codebreak.Service.World.Manager
                 if (character.HasGameAction(GameActionTypeEnum.MAP))
                     character.AbortAction(GameActionTypeEnum.MAP);
             });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void RemoveCharacter(CharacterEntity character)
+        {
+            _onlinePlayer--;
+            _characterById.Remove(character.Id);
+            _characterByName.Remove(character.Name.ToLower());
+
+            Logger.Debug("EntityManager online players : " + _onlinePlayer);
         }
 
         /// <summary>

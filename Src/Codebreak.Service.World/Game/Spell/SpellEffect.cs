@@ -11,14 +11,9 @@ namespace Codebreak.Service.World.Game.Spell
     /// <summary>
     /// 
     /// </summary>
+    [Flags]
     public enum EffectEnum
     {
-        WEAPON_EFFECT = StealEarth | StealFire | StealWater | StealAir | StealNeutral | DamageEarth | DamageNeutral
-            | DamageFire | DamageWater | DamageAir | SubAPDodgeable,
-
-        DAMAGE_EFFECT = StealEarth | StealFire | StealWater | StealAir | StealNeutral | DamageEarth | DamageNeutral
-            | DamageFire | DamageWater | DamageAir,
-
         None = -1,
 
         // Armures

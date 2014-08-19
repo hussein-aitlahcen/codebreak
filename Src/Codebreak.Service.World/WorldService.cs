@@ -96,7 +96,7 @@ namespace Codebreak.Service.World
             {
                 if (client.CurrentCharacter != null)
                 {
-                    EntityManager.Instance.RemoveCharacter(client.CurrentCharacter);
+                    EntityManager.Instance.CharacterDisconnect(client.CurrentCharacter);
 
                     client.Characters = null;
                     client.CurrentCharacter = null;

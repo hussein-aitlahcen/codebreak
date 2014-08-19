@@ -7,7 +7,7 @@ using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Commands
 {
-    public class CharacterCommand : Command<WorldCommandContext>
+    public sealed class CharacterCommand : Command<WorldCommandContext>
     {
         private readonly string[] _aliases =
         {
@@ -24,10 +24,53 @@ namespace Codebreak.Service.World.Commands
         protected override bool CanExecute(WorldCommandContext context)
         {
             return true;
-
         }
 
-        public class ItemSubCommand : SubCommand<WorldCommandContext>
+        public sealed class LevelUpSubCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases =
+            {
+                "levelup"
+            };
+
+            public override string[] Aliases
+            {
+                get { return _aliases; }
+            }
+
+            public override string Description
+            {
+                get { return "Command to level up"; }
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                int level;
+                if (Int32.TryParse(context.TextCommandArgument.NextWord(), out level))
+                {
+                    if (level > context.Entity.Level)
+                    {
+                        var character = context.Entity as CharacterEntity;
+                        if (character != null)
+                        {
+                            while (level > character.Level)
+                            {
+                                character.LevelUp();
+                            }
+                            character.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(character.Level));
+                            character.Dispatch(WorldMessage.SPELLS_LIST(character.Spells));
+                            character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+                            character.DispatchChatMessage(
+                                ChatChannelEnum.CHANNEL_ADMIN,
+                                "Now you are stronger"
+                                );
+                        }
+                    }
+                }
+            }
+        }
+
+        public sealed class ItemSubCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases =
             {
@@ -49,7 +92,6 @@ namespace Codebreak.Service.World.Commands
                 int idTemplate;
                 if (Int32.TryParse(context.TextCommandArgument.NextWord(), out idTemplate))
                 {
-                    Console.WriteLine(idTemplate);
                     var itemTemplate = ItemTemplateRepository.Instance.GetTemplate(idTemplate);
                     if (itemTemplate != null)
                     {

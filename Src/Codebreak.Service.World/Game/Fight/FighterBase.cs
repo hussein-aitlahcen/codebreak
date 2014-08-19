@@ -863,7 +863,10 @@ namespace Codebreak.Service.World.Game.Fight
             if (Fight.State != FightStateEnum.STATE_FIGHTING)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            return Fight.TryKillFighter(this, Id);
+            if(Fight.LoopState != FightLoopStateEnum.STATE_ENDED)
+                return Fight.TryKillFighter(this, Id);
+
+            return FightActionResultEnum.RESULT_NOTHING;
         }
 
         /// <summary>
@@ -908,10 +911,13 @@ namespace Codebreak.Service.World.Game.Fight
             switch(actionType)
             {
                 case GameActionTypeEnum.FIGHT:
-                    WorldService.Instance.AddUpdatable(this);
-                    FrameManager.AddFrame(GameCreationFrame.Instance);
-                    FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
-                    FrameManager.RemoveFrame(GameFightFrame.Instance);
+                    if (!Disconnected)
+                    {
+                        WorldService.Instance.AddUpdatable(this);
+                        FrameManager.AddFrame(GameCreationFrame.Instance);
+                        FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
+                        FrameManager.RemoveFrame(GameFightFrame.Instance);
+                    }
                     break;
             }
 

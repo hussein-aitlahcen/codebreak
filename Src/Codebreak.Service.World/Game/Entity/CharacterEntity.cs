@@ -460,42 +460,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="remoteEntity"></param>
         public override void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
         {
-            switch(channel)
-            {
-                case ChatChannelEnum.CHANNEL_GENERAL:
-                    if (message.StartsWith(".item"))
-                    {
-                        var cmdData = message.Split(' ');
-                        var templateId = int.Parse(cmdData[1]);
-
-                        var itemTemplate = ItemTemplateRepository.Instance.GetTemplate(templateId);
-                        if (itemTemplate != null)
-                        {
-                            var instance = itemTemplate.CreateItem(1, ItemSlotEnum.SLOT_INVENTORY, true);
-                            if (instance != null)
-                                Inventory.AddItem(instance);
-                        }
-                        return;
-                    }
-                    else if (message.StartsWith(".200"))
-                    {
-                        while (Level != 200)
-                        {
-                            LevelUp();
-                        }
-
-                        base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
-                        base.Dispatch(WorldMessage.SPELLS_LIST(Spells));
-                        base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-                        return;
-                    }
-                    else if (message.StartsWith(".save"))
-                    {
-                        WorldService.Instance.UpdateWorld();
-                        return;
-                    }                    
-                    break;
-            }
             base.DispatchChatMessage(channel, message, remoteEntity);
         }
 

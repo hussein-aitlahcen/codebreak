@@ -183,7 +183,23 @@ namespace Codebreak.Service.World.Database.Structures
         /// <returns></returns>
         public static bool IsWeaponEffect(EffectEnum type)
         {
-            return (type | EffectEnum.WEAPON_EFFECT) == type;
+            switch (type)
+            {
+                case EffectEnum.StealEarth:
+                case EffectEnum.StealFire:
+                case EffectEnum.StealWater:
+                case EffectEnum.StealAir:
+                case EffectEnum.StealNeutral:
+                case EffectEnum.DamageEarth:
+                case EffectEnum.DamageNeutral:
+                case EffectEnum.DamageFire:
+                case EffectEnum.DamageWater:
+                case EffectEnum.DamageAir:
+                case EffectEnum.SubAPDodgeable:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
@@ -392,14 +408,13 @@ namespace Codebreak.Service.World.Database.Structures
         private Dictionary<int, Tuple<int, int, int>> _statistics;
 
         /// <summary>
-        /// Retourne des stats aleatoire
+        /// 
         /// </summary>
         /// <returns></returns>
         public GenericStats GenerateStats(bool max = false)
         {
             var generatedStats = new GenericStats();
             
-            // On initialise si c'est pas deja fait
             if (_statistics == null)
             {
                 _statistics = new Dictionary<int, Tuple<int, int, int>>();
@@ -417,10 +432,15 @@ namespace Codebreak.Service.World.Database.Structures
 
             foreach (var effect in _statistics.Values)
             {
-                if (IsWeaponEffect((EffectEnum)effect.Item1))                
-                    generatedStats.AddWeaponEffect((EffectEnum)effect.Item1, effect.Item2, effect.Item3, effect.Item2 + ";" + effect.Item3 + ";-1;-1;0;0d0+0"); 
+                if (IsWeaponEffect((EffectEnum)effect.Item1))
+                    generatedStats.AddWeaponEffect((EffectEnum)effect.Item1, effect.Item2, effect.Item3, effect.Item2 + ";" + effect.Item3 + ";-1;-1;0;0d0+0");
                 else
-                    generatedStats.AddItem((EffectEnum)effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                {
+                    if(effect.Item3 > effect.Item2)
+                        generatedStats.AddItem((EffectEnum)effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                    else
+                        generatedStats.AddItem((EffectEnum)effect.Item1, effect.Item2);
+                }
             }
 
             return generatedStats;

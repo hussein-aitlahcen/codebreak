@@ -1064,16 +1064,10 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
             {
-                if (State == FightStateEnum.STATE_PLACEMENT)
-                {
-                    Logger.Debug("Fight::Disconnect fighter left during fight placement : " + fighter.Name);
-                    FightQuit(fighter, true);
-                    return;
-                }
-
                 fighter.Disconnected = true;
 
-                if (fighter.IsSpectating)
+                // disconnected during placement or spectator disconnected
+                if (State == FightStateEnum.STATE_PLACEMENT || fighter.IsSpectating)
                 {
                     FightQuit(fighter, true);
                     return;
@@ -1099,6 +1093,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public FightActionResultEnum TryKillFighter(FighterBase fighter, long killerId, bool force = false, bool quit = false)
         {
+            if (LoopState == FightLoopStateEnum.STATE_ENDED ||
+                LoopState == FightLoopStateEnum.STATE_WAIT_END ||
+                LoopState == FightLoopStateEnum.STATE_INIT)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             if (force)
             {
                 fighter.Life = 0;
@@ -1812,27 +1811,30 @@ namespace Codebreak.Service.World.Game.Fight
                 Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
             }
 
-            base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
+            State = FightStateEnum.STATE_ENDED;
+            LoopState = FightLoopStateEnum.STATE_ENDED;
+            
+            var message = WorldMessage.FIGHT_END_RESULT(Result);
 
             foreach (var fighter in _winnerTeam.Fighters.ToArray())
             {
+                fighter.Dispatch(message);
                 fighter.EndFight(true);
             }
 
             foreach (var fighter in _loserTeam.Fighters.ToArray())
             {
+                fighter.Dispatch(message);
                 fighter.EndFight();
             }
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
             {
+                spectator.Dispatch(message);
                 spectator.EndFight();
             }
-
+            
             Map.FightManager.Remove(this);
-
-            State = FightStateEnum.STATE_ENDED;
-            LoopState = FightLoopStateEnum.STATE_ENDED;
         }
         
         /// <summary>
@@ -1924,6 +1926,7 @@ namespace Codebreak.Service.World.Game.Fight
                 if (LoopState != FightLoopStateEnum.STATE_WAIT_TURN)
                 {
                     Logger.Debug("Fight::Move trying to move withouth being in turn wait phase : " + entity.Name);
+                    return;
                 }
 
                 if (entity != CurrentFighter)
