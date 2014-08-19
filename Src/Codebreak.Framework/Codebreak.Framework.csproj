@@ -48,6 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\Command.cs" />
+    <Compile Include="Command\CommandContext.cs" />
+    <Compile Include="Command\CommandManager.cs" />
+    <Compile Include="Command\TextCommandArgument.cs" />
     <Compile Include="Configuration\ConfigurableAttribute.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\ICommitableProvider.cs" />

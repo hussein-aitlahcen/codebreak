@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Network;
+using Codebreak.Service.World.Commands;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Frames;
 using Codebreak.Service.World.Game.Action;
@@ -394,7 +395,14 @@ namespace Codebreak.Service.World.Game.Entity
                             break;
 
                         default:
-                            chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
+                            if (message.StartsWith("."))
+                            {
+                                WorldService.Instance.CommandManager.Execute(new WorldCommandContext(this, message.Remove(0, 1)));
+                            }
+                            else
+                            {
+                                chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
+                            }
                             break;
                     }
                 }
