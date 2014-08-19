@@ -65,6 +65,15 @@ namespace Codebreak.Service.World.Game
         /// <param name="method"></param>
         public virtual void AddHandler(Action<string> method)
         {
+            OnMessage += method;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        public virtual void AddHandlerSafe(Action<string> method)
+        {
             AddMessage(() =>
                 {
                     OnMessage += method;
@@ -76,6 +85,15 @@ namespace Codebreak.Service.World.Game
         /// </summary>
         /// <param name="method"></param>
         public virtual void RemoveHandler(Action<string> method)
+        {
+            OnMessage -= method;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        public virtual void RemoveHandlerSafe(Action<string> method)
         {
             AddMessage(() =>
                 {
@@ -89,26 +107,6 @@ namespace Codebreak.Service.World.Game
         /// <param name="message"></param>
         public virtual void Dispatch(string message)
         {
-            AddMessage(() =>
-                {
-                    if (CachedBuffer)
-                    {
-                        _cachedBuffer.Append(message + (char)0x00);
-                    }
-                    else if (OnMessage != null)
-                    {
-                        OnMessage(message);
-                    }
-                });
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        public virtual void DispatchInstant(string message)
-        {
             if (CachedBuffer)
             {
                 _cachedBuffer.Append(message + (char)0x00);
@@ -117,6 +115,26 @@ namespace Codebreak.Service.World.Game
             {
                 OnMessage(message);
             }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public virtual void SafeDispatch(string message)
+        {
+            AddMessage(() =>
+            {
+                if (CachedBuffer)
+                {
+                    _cachedBuffer.Append(message + (char)0x00);
+                }
+                else if (OnMessage != null)
+                {
+                    OnMessage(message);
+                }
+            });
         }
     }
 }

@@ -56,14 +56,14 @@ namespace Codebreak.Service.World.Frames
             if (!int.TryParse(message.Substring(2, 3), out actionId))
             {
                 Logger.Debug("GameActionFrame::Start failed to parse actionId : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             if(!Enum.IsDefined(typeof(GameActionTypeEnum), actionId))
             {
                 Logger.Debug("GameActionFrame::Start unknow action id  : " + actionId + " : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 

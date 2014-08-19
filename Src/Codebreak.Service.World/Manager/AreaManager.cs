@@ -35,7 +35,7 @@ namespace Codebreak.Service.World.Manager
             {
                 var instance = new SuperAreaInstance(superAreaDAO);
                 WorldService.Instance.AddUpdatable(instance);
-                WorldService.Instance.Dispatcher.AddHandler(instance.Dispatch);
+                WorldService.Instance.Dispatcher.AddHandlerSafe(instance.Dispatch);
 
                 _superAreaById.Add(superAreaDAO.Id, instance);
             }
@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Manager
             foreach(var areaDAO in AreaRepository.Instance.GetAll())
             {
                 var instance =  new AreaInstance(areaDAO);
-                instance.SuperArea.AddHandler(instance.Dispatch);
+                instance.SuperArea.AddHandlerSafe(instance.SafeDispatch);
 
                 _areaById.Add(areaDAO.Id, instance);
             }
@@ -52,7 +52,7 @@ namespace Codebreak.Service.World.Manager
             {
                 var instance = new SubAreaInstance(subAreaDAO);
                 instance.Area.AddUpdatable(instance);
-                instance.Area.AddHandler(instance.Dispatch);
+                instance.Area.AddHandlerSafe(instance.Dispatch);
 
                 _subAreaById.Add(subAreaDAO.Id, instance);
             }

@@ -127,7 +127,7 @@ namespace Codebreak.Service.World
         {
             WorldService.Instance.AddMessage(() =>
             {
-                WorldService.Instance.Dispatcher.DispatchInstant(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING));
+                WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING));
 
                 WorldService.Instance.AddMessage(() =>
                 {

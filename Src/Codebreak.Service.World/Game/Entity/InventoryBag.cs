@@ -103,10 +103,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             item.OwnerId = Entity.Id;
 
-            WorldService.Instance.AddMessage(() =>
-                {
-                    InventoryItemRepository.Instance.Update(item);
-                });
+            InventoryItemRepository.Instance.Update(item);
 
             Items.Add(item);
 

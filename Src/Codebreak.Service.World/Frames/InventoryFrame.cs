@@ -56,20 +56,20 @@ namespace Codebreak.Service.World.Frames
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                 return;
             }
 
             int slotId = -1;
             if(!int.TryParse(data[1], out slotId))
             {
-                entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                 return;
             }
 
             if(!Enum.IsDefined(typeof(ItemSlotEnum), slotId))
             {
-                entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                 return;
             }
 

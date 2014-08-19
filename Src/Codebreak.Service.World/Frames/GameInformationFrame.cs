@@ -33,9 +33,8 @@ namespace Codebreak.Service.World.Frames
 
                     if (entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        entity.CachedBuffer = true;
-                        entity.Fight.JoinFight((FighterBase)entity, null);
-                        entity.CachedBuffer = false;
+                        var fighter = (FighterBase)entity;
+                        fighter.Fight.JoinFight((FighterBase)entity, null);
                         return;
                     }
 

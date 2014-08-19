@@ -56,21 +56,31 @@ namespace Codebreak.Service.World.Manager
         /// <param name="character"></param>
         public void RemoveCharacter(CharacterEntity character)
         {
-            if (character.HasGameAction(Game.Action.GameActionTypeEnum.FIGHT))
-            {
-                if (character.CurrentAction != null)
-                    character.AbortAction(character.CurrentAction.Type);
-                character.AbortAction(GameActionTypeEnum.FIGHT);
-                return;
-            }
+            character.AddMessage(() =>
+            {                
+                if (character.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    if (character.CurrentAction != null)
+                        character.AbortAction(character.CurrentAction.Type);
+                    character.AbortAction(GameActionTypeEnum.FIGHT);
+                }
 
-            _characterById.Remove(character.Id);
-            _characterByName.Remove(character.Name.ToLower());
-            
-            if (character.CurrentAction != null)
-                character.AbortAction(character.CurrentAction.Type, character.Id);
-            if(character.HasGameAction(GameActionTypeEnum.MAP))
-                character.AbortAction(GameActionTypeEnum.MAP);
+                // disconnected meanwhile fighting
+                if (character.HasGameAction(GameActionTypeEnum.FIGHT))
+                    return;
+
+                WorldService.Instance.AddMessage(() =>
+                    {
+                        _characterById.Remove(character.Id);
+                        _characterByName.Remove(character.Name.ToLower());
+                    });
+
+                
+                if (character.CurrentAction != null)
+                    character.AbortAction(character.CurrentAction.Type, character.Id);
+                if (character.HasGameAction(GameActionTypeEnum.MAP))
+                    character.AbortAction(GameActionTypeEnum.MAP);
+            });
         }
 
         /// <summary>

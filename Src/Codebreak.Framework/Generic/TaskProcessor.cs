@@ -138,7 +138,7 @@ namespace Codebreak.Framework.Generic
             {
                 _updatableObjects.Add(updatable);
             });
-        }
+        }      
 
         /// <summary>
         /// 

@@ -281,21 +281,10 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public FightBase Fight
-        {
-            get;
-            protected set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IMovementHandler MovementHandler
+        public virtual IMovementHandler MovementHandler
         {
             get
             {
-                if (Fight != null)
-                    return Fight;
                 return Map;
             }
         }

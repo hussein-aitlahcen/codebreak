@@ -1542,8 +1542,7 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
 
                 case FightLoopStateEnum.STATE_ENDED:
-                    if (MessageCount == 0)
-                        FightEnded();
+                    FightEnded();
                     break;
             }
 
@@ -1815,15 +1814,6 @@ namespace Codebreak.Service.World.Game.Fight
 
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
 
-            State = FightStateEnum.STATE_ENDED;
-            LoopState = FightLoopStateEnum.STATE_ENDED;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private void FightEnded()
-        {
             foreach (var fighter in _winnerTeam.Fighters.ToArray())
             {
                 fighter.EndFight(true);
@@ -1841,6 +1831,15 @@ namespace Codebreak.Service.World.Game.Fight
 
             Map.FightManager.Remove(this);
 
+            State = FightStateEnum.STATE_ENDED;
+            LoopState = FightLoopStateEnum.STATE_ENDED;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private void FightEnded()
+        {         
             foreach (var cell in Cells)
                 cell.Value.Dispose();
 

@@ -76,11 +76,8 @@ namespace Codebreak.Service.World.Frames
 
             if (!Enum.IsDefined(typeof(ExchangeTypeEnum), exchangeTypeId))
             {
-                Logger.Debug("ExchangeFrame::Request unknow exchangeType : " + exchangeTypeId + " " + entity.Name); 
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                Logger.Debug("ExchangeFrame::Request unknow exchangeType : " + exchangeTypeId + " " + entity.Name);
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -217,7 +214,7 @@ namespace Codebreak.Service.World.Frames
         {
             if (!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -225,21 +222,21 @@ namespace Codebreak.Service.World.Frames
 
             if(data.Length != 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
@@ -265,7 +262,7 @@ namespace Codebreak.Service.World.Frames
         {
             if(!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -273,21 +270,21 @@ namespace Codebreak.Service.World.Frames
 
             if(data.Length != 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int templateId = -1;
             if (!int.TryParse(data[0], out templateId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -314,7 +311,7 @@ namespace Codebreak.Service.World.Frames
             long kamas = -1;
             if(!long.TryParse(message.Substring(3), out kamas))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
@@ -340,7 +337,7 @@ namespace Codebreak.Service.World.Frames
         {
             if (!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -348,7 +345,7 @@ namespace Codebreak.Service.World.Frames
 
             if (data.Length != 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 

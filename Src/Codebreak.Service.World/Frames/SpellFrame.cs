@@ -47,10 +47,7 @@ namespace Codebreak.Service.World.Frames
             var data = message.Substring(2).Split('|');
             if (data.Length != 2)
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -86,10 +83,7 @@ namespace Codebreak.Service.World.Frames
             var spellId = -1;
             if (!int.TryParse(message.Substring(2), out spellId))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
-                });
+                entity.SafeDispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                 return;
             }
 

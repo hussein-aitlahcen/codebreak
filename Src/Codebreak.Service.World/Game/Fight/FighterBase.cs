@@ -209,7 +209,16 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         #endregion
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public FightBase Fight
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -372,6 +381,19 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override IMovementHandler MovementHandler
+        {
+            get
+            {
+                if (Fight != null)
+                    return Fight;
+                return base.MovementHandler;
+            }
         }
 
         /// <summary>
