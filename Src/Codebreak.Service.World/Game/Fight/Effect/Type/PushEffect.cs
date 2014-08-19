@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
+using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.Game.Fight.Effect.Type
 {
@@ -73,7 +74,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                         target.Fight.SetSubAction(() =>
                         {
                             return target.SetCell(nextCell);
-                        }, 1 + length * 180);
+                        }, 1 + ++i * WorldConfig.FIGHT_PUSH_CELL_TIME);
 
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
@@ -95,7 +96,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                         }
 
                         return target.SetCell(currentCell);
-                    }, 1 + (i * 180));
+                    }, 1 + (i * WorldConfig.FIGHT_PUSH_CELL_TIME));
 
                     return FightActionResultEnum.RESULT_NOTHING;
                 }
@@ -108,7 +109,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             target.Fight.SetSubAction(() =>
             {
                 return target.SetCell(currentCell);
-            }, 1 + length * 180);
+            }, 1 + length * WorldConfig.FIGHT_PUSH_CELL_TIME);
 
             return FightActionResultEnum.RESULT_NOTHING;
         }

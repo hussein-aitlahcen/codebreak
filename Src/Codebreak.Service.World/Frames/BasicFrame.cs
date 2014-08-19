@@ -105,8 +105,6 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            var effect = EffectEnum.DoNothing;
-
             if (!_statById.ContainsKey(statId))
             {
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -115,7 +113,9 @@ namespace Codebreak.Service.World.Frames
 
             entity.AddMessage(() =>
             {
+                var effect = _statById[statId];
                 var actualValue = entity.Statistics.GetEffect(effect).Base;
+                var boostValue = statId == 11 && character.Breed == CharacterBreedEnum.BREED_SACRIEUR ? 2 : 1;
                 var requiredPoint = GenericStats.GetRequiredStatsPoint(character.Breed, statId, actualValue);
 
                 if (character.CaractPoint < requiredPoint)
@@ -123,8 +123,6 @@ namespace Codebreak.Service.World.Frames
                     entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
-
-                var boostValue = statId == 11 && character.Breed == CharacterBreedEnum.BREED_SACRIEUR ? 2 : 1;
 
                 character.CaractPoint -= requiredPoint;
 
