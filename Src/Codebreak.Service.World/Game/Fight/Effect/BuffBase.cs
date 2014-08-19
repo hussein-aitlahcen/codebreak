@@ -123,7 +123,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
 
             ActiveType = activeType;
             DecrementType = decrementType;
-
+            
             switch (castInfos.EffectType)
             {
                 case EffectEnum.ReflectSpell:
@@ -150,14 +150,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect
                     break;
 
                 case EffectEnum.PandaCarrier:
-                    Caster.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
-                                                                          Caster.Id,
-                                                                          CastInfos.Value1.ToString(),
-                                                                          "",
-                                                                          "",
-                                                                          "",
-                                                                          CastInfos.Duration.ToString(),
-                                                                          CastInfos.SpellId.ToString()));
+                    //Caster.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
+                    //                                                      Caster.Id,
+                    //                                                      CastInfos.Value1.ToString(),
+                    //                                                      "",
+                    //                                                      "",
+                    //                                                      "",
+                    //                                                      CastInfos.Duration.ToString(),
+                    //                                                      CastInfos.SpellId.ToString()));
                     break;
 
                 default:

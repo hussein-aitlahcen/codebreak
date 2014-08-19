@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         {
             Caster.StateManager.AddState(this);
 
-            Caster.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.PandaCarrier, castInfos.Caster.Id, target.Id.ToString()));          
+            castInfos.Caster.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.PandaCarrier, castInfos.Caster.Id, target.Id.ToString()));
         }
 
         /// <summary>

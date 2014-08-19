@@ -37,6 +37,7 @@ namespace Codebreak.Service.World.Game.Action
             Exchange = exchange;
             Exchange.AddHandler(Entity.Dispatch);
             Exchange.AddHandler(DistantEntity.Dispatch);
+            Entity.AddUpdatable(Exchange);
         }
         
         public void Accept()
@@ -49,6 +50,7 @@ namespace Codebreak.Service.World.Game.Action
             Exchange.Leave(success);
             Exchange.RemoveHandler(Entity.Dispatch);
             Exchange.RemoveHandler(DistantEntity.Dispatch);
+            Entity.RemoveUpdatable(Exchange);
         }
     }
 }

@@ -575,6 +575,8 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
+                if (NextTurnTimeout < UpdateTime)
+                    return 0;
                 return NextTurnTimeout - UpdateTime;
             }
         }
@@ -793,7 +795,7 @@ namespace Codebreak.Service.World.Game.Fight
             get;
             private set;
         }
-     
+
         /// <summary>
         /// 
         /// </summary>
@@ -810,6 +812,7 @@ namespace Codebreak.Service.World.Game.Fight
         private long _loopTimeout, _turnTimeout, _subActionTimeout, _synchronizationTimeout;
         private Dictionary<FighterBase, List<FightActivableObject>> _activableObjects;
         private LinkedList<CastInfos> _processingTargets;
+        private int _currentApCost;
                 
         /// <summary>
         /// 
@@ -819,6 +822,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             _activableObjects = new Dictionary<FighterBase, List<FightActivableObject>>();
             _processingTargets = new LinkedList<CastInfos>();
+            _currentApCost = -1;
 
             Type = type;
             Id = id;
@@ -1404,6 +1408,13 @@ namespace Codebreak.Service.World.Game.Fight
                             break;
                         }
 
+                        // THAT WAS THE FUCKING FIX, NICE CLIENT WAITING FOR THAT TO REFHRESH PLAYER STATE !!!!!!!!!!!! ANKAMAAAAAAAAARGHHHHHHHH
+                        if(_currentApCost != -1)
+                        {
+                            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + _currentApCost));
+                            _currentApCost = -1;
+                        }
+
                         base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
 
                         if (LoopState == FightLoopStateEnum.STATE_WAIT_END)
@@ -1727,10 +1738,10 @@ namespace Codebreak.Service.World.Game.Fight
                                                         spellLevel.RangeType,
                                                         effectTarget.Cell.Id));
                                 }
-                            }
+                            }                 
                         }
-                        
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
+
+                        _currentApCost = spellLevel.APCost;
                     });
                 }
             });

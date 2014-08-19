@@ -65,7 +65,7 @@ namespace Codebreak.Service.World.Game.Action
             get;
             private set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>

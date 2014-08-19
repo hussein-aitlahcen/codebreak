@@ -109,10 +109,7 @@ namespace Codebreak.Service.World.Frames
 
             if (!_statById.ContainsKey(statId))
             {
-                entity.AddMessage(() =>
-                    {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                    });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -166,10 +163,7 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicPong(EntityBase entity, string message)
         {
-            entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_PONG());
-                });
+            entity.Dispatch(WorldMessage.BASIC_PONG());
         }
 
         /// <summary>
@@ -179,10 +173,7 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicQPong(EntityBase entity, string message)
         {
-            entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_QPONG());
-                });
+            entity.Dispatch(WorldMessage.BASIC_QPONG());
         }
 
         /// <summary>
@@ -192,10 +183,7 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicDate(EntityBase entity, string message)
         {
-            entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_DATE());
-                });
+            entity.Dispatch(WorldMessage.BASIC_DATE());
         }
 
         /// <summary>
@@ -205,10 +193,7 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void BasicTime(EntityBase entity, string message)
         {
-            entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_TIME());
-                });
+            entity.Dispatch(WorldMessage.BASIC_TIME());
         }
 
         /// <summary>
@@ -235,10 +220,7 @@ namespace Codebreak.Service.World.Frames
 
                 if (remoteEntity == null)
                 {
-                    entity.AddMessage(() =>
-                    {
-                        entity.Dispatch(WorldMessage.CHAT_MESSAGE_ERROR_PLAYER_OFFLINE());
-                    });
+                    entity.Dispatch(WorldMessage.CHAT_MESSAGE_ERROR_PLAYER_OFFLINE());
                     return;
                 }
 

@@ -217,10 +217,7 @@ namespace Codebreak.Service.World.Frames
         {
             if (!message.Contains('|'))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -228,30 +225,21 @@ namespace Codebreak.Service.World.Frames
 
             if(data.Length != 2)
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
@@ -277,10 +265,7 @@ namespace Codebreak.Service.World.Frames
         {
             if(!message.Contains('|'))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -288,30 +273,21 @@ namespace Codebreak.Service.World.Frames
 
             if(data.Length != 2)
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int templateId = -1;
             if (!int.TryParse(data[0], out templateId))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -338,10 +314,7 @@ namespace Codebreak.Service.World.Frames
             long kamas = -1;
             if(!long.TryParse(message.Substring(3), out kamas))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
@@ -367,10 +340,7 @@ namespace Codebreak.Service.World.Frames
         {
             if (!message.Contains('|'))
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -378,10 +348,7 @@ namespace Codebreak.Service.World.Frames
 
             if (data.Length != 2)
             {
-                entity.AddMessage(() =>
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                });
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
