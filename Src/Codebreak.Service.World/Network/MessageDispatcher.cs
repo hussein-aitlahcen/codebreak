@@ -101,5 +101,22 @@ namespace Codebreak.Service.World.Game
                     }
                 });
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public virtual void DispatchInstant(string message)
+        {
+            if (CachedBuffer)
+            {
+                _cachedBuffer.Append(message + (char)0x00);
+            }
+            else if (OnMessage != null)
+            {
+                OnMessage(message);
+            }
+        }
     }
 }

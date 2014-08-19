@@ -95,7 +95,7 @@ namespace Codebreak.Service.World.Game.Fight
                     }
 
                 case FightStateEnum.STATE_FIGHTING:
-                    if (fighter.Spectating)
+                    if (fighter.IsSpectating)
                     {
                         fighter.LeaveFight();
                         fighter.Dispatch(WorldMessage.FIGHT_LEAVE());

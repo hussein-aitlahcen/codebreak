@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Game.Action
         MAP_PUSHBACK = 5,
         CHALLENGE_REQUEST = 900,
         CHALLENGE_ACCEPT = 901,
-        CHALLENGE_DENY = 902,
+        CHALLENGE_DECLINE = 902,
         FIGHT_JOIN = 903,
         FIGHT_AGGRESSION = 906,
         FIGHT_KILL = 103,

@@ -78,7 +78,7 @@ namespace Codebreak.Service.World.Game.Action
             else
                 Entity.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST);
             
-            var message = WorldMessage.GAME_ACTION(GameActionTypeEnum.CHALLENGE_DENY, Entity.Id, Defender.Id.ToString());
+            var message = WorldMessage.GAME_ACTION(GameActionTypeEnum.CHALLENGE_DECLINE, Entity.Id, Defender.Id.ToString());
             Entity.Dispatch(message);
             Defender.Dispatch(message);
         }

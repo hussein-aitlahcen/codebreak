@@ -946,8 +946,8 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         if (State != FightStateEnum.STATE_FIGHTING)
                         {
-                            Logger.Debug("FightBase::TrySpectate fight already started " + fighter.Name);
-                            fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                            Logger.Debug("FightBase::TrySpectate cannot spectate placement " + fighter.Name);
+                            fighter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_SPECTATOR_LOCKED));
                             return;
                         }
                         
@@ -982,13 +982,13 @@ namespace Codebreak.Service.World.Game.Fight
                     if (State != FightStateEnum.STATE_PLACEMENT)
                     {
                         Logger.Debug("FightBase::TryJoin fight already started " + fighter.Name);
-                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
                     if (!CanJoin(fighter))
                     {
-                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
@@ -996,8 +996,8 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if (!team.CanJoinBeforeStart(fighter))
                     {
-                        Logger.Debug("FightBase::TryJoin cannot join team before start " + fighter.Name);
-                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                        Logger.Debug("FightBase::TryJoin cannot join team before start " + fighter.Name); 
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
@@ -1067,6 +1067,14 @@ namespace Codebreak.Service.World.Game.Fight
                 if (State == FightStateEnum.STATE_PLACEMENT)
                 {
                     Logger.Debug("Fight::Disconnect fighter left during fight placement : " + fighter.Name);
+                    FightQuit(fighter);
+                    return;
+                }
+
+                fighter.Disconnected = true;
+
+                if (fighter.IsSpectating)
+                {
                     FightQuit(fighter);
                     return;
                 }

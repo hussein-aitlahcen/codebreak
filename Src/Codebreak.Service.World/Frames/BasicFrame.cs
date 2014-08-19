@@ -40,16 +40,16 @@ namespace Codebreak.Service.World.Frames
                 case 'P':
                     switch(message[1])
                     {
-                        case 'I':
+                        case 'I': // PartyInvite
                             break;
 
-                        case 'A': 
+                        case 'A': // PartyAccept
                             break;
                         
-                        case 'R':
+                        case 'R': // Party
                             break;
 
-                        case 'V':
+                        case 'V': // Leave
                             break;
                     }
                     break;
@@ -87,6 +87,36 @@ namespace Codebreak.Service.World.Frames
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void PartyInvite(EntityBase entity, string message)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void PartyDecline(EntityBase entity, string message)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void PartyAccept(EntityBase entity, string message)
+        {
+
         }
 
         /// <summary>

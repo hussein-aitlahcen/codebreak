@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Game.Exchange
 
         public virtual void Leave(bool success = false)
         {
-            base.Dispatch(WorldMessage.EXCHANGE_LEAVE(success));
+            base.DispatchInstant(WorldMessage.EXCHANGE_LEAVE(success));
         }
 
         protected virtual string SerializeAs_ExchangeCreate()

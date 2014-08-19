@@ -927,16 +927,7 @@ namespace Codebreak.Service.World.Game
         {
             return "Gc-" + fightId;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string FIGHT_JOIN_ERROR()
-        {
-            return "GJE";
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

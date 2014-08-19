@@ -8,20 +8,32 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Action
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class GameExchangeActionBase : GameActionBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ExchangeBase Exchange
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public EntityBase DistantEntity
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool CanAbort
         {
             get
@@ -30,6 +42,12 @@ namespace Codebreak.Service.World.Game.Action
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="localEntity"></param>
+        /// <param name="distantEntity"></param>
         public GameExchangeActionBase(ExchangeBase exchange, EntityBase localEntity, EntityBase distantEntity)
             : base(GameActionTypeEnum.EXCHANGE, localEntity)
         {
@@ -40,11 +58,18 @@ namespace Codebreak.Service.World.Game.Action
             Entity.AddUpdatable(Exchange);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void Accept()
         {
             Exchange.Create();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
         public void Leave(bool success = false)
         {
             Exchange.Leave(success);

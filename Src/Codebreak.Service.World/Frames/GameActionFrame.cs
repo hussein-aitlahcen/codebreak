@@ -91,7 +91,7 @@ namespace Codebreak.Service.World.Frames
                         GameChallengeAccept(entity, message);
                         break;
 
-                    case GameActionTypeEnum.CHALLENGE_DENY:
+                    case GameActionTypeEnum.CHALLENGE_DECLINE:
                         GameChallengeDeny(entity, message);
                         break;
 

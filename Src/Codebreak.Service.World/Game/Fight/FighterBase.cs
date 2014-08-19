@@ -193,7 +193,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool Spectating
+        public bool IsSpectating
         {
             get;
             set;
@@ -445,7 +445,7 @@ namespace Codebreak.Service.World.Game.Fight
         public virtual void JoinSpectator(FightBase fight)
         {
             Fight = fight;
-            Spectating = true;
+            IsSpectating = true;
 
             Fight.SpectatorTeam.AddSpectator(this);
             Fight.SpectatorTeam.AddUpdatable(this);
@@ -459,7 +459,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public virtual void LeaveFight(bool kicked = false)
         {
-            if (Spectating)
+            if (IsSpectating)
             {
                 Fight.SpectatorTeam.RemoveSpectator(this);
                 Fight.SpectatorTeam.RemoveUpdatable(this);
@@ -487,7 +487,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public virtual void EndFight(bool win = false)
         {
-            if (!Spectating)
+            if (!IsSpectating)
             {
                 switch (Fight.Type)
                 {
@@ -528,7 +528,7 @@ namespace Codebreak.Service.World.Game.Fight
             SetCell(null);
             Team = null;
             Fight = null;
-            Spectating = false;
+            IsSpectating = false;
             Disconnected = false;
             Invocator = null;
             if (SpellManager != null)
@@ -914,6 +914,30 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             base.AbortAction(actionType, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="message"></param>
+        /// <param name="remoteEntity"></param>
+        public override void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
+        {
+            switch(channel)
+            {
+                case ChatChannelEnum.CHANNEL_TEAM:
+                    if(Fight != null)
+                    {
+                        if (IsSpectating)
+                            Fight.SpectatorTeam.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_TEAM, Id, Name, message));
+                        else
+                            Team.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_TEAM, Id, Name, message));
+                        return;
+                    }
+                    break;
+            }
+            base.DispatchChatMessage(channel, message, remoteEntity);
         }
 
         /// <summary>

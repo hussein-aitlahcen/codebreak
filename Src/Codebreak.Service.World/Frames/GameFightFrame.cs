@@ -88,7 +88,7 @@ namespace Codebreak.Service.World.Frames
                     return;
                 }
 
-                if (fighter.Spectating)
+                if (fighter.IsSpectating)
                 {
                     Logger.Debug("GameFight::TurnReady spectator player cant be ready : " + entity.Name);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -116,7 +116,7 @@ namespace Codebreak.Service.World.Frames
                     return;
                 }
 
-                if (fighter.Spectating)
+                if (fighter.IsSpectating)
                 {
                     Logger.Debug("GameFight::TurnPass spectator player cant pass turn : " + entity.Name);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());

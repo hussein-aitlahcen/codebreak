@@ -346,7 +346,7 @@ namespace Codebreak.Service.World.Game.Entity
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => Fight == null ? default(Action<string>) : ((FighterBase)this).Team.Dispatch);
+            _chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => this.Dispatch);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => this.Dispatch);
 
@@ -389,7 +389,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="channel"></param>
         /// <param name="message"></param>
         /// <param name="remoteEntity"></param>
-        public void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
+        public virtual void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
         {
             var raiser = _chatByChannel[channel];
             if (raiser != null)
@@ -405,41 +405,7 @@ namespace Codebreak.Service.World.Game.Entity
                             break;
 
                         default:
-
-                            if (message.StartsWith(".item"))
-                            {
-                                var cmdData = message.Split(' ');
-                                var templateId = int.Parse(cmdData[1]);
-
-                                var itemTemplate = ItemTemplateRepository.Instance.GetTemplate(templateId);
-                                if(itemTemplate != null)
-                                {
-                                    var instance = itemTemplate.CreateItem(1, ItemSlotEnum.SLOT_INVENTORY, true);
-                                    if (instance != null)
-                                        Inventory.AddItem(instance);
-                                }
-                            }
-                            else if(message.StartsWith(".200"))
-                            {
-                                while(Level != 200)
-                                {
-                                    ((CharacterEntity)this).LevelUp();
-                                }
-                                
-                                base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
-                                base.Dispatch(WorldMessage.SPELLS_LIST(Spells));
-                                base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)this));
-                            }
-                            else if(message.StartsWith(".save"))
-                            {
-                                WorldService.Instance.UpdateWorld();
-
-                                base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Sauvegarde terminée"));
-                            }
-                            else
-                            {
-                                chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
-                            }
+                            chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
                             break;
                     }
                 }
@@ -458,7 +424,7 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.CHALLENGE_ACCEPT:
                     return CurrentAction != null && CurrentAction.Type == GameActionTypeEnum.CHALLENGE_REQUEST && ((GameChallengeRequestAction)CurrentAction).Entity.Id != Id;
 
-                case GameActionTypeEnum.CHALLENGE_DENY:
+                case GameActionTypeEnum.CHALLENGE_DECLINE:
                     return CurrentAction != null && CurrentAction.Type == GameActionTypeEnum.CHALLENGE_REQUEST;
 
                 case GameActionTypeEnum.EXCHANGE:
