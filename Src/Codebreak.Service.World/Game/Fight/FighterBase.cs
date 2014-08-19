@@ -430,6 +430,8 @@ namespace Codebreak.Service.World.Game.Fight
             TurnReady = false;
 
             Team.AddFighter(this);
+            Team.AddUpdatable(this);
+            Team.AddHandler(Dispatch);
 
             SetCell(team.FreePlace);
 
@@ -440,12 +442,16 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fight"></param>
-        public void JoinSpectator(FightBase fight)
+        public virtual void JoinSpectator(FightBase fight)
         {
             Fight = fight;
             Spectating = true;
 
             Fight.SpectatorTeam.AddSpectator(this);
+            Fight.SpectatorTeam.AddUpdatable(this);
+            fight.SpectatorTeam.AddHandler(Dispatch);
+
+            StartAction(GameActionTypeEnum.FIGHT);
         }
 
         /// <summary>
@@ -456,10 +462,14 @@ namespace Codebreak.Service.World.Game.Fight
             if (Spectating)
             {
                 Fight.SpectatorTeam.RemoveSpectator(this);
+                Fight.SpectatorTeam.RemoveUpdatable(this);
+                Fight.SpectatorTeam.RemoveHandler(Dispatch);
             }
             else
             {
                 Team.RemoveFighter(this);
+                Team.RemoveUpdatable(this);
+                Team.RemoveHandler(Dispatch);
 
                 if (!kicked)
                 {
@@ -477,15 +487,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public virtual void EndFight(bool win = false)
         {
-            StopAction(GameActionTypeEnum.FIGHT);
-
-            Team.RemoveHandler(base.Dispatch);
-
             if (!Spectating)
             {
                 switch (Fight.Type)
                 {
-                        // On rend la vie aux joueur en pvp
+                    // On rend la vie aux joueur en pvp
                     case FightTypeEnum.TYPE_CHALLENGE:
                         Life = MaxLife;
                         break;
@@ -496,8 +502,20 @@ namespace Codebreak.Service.World.Game.Fight
                         break;
                 }
 
+                Team.RemoveFighter(this);
+                Team.RemoveUpdatable(this);
+                Team.RemoveHandler(Dispatch);
+
                 Statistics.ClearBoosts();
             }
+            else
+            {
+                Fight.SpectatorTeam.RemoveSpectator(this);
+                Fight.SpectatorTeam.RemoveUpdatable(this);
+                Fight.SpectatorTeam.RemoveHandler(Dispatch);
+            }
+
+            StopAction(GameActionTypeEnum.FIGHT);
 
             if (Disconnected)
             {
@@ -509,16 +527,25 @@ namespace Codebreak.Service.World.Game.Fight
 
             SetCell(null);
             Team = null;
-            Fight = null;            
+            Fight = null;
             Spectating = false;
             Disconnected = false;
             Invocator = null;
-            SpellManager.Dispose();
-            SpellManager = null;
-            StateManager.Dispose();
-            StateManager = null;
-            BuffManager.Dispose();
-            BuffManager = null;
+            if (SpellManager != null)
+            {
+                SpellManager.Dispose();
+                SpellManager = null;
+            }
+            if (StateManager != null)
+            {
+                StateManager.Dispose();
+                StateManager = null;
+            }
+            if (BuffManager != null)
+            {
+                BuffManager.Dispose();
+                BuffManager = null;
+            }
         }
 
         /// <summary>
@@ -827,7 +854,6 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 case GameActionTypeEnum.FIGHT:
                     StopAction(GameActionTypeEnum.MAP);
-                    Fight.AddUpdatable(this);
                     FrameManager.AddFrame(GameFightPlacementFrame.Instance);
                     break;
 
@@ -860,7 +886,6 @@ namespace Codebreak.Service.World.Game.Fight
             switch(actionType)
             {
                 case GameActionTypeEnum.FIGHT:
-                    Fight.RemoveUpdatable(this);
                     WorldService.Instance.AddUpdatable(this);
                     FrameManager.AddFrame(GameCreationFrame.Instance);
                     FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);

@@ -894,7 +894,7 @@ namespace Codebreak.Service.World.Game
         public static string FIGHT_FLAG_DISPLAY(FightBase fight)
         {
             var message = new StringBuilder("Gc+");
-            //fight.SerializeAs_FightFlagSpawn(message);
+            fight.SerializeAs_FightFlag(message);
             return message.ToString();
         }
 
@@ -1114,7 +1114,7 @@ namespace Codebreak.Service.World.Game
         /// </summary>
         /// <param name="fights"></param>
         /// <returns></returns>
-        public static string FightList(IEnumerable<FightBase> fights)
+        public static string FIGHT_LIST(IEnumerable<FightBase> fights)
         {
             var message = new StringBuilder("fL");
             foreach (var fight in fights)            
@@ -1127,7 +1127,7 @@ namespace Codebreak.Service.World.Game
         /// </summary>
         /// <param name="fight"></param>
         /// <returns></returns>
-        public static string FightDetails(FightBase fight)
+        public static string FIGHT_DETAILS(FightBase fight)
         {
             var message = new StringBuilder("fD");
             message.Append(fight.Id);

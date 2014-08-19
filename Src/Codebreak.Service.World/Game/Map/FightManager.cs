@@ -27,6 +27,17 @@ namespace Codebreak.Service.World.Game.Map
             get;
             private set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<FightBase> Fights
+        {
+            get
+            {
+                return _fightList.Values;
+            }
+        }
         
         /// <summary>
         /// 

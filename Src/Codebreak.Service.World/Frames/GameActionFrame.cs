@@ -96,38 +96,7 @@ namespace Codebreak.Service.World.Frames
                         break;
 
                     case GameActionTypeEnum.FIGHT_JOIN:
-
-                        //var fightData = message.Substring(5).Split(';');
-                        //var fightId = int.Parse(fightData[0]);
-                        //var fight = FightManager.GetFight(fightId);
-
-                        //if (fight != null)
-                        //{
-                        //    if (fightData.Length == 1)
-                        //    {
-                        //        fight.TrySpectate(entity);
-                        //    }
-                        //    else
-                        //    {
-                        //        if (entity.HasRestriction(RestrictionEnum.RESTRICTION_CANT_CHALLENGE))
-                        //        {
-                        //            Logger.Debug("player cant challenge.");
-                        //            return;
-                        //        }
-
-                        //        var leaderId = int.Parse(fightData[1]);
-                        //        var team = fight.TryJoin((BaseFighter)entity, leaderId);
-
-                        //        if (team != null)
-                        //        {
-                        //            GameActionFactory.Create(GameActionTypeEnum.FIGHT, entity, fight);
-                        //            entity.AddMessage(() =>
-                        //            {
-                        //                fight.JoinFight((BaseFighter)entity, team);
-                        //            });
-                        //        }
-                        //    }
-                        //}
+                        GameChallengeJoin(entity, message);                        
                         break;
 
                     case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
@@ -135,6 +104,48 @@ namespace Codebreak.Service.World.Frames
                         break;
                 }
             }); 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GameChallengeJoin(EntityBase entity, string message)
+        {
+            var fightData = message.Substring(5).Split(';');
+            var fightId = int.Parse(fightData[0]);
+            var fight = entity.Map.FightManager.GetFight(fightId);
+
+            if(fight == null)
+            {
+                Logger.Debug("GameActionFrame::ChallengeJoin unknow fight : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if(fightData.Length == 1)
+            {
+                fight.TrySpectate((FighterBase)entity);
+                return;
+            }
+
+            if(entity.HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE))
+            {
+                Logger.Debug("GameActionFrame::ChallengeJoin player restricted, unable to challenge : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            long leaderId = -1;
+            if(!long.TryParse(fightData[1], out leaderId))
+            {                
+                Logger.Debug("GameActionFrame::ChallengeJoin unknow leaderId : " + entity.Name);
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            fight.TryJoin((FighterBase)entity, leaderId);
         }
 
         /// <summary>

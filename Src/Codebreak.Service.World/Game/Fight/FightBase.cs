@@ -865,6 +865,8 @@ namespace Codebreak.Service.World.Game.Fight
                 {
                     LoopState = FightLoopStateEnum.STATE_WAIT_START;
                     Map.Dispatch(WorldMessage.FIGHT_FLAG_DISPLAY(this));
+                    Map.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, Team0.LeaderId, Team0.Fighters.ToArray()));
+                    Map.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, Team1.LeaderId, Team1.Fighters.ToArray()));
                 });
         }
 
@@ -929,9 +931,44 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 for (int i = SpectatorTeam.Spectators.Count() - 1; i > -1; i--)
                 {
-                    SpectatorTeam.Spectators.ElementAt(i).AbortAction(GameActionTypeEnum.FIGHT);
+                    FightQuit(SpectatorTeam.Spectators.ElementAt(i), true);
                 }
             });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        public void TrySpectate(FighterBase fighter)
+        {
+            AddMessage(() =>
+                    {
+                        if (State != FightStateEnum.STATE_FIGHTING)
+                        {
+                            Logger.Debug("FightBase::TrySpectate fight already started " + fighter.Name);
+                            fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                            return;
+                        }
+                        
+                        if (!SpectatorTeam.CanJoin)
+                        {
+                            fighter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_SPECTATOR_LOCKED));
+                            return;
+                        }
+
+                        fighter.JoinSpectator(this);
+
+                        fighter.CachedBuffer = true;
+                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_SUCCESS((int)FightStateEnum.STATE_FIGHTING, false, false, true, 0)); // GameJoin
+                        fighter.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, AliveFighters.ToArray()));
+                        fighter.Dispatch(WorldMessage.FIGHT_STARTS());
+                        fighter.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                        fighter.Dispatch(WorldMessage.FIGHT_TURN_STARTS(CurrentFighter.Id, TurnTimeLeft));
+                        fighter.CachedBuffer = false;
+                        
+                        base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_SPECTATOR_JOINED, fighter.Name));
+                    });
         }
 
         /// <summary>
@@ -940,29 +977,32 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="client"></param>
         public void TryJoin(FighterBase fighter, long teamId)
         {
-            if (State != FightStateEnum.STATE_PLACEMENT)
-            {
-                Logger.Debug("Fight::TryJoin fight already started " + fighter.Name);
-                fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
-                return;
-            }
+            AddMessage(() =>
+                {
+                    if (State != FightStateEnum.STATE_PLACEMENT)
+                    {
+                        Logger.Debug("FightBase::TryJoin fight already started " + fighter.Name);
+                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                        return;
+                    }
 
-            if (!CanJoin(fighter))
-            {
-                fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
-                return;
-            }
+                    if (!CanJoin(fighter))
+                    {
+                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                        return;
+                    }
 
-            FightTeam team = teamId == Team0.LeaderId ? Team0 : Team1;
+                    FightTeam team = teamId == Team0.LeaderId ? Team0 : Team1;
 
-            if (!team.CanJoinBeforeStart(fighter))
-            {
-                Logger.Debug("Fight::TryJoin cannot join team before start " + fighter.Name);
-                fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
-                return;
-            }
+                    if (!team.CanJoinBeforeStart(fighter))
+                    {
+                        Logger.Debug("FightBase::TryJoin cannot join team before start " + fighter.Name);
+                        fighter.Dispatch(WorldMessage.FIGHT_JOIN_ERROR());
+                        return;
+                    }
 
-            JoinFight(fighter, team);
+                    JoinFight(fighter, team);
+                });
         }
 
         /// <summary>
@@ -978,7 +1018,6 @@ namespace Codebreak.Service.World.Game.Fight
                 {
                     fighter.JoinFight(this, team);
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
-                    team.AddHandler(fighter.Dispatch);
                 }
                 
                 if (fighter.Type == EntityTypEnum.TYPE_CHARACTER)
@@ -1589,6 +1628,12 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
+                if(_currentApCost != -1)
+                {
+                    Logger.Debug("Fight::LaunchSpell fight already processing spell launch and not finished : " + fighter.Name);
+                    return;
+                }
+
                 if (fighter.Spells == null)
                 {
                     Logger.Debug("Fight::LaunchSpell empty spellbook : " + fighter.Name);
@@ -1748,7 +1793,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
         
 
-        // <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="winnerTeam"></param>
@@ -1771,17 +1816,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void FightEnded()
         {
-            foreach (var fighter in _winnerTeam.Fighters)
+            foreach (var fighter in _winnerTeam.Fighters.ToArray())
             {
                 fighter.EndFight(true);
             }
 
-            foreach (var fighter in _loserTeam.Fighters)
+            foreach (var fighter in _loserTeam.Fighters.ToArray())
             {
                 fighter.EndFight();
             }
 
-            foreach (var spectator in SpectatorTeam.Spectators)
+            foreach (var spectator in SpectatorTeam.Spectators.ToArray())
             {
                 spectator.EndFight();
             }
@@ -1976,6 +2021,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="message"></param>
         public abstract void SerializeAs_FightList(StringBuilder message);
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public abstract void SerializeAs_FightFlag(StringBuilder message);
     }
 }

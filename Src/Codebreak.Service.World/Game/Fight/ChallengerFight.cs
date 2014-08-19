@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Attacker = attacker;
             Defender = defender;
-            
+
             JoinFight(Attacker, Team0);
             JoinFight(Defender, Team1);
 
@@ -144,6 +144,21 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="message"></param>
         public override void SerializeAs_FightList(StringBuilder message)
+        {
+            message.Append(Id.ToString()).Append(';');
+            message.Append(UpdateTime).Append(';'); // TODO : Time;
+            message.Append("0,0,"); // TODO : Alignement etc
+            message.Append(Team0.AliveFighters.Count()).Append(';');
+            message.Append("0,0,"); // TODO : Valeur monster "," Alignement monstre
+            message.Append(Team1.AliveFighters.Count()).Append(';');
+            message.Append('|');
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public override void SerializeAs_FightFlag(StringBuilder message)
         {
             if (_serializedFlag == null)
             {
