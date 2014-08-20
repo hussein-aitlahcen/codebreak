@@ -577,7 +577,6 @@ namespace Codebreak.Service.World.Game.Entity
 
                 case GameActionTypeEnum.MAP:
                     FrameManager.RemoveFrame(GameMapFrame.Instance);
-                    FrameManager.RemoveFrame(InventoryFrame.Instance);
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
                     Map.DestroyEntity(this);

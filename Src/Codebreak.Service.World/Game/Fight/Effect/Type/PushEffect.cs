@@ -124,7 +124,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <returns></returns>
         private static FightActionResultEnum ApplyPushBackDamages(CastInfos castInfos, FighterBase target, int length, int currentLength)
         {
-            var damageCoef = Util.Next(9, 16);
+            var damageCoef = Util.Next(9, 17);
             double levelCoef = castInfos.Caster.Level / 50;
             if (levelCoef < 0.1)
                 levelCoef = 0.1;

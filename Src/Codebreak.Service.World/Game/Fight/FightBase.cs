@@ -1211,6 +1211,7 @@ namespace Codebreak.Service.World.Game.Fight
                 foreach (var fighter in Fighters)
                 {
                     fighter.FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
+                    fighter.FrameManager.RemoveFrame(InventoryFrame.Instance);
                     fighter.FrameManager.AddFrame(GameActionFrame.Instance);
                     fighter.FrameManager.AddFrame(GameFightFrame.Instance);
                 }
@@ -1584,9 +1585,9 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             var distance = Pathfinding.GoalDistance(Map, cellId, castCell);
-            var maxPo = spellLevel.MaxPO + (spellLevel.AllowPOBoost ? fighter.Statistics.GetTotal(EffectEnum.AddPO) : 0);
+            var maxPo = spellLevel.MaxPO + fighter.Statistics.GetTotal(EffectEnum.AddPO);
 
-            if (maxPo - spellLevel.MinPO < 1)
+            if (maxPo < spellLevel.MinPO)
                 maxPo = spellLevel.MinPO;
 
             if (distance > maxPo || distance < spellLevel.MinPO)
@@ -1718,7 +1719,7 @@ namespace Codebreak.Service.World.Game.Fight
                         if (criticalFailureRate < 2)
                             criticalFailureRate = 2;
 
-                        if (Util.Next(1, criticalFailureRate) == 1)
+                        if (Util.Next(0, criticalFailureRate) == 1)
                             failure = true;
                     }
 
@@ -1743,7 +1744,7 @@ namespace Codebreak.Service.World.Game.Fight
                         if (criticalHitRate < 2)
                             criticalHitRate = 2;
 
-                        if (Util.Next(1, criticalHitRate) == 1)
+                        if (Util.Next(0, criticalHitRate) == 1)
                             criticalHit = true;
                     }
 
@@ -1884,7 +1885,7 @@ namespace Codebreak.Service.World.Game.Fight
                     if (echecRate < 2)
                         echecRate = 2;
 
-                    if (Util.Next(1, echecRate) == 1)
+                    if (Util.Next(0, echecRate) == 1)
                         isEchec = true;
 
                     if (isEchec)
@@ -1916,7 +1917,7 @@ namespace Codebreak.Service.World.Game.Fight
                     if (criticalHitRate < 2)
                         criticalHitRate = 2;
 
-                    if (Util.Next(1, criticalHitRate) == 1)
+                    if (Util.Next(0, criticalHitRate) == 1)
                         isCritic = true;
                 }
                 
@@ -1958,7 +1959,7 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         if (effect.Chance > 0)
                         {
-                            if (Util.Next(1, 101) > (effect.Chance + actualChance))
+                            if (Util.Next(0, 100) > (effect.Chance + actualChance))
                             {
                                 actualChance += effect.Chance;
                                 continue;

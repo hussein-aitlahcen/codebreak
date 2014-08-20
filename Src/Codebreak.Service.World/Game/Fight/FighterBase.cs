@@ -461,6 +461,7 @@ namespace Codebreak.Service.World.Game.Fight
             Fight = fight;
             Team = team;
             TurnReady = false;
+            TurnPass = false;
 
             Team.AddFighter(this);
             Team.AddUpdatable(this);
@@ -563,7 +564,10 @@ namespace Codebreak.Service.World.Game.Fight
             Fight = null;
             IsSpectating = false;
             Disconnected = false;
+            TurnPass = false;
+            TurnReady = false;
             Invocator = null;
+
             if (SpellManager != null)
             {
                 SpellManager.Dispose();

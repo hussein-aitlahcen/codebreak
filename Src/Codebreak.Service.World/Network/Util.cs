@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static int Next(int min, int max)
         {
-            return Random.Next(min, max + 1);
+            return Random.Next(min, max);
         }
 
         /// <summary>
