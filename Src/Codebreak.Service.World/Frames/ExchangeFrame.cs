@@ -106,6 +106,7 @@ namespace Codebreak.Service.World.Frames
                     entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
+
                 switch (distantEntity.Type)
                 {
                     case EntityTypEnum.TYPE_CHARACTER:

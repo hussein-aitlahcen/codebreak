@@ -148,25 +148,16 @@ namespace Codebreak.Service.World.Game.Stats
             /// <returns></returns>
             public string ToItemString()
             {
-                var SerializedStats = new StringBuilder();
-
-                if (ItemTemplateDAO.IsWeaponEffect(EffectType))
-                {
-                    // TODO JET DES WEAPONS 1dx+x
-                }
-                else
-                {
-                    SerializedStats.Append(Type.ToString("x"));
-                    SerializedStats.Append("#" + Items.ToString("x") + "#0#0#");
-                    SerializedStats.Append("0d0+0");
-                }
-
-                return SerializedStats.ToString();
+                var serializedStats = new StringBuilder();
+                serializedStats.Append(Type.ToString("x"));
+                serializedStats.Append("#" + Items.ToString("x") + "#0#0#");
+                serializedStats.Append("0d0+0");
+                return serializedStats.ToString();
             }
         }
 
         /// <summary>
-        /// Effet possible d'une arme
+        /// 
         /// </summary>
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
         public sealed class WeaponEffect
@@ -174,6 +165,7 @@ namespace Codebreak.Service.World.Game.Stats
             /// <summary>
             /// 
             /// </summary>
+            public int EffectId;
             public int Min;
             public int Max;
             public string Args;
@@ -181,11 +173,19 @@ namespace Codebreak.Service.World.Game.Stats
             /// <summary>
             /// 
             /// </summary>
+            public WeaponEffect()
+            {
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
             /// <param name="min"></param>
             /// <param name="max"></param>
             /// <param name="args"></param>
-            public WeaponEffect(int min, int max, string args)
+            public WeaponEffect(int effectId, int min, int max, string args)
             {
+                EffectId = effectId;
                 Min = min;
                 Max = max;
                 Args = args;
@@ -194,20 +194,29 @@ namespace Codebreak.Service.World.Game.Stats
             /// <summary>
             /// 
             /// </summary>
-            public WeaponEffect()
+            /// <returns></returns>
+            public override string ToString()
             {
+                var serializedStats = new StringBuilder();
+                serializedStats.Append(EffectId.ToString("x"));
+                serializedStats.Append("#" + Min.ToString("x") + "#" + Max.ToString("x") + "#0#");
+                serializedStats.Append("0d0+0");
+                return serializedStats.ToString();
             }
         }
 
-        /* Dictionnaire des effets */
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<EffectEnum, GenericEffect> _genericEffects = new Dictionary<EffectEnum, GenericEffect>();
-        private Dictionary<Tuple<EffectEnum, int>, WeaponEffect> _weaponEffects = new Dictionary<Tuple<EffectEnum, int>, WeaponEffect>();
+        private List<WeaponEffect> _weaponEffects = new List<WeaponEffect>();
         private Dictionary<EffectEnum, string> _specialEffects = new Dictionary<EffectEnum, string>();
 
-        /* Effets opposés */
+        /// <summary>
+        /// 
+        /// </summary>
         private static Dictionary<EffectEnum, List<EffectEnum>> OppositeStats = new Dictionary<EffectEnum, List<EffectEnum>>()
         {
-            /* Statistiques de base */
             {EffectEnum.AddInitiative, new List<EffectEnum>() { EffectEnum.SubInitiative }},
             {EffectEnum.AddAP, new List<EffectEnum>() { EffectEnum.SubAP,  EffectEnum.SubAPDodgeable }},
             {EffectEnum.AddMP, new List<EffectEnum>() { EffectEnum.SubMP, EffectEnum.SubMPDodgeable }},
@@ -222,7 +231,6 @@ namespace Codebreak.Service.World.Game.Stats
             {EffectEnum.AddAgility, new List<EffectEnum>() { EffectEnum.SubAgility }},
             {EffectEnum.AddChance, new List<EffectEnum>() { EffectEnum.SubChance }},
 
-            /* Statistiques avancés */
             {EffectEnum.AddDamage, new List<EffectEnum>() { EffectEnum.SubDamage }},
             {EffectEnum.AddDamagePercent, new List<EffectEnum>() { EffectEnum.SubDamagePercent }},
             {EffectEnum.AddDamageCritic, new List<EffectEnum>() { EffectEnum.SubDamageCritic }},
@@ -231,7 +239,6 @@ namespace Codebreak.Service.World.Game.Stats
             {EffectEnum.AddAPDodge, new List<EffectEnum>() { EffectEnum.SubAPDodgeable }},
             {EffectEnum.AddMPDodge, new List<EffectEnum>() { EffectEnum.SubMPDodgeable }},
 
-            /* Resistances / Malus */
             {EffectEnum.AddReduceDamageAir, new List<EffectEnum>() { EffectEnum.SubReduceDamageAir }},
             {EffectEnum.AddReduceDamageWater, new List<EffectEnum>() { EffectEnum.SubReduceDamageWater }},
             {EffectEnum.AddReduceDamageFire, new List<EffectEnum>() { EffectEnum.SubReduceDamageFire }},
@@ -251,6 +258,9 @@ namespace Codebreak.Service.World.Game.Stats
             {EffectEnum.AddReduceDamagePercentPvPEarth, new List<EffectEnum>() { EffectEnum.SubReduceDamagePercentPvPEarth }},
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
         public GenericStats()
         {
         }
@@ -277,7 +287,7 @@ namespace Codebreak.Service.World.Game.Stats
         }
 
         /// <summary>
-        /// Retourne tous les effets
+        /// 
         /// </summary>
         /// <returns></returns>
         public Dictionary<EffectEnum, GenericEffect> GetEffects()
@@ -286,10 +296,10 @@ namespace Codebreak.Service.World.Game.Stats
         }
 
         /// <summary>
-        /// Retoure les effets d'arme
+        /// 
         /// </summary>
         /// <returns></returns>
-        public Dictionary<Tuple<EffectEnum, int>, WeaponEffect> GetWeaponEffects()
+        public List<WeaponEffect> GetWeaponEffects()
         {
             return _weaponEffects;
         }
@@ -329,7 +339,6 @@ namespace Codebreak.Service.World.Game.Stats
                     break;
             }
 
-            // malus ?
             if (OppositeStats.ContainsKey(effectType))
             {
                 foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
@@ -348,7 +357,7 @@ namespace Codebreak.Service.World.Game.Stats
         }
 
         /// <summary>
-        /// Retourne le total d'un effet
+        ///
         /// </summary>
         /// <param name="effectType"></param>
         /// <returns></returns>
@@ -356,7 +365,6 @@ namespace Codebreak.Service.World.Game.Stats
         {
             int total = 0;
 
-            // existant ?
             if (_genericEffects.ContainsKey(effectType))
             {
                 total += _genericEffects[effectType].Total;
@@ -379,7 +387,6 @@ namespace Codebreak.Service.World.Game.Stats
                     break;
             }
 
-            // malus ?
             if (OppositeStats.ContainsKey(effectType))
             {
                 foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
@@ -395,7 +402,7 @@ namespace Codebreak.Service.World.Game.Stats
         }
 
         /// <summary>
-        /// Retourne l'effet désiré
+        ///
         /// </summary>
         /// <param name="EffectType"></param>
         /// <returns></returns>
@@ -403,22 +410,21 @@ namespace Codebreak.Service.World.Game.Stats
         {
             if (!_genericEffects.ContainsKey(EffectType))
                 _genericEffects.Add(EffectType, new GenericEffect(EffectType));
-
             return _genericEffects[EffectType];
         }
 
         /// <summary>
-        /// Retourne l'effet désiré
+        /// 
         /// </summary>
         /// <param name="EffectType"></param>
         /// <returns></returns>
         public IEnumerable<WeaponEffect> GetWeaponEffect(EffectEnum EffectType)
         {
-            return _weaponEffects.Where(entry => entry.Key.Item1 == EffectType).Select(entry => entry.Value);
+            return _weaponEffects.Where(effect => effect.EffectId == (int)EffectType);
         }
 
         /// <summary>
-        /// Retourne l'effet désiré
+        /// 
         /// </summary>
         /// <param name="EffectType"></param>
         /// <returns></returns>
@@ -426,7 +432,6 @@ namespace Codebreak.Service.World.Game.Stats
         {
             if (!_specialEffects.ContainsKey(EffectType))
                 return null;
-
             return _specialEffects[EffectType];
         }
 
@@ -435,77 +440,71 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         public void ClearBoosts()
         {
-            foreach (var effect in _genericEffects)
-            {
-                effect.Value.Boosts = 0;
-            }
+            foreach (var effect in _genericEffects)            
+                effect.Value.Boosts = 0;            
         }
 
         /// <summary>
-        /// Stats de base
+        ///
         /// </summary>
         /// <param name="EffectType"></param>
         /// <param name="Value"></param>
-        public void AddBase(EffectEnum EffectType, int Value)
+        public void AddBase(EffectEnum effectType, int Value)
         {
-            if (!_genericEffects.ContainsKey(EffectType))
-                _genericEffects.Add(EffectType, new GenericEffect(EffectType, baseValue: Value));
-            else
-                _genericEffects[EffectType].Base += Value;
+            if (!_genericEffects.ContainsKey(effectType))
+                _genericEffects.Add(effectType, new GenericEffect(effectType));
+            _genericEffects[effectType].Base += Value;
         }
 
         /// <summary>
-        /// Boosts (buffs etc)
+        /// 
         /// </summary>
         /// <param name="EffectType"></param>
         /// <param name="Value"></param>
-        public void AddBoost(EffectEnum EffectType, int Value)
+        public void AddBoost(EffectEnum effectType, int value)
         {
-            if (!_genericEffects.ContainsKey(EffectType))
-                _genericEffects.Add(EffectType, new GenericEffect(EffectType, boosts: Value));
-            else
-                _genericEffects[EffectType].Boosts += Value;
+            if (!_genericEffects.ContainsKey(effectType))
+                _genericEffects.Add(effectType, new GenericEffect(effectType));
+            _genericEffects[effectType].Boosts += value;
         }
 
         /// <summary>
-        /// Effets d'items
+        /// 
+        /// </summary>
+        /// <param name="effectType"></param>
+        /// <param name="value"></param>
+        public void AddItem(EffectEnum effectType, int value)
+        {
+            if (!_genericEffects.ContainsKey(effectType))
+                _genericEffects.Add(effectType, new GenericEffect(effectType));
+            _genericEffects[effectType].Items += value;
+        }
+
+        /// <summary>
+        /// 
         /// </summary>
         /// <param name="EffectType"></param>
         /// <param name="Value"></param>
-        public void AddItem(EffectEnum EffectType, int Value)
+        public void AddDon(EffectEnum effectType, int Value)
         {
-            if (!_genericEffects.ContainsKey(EffectType))
-                _genericEffects.Add(EffectType, new GenericEffect(EffectType, items: Value));
-            else
-                _genericEffects[EffectType].Items += Value;
+            if (!_genericEffects.ContainsKey(effectType))
+                _genericEffects.Add(effectType, new GenericEffect(effectType));
+            _genericEffects[effectType].Dons += Value;
         }
 
         /// <summary>
-        /// Effets d'items
+        /// 
         /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="Value"></param>
-        public void AddDon(EffectEnum EffectType, int Value)
+        /// <param name="effectType"></param>
+        /// <param name="minJet"></param>
+        /// <param name="maxJet"></param>
+        public void AddWeaponEffect(EffectEnum effectType, int minJet, int maxJet, string args)
         {
-            if (!_genericEffects.ContainsKey(EffectType))
-                _genericEffects.Add(EffectType, new GenericEffect(EffectType, dons: Value));
-            else
-                _genericEffects[EffectType].Dons += Value;
+            _weaponEffects.Add(new WeaponEffect((int)effectType, minJet, maxJet, args));
         }
 
         /// <summary>
-        /// Ajout d'un effet d'arme
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="MinJet"></param>
-        /// <param name="MaxJet"></param>
-        public void AddWeaponEffect(EffectEnum EffectType, int MinJet, int MaxJet, string Args)
-        {
-            _weaponEffects.Add(new Tuple<EffectEnum, int>(EffectType, _weaponEffects.Count), new WeaponEffect(MinJet, MaxJet, Args));
-        }
-
-        /// <summary>
-        /// Ajout d'un effet texte genre traque etc ...
+        ///
         /// </summary>
         /// <param name="EffectType"></param>
         /// <param name="Args"></param>
@@ -515,15 +514,15 @@ namespace Codebreak.Service.World.Game.Stats
         }
 
         /// <summary>
-        /// Retourne les stats en format de stats d'item
+        /// 
         /// </summary>
         public string ToItemStats()
         {
-            return string.Join(",", _genericEffects.Select(x => x.Value.ToItemString())) + (_weaponEffects.Count > 0 ? "," : "") + string.Join(",", _weaponEffects.Select(x => x.Value.ToString()));
+            return string.Join(",", _weaponEffects.Select(x => x.ToString())) + (_genericEffects.Count > 0 ? "," : "") +  string.Join(",", _genericEffects.Select(x => x.Value.ToItemString()));
         }
 
         /// <summary>
-        /// Fusionne les statistiques
+        /// 
         /// </summary>
         /// <param name="Stats"></param>
         public void Merge(GenericStats Stats)
@@ -532,13 +531,12 @@ namespace Codebreak.Service.World.Game.Stats
             {
                 if (!_genericEffects.ContainsKey(Effect.Key))
                     _genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
-
                 _genericEffects[Effect.Key].Merge(Effect.Value);
             }
         }
 
         /// <summary>
-        /// Defusionne les statistiques
+        /// 
         /// </summary>
         /// <param name="Stats"></param>
         public void UnMerge(GenericStats Stats)
@@ -547,7 +545,6 @@ namespace Codebreak.Service.World.Game.Stats
             {
                 if (!_genericEffects.ContainsKey(Effect.Key))
                     _genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
-
                 _genericEffects[Effect.Key].UnMerge(Effect.Value);
             }
         }

@@ -13,6 +13,7 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.WorldService;
 using Codebreak.Framework.Generic;
+using Codebreak.Service.World.Database.Structures;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -1569,13 +1570,7 @@ namespace Codebreak.Service.World.Game.Fight
                 Logger.Debug("Fight::CanLaunchSpell fighter try to launch a spell but its not his turn : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
             }
-
-            if (!fighter.CanGameAction(GameActionTypeEnum.FIGHT_SPELL_LAUNCH))
-            {
-                Logger.Debug("Fight::CanLaunchSpell fighter cannot game action : " + fighter.Name);
-                return FightSpellLaunchResultEnum.RESULT_ERROR;
-            }
-
+            
             if (GetCell(castCell) == null)
             {
                 Logger.Debug("Fight::CanLaunchSpell null cast cell : " + fighter.Name);
@@ -1594,7 +1589,7 @@ namespace Codebreak.Service.World.Game.Fight
             if (maxPo - spellLevel.MinPO < 1)
                 maxPo = spellLevel.MinPO;
 
-            if (distance > maxPo || distance < spellLevel.MinPO - 1)
+            if (distance > maxPo || distance < spellLevel.MinPO)
             {
                 Logger.Debug("Fight::CanLaunchSpell target cell not in range : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
@@ -1622,102 +1617,149 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        /// <param name="spellId"></param>
-        /// <param name="castCellId"></param>
-        public void LaunchSpell(FighterBase fighter, int spellId, int castCellId, int actionTime = 5000)
+        /// <param name="cellId"></param>
+        /// <returns></returns>
+        public bool CanUseWeapon(FighterBase fighter, InventoryItemDAO weapon, int cellId)
+        {
+            var template = weapon.GetTemplate();
+
+            if (LoopState != FightLoopStateEnum.STATE_WAIT_TURN)
+            {
+                Logger.Debug("Fight::CanUseWeapon trying to cast spell withouth being in turn wait phase : " + fighter.Name);
+                return false;
+            }
+
+            if (CurrentFighter != fighter)
+            {
+                Logger.Debug("Fight::CanUseWeapon fighter try to use weapon but its not his turn : " + fighter.Name);
+                return false;
+            }
+
+            if (GetCell(cellId) == null)
+            {
+                Logger.Debug("Fight::CanUseWeapon null cast cell : " + fighter.Name);
+                return false;
+            }
+
+            if (fighter.AP < template.APCost)
+            {
+                Logger.Debug("Fight::CanUseWeapon not enought AP : " + fighter.Name);
+                return false;
+            }
+
+            var distance = Pathfinding.GoalDistance(Map, fighter.Cell.Id, cellId);
+            var poMax = template.POMax + fighter.Statistics.GetTotal(EffectEnum.AddPO);
+
+            if (poMax - template.POMin < 1)
+                poMax = template.POMin;
+
+            if (distance > poMax || distance < template.POMin)
+            {
+                Logger.Debug("Fight::CanUseWeapon target cell not in range : " + fighter.Name);
+                return false;
+            }
+
+            // TODO : CHECK LOS
+            //if (spellLevel.LineOfSight && !Pathfinding.CheckView(this, cellId, castCell))
+            //    return FightSpellLaunchResultEnum.RESULT_NO_LOS;
+            
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        /// <param name="cellId"></param>
+        public void TryUseWeapon(FighterBase fighter, int cellId, int actionTime = 5000)
         {
             AddMessage(() =>
-            {
-                if (State != FightStateEnum.STATE_FIGHTING)
                 {
-                    Logger.Debug("Fight::LaunchSpell fight is not in fighting state : " + fighter.Name);
-                    return;
-                }
-
-                if(_currentApCost != -1)
-                {
-                    Logger.Debug("Fight::LaunchSpell fight already processing spell launch and not finished : " + fighter.Name);
-                    return;
-                }
-
-                if (fighter.Spells == null)
-                {
-                    Logger.Debug("Fight::LaunchSpell empty spellbook : " + fighter.Name);
-                    return;
-                }
-
-                var spellLevel = fighter.Spells.GetSpellLevel(spellId);
-
-                if (spellLevel == null)
-                {
-                    Logger.Debug("Fight::LaunchSpell unnknow spellId : " + fighter.Name);
-                    return;
-                }
-
-                if (CanLaunchSpell(fighter, spellLevel, spellId, fighter.Cell.Id, castCellId) != FightSpellLaunchResultEnum.RESULT_OK)
-                {
-                    Logger.Debug("Fight::LaunchSpell unable to launch spell : " + fighter.Name);
-                    return;
-                }
-
-                fighter.UsedAP += spellLevel.APCost;
-
-                var isEchec = false;
-                var echecRate = spellLevel.ESCRate - fighter.Statistics.GetTotal(EffectEnum.AddEchecCritic);
-
-                if (echecRate < 2)
-                    echecRate = 2;
-
-                if (spellLevel.ESCRate != 0 && (Util.Next(0, spellLevel.ESCRate) == 1))
-                    isEchec = true;
-
-                if (isEchec)
-                {
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_ECHEC, fighter.Id, spellId.ToString()));
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
-
-                    if (spellLevel.IsECSEndTurn == 1)
+                    if(State != FightStateEnum.STATE_FIGHTING)
                     {
-                        CurrentFighter.TurnPass = true;
-                    }
-                }
-                else
-                {
-                    var target = GetFighterOnCell(castCellId);
-                    if (target != null)
-                    {
-                        fighter.SpellManager.Actualize(spellLevel, spellId, target.Id);
+                        Logger.Debug("Fight::TryUseWeapon fight is not in fighting state : " + fighter.Name);
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
                     }
 
-                    var isCritic = false;
-                    if (spellLevel.CSRate != 0 && spellLevel.CriticalEffects.Count > 0)
+                    if (_currentApCost != -1)
                     {
-                        var criticRate = spellLevel.CSRate - fighter.Statistics.GetTotal(EffectEnum.AddDamageCritic);
-
-                        if (criticRate < 2)
-                            criticRate = 2;
-
-                        if (Util.Next(0, criticRate) == 1)
-                            isCritic = true;
+                        Logger.Debug("Fight::TryUseWeapon fight already processing spell launch and not finished : " + fighter.Name);
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
                     }
+                    
+                    var weapon = fighter.Inventory.Items.Find(item => item.GetSlot() == ItemSlotEnum.SLOT_WEAPON);
+
+                    if(weapon == null)
+                    {
+                        TryLaunchSpell(fighter, 0, cellId);
+                        return;
+                    }
+
+                    if(!CanUseWeapon(fighter, weapon, cellId))
+                    {
+                        Logger.Debug("Fight::TryUseWeapon unable to use weapon : " + fighter.Name);
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    var weaponTemplate = weapon.GetTemplate();
+
+                    fighter.UsedAP += weaponTemplate.APCost;
 
                     base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
 
-                    if (isCritic)
+                    var failure = false;
+                    if (weaponTemplate.CFRate != 0)
                     {
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_CRITIC, fighter.Id, spellId.ToString()));
+                        var criticalFailureRate = weaponTemplate.CFRate - fighter.Statistics.GetTotal(EffectEnum.AddEchecCritic);
+
+                        if (criticalFailureRate < 2)
+                            criticalFailureRate = 2;
+
+                        if (Util.Next(1, criticalFailureRate) == 1)
+                            failure = true;
                     }
 
-                    var effects = isCritic ? spellLevel.CriticalEffects : spellLevel.Effects;
-                    var targetLists = new Dictionary<SpellEffect, List<FighterBase>>();
+                    if(failure)
+                    {
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_WEAPON_FAILURE, fighter.Id, weaponTemplate.Id.ToString()));
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + weaponTemplate.APCost));
+                        base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+
+                        // On passe toujours le tour sur un echec critique au corps a corps
+                        CurrentFighter.TurnPass = true;
+                        return;
+                    }
+
+                    var criticalHit = false;
+                    if (weaponTemplate.CSRate != 0)
+                    {
+                        var criticalHitRate = weaponTemplate.CSRate - fighter.Statistics.GetTotal(EffectEnum.AddDamageCritic);
+
+                        fighter.CalculCriticalHitRate(ref criticalHitRate);
+
+                        if (criticalHitRate < 2)
+                            criticalHitRate = 2;
+
+                        if (Util.Next(1, criticalHitRate) == 1)
+                            criticalHit = true;
+                    }
+
+                    if(criticalHit)                   
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
+
+                    var effects = weaponTemplate.GetWeaponEffects();
+                    var targetLists = new Dictionary<Tuple<EffectEnum, int, int> , List<FighterBase>>();
 
                     foreach (var effect in effects)
                     {
                         targetLists.Add(effect, new List<FighterBase>());
 
-                        if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
+                        if (effect.Item1 != EffectEnum.UseGlyph && effect.Item1 != EffectEnum.UseTrap)
                         {
-                            foreach (var currentCellId in CellZone.GetCells(Map, castCellId, fighter.Cell.Id, spellLevel.RangeType))
+                            foreach (var currentCellId in CellZone.GetCells(Map, cellId, fighter.Cell.Id, weaponTemplate.RangeType()))
                             {
                                 var fightCell = GetCell(currentCellId);
                                 if (fightCell != null)
@@ -1733,42 +1775,27 @@ namespace Codebreak.Service.World.Game.Fight
 
                     LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
 
-                    var template = SpellManager.Instance.GetTemplate(spellId);
-
-                    fighter.LaunchSpell(castCellId, spellId, spellLevel.Level, template.Sprite.ToString(), template.SpriteInfos, actionTime, () =>
+                    fighter.UseWeapon(cellId, actionTime, () =>
                     {
-                        var actualChance = 0;
-
                         foreach (var effect in effects)
                         {
-                            if (effect.Chance > 0)
-                            {
-                                if (Util.Next(1, 101) > (effect.Chance + actualChance))
-                                {
-                                    actualChance += effect.Chance;
-                                    continue;
-                                }
-
-                                actualChance -= 100;
-                            }
-
                             targetLists[effect].RemoveAll(affectedTarget => affectedTarget.IsFighterDead);
 
                             if (targetLists[effect].Count == 0)
                             {
                                 AddProcessingTarget(
                                         new CastInfos(
-                                                        effect.TypeEnum,
-                                                        spellId,
-                                                        castCellId,
-                                                        effect.Value1,
-                                                        effect.Value2,
-                                                        effect.Value3,
-                                                        effect.Chance,
-                                                        effect.Duration,
+                                                        effect.Item1,
+                                                        -1,
+                                                        cellId,
+                                                        criticalHit ? effect.Item2 + weaponTemplate.CSBonus : effect.Item2,
+                                                        criticalHit ? effect.Item3 + weaponTemplate.CSBonus : effect.Item3,
+                                                        -1,
+                                                        -1,
+                                                        0,
                                                         fighter,
                                                         null,
-                                                        spellLevel.RangeType)
+                                                        weaponTemplate.RangeType())
                                                      );
                             }
                             else
@@ -1776,25 +1803,213 @@ namespace Codebreak.Service.World.Game.Fight
                                 foreach (var effectTarget in targetLists[effect])
                                 {
                                     AddProcessingTarget(new CastInfos(
-                                                        effect.TypeEnum,
-                                                        spellId,
-                                                        castCellId,
-                                                        effect.Value1,
-                                                        effect.Value2,
-                                                        effect.Value3,
-                                                        effect.Chance,
-                                                        effect.Duration,
+                                                        effect.Item1,
+                                                        -1,
+                                                        cellId,
+                                                        criticalHit ? effect.Item2 + weaponTemplate.CSBonus : effect.Item2,
+                                                        criticalHit ? effect.Item3 + weaponTemplate.CSBonus : effect.Item3,
+                                                        -1,
+                                                        -1,
+                                                        0,
                                                         fighter,
                                                         effectTarget,
-                                                        spellLevel.RangeType,
+                                                        weaponTemplate.RangeType(),
                                                         effectTarget.Cell.Id));
                                 }
-                            }                 
+                            }
+
                         }
 
-                        _currentApCost = spellLevel.APCost;
+                        _currentApCost = weaponTemplate.APCost;
                     });
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        /// <param name="spellId"></param>
+        /// <param name="castCellId"></param>
+        public void TryLaunchSpell(FighterBase fighter, int spellId, int castCellId, int actionTime = 5000)
+        {
+            AddMessage(() =>
+            {
+                if (State != FightStateEnum.STATE_FIGHTING)
+                {
+                    Logger.Debug("Fight::TryLaunchSpell fight is not in fighting state : " + fighter.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
                 }
+
+                if (_currentApCost != -1)
+                {
+                    Logger.Debug("Fight::TryLaunchSpell fight already processing spell launch and not finished : " + fighter.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                if (fighter.Spells == null)
+                {
+                    Logger.Debug("Fight::TryLaunchSpell empty spellbook : " + fighter.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var spellLevel = fighter.Spells.GetSpellLevel(spellId);
+
+                if (spellLevel == null)
+                {
+                    Logger.Debug("Fight::TryLaunchSpell unnknow spellId : " + fighter.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                if (CanLaunchSpell(fighter, spellLevel, spellId, fighter.Cell.Id, castCellId) != FightSpellLaunchResultEnum.RESULT_OK)
+                {
+                    Logger.Debug("Fight::TryLaunchSpell unable to launch spell : " + fighter.Name);
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                fighter.UsedAP += spellLevel.APCost;
+                
+                base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
+
+                var isEchec = false;
+                if (spellLevel.ESCRate != 0)
+                {
+                    var echecRate = spellLevel.ESCRate - fighter.Statistics.GetTotal(EffectEnum.AddEchecCritic);
+
+                    if (echecRate < 2)
+                        echecRate = 2;
+
+                    if (Util.Next(1, echecRate) == 1)
+                        isEchec = true;
+
+                    if (isEchec)
+                    {
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_FAILURE, fighter.Id, spellId.ToString()));
+                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
+                        base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+
+                        if (spellLevel.IsECSEndTurn == 1)
+                            CurrentFighter.TurnPass = true;
+
+                        return;
+                    }
+                }
+
+                var target = GetFighterOnCell(castCellId);
+                if (target != null)
+                {
+                    fighter.SpellManager.Actualize(spellLevel, spellId, target.Id);
+                }
+
+                var isCritic = false;
+                if (spellLevel.CSRate != 0 && spellLevel.CriticalEffects.Count > 0)
+                {
+                    var criticalHitRate = spellLevel.CSRate - fighter.Statistics.GetTotal(EffectEnum.AddDamageCritic);
+                    
+                    fighter.CalculCriticalHitRate(ref criticalHitRate);
+
+                    if (criticalHitRate < 2)
+                        criticalHitRate = 2;
+
+                    if (Util.Next(1, criticalHitRate) == 1)
+                        isCritic = true;
+                }
+                
+                if (isCritic)                
+                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, spellId.ToString()));                
+
+                var effects = isCritic ? spellLevel.CriticalEffects : spellLevel.Effects;
+                var targetLists = new Dictionary<SpellEffect, List<FighterBase>>();
+
+                foreach (var effect in effects)
+                {
+                    targetLists.Add(effect, new List<FighterBase>());
+
+                    if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
+                    {
+                        foreach (var currentCellId in CellZone.GetCells(Map, castCellId, fighter.Cell.Id, spellLevel.RangeType))
+                        {
+                            var fightCell = GetCell(currentCellId);
+                            if (fightCell != null)
+                            {
+                                if (fightCell.HasObject(FightObstacleTypeEnum.TYPE_FIGHTER))
+                                {
+                                    targetLists[effect].AddRange(fightCell.FightObjects.OfType<FighterBase>());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
+
+                var template = SpellManager.Instance.GetTemplate(spellId);
+
+                fighter.LaunchSpell(castCellId, spellId, spellLevel.Level, template.Sprite.ToString(), template.SpriteInfos, actionTime, () =>
+                {
+                    var actualChance = 0;
+
+                    foreach (var effect in effects)
+                    {
+                        if (effect.Chance > 0)
+                        {
+                            if (Util.Next(1, 101) > (effect.Chance + actualChance))
+                            {
+                                actualChance += effect.Chance;
+                                continue;
+                            }
+                            actualChance -= 100;
+                        }
+
+                        targetLists[effect].RemoveAll(affectedTarget => affectedTarget.IsFighterDead);
+
+                        if (targetLists[effect].Count == 0)
+                        {
+                            AddProcessingTarget(
+                                    new CastInfos(
+                                                    effect.TypeEnum,
+                                                    spellId,
+                                                    castCellId,
+                                                    effect.Value1,
+                                                    effect.Value2,
+                                                    effect.Value3,
+                                                    effect.Chance,
+                                                    effect.Duration,
+                                                    fighter,
+                                                    null,
+                                                    spellLevel.RangeType)
+                                                 );
+                        }
+                        else
+                        {
+                            foreach (var effectTarget in targetLists[effect])
+                            {
+                                AddProcessingTarget(new CastInfos(
+                                                    effect.TypeEnum,
+                                                    spellId,
+                                                    castCellId,
+                                                    effect.Value1,
+                                                    effect.Value2,
+                                                    effect.Value3,
+                                                    effect.Chance,
+                                                    effect.Duration,
+                                                    fighter,
+                                                    effectTarget,
+                                                    spellLevel.RangeType,
+                                                    effectTarget.Cell.Id));
+                            }
+                        }
+
+                    }
+
+                    _currentApCost = spellLevel.APCost;
+
+                });
             });
         }
         

@@ -435,6 +435,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cellId"></param>
+        public void UseWeapon(int cellId, long duration, System.Action callback)
+        {
+            CurrentAction = new GameFightWeaponAction(this, cellId, duration, callback);
+
+            StartAction(GameActionTypeEnum.FIGHT_WEAPON_USE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void JoinFight(FightBase fight, FightTeam team)
         {
             BuffManager = new BuffEffectManager(this);
@@ -715,6 +726,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="CHRate"></param>
+        public void CalculCriticalHitRate(ref int CHRate)
+        {
+            CHRate = (int)(CHRate * Math.E * 1.1 / Math.Log(Statistics.GetTotal(EffectEnum.AddAgility) + 12));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="DamageEffect"></param>
         public int CalculArmor(EffectEnum DamageEffect)
         {
@@ -882,8 +902,9 @@ namespace Codebreak.Service.World.Game.Fight
                     FrameManager.AddFrame(GameFightPlacementFrame.Instance);
                     break;
 
+                case GameActionTypeEnum.FIGHT_WEAPON_USE:
                 case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
-                    Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_SPELL_LAUNCH, Id, CurrentAction.SerializeAs_GameAction()));
+                    Fight.Dispatch(WorldMessage.GAME_ACTION(CurrentAction.Type, Id, CurrentAction.SerializeAs_GameAction()));
                     break;
 
                 case GameActionTypeEnum.MAP_MOVEMENT:

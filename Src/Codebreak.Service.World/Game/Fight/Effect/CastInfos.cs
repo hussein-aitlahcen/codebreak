@@ -176,7 +176,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         {
             get
             {
-                return (Value2 == -1 ? Value1 : Util.Next(Value1, Value2));
+                return (Value2 < Value1 ? Value1 : Util.Next(Value1, Value2));
             }
         }
 

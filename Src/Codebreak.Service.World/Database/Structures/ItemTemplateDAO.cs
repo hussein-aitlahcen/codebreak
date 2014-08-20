@@ -404,8 +404,130 @@ namespace Codebreak.Service.World.Database.Structures
             get;
             set;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CSBonus
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int APCost
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int POMin
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int POMax
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CSRate
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CFRate
+        {
+            get;
+            set;
+        }
 
-        private Dictionary<int, Tuple<int, int, int>> _statistics;
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<Tuple<EffectEnum, int, int>> _effects;
+        private List<Tuple<EffectEnum, int, int>> _weaponEffects;
+        private string _rangeType;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string RangeType()
+        { 
+            if(_rangeType == null)
+            {
+                switch((ItemTypeEnum)Type)
+                {
+                    case ItemTypeEnum.TYPE_MARTEAU:
+                        _rangeType = "Xb";
+                        break;
+                    case ItemTypeEnum.TYPE_BATON:
+                        _rangeType =  "Tb";
+                        break;
+                    case  ItemTypeEnum.TYPE_ARBALETE:
+                        _rangeType =  "Lc";
+                        break;
+                    default:
+                        _rangeType = "Pa";
+                        break;
+                }
+            }
+
+            return _rangeType;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Tuple<EffectEnum, int, int>> GetGenericEffects()
+        {
+            if (_effects == null)
+                Initialize();
+            return _effects;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Tuple<EffectEnum, int, int>> GetWeaponEffects()
+        {
+            if (_weaponEffects == null)
+                Initialize();
+            return _weaponEffects;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void Initialize()
+        {
+            _effects = new List<Tuple<EffectEnum, int, int>>();
+            _weaponEffects = new List<Tuple<EffectEnum, int, int>>();
+
+            foreach (var effect in Effects.Split(','))
+            {
+                var effectDatas = effect.Split('#');
+                var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
+                var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
+                var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
+                if (ItemTemplateDAO.IsWeaponEffect(effectType))
+                    _weaponEffects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                else
+                    _effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+            }
+        }
 
         /// <summary>
         /// 
@@ -413,36 +535,18 @@ namespace Codebreak.Service.World.Database.Structures
         /// <returns></returns>
         public GenericStats GenerateStats(bool max = false)
         {
-            var generatedStats = new GenericStats();
-            
-            if (_statistics == null)
+            var generatedStats = new GenericStats();                        
+            foreach(var weaponEffect in GetWeaponEffects())
             {
-                _statistics = new Dictionary<int, Tuple<int, int, int>>();
-
-                foreach (var effect in Effects.Split(','))
-                {
-                    var effectDatas = effect.Split('#');
-                    var effectId = int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
-                    var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
-                    var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
-
-                    _statistics.Add(effectId, new Tuple<int, int, int>(effectId, effectMinJet, effectMaxJet));
-                }
+                generatedStats.AddWeaponEffect(weaponEffect.Item1, weaponEffect.Item2, weaponEffect.Item3, weaponEffect.Item2 + ";" + weaponEffect.Item3 + ";-1;-1;0;0d0+0");
             }
-
-            foreach (var effect in _statistics.Values)
+            foreach (var effect in GetGenericEffects())
             {
-                if (IsWeaponEffect((EffectEnum)effect.Item1))
-                    generatedStats.AddWeaponEffect((EffectEnum)effect.Item1, effect.Item2, effect.Item3, effect.Item2 + ";" + effect.Item3 + ";-1;-1;0;0d0+0");
+                if (effect.Item3 > effect.Item2)
+                    generatedStats.AddItem(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
                 else
-                {
-                    if(effect.Item3 > effect.Item2)
-                        generatedStats.AddItem((EffectEnum)effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
-                    else
-                        generatedStats.AddItem((EffectEnum)effect.Item1, effect.Item2);
-                }
+                    generatedStats.AddItem(effect.Item1, effect.Item2);
             }
-
             return generatedStats;
         }
 

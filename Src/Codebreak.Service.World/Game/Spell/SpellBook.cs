@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,9 +94,17 @@ namespace Codebreak.Service.World.Game.Spell
         /// <summary>
         /// 
         /// </summary>
+        private static SpellLevel _basicFist = SpellManager.Instance.GetSpellLevel(0, 1);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public SpellLevel GetSpellLevel(int spellId)
         {
+            if (spellId == 0)
+                return _basicFist;
+
             if (HasSpell(spellId))
             {
                 return _spellEntries[spellId].GetSpellLevel();

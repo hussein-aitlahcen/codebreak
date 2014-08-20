@@ -129,7 +129,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 Logger.Debug("InventoryBag::TryMerge merged item : " + Entity.Name);
                 sameItem.Quantity += item.Quantity;
-                base.Dispatch(WorldMessage.OBJECT_QUANTITY_ACTUALIZE(sameItem.Id, sameItem.Quantity));
+                base.Dispatch(WorldMessage.OBJECT_QUANTITY_UPDATE(sameItem.Id, sameItem.Quantity));
                 return true;
             }
 
@@ -155,7 +155,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             item.Quantity -= quantity;
 
-            base.Dispatch(WorldMessage.OBJECT_QUANTITY_ACTUALIZE(item.Id, item.Quantity));
+            base.Dispatch(WorldMessage.OBJECT_QUANTITY_UPDATE(item.Id, item.Quantity));
 
             return item.Clone(quantity);
         }
@@ -193,23 +193,23 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (item.IsEquiped() && slot == ItemSlotEnum.SLOT_INVENTORY)
             {
-                Logger.Debug("InventoryBag::MoveItem moving item from hero to inventory : " + Entity.Name);
-
+                Logger.Debug("InventoryBag::MoveItem moving item from entity to inventory : " + Entity.Name);
+                
                 item.SlotId = (int)slot;
                 _entityLookRefresh = true;
                 bool merged = AddItem(MoveQuantity(item, 1));
 
                 Entity.Statistics.UnMerge(item.GetStatistics());
-
+                
+                Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
+                               
                 // send new stats
                 if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)
                 {
-                    if (!merged)
-                        base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, slot));
+                    if (!merged)                    
+                        base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, slot));                    
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
                 }
-
-                Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
                 return;
             }
             else if (!item.IsEquiped() && InventoryItemDAO.IsEquipedSlot(slot))
@@ -254,13 +254,14 @@ namespace Codebreak.Service.World.Game.Entity
                 AddItem(newItem, false);
 
                 Entity.Statistics.Merge(newItem.GetStatistics());
+
+                Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
+
                 // send new stats
                 if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)
                 {
-                    base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(newItem.Id, slot));
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
                 }
-                Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
             }
             else
             {

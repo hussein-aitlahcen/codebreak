@@ -36,13 +36,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             _character = character;
 
-            foreach (var item in Items)
-            {
-                if (item.IsEquiped())
-                {
-                    Entity.Statistics.Merge(item.GetStatistics());
-                }
-            }
+            foreach (var item in Items)            
+                if (item.IsEquiped())                
+                    Entity.Statistics.Merge(item.GetStatistics());               
         }
     }
 }

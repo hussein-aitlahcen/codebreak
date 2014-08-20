@@ -20,6 +20,14 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        int ObjectCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         void UpdateAll();
     }
 
@@ -45,6 +53,17 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         protected List<TDataObject> _dataObjects;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ObjectCount
+        {
+            get
+            {
+                return _dataObjects.Count;
+            }
+        }
 
         /// <summary>
         /// 

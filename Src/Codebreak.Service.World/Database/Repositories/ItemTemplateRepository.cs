@@ -26,7 +26,7 @@ namespace Codebreak.Service.World.Game.Database.Repository
         {
             _templateById.Remove(template.Id);
         }
-
+        
         public ItemTemplateDAO GetTemplate(int templateId)
         {
             if(_templateById.ContainsKey(templateId))

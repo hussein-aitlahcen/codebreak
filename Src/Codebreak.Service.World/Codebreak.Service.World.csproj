@@ -83,6 +83,7 @@
     <Compile Include="Game\Action\GameFightActionBase.cs" />
     <Compile Include="Game\Action\GameFightMovementAction.cs" />
     <Compile Include="Game\Action\GameFightSpellAction.cs" />
+    <Compile Include="Game\Action\GameFightWeaponAction.cs" />
     <Compile Include="Game\Action\GameMapMovementAction.cs" />
     <Compile Include="Game\Action\GameMapTeleportAction.cs" />
     <Compile Include="Game\Action\GamePlayerExchangeAction.cs" />

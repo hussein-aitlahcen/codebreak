@@ -31,10 +31,10 @@ namespace Codebreak.Service.World.Game.Action
         FIGHT_HEAL = FIGHT_DAMAGE,
 
         FIGHT_SPELL_LAUNCH = 300,
-        FIGHT_SPELL_CRITIC = 301,
-        FIGHT_SPELL_ECHEC = 302,
+        FIGHT_CRITICAL_HIT = 301,
+        FIGHT_CRITICAL_FAILURE = 302,
         FIGHT_WEAPON_USE = 303,
-        FIGHT_WEAPON_ECHEC = 305,
+        FIGHT_WEAPON_FAILURE = 305,
         FIGHT_DODGE_SUBPA = 308,
         FIGHT_DODGE_SUBPM = 309,
 

@@ -27,9 +27,10 @@ namespace Codebreak.Framework.Database
             SqlManager.Instance.Initialize(connectionString);
 
             foreach (var repository in repositories)
-            {               
-                Logger.Info("Database loading : " + repository.GetType().Name);
+            {
+                Logger.Info(repository.GetType().Name + " : loading...");
                 repository.Initialize();
+                Logger.Info(repository.GetType().Name + " : " + repository.ObjectCount + " record loaded.");
             }
         }
 

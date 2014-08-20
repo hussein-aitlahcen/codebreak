@@ -560,6 +560,7 @@ namespace Codebreak.Service.World.Game
                 case GameActionTypeEnum.CHANGE_MAP:
                 case GameActionTypeEnum.MAP_MOVEMENT:
                 case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
+                case GameActionTypeEnum.FIGHT_WEAPON_USE:
                     message.Append((int)type);
                     break;
             }
@@ -743,12 +744,36 @@ namespace Codebreak.Service.World.Game
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string OBJECT_WEAPON_EQUIPPED(int templateId)
+        {
+            if (templateId == -1)
+                return "OT";
+            return "OT" + templateId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public static string OBJECT_QUANTITY_ACTUALIZE(long guid, int quantity)
+        public static string OBJECT_QUANTITY_UPDATE(long guid, int quantity)
         {
             return "OQ" + guid + "|" + quantity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static string OBJECT_UPDATE(InventoryItemDAO item)
+        {
+            var message = new StringBuilder("OC;");
+            item.SerializeAs_BagContent(message);
+            return message.ToString();
         }
 
         /// <summary>

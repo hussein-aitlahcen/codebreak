@@ -102,8 +102,32 @@ namespace Codebreak.Service.World.Frames
                     case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
                         GameFightSpellLaunch(entity, message);
                         break;
+
+                    case GameActionTypeEnum.FIGHT_WEAPON_USE:
+                        GameWeaponUse(entity, message);
+                        break;
                 }
             }); 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GameWeaponUse(EntityBase entity, string message)
+        {
+            var cellId = -1;
+
+            if(!int.TryParse(message.Substring(5), out cellId))
+            {
+                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var fighter = (FighterBase)entity;
+
+            fighter.Fight.TryUseWeapon(fighter, cellId);
         }
 
         /// <summary>
@@ -129,14 +153,7 @@ namespace Codebreak.Service.World.Frames
                 fight.TrySpectate((FighterBase)entity);
                 return;
             }
-
-            if(entity.HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE))
-            {
-                Logger.Debug("GameActionFrame::ChallengeJoin player restricted, unable to challenge : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
+            
             long leaderId = -1;
             if(!long.TryParse(fightData[1], out leaderId))
             {                
@@ -155,13 +172,6 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void GameFightSpellLaunch(EntityBase entity, string message)
         {
-            if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
-            {
-                Logger.Debug("GameActionFrame::SpellLaunch entity is not in fight : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
             if(!message.Contains(';'))
             {
                 Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
@@ -195,7 +205,7 @@ namespace Codebreak.Service.World.Frames
 
             var fighter = (FighterBase)entity;
 
-            fighter.Fight.LaunchSpell(fighter, spellId, cellId);
+            fighter.Fight.TryLaunchSpell(fighter, spellId, cellId);
         }
 
         /// <summary>
@@ -230,14 +240,7 @@ namespace Codebreak.Service.World.Frames
                 entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Aucune cell de combat n'est disponible sur cette map."));
                 return;
             }
-
-            if (!entity.HasGameAction(GameActionTypeEnum.MAP))
-            {
-                Logger.Debug("GameActionFrame::ChallengeRequest entity is not on a map : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
+            
             long distantEntityId = -1;
             if(!long.TryParse(message.Substring(5), out distantEntityId))
             {
