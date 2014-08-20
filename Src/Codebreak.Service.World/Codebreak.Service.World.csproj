@@ -108,6 +108,7 @@
     <Compile Include="Game\Fight\Effect\Type\DamageLifePercentEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceBuff.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PunishmentDamageEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\PushFearEffect.cs" />
     <Compile Include="Game\Fight\FightGlyph.cs" />
     <Compile Include="Game\Fight\Effect\Type\ActivableObjectEffect.cs" />
