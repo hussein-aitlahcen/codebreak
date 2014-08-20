@@ -212,6 +212,7 @@ namespace Codebreak.Service.World.Game.Fight
         private Dictionary<FightOptionTypeEnum, bool> _blockedOption;
         private List<FighterBase> _fighters;
         private List<FightCell> _places;
+        private long partyId = -2;
 
         /// <summary>
         /// 
@@ -279,9 +280,9 @@ namespace Codebreak.Service.World.Game.Fight
                 fighter.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, fighter.Id, "f"));
                 return false;
             }
-
-            // TODO : party
-            if (IsOptionLocked(FightOptionTypeEnum.TYPE_PARTY))
+            
+            var character = (CharacterEntity)fighter;
+            if (IsOptionLocked(FightOptionTypeEnum.TYPE_PARTY) && character.PartyId != ((CharacterEntity)_fighters[0]).PartyId)
             {
                 fighter.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, fighter.Id, "f"));
                 return false;

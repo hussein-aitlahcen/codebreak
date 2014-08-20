@@ -76,6 +76,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.SubChance, new StatsEffect());
             _effects.Add(EffectEnum.SubWisdom, new StatsEffect());
             _effects.Add(EffectEnum.SubVitality, new StatsEffect());
+            _effects.Add(EffectEnum.AddInvocationMax, new StatsEffect());
 
             // Soins
             _effects.Add(EffectEnum.AddHealCare, new StatsEffect());
@@ -120,6 +121,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             // Effet de push back/fear
             _effects.Add(EffectEnum.PushBack, new PushEffect());
             _effects.Add(EffectEnum.PushFront, new PushEffect());
+            _effects.Add(EffectEnum.PushFear, new PushFearEffect());
 
             // Ajout d'un etat / changement de skin
             _effects.Add(EffectEnum.ChangeSkin, new SkinChangeEffect());
@@ -137,18 +139,20 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.MPSteal, new StatsStealEffect());
             _effects.Add(EffectEnum.StealPO, new StatsStealEffect());
 
+            // Autres
+            _effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect());
+            _effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
+
             // Sacrifice
             _effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());
             _effects.Add(EffectEnum.Transpose, new TransposeEffect());
 
             // Derobade
             _effects.Add(EffectEnum.Evasion, new DamageDodgeEffect());
-
+            
             // Augmente de X les domamges de base du sort Y
             _effects.Add(EffectEnum.IncreaseSpellDamage, new IncreaseSpellJetEffect());
 
-            // Chance Ecaflip
-            //_effects.Add(EffectEnum.ChanceEcaflip, new EcaflipLuckEffect());
 
             // Debuff
             _effects.Add(EffectEnum.DeleteAllBonus, new BuffRemoveEffect());
@@ -157,6 +161,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.PandaCarrier, new PandaCarrierEffect());
             _effects.Add(EffectEnum.PandaLaunch, new PandaLaunchEffect());
 
+            // ActivableObjects
             _effects.Add(EffectEnum.UseGlyph, new ActivableObjectEffect());
             _effects.Add(EffectEnum.UseTrap, new ActivableObjectEffect());
         }

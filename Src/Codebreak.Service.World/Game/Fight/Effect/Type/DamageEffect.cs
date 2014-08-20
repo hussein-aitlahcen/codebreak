@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     public sealed class DamageEffect : EffectBase
     {
         /// <summary>
-        /// Applique l'effet, buff ou direct
+        /// 
         /// </summary>
         /// <param name="castInfos"></param>
         /// <returns></returns>
@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
 
 
         /// <summary>
-        /// Applique les dommages.
+        ///
         /// </summary>
         /// <param name="CastInfos"></param>
         /// <param name="damageJet"></param>
@@ -136,7 +136,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             }
 
             // Peu pas etre en dessous de 0
-            if (damageJet < 0) damageJet = 0;
+            if (damageJet < 0)
+                damageJet = 0;
 
             // Dommages superieur a la vie de la cible
             if (damageJet > target.Life)

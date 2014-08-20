@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace Codebreak.Service.World.Game.Fight.Effect.Type
 {
     /// <summary>
-    /// Classe de gestion des soins
+    ///
     /// </summary>
     public sealed class HealEffect : EffectBase
     {
         /// <summary>
-        /// Application de l'effet, buff ou directe
+        /// 
         /// </summary>
         /// <param name="CastInfos"></param>
         /// <returns></returns>
@@ -37,27 +37,27 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         }
 
         /// <summary>
-        /// Application du heal
+        ///
         /// </summary>
         /// <param name="CastInfos"></param>
         /// <param name="Heal"></param>
         /// <returns></returns>
-        public static FightActionResultEnum ApplyHeal(CastInfos castInfos, FighterBase target, ref int Heal)
+        public static FightActionResultEnum ApplyHeal(CastInfos castInfos, FighterBase target, ref int heal)
         {
             var caster = castInfos.Caster;
 
             // Boost soin etc
-            caster.CalculHeal(ref Heal);
+            caster.CalculHeal(ref heal);
 
             // Si le soin est superieur a sa vie actuelle
-            if (target.Life + Heal > target.MaxLife)
-                Heal = target.MaxLife - target.Life;
+            if (target.Life + heal > target.MaxLife)
+                heal = target.MaxLife - target.Life;
 
             // Affectation
-            target.Life += Heal;
+            target.Life += heal;
 
             // Envoi du packet
-            target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_HEAL, caster.Id, target.Id + "," + Heal));
+            target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_HEAL, caster.Id, target.Id + "," + heal));
 
             // Le soin entraine la fin du combat ? lol on test quand même :D
             return target.Fight.TryKillFighter(target, caster.Id);

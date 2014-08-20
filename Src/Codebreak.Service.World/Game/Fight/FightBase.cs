@@ -930,6 +930,9 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
             {
+                if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                    return;
+
                 for (int i = SpectatorTeam.Spectators.Count() - 1; i > -1; i--)
                 {
                     FightQuit(SpectatorTeam.Spectators.ElementAt(i), true);
@@ -945,6 +948,12 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
                     {
+                        if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                        {
+                            fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                            return;
+                        }
+
                         if (State != FightStateEnum.STATE_FIGHTING)
                         {
                             Logger.Debug("FightBase::TrySpectate cannot spectate placement " + fighter.Name);
@@ -980,6 +989,12 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
                 {
+                    if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                    {
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
                     if (State != FightStateEnum.STATE_PLACEMENT)
                     {
                         Logger.Debug("FightBase::TryJoin fight already started " + fighter.Name);
@@ -1064,8 +1079,12 @@ namespace Codebreak.Service.World.Game.Fight
         public void FightDisconnect(FighterBase fighter)
         {
             AddMessage(() =>
-            {
+            {                
                 fighter.Disconnected = true;
+
+                // fight just ended
+                if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)                
+                    return;                
 
                 // disconnected during placement or spectator disconnected
                 if (State == FightStateEnum.STATE_PLACEMENT || fighter.IsSpectating)
@@ -1676,6 +1695,12 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
                 {
+                    if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                    {
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
                     if(State != FightStateEnum.STATE_FIGHTING)
                     {
                         Logger.Debug("Fight::TryUseWeapon fight is not in fighting state : " + fighter.Name);
@@ -1706,6 +1731,8 @@ namespace Codebreak.Service.World.Game.Fight
                     }
 
                     var weaponTemplate = weapon.GetTemplate();
+
+                    var isMelee = Pathfinding.GoalDistance(Map, fighter.Cell.Id, cellId) == 1;
 
                     fighter.UsedAP += weaponTemplate.APCost;
 
@@ -1796,7 +1823,8 @@ namespace Codebreak.Service.World.Game.Fight
                                                         0,
                                                         fighter,
                                                         null,
-                                                        weaponTemplate.RangeType())
+                                                        weaponTemplate.RangeType(),
+                                                        isMelee: isMelee)
                                                      );
                             }
                             else
@@ -1815,7 +1843,8 @@ namespace Codebreak.Service.World.Game.Fight
                                                         fighter,
                                                         effectTarget,
                                                         weaponTemplate.RangeType(),
-                                                        effectTarget.Cell.Id));
+                                                        effectTarget.Cell.Id,
+                                                        isMelee));
                                 }
                             }
 
@@ -1836,6 +1865,12 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
             {
+                if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                {
+                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
                 if (State != FightStateEnum.STATE_FIGHTING)
                 {
                     Logger.Debug("Fight::TryLaunchSpell fight is not in fighting state : " + fighter.Name);
@@ -1872,6 +1907,8 @@ namespace Codebreak.Service.World.Game.Fight
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
+
+                var isMelee = Pathfinding.GoalDistance(Map, fighter.Cell.Id, castCellId) == 1;
 
                 fighter.UsedAP += spellLevel.APCost;
                 
@@ -1983,7 +2020,8 @@ namespace Codebreak.Service.World.Game.Fight
                                                     effect.Duration,
                                                     fighter,
                                                     null,
-                                                    spellLevel.RangeType)
+                                                    spellLevel.RangeType,
+                                                    isMelee: isMelee)
                                                  );
                         }
                         else
@@ -2002,7 +2040,8 @@ namespace Codebreak.Service.World.Game.Fight
                                                     fighter,
                                                     effectTarget,
                                                     spellLevel.RangeType,
-                                                    effectTarget.Cell.Id));
+                                                    effectTarget.Cell.Id,
+                                                    isMelee));
                             }
                         }
 

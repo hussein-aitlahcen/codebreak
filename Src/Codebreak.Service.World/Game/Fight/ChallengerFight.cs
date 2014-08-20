@@ -69,6 +69,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public override FightActionResultEnum FightQuit(FighterBase fighter, bool kick = false)
         {
+            if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             switch (State)
             {
                 case FightStateEnum.STATE_PLACEMENT:
@@ -88,7 +91,7 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
                         fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
-                        fighter.LeaveFight(kick);
+                        fighter.LeaveFight(true);
                         fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;

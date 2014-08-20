@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Game.Spell
 
         MPSteal = 77,
         MPBonus = 78,
-        ChanceEcaflip = 79,
+        EcaflipChance = 79,
         LifeSteal = 82,
         APSteal = 84,
         ChanceSteal = 266,

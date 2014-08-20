@@ -137,7 +137,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
                                                                                CastInfos.SpellId.ToString()));
                     break;
 
-                case EffectEnum.ChanceEcaflip:
+                case EffectEnum.EcaflipChance:
                 case EffectEnum.AddChatiment:
                     Target.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
                                                                            Target.Id,

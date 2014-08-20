@@ -416,46 +416,46 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Width"></param>
-        /// <param name="CellsCount"></param>
-        public static void GenerateGrid(int Width, int CellsCount)
+        /// <param name="width"></param>
+        /// <param name="cellsCount"></param>
+        public static void GenerateGrid(int width, int cellsCount)
         {
-            var Grid = new Dictionary<int, Point>(CellsCount);
+            var Grid = new Dictionary<int, Point>(cellsCount);
 
-            for (int i = 0; i < CellsCount; i++)
+            for (int i = 0; i < cellsCount; i++)
             {
-                Grid.Add(i, new Point(_GetX(Width, i), _GetY(Width, i)));
+                Grid.Add(i, new Point(_GetX(width, i), _GetY(width, i)));
             }
 
-            CellPoints.Add(CellsCount, Grid);
+            CellPoints.Add(cellsCount, Grid);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Width"></param>
-        /// <param name="Cell"></param>
+        /// <param name="width"></param>
+        /// <param name="cell"></param>
         /// <returns></returns>
-        private static double _GetX(int Width, int Cell)
+        private static double _GetX(int width, int cell)
         {
-            double loc5 = Math.Floor((double)(Cell / (Width * 2 - 1)));
-            double loc6 = Cell - loc5 * (Width * 2 - 1);
-            double loc7 = loc6 % Width;
+            double loc5 = Math.Floor((double)(cell / (width * 2 - 1)));
+            double loc6 = cell - loc5 * (width * 2 - 1);
+            double loc7 = loc6 % width;
 
-            return (Cell - (Width - 1) * (loc5 - loc7)) / Width;
+            return (cell - (width - 1) * (loc5 - loc7)) / width;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Width"></param>
-        /// <param name="Cell"></param>
+        /// <param name="width"></param>
+        /// <param name="cell"></param>
         /// <returns></returns>
-        private static double _GetY(int Width, int Cell)
+        private static double _GetY(int width, int cell)
         {
-            double loc5 = Math.Floor((double)(Cell / (Width * 2 - 1)));
-            double loc6 = Cell - loc5 * (Width * 2 - 1);
-            double loc7 = loc6 % Width;
+            double loc5 = Math.Floor((double)(cell / (width * 2 - 1)));
+            double loc6 = cell - loc5 * (width * 2 - 1);
+            double loc7 = loc6 % width;
 
             return loc5 - loc7;
         }
@@ -466,37 +466,37 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="Map"></param>
         /// <param name="Cell"></param>
         /// <returns></returns>
-        public static Point GetPoint(MapInstance map, int Cell)
+        public static Point GetPoint(MapInstance map, int cell)
         {
             if (CellPoints.ContainsKey(map.Cells.Count))
-                return CellPoints[map.Cells.Count][Cell];
+                return CellPoints[map.Cells.Count][cell];
 
             Pathfinding.GenerateGrid(map.Width, map.Cells.Count);
 
-            return CellPoints[map.Cells.Count][Cell];
+            return CellPoints[map.Cells.Count][cell];
         }
 
-        public static double GetX(MapInstance map, int Cell)
+        public static double GetX(MapInstance map, int cell)
         {
             if (!CellPoints.ContainsKey(map.Cells.Count))
                 Pathfinding.GenerateGrid(map.Width, map.Cells.Count);
 
             Point p = new Point();
 
-            if (CellPoints[map.Cells.Count].TryGetValue(Cell, out p))
+            if (CellPoints[map.Cells.Count].TryGetValue(cell, out p))
                 return p.X;
 
             return -1000;
         }
 
-        public static double GetY(MapInstance map, int Cell)
+        public static double GetY(MapInstance map, int cell)
         {
             if (!CellPoints.ContainsKey(map.Cells.Count))
                 Pathfinding.GenerateGrid(map.Width, map.Cells.Count);
 
             Point p = new Point();
 
-            if (CellPoints[map.Cells.Count].TryGetValue(Cell, out p))
+            if (CellPoints[map.Cells.Count].TryGetValue(cell, out p))
                 return p.Y;
 
             return -1000;
@@ -506,17 +506,17 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="Map"></param>
-        /// <param name="BeginCell"></param>
-        /// <param name="EndCell"></param>
+        /// <param name="beginCell"></param>
+        /// <param name="endCell"></param>
         /// <returns></returns>
-        public static bool InLine(MapInstance map, int BeginCell, int EndCell)
+        public static bool InLine(MapInstance map, int beginCell, int endCell)
         {
-            var cryptedCell = BeginCell * BeginCell * EndCell + EndCell;
+            var cryptedCell = beginCell * beginCell * endCell + endCell;
             if (CellLines.ContainsKey(cryptedCell))
                 return CellLines[cryptedCell];
 
-            var beginPoint = GetPoint(map, BeginCell);
-            var endPoint = GetPoint(map, EndCell);
+            var beginPoint = GetPoint(map, beginCell);
+            var endPoint = GetPoint(map, endCell);
 
             var line = beginPoint.X == endPoint.X || beginPoint.Y == endPoint.Y;
 
@@ -529,17 +529,17 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="Map"></param>
-        /// <param name="BeginCell"></param>
-        /// <param name="EndCell"></param>
+        /// <param name="beginCell"></param>
+        /// <param name="endCell"></param>
         /// <returns></returns>
-        public static int GoalDistance(MapInstance map, int BeginCell, int EndCell)
+        public static int GoalDistance(MapInstance map, int beginCell, int endCell)
         {
-            var cryptedCell = BeginCell * BeginCell * EndCell + EndCell;
+            var cryptedCell = beginCell * beginCell * endCell + endCell;
             if (CellDistances.ContainsKey(cryptedCell))
                 return CellDistances[cryptedCell];
 
-            var beginPoint = GetPoint(map, BeginCell);
-            var endPoint = GetPoint(map, EndCell);
+            var beginPoint = GetPoint(map, beginCell);
+            var endPoint = GetPoint(map, endCell);
             var distance = (int)(Math.Abs(endPoint.X - beginPoint.X) + Math.Abs(endPoint.Y - beginPoint.Y));
 
             CellDistances.Add(cryptedCell, distance);
@@ -550,21 +550,21 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Direction"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        public static char GetDirectionChar(int Direction)
+        public static char GetDirectionChar(int direction)
         {
-            return Util.HASH[Direction];
+            return Util.HASH[direction];
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Direction"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        public static int GetDirection(char Direction)
+        public static int GetDirection(char direction)
         {
-            return Util.HASH.IndexOf(Direction);
+            return Util.HASH.IndexOf(direction);
         }
 
         /// <summary>
@@ -596,25 +596,25 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="Map"></param>
-        /// <param name="BeginCell"></param>
-        /// <param name="EndCell"></param>
+        /// <param name="beginCell"></param>
+        /// <param name="dndCell"></param>
         /// <returns></returns>
-        public static int GetDirection(MapInstance map, int BeginCell, int EndCell)
+        public static int GetDirection(MapInstance map, int beginCell, int dndCell)
         {
-            var cryptedCell = BeginCell * BeginCell * EndCell + EndCell;
+            var cryptedCell = beginCell * beginCell * dndCell + dndCell;
             if (CellDirections.ContainsKey(cryptedCell))
                 return CellDirections[cryptedCell];
 
             var listChange = GetDirectionChanges(map);
-            var result = EndCell - BeginCell;
+            var result = dndCell - beginCell;
             var direction = 0;
 
             for (int i = 7; i > -1; i--)
                 if (result == listChange[i])
                     direction = i;
 
-            var beginPoint = GetPoint(map, BeginCell);
-            var endPoint = GetPoint(map, EndCell);
+            var beginPoint = GetPoint(map, beginCell);
+            var endPoint = GetPoint(map, dndCell);
             var resultX = endPoint.X - beginPoint.X;
             var resultY = endPoint.Y - beginPoint.Y;
 
@@ -637,22 +637,22 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="Map"></param>
-        /// <param name="CurrentCell"></param>
-        /// <param name="Path"></param>
+        /// <param name="currentCell"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public static MovementPath DecodePath(MapInstance map, int CurrentCell, string Path)
+        public static MovementPath DecodePath(MapInstance map, int currentCell, string path)
         {
             MovementPath MovementPath = new MovementPath();
 
-            if (Path == "")
+            if (path == "")
                 return MovementPath;
 
-            MovementPath.AddCell(CurrentCell, GetDirection(map, CurrentCell, Util.CharToCell(Path.Substring(1, 2))));
+            MovementPath.AddCell(currentCell, GetDirection(map, currentCell, Util.CharToCell(path.Substring(1, 2))));
 
-            for (int i = 0; i < Path.Length; i += 3)
+            for (int i = 0; i < path.Length; i += 3)
             {
-                int curCell = Util.CharToCell(Path.Substring(i + 1, 2));
-                int curDir = Util.HASH.IndexOf(Path[i]);
+                int curCell = Util.CharToCell(path.Substring(i + 1, 2));
+                int curDir = Util.HASH.IndexOf(path[i]);
 
                 MovementPath.AddCell(curCell, curDir);
             }
@@ -663,11 +663,11 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Direction"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        public static int OppositeDirection(int Direction)
+        public static int OppositeDirection(int direction)
         {
-            return (Direction >= 4 ? Direction - 4 : Direction + 4);
+            return (direction >= 4 ? direction - 4 : direction + 4);
         }
 
         /// <summary>

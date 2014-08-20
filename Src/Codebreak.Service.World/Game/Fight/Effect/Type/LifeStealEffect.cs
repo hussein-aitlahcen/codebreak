@@ -29,10 +29,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             // On ne se soigne que de 50% des dégats
             var healJet = damageJet / 2;
 
-            if (HealEffect.ApplyHeal(CastInfos, CastInfos.Caster, ref healJet) == FightActionResultEnum.RESULT_END)
-                return FightActionResultEnum.RESULT_END;
-
-            return FightActionResultEnum.RESULT_NOTHING;
+            return HealEffect.ApplyHeal(CastInfos, CastInfos.Caster, ref healJet);
         }
     }
 }
