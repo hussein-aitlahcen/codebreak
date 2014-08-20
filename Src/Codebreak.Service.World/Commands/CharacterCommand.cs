@@ -60,10 +60,12 @@ namespace Codebreak.Service.World.Commands
                             character.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(character.Level));
                             character.Dispatch(WorldMessage.SPELLS_LIST(character.Spells));
                             character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
-                            character.DispatchChatMessage(
-                                ChatChannelEnum.CHANNEL_ADMIN,
+                            character.Dispatch(WorldMessage.CHAT_MESSAGE(
+                                ChatChannelEnum.CHANNEL_ADMIN, 
+                                0, 
+                                "Server",
                                 "Now you are stronger"
-                                );
+                                ));
                         }
                     }
                 }
@@ -99,10 +101,12 @@ namespace Codebreak.Service.World.Commands
                         if (instance != null)
                         {
                             context.Entity.Inventory.AddItem(instance);
-                            context.Entity.DispatchChatMessage(
+                            context.Entity.Dispatch(WorldMessage.CHAT_MESSAGE(
                                 ChatChannelEnum.CHANNEL_ADMIN,
+                                0,
+                                "Server",
                                 String.Format("Item {0} - `{1}` added in your inventory", itemTemplate.Id, itemTemplate.Name)
-                                );
+                                ));
                         }
                     }
                 }
