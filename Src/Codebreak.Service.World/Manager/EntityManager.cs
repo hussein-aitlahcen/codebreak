@@ -33,7 +33,6 @@ namespace Codebreak.Service.World.Manager
         {
             var npc = new NonPlayerCharacterEntity(npcDAO, id);
             _npcById.Add(npc.Id, npc);
-
             return npc;
         }
 
@@ -48,9 +47,7 @@ namespace Codebreak.Service.World.Manager
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
             _onlinePlayer++;
-
-            Logger.Debug("EntityManager online players : " + _onlinePlayer);
-            
+            Logger.Debug("EntityManager online players : " + _onlinePlayer);            
             return character;
         }
         
@@ -61,7 +58,10 @@ namespace Codebreak.Service.World.Manager
         public void CharacterDisconnect(CharacterEntity character)
         {
             character.AddMessage(() =>
-            {                
+            {
+                if (character.PartyId != -1)                
+                    PartyManager.Instance.LeaveParty(character);
+                
                 if (character.HasGameAction(GameActionTypeEnum.FIGHT))
                 {
                     if (character.CurrentAction != null)
@@ -69,17 +69,13 @@ namespace Codebreak.Service.World.Manager
                     character.AbortAction(GameActionTypeEnum.FIGHT);
                     return;
                 }
-
-                WorldService.Instance.AddMessage(() =>
-                    {
-                        RemoveCharacter(character);
-                    });
-
-                
+                                
                 if (character.CurrentAction != null)
                     character.AbortAction(character.CurrentAction.Type, character.Id);
                 if (character.HasGameAction(GameActionTypeEnum.MAP))
                     character.AbortAction(GameActionTypeEnum.MAP);
+
+                RemoveCharacter(character);
             });
         }
 
@@ -89,11 +85,14 @@ namespace Codebreak.Service.World.Manager
         /// <param name="character"></param>
         public void RemoveCharacter(CharacterEntity character)
         {
-            _onlinePlayer--;
-            _characterById.Remove(character.Id);
-            _characterByName.Remove(character.Name.ToLower());
+            WorldService.Instance.AddMessage(() =>
+                {
+                    _onlinePlayer--;
+                    _characterById.Remove(character.Id);
+                    _characterByName.Remove(character.Name.ToLower());
 
-            Logger.Debug("EntityManager online players : " + _onlinePlayer);
+                    Logger.Debug("EntityManager online players : " + _onlinePlayer);
+                });
         }
 
         /// <summary>

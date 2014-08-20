@@ -30,7 +30,7 @@ namespace Codebreak.Service.World.Manager
                 var instance = new MapInstance(mapDAO.SubAreaId, mapDAO.Id, mapDAO.X, mapDAO.Y, mapDAO.Width, mapDAO.Height, mapDAO.Data, mapDAO.DataKey, mapDAO.CreateTime, mapDAO.FightTeam0Cells, mapDAO.FightTeam1Cells);
 
                 instance.SubArea.AddUpdatable(instance);
-                instance.SubArea.AddHandlerSafe(instance.Dispatch);
+                instance.SubArea.SafeAddHandler(instance.Dispatch);
 
                 _mapById.Add(instance.Id, instance);
             }

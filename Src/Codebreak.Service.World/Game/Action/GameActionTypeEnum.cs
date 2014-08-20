@@ -11,7 +11,6 @@ namespace Codebreak.Service.World.Game.Action
     /// </summary>
     public enum GameActionTypeEnum : int
     {
-        // real
         MAP_MOVEMENT = 1,
         CHANGE_MAP = 2,
         MAP_TELEPORT = 4,
@@ -43,6 +42,7 @@ namespace Codebreak.Service.World.Game.Action
         EXCHANGE,
         PLAYER_EXCHANGE,
         NPC_EXCHANGE,
+        PARTY_REQUEST,
         FIGHT,
         GUILD_CREATE,
         NOTHING,

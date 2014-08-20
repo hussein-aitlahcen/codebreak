@@ -440,6 +440,33 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public long PartyId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long PartyInvitedPlayerId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long PartyInviterPlayerId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private CharacterAlignmentDAO _alignmentRecord;
 
         public CharacterEntity(CharacterDAO characterDAO)
@@ -447,6 +474,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             _alignmentRecord = characterDAO.GetAlignment();
 
+            PartyId = -1;
+            PartyInvitedPlayerId = -1;
+            PartyInviterPlayerId = -1;
             DatabaseRecord = characterDAO;
             Statistics = new GenericStats(characterDAO);
             Inventory = new CharacterInventory(this);
@@ -460,6 +490,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="remoteEntity"></param>
         public override void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
         {
+            switch(channel)
+            {
+                case ChatChannelEnum.CHANNEL_GROUP:
+                    PartyManager.Instance.PartyMessage(PartyId, Id, Name, message);
+                    break;
+            }
             base.DispatchChatMessage(channel, message, remoteEntity);
         }
 
@@ -659,6 +695,27 @@ namespace Codebreak.Service.World.Game.Entity
                     }
                     break;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_PartyMemberListInformations(StringBuilder message)
+        {
+            message.Append(Id).Append(';');
+            message.Append(Name).Append(';');
+            message.Append(SkinBase).Append(';');
+            message.Append(HexColor1).Append(';');
+            message.Append(HexColor2).Append(';');
+            message.Append(HexColor3).Append(';');
+            Inventory.SerializeAs_ActorLookMessage(message);
+            message.Append(';');
+            message.Append(Life).Append(',').Append(MaxLife).Append(';');
+            message.Append(Level).Append(';');
+            message.Append(Initiative).Append(';');
+            message.Append(Prospection).Append(';');
+            message.Append(0); // TODO : What is that shit ?
         }
 
         /// <summary>

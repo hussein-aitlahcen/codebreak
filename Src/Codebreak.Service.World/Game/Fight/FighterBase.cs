@@ -550,14 +550,9 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             StopAction(GameActionTypeEnum.FIGHT);
-
+            
             if (Disconnected)
-            {
-                WorldService.Instance.AddMessage(() =>
-                    {
-                        EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
-                    });
-            }
+                EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
 
             SetCell(null);
             Team = null;

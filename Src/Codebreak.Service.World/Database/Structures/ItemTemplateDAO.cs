@@ -516,16 +516,19 @@ namespace Codebreak.Service.World.Database.Structures
             _effects = new List<Tuple<EffectEnum, int, int>>();
             _weaponEffects = new List<Tuple<EffectEnum, int, int>>();
 
-            foreach (var effect in Effects.Split(','))
+            if (Effects != "")
             {
-                var effectDatas = effect.Split('#');
-                var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
-                var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
-                var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
-                if (ItemTemplateDAO.IsWeaponEffect(effectType))
-                    _weaponEffects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
-                else
-                    _effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                foreach (var effect in Effects.Split(','))
+                {
+                    var effectDatas = effect.Split('#');
+                    var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
+                    var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
+                    var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
+                    if (ItemTemplateDAO.IsWeaponEffect(effectType))
+                        _weaponEffects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                    else
+                        _effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                }
             }
         }
 

@@ -41,16 +41,16 @@ namespace Codebreak.Service.World.Frames
                     switch(message[1])
                     {
                         case 'I': // PartyInvite
-                            break;
+                            return PartyInvite;
 
                         case 'A': // PartyAccept
-                            break;
+                            return PartyAccept;
                         
-                        case 'R': // Party
-                            break;
+                        case 'R': // PartyRefuse
+                            return PartyRefuse;
 
                         case 'V': // Leave
-                            break;
+                            return PartyLeave;
                     }
                     break;
                 case 'A':
@@ -96,7 +96,50 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void PartyInvite(EntityBase entity, string message)
         {
+            var distantCharacterName = message.Substring(2);
 
+            // if disconnected or fake
+            var distantCharacter = EntityManager.Instance.GetCharacter(distantCharacterName);
+            if(distantCharacter == null)
+            {
+                entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_PLAYER_OFFLINE(distantCharacterName));
+                return;
+            }
+
+            // if in party or being invited or even inviting
+            if(distantCharacter.PartyId != -1 || distantCharacter.PartyInvitedPlayerId != -1 || distantCharacter.PartyInviterPlayerId != -1)
+            {
+                entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_ALREADY_IN_PARTY());
+                return;
+            }
+                                               
+            var character = (CharacterEntity)entity;
+            
+            // if being invited or inviting
+            if(character.PartyInvitedPlayerId != -1 || character.PartyInviterPlayerId != -1)
+            {
+                entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_ALREADY_IN_PARTY());
+                return;
+            }
+
+            // if party full
+            var party = PartyManager.Instance.GetParty(character.PartyId);
+            if(party != null)  
+            {         
+                if(party.MemberCount > 7)
+                {
+                    character.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_FULL());
+                    return;
+                }
+            }
+
+            character.PartyInvitedPlayerId = distantCharacter.Id;
+            distantCharacter.PartyInviterPlayerId = character.Id;
+            
+            message = WorldMessage.PARTY_INVITE_SUCCESS(character.Name, distantCharacterName);
+
+            character.SafeDispatch(message);
+            distantCharacter.SafeDispatch(message);
         }
 
         /// <summary>
@@ -104,9 +147,36 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void PartyDecline(EntityBase entity, string message)
+        private void PartyRefuse(EntityBase entity, string message)
         {
+            var character = (CharacterEntity)entity;
 
+            // if not being invited and not even inviting
+            if(character.PartyInvitedPlayerId == -1 && character.PartyInviterPlayerId == -1)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            CharacterEntity distantCharacter = null;
+
+            // get the remote character
+            if (character.PartyInvitedPlayerId != -1)
+                distantCharacter = EntityManager.Instance.GetCharacter(character.PartyInvitedPlayerId);
+            else
+                distantCharacter = EntityManager.Instance.GetCharacter(character.PartyInviterPlayerId);
+
+            // be safe even if this should never happend
+            if (distantCharacter != null)
+            {
+                distantCharacter.PartyInvitedPlayerId = -1;
+                distantCharacter.PartyInviterPlayerId = -1;
+                distantCharacter.SafeDispatch(WorldMessage.PARTY_REFUSE());
+            }
+
+            character.PartyInvitedPlayerId = -1;
+            character.PartyInviterPlayerId = -1;
+            character.SafeDispatch(WorldMessage.PARTY_REFUSE());
         }
 
         /// <summary>
@@ -116,7 +186,90 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void PartyAccept(EntityBase entity, string message)
         {
+            var character = (CharacterEntity)entity;
 
+            // not being invited ?
+            if(character.PartyInviterPlayerId == -1)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var distantCharacter = EntityManager.Instance.GetCharacter(character.PartyInviterPlayerId);
+
+            // should never happend
+            if(distantCharacter == null)
+            {
+                character.PartyInviterPlayerId = -1;
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+            
+            character.PartyInvitedPlayerId = -1;
+            character.PartyInviterPlayerId = -1;
+            distantCharacter.PartyInvitedPlayerId = -1;
+            distantCharacter.PartyInviterPlayerId = -1;
+            
+            distantCharacter.SafeDispatch(WorldMessage.PARTY_REFUSE());
+
+            // already in party so we add the new one
+            if(distantCharacter.PartyId != -1)
+            {
+                var party = PartyManager.Instance.GetParty(distantCharacter.PartyId);
+                if(party == null)
+                {
+                    character.PartyInviterPlayerId = -1;
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                party.AddMember(character);
+                return;
+            }
+
+            // create new party
+            PartyManager.Instance.CreateParty(distantCharacter, character);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void PartyLeave(EntityBase entity, string message)
+        {
+            var character = (CharacterEntity)entity;
+
+            // not in party ?
+            if(character.PartyId == -1)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            // null party should never happend but be sure
+            var party = PartyManager.Instance.GetParty(character.PartyId);
+            if(party == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            // wants to leave
+            if (message == "PV")
+            {
+                party.RemoveMember(character);
+                return;
+            }
+
+            long kickedPlayerId = -1;
+            if(!long.TryParse(message.Substring(2), out kickedPlayerId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            party.KickMember(character, kickedPlayerId);
         }
 
         /// <summary>
@@ -131,13 +284,13 @@ namespace Codebreak.Service.World.Frames
 
             if (!int.TryParse(message.Substring(2), out statId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             if (!_statById.ContainsKey(statId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 

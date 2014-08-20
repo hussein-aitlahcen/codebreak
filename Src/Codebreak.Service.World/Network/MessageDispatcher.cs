@@ -72,7 +72,7 @@ namespace Codebreak.Service.World.Game
         /// 
         /// </summary>
         /// <param name="method"></param>
-        public virtual void AddHandlerSafe(Action<string> method)
+        public virtual void SafeAddHandler(Action<string> method)
         {
             AddMessage(() =>
                 {
@@ -93,7 +93,7 @@ namespace Codebreak.Service.World.Game
         /// 
         /// </summary>
         /// <param name="method"></param>
-        public virtual void RemoveHandlerSafe(Action<string> method)
+        public virtual void SafeRemoveHandler(Action<string> method)
         {
             AddMessage(() =>
                 {

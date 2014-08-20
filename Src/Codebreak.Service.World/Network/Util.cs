@@ -35,6 +35,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static int NextJet(int min, int max)
         {
+            max++;
             if (max <= min)
                 return min;
             return Next(min, max);

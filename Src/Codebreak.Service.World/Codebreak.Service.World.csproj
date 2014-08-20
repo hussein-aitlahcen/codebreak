@@ -156,6 +156,7 @@
     <Compile Include="Game\Map\MapCell.cs" />
     <Compile Include="Game\Map\MapInstance.cs" />
     <Compile Include="Game\Map\Pathfinding.cs" />
+    <Compile Include="Game\Party\PartyInstance.cs" />
     <Compile Include="Game\Spell\SpellBook.cs" />
     <Compile Include="Game\Spell\SpellEffect.cs" />
     <Compile Include="Game\Spell\SpellLevel.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Game\Map\FightManager.cs" />
     <Compile Include="Manager\MapManager.cs" />
     <Compile Include="Manager\NpcManager.cs" />
+    <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
     <Compile Include="Network\Util.cs" />

@@ -1212,5 +1212,133 @@ namespace Codebreak.Service.World.Game
         {
             return fightResult.Message;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ownerName"></param>
+        /// <returns></returns>
+        public static string PARTY_CREATE_SUCCESS(string ownerName)
+        {
+            return "PCK" + ownerName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leaderName"></param>
+        /// <param name="memberInvited"></param>
+        /// <returns></returns>
+        public static string PARTY_INVITE_SUCCESS(string leaderName, string memberInvited)
+        {
+            return "PIK" + leaderName + "|" + memberInvited;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string PARTY_REFUSE()
+        {
+            return "PR";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leaderName"></param>
+        /// <param name="memberInvited"></param>
+        /// <returns></returns>
+        public static string PARTY_INVITE_ERROR_FULL()
+        {
+            return "PIEf";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leaderName"></param>
+        /// <param name="memberInvited"></param>
+        /// <returns></returns>
+        public static string PARTY_INVITE_ERROR_PLAYER_OFFLINE(string distantPlayerName)
+        {
+            return "PIEn" + distantPlayerName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leaderName"></param>
+        /// <param name="memberInvited"></param>
+        /// <returns></returns>
+        public static string PARTY_INVITE_ERROR_ALREADY_IN_PARTY()
+        {
+            return "PIEa";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string PARTY_CREATE_ERROR_ALREADY_IN_PARTY()
+        {
+            return "PCEa";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string PARTY_CREATE_ERROR_FULL()
+        {
+            return "PCEf";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string PARTY_SET_LEADER(long id)
+        {
+            return "PL" + id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string PARTY_MEMBER_LEFT(long id)
+        {
+            return "PM-" + id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="kickerId"></param>
+        /// <returns></returns>
+        public static string PARTY_LEAVE(string kickerId = "")
+        {
+            return "PV" + kickerId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public static string PARTY_MEMBER_LIST(params CharacterEntity[] members)
+        {
+            var message = new StringBuilder("PM+");
+            foreach(var member in members)
+            {
+                member.SerializeAs_PartyMemberListInformations(message);
+                message.Append("|");
+            }
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
     }
 }
