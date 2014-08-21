@@ -137,7 +137,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.ChanceSteal, new StatsStealEffect());
             _effects.Add(EffectEnum.APSteal, new StatsStealEffect());
             _effects.Add(EffectEnum.MPSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.StealPO, new StatsStealEffect());
+            _effects.Add(EffectEnum.POSteal, new StatsStealEffect());
 
             // Autres
             _effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect());

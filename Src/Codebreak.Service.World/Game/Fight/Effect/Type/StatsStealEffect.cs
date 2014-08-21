@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             { EffectEnum.ChanceSteal            , EffectEnum.SubChance        },
             { EffectEnum.APSteal                , EffectEnum.SubAP            },
             { EffectEnum.MPSteal                , EffectEnum.SubMP            },
-            { EffectEnum.StealPO                , EffectEnum.SubPO            },
+            { EffectEnum.POSteal                , EffectEnum.SubPO            },
         };
 
         private static Dictionary<EffectEnum, EffectEnum> _casterBonus = new Dictionary<EffectEnum, EffectEnum>()
@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             { EffectEnum.ChanceSteal            , EffectEnum.AddChance        },
             { EffectEnum.APSteal                , EffectEnum.AddAP            },
             { EffectEnum.MPSteal                , EffectEnum.AddMP            },
-            { EffectEnum.StealPO                , EffectEnum.AddPO            },
+            { EffectEnum.POSteal                , EffectEnum.AddPO            },
         };
 
         /// <summary>

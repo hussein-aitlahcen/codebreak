@@ -675,39 +675,39 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Effect"></param>
-        /// <param name="Damages"></param>
-        public void CalculReduceDamages(EffectEnum Effect, ref int Damages)
+        /// <param name="effect"></param>
+        /// <param name="damages"></param>
+        public void CalculReduceDamages(EffectEnum effect, ref int damages)
         {
-            switch (Effect)
+            switch (effect)
             {
                 case EffectEnum.DamageNeutral:
                 case EffectEnum.StealNeutral:
-                    Damages = Damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentNeutral) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPNeutral)) / 100
+                    damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentNeutral) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPNeutral)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageNeutral) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPNeutral);
                     break;
 
                 case EffectEnum.DamageEarth:
                 case EffectEnum.StealEarth:
-                    Damages = Damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentEarth) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPEarth)) / 100
+                    damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentEarth) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPEarth)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageEarth) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPEarth);
                     break;
 
                 case EffectEnum.DamageFire:
                 case EffectEnum.StealFire:
-                    Damages = Damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentFire) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPFire)) / 100
+                    damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentFire) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPFire)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageFire) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPFire);
                     break;
 
                 case EffectEnum.DamageAir:
                 case EffectEnum.StealAir:
-                    Damages = Damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentAir) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPAir)) / 100
+                    damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentAir) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPAir)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageAir) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPAir);
                     break;
 
                 case EffectEnum.DamageWater:
                 case EffectEnum.StealWater:
-                    Damages = Damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentWater) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPWater)) / 100
+                    damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentWater) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPWater)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageWater) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPWater);
                     break;
             }
@@ -716,28 +716,28 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Heal"></param>
-        public void CalculHeal(ref int Heal)
+        /// <param name="heal"></param>
+        public void CalculHeal(ref int heal)
         {
-            Heal = (int)Math.Floor((double)Heal * (100 + Statistics.GetTotal(EffectEnum.AddIntelligence)) / 100 + Statistics.GetTotal(EffectEnum.AddHealCare));
+            heal = (int)Math.Floor((double)heal * (100 + Statistics.GetTotal(EffectEnum.AddIntelligence)) / 100 + Statistics.GetTotal(EffectEnum.AddHealCare));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CHRate"></param>
-        public void CalculCriticalHitRate(ref int CHRate)
+        /// <param name="cHitRate"></param>
+        public void CalculCriticalHitRate(ref int cHitRate)
         {
-            CHRate = (int)(CHRate * Math.E * 1.1 / Math.Log(Statistics.GetTotal(EffectEnum.AddAgility) + 12));
+            cHitRate = (int)(cHitRate * Math.E * 1.1 / Math.Log(Statistics.GetTotal(EffectEnum.AddAgility) + 12));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DamageEffect"></param>
-        public int CalculArmor(EffectEnum DamageEffect)
+        /// <param name="damageEffect"></param>
+        public int CalculArmor(EffectEnum damageEffect)
         {
-            switch (DamageEffect)
+            switch (damageEffect)
             {
                 case EffectEnum.DamageEarth:
                 case EffectEnum.StealEarth:
@@ -1009,7 +1009,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        int IComparable<IFightObstacle>.CompareTo(IFightObstacle obj)
+        public int CompareTo(IFightObstacle obj)
         {
             return Priority.CompareTo(obj.Priority);
         }   

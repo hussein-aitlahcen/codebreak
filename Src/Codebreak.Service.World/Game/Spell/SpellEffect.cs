@@ -17,11 +17,11 @@ namespace Codebreak.Service.World.Game.Spell
         None = -1,
 
         // Armures
-        AddArmorNeutral,
-        AddArmorEarth,
-        AddArmorFire,
-        AddArmorWater,
-        AddArmorAir,
+        AddArmorNeutral = -2,
+        AddArmorEarth = -3,
+        AddArmorFire = -4,
+        AddArmorWater = -5,
+        AddArmorAir = -6,
 
         Teleport = 4,
         PushBack = 5,
@@ -102,7 +102,7 @@ namespace Codebreak.Service.World.Game.Spell
         DamagePerAP = 131,
         IncreaseSpellDamage = 293,
         Mastery = 165,
-        StealPO = 320,
+        POSteal = 320,
         Punition = 672,
         Sacrifice = 765,
 

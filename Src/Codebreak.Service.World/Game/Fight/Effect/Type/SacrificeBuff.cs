@@ -25,11 +25,19 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DamageValue"></param>
-        /// <param name="DamageInfos"></param>
+        /// <param name="damageValue"></param>
+        /// <param name="damageInfos"></param>
         /// <returns></returns>
-        public override FightActionResultEnum ApplyEffect(ref int DamageValue, CastInfos DamageInfos = null)
+        public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
+            // mort
+            if(Caster.IsFighterDead)
+            {
+                Target.BuffManager.RemoveBuff(this);
+
+                return FightActionResultEnum.RESULT_NOTHING;
+            }
+
             var targetTeleport = new CastInfos(EffectEnum.Teleport, CastInfos.SpellId, CastInfos.Caster.Cell.Id, 0, 0, 0, 0, 0, Target, null);
             var casterTeleport = new CastInfos(EffectEnum.Teleport, CastInfos.SpellId, Target.Cell.Id, 0, 0, 0, 0, 0, CastInfos.Caster, null);
 
@@ -42,12 +50,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (TeleportEffect.ApplyTeleport(casterTeleport) == FightActionResultEnum.RESULT_END)
                 return FightActionResultEnum.RESULT_END;
 
-            if (DamageEffect.ApplyDamages(DamageInfos, CastInfos.Caster, ref DamageValue) == FightActionResultEnum.RESULT_END)
+            var damageJet = damageInfos.RandomJet;
+
+            if (DamageEffect.ApplyDamages(damageInfos, CastInfos.Caster, ref damageJet) == FightActionResultEnum.RESULT_END)
                 return FightActionResultEnum.RESULT_END;
 
-            DamageValue = 0;
+            damageValue = 0;
 
-            return base.ApplyEffect(ref DamageValue, DamageInfos);
+            return base.ApplyEffect(ref damageValue, damageInfos);
         }
     }
 }

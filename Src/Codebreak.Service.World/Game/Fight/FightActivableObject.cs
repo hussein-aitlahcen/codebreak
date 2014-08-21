@@ -312,7 +312,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        int IComparable<IFightObstacle>.CompareTo(IFightObstacle obj)
+        public int CompareTo(IFightObstacle obj)
         {
             return Priority.CompareTo(obj.Priority);
         }
