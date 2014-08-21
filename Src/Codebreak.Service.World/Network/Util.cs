@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Network
         }
 
         /// <summary>
-        /// Encode the given number into a Base36 string
+        /// 
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
