@@ -25,10 +25,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DamageValue"></param>
-        /// <param name="DamageInfos"></param>
+        /// <param name="damageValue"></param>
+        /// <param name="damageInfos"></param>
         /// <returns></returns>
-        public override FightActionResultEnum ApplyEffect(ref int DamageValue, CastInfos DamageInfos = null)
+        public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
             var apLost = CastInfos.Value1 > Target.AP ? Target.AP : CastInfos.Value1;
             CastInfos.Value1 = Target.CalculDodgeAPMP(CastInfos.Caster, apLost);
@@ -40,12 +40,12 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
 
             if (CastInfos.Value1 > 0)
             {
-                var BuffStats = new StatsBuff(new CastInfos(CastInfos.EffectType, CastInfos.SpellId, CastInfos.SpellId, CastInfos.Value1, 0, 0, 0, Duration, CastInfos.Caster, null), Target);
-                BuffStats.ApplyEffect(ref apLost);
-                Target.BuffManager.AddBuff(BuffStats);
+                var buffStats = new StatsBuff(new CastInfos(CastInfos.EffectType, CastInfos.SpellId, CastInfos.SpellId, CastInfos.Value1, 0, 0, 0, Duration, CastInfos.Caster, null), Target);
+                buffStats.ApplyEffect(ref apLost);
+                Target.BuffManager.AddBuff(buffStats);
             }
 
-            return base.ApplyEffect(ref DamageValue, DamageInfos);
+            return base.ApplyEffect(ref damageValue, damageInfos);
         }
 
         /// <summary>

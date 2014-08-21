@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                     var cell = target.Fight.GetCell(CastInfos.CellId);
                     if (cell.CanWalk)
                     {
-                        var sleepTime = 1 + (WorldConfig.FIGHT_PANDA_LAUNCH_CELL_TIME * (Pathfinding.GoalDistance(target.Fight.Map, target.Cell.Id, CastInfos.CellId)));
+                        var sleepTime = 1 + (WorldConfig.FIGHT_PANDA_LAUNCH_CELL_TIME * Pathfinding.GoalDistance(target.Fight.Map, target.Cell.Id, CastInfos.CellId));
 
                         target.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.PandaLaunch, CastInfos.Caster.Id, CastInfos.CellId.ToString()));
 

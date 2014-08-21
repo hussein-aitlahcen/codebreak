@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class LifeStealEffect : EffectBase
+    public sealed class ReflectSpellEffect : EffectBase
     {
         /// <summary>
         /// 
@@ -20,16 +20,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         {
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
+            
+            castInfos.Target.BuffManager.AddBuff(new ReflectSpellBuff(castInfos, castInfos.Target));
 
-            var damageJet = castInfos.RandomJet;
-
-            if (DamageEffect.ApplyDamages(castInfos, castInfos.Target, ref damageJet) == FightActionResultEnum.RESULT_END)
-                return FightActionResultEnum.RESULT_END;
-
-            // On ne se soigne que de 50% des dégats
-            var healJet = damageJet / 2;
-
-            return HealEffect.ApplyHeal(castInfos, castInfos.Caster, ref healJet);
+            return FightActionResultEnum.RESULT_NOTHING;
         }
     }
 }

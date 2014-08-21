@@ -129,10 +129,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect
                 case EffectEnum.ReflectSpell:
                     Target.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
                                                                                Target.Id,
-                                                                               "-1",
-                                                                               CastInfos.Value1.ToString(),
+                                                                               CastInfos.Value2.ToString(),
+                                                                               CastInfos.Value2.ToString(),
                                                                                "10",
-                                                                               "",
+                                                                               CastInfos.Value2.ToString(),
                                                                                CastInfos.Duration.ToString(),
                                                                                CastInfos.SpellId.ToString()));
                     break;
@@ -150,14 +150,6 @@ namespace Codebreak.Service.World.Game.Fight.Effect
                     break;
 
                 case EffectEnum.PandaCarrier:
-                    //Caster.Fight.Dispatch(WorldMessage.FIGHT_EFFECT_INFORMATION(CastInfos.EffectType,
-                    //                                                      Caster.Id,
-                    //                                                      CastInfos.Value1.ToString(),
-                    //                                                      "",
-                    //                                                      "",
-                    //                                                      "",
-                    //                                                      CastInfos.Duration.ToString(),
-                    //                                                      CastInfos.SpellId.ToString()));
                     break;
 
                 default:

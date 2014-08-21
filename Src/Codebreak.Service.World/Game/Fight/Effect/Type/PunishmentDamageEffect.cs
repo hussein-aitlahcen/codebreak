@@ -24,6 +24,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
 
             castInfos.EffectType = EffectEnum.DamageNeutral;
             
+            // official formulas
             var damageCoef = (double)castInfos.RandomJet / 100;
             var maxLife = castInfos.Caster.MaxLife;
             var percentLife = (double)castInfos.Caster.Life / castInfos.Caster.MaxLife;

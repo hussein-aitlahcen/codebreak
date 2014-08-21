@@ -15,34 +15,34 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CastInfos"></param>
+        /// <param name="castInfos"></param>
         /// <returns></returns>
-        public override FightActionResultEnum ApplyEffect(CastInfos CastInfos)
+        public override FightActionResultEnum ApplyEffect(CastInfos castInfos)
         {
-            if (CastInfos.Target == null)
+            if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            if (CastInfos.SpellId == 445)
+            if (castInfos.SpellId == 445)
             {
-                if (CastInfos.Target.Team == CastInfos.Caster.Team)
+                if (castInfos.Target.Team == castInfos.Caster.Team)
                     return FightActionResultEnum.RESULT_NOTHING;
             }
-            else if (CastInfos.SpellId == 438)
+            else if (castInfos.SpellId == 438)
             {
-                if (CastInfos.Target.Team != CastInfos.Caster.Team)
+                if (castInfos.Target.Team != castInfos.Caster.Team)
                     return FightActionResultEnum.RESULT_NOTHING;
             }
 
-            var TargetTeleport = new CastInfos(EffectEnum.Teleport, CastInfos.SpellId, CastInfos.Caster.Cell.Id, 0, 0, 0, 0, 0, CastInfos.Target, null);
-            var CasterTeleport = new CastInfos(EffectEnum.Teleport, CastInfos.SpellId, CastInfos.Target.Cell.Id, 0, 0, 0, 0, 0, CastInfos.Caster, null);
+            var targetTeleport = new CastInfos(EffectEnum.Teleport, castInfos.SpellId, castInfos.Caster.Cell.Id, 0, 0, 0, 0, 0, castInfos.Target, null);
+            var casterTeleport = new CastInfos(EffectEnum.Teleport, castInfos.SpellId, castInfos.Target.Cell.Id, 0, 0, 0, 0, 0, castInfos.Caster, null);
 
-            CastInfos.Caster.SetCell(null);
-            CastInfos.Target.SetCell(null);
+            castInfos.Caster.SetCell(null);
+            castInfos.Target.SetCell(null);
 
-            if (TeleportEffect.ApplyTeleport(TargetTeleport) == FightActionResultEnum.RESULT_END)
+            if (TeleportEffect.ApplyTeleport(targetTeleport) == FightActionResultEnum.RESULT_END)
                 return FightActionResultEnum.RESULT_END;
 
-            if (TeleportEffect.ApplyTeleport(CasterTeleport) == FightActionResultEnum.RESULT_END)
+            if (TeleportEffect.ApplyTeleport(casterTeleport) == FightActionResultEnum.RESULT_END)
                 return FightActionResultEnum.RESULT_END;
 
             return FightActionResultEnum.RESULT_NOTHING;

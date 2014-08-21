@@ -270,7 +270,9 @@ namespace Codebreak.Service.World.Game.Fight
                                             effect.Chance,
                                             effect.Duration,
                                             _caster,
-                                            target,targetKnownCellId: target.Cell.Id,
+                                            target,
+                                            "",
+                                            target.Cell.Id,
                                             isTrap: ObstacleType == FightObstacleTypeEnum.TYPE_TRAP)
                                          );
                     }

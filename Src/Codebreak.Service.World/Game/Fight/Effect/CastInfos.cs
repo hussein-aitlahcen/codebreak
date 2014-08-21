@@ -124,54 +124,90 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public EffectEnum EffectType
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public EffectEnum SubEffect
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int SpellId
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int CellId
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsReflect
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsPoison
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsReturnedDamages
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsMelee
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsTrap
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int RandomJet
         {
             get
@@ -180,72 +216,135 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Value1
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Value2
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Value3
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int FakeValue
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int DamageValue
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Chance
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Duration
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int SpellLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string RangeType
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FighterBase Caster
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FighterBase Target
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int TargetKnownCellId
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="effectType"></param>
+        /// <param name="spellId"></param>
+        /// <param name="cellId"></param>
+        /// <param name="value1"></param>
+        /// <param name="value2"></param>
+        /// <param name="value3"></param>
+        /// <param name="chance"></param>
+        /// <param name="duration"></param>
+        /// <param name="caster"></param>
+        /// <param name="target"></param>
+        /// <param name="rangeType"></param>
+        /// <param name="targetKnownCellId"></param>
+        /// <param name="spellLevel"></param>
+        /// <param name="isMelee"></param>
+        /// <param name="isTrap"></param>
+        /// <param name="subEffect"></param>
+        /// <param name="damageValue"></param>
+        /// <param name="fakeValue"></param>
         public CastInfos(EffectEnum effectType,
             int spellId,
             int cellId,
@@ -258,11 +357,13 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             FighterBase target,
             string rangeType = "",
             int targetKnownCellId = 0,
+            int spellLevel = -1,
             bool isMelee = false,
             bool isTrap = false,
             EffectEnum subEffect = EffectEnum.None,
             int damageValue = 0, int fakeValue = 0)
         {
+            SpellLevel = spellLevel;
             TargetKnownCellId = targetKnownCellId;
             FakeValue = fakeValue;
             RangeType = rangeType;

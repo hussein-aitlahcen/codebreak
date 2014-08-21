@@ -25,12 +25,12 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DamageValue"></param>
-        /// <param name="DamageInfos"></param>
+        /// <param name="damageValue"></param>
+        /// <param name="damageInfos"></param>
         /// <returns></returns>
-        public override FightActionResultEnum ApplyEffect(ref int DamageValue, CastInfos DamageInfos = null)
+        public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
-            var buffValue = DamageValue / 2; // Divise par deux les stats a boost car c'est un personnage.
+            var buffValue = damageValue / 2; // Divise par deux les stats a boost car c'est un personnage.
             var statsType = (EffectEnum)CastInfos.Value1 == EffectEnum.Heal ? EffectEnum.AddVitality : (EffectEnum)CastInfos.Value1;
             var maxValue = CastInfos.Value2;
             var duration = CastInfos.Value3;
@@ -69,7 +69,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                 Target.BuffManager.AddBuff(BuffStats);
             }
 
-            return base.ApplyEffect(ref DamageValue, DamageInfos);
+            return base.ApplyEffect(ref damageValue, damageInfos);
         }
 
         /// <summary>

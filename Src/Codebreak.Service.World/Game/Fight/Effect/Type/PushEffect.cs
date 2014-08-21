@@ -26,6 +26,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
+            if (castInfos.Target.Cell.Id != castInfos.TargetKnownCellId)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             int direction = 0;
 
             switch (castInfos.EffectType)

@@ -30,6 +30,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <returns></returns>
         public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
+            //
+            if (damageInfos.IsReflect || damageInfos.IsReturnedDamages || damageInfos.IsPoison)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             // mort
             if(Caster.IsFighterDead)
             {
@@ -50,14 +54,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (TeleportEffect.ApplyTeleport(casterTeleport) == FightActionResultEnum.RESULT_END)
                 return FightActionResultEnum.RESULT_END;
 
-            var damageJet = damageInfos.RandomJet;
-
-            if (DamageEffect.ApplyDamages(damageInfos, CastInfos.Caster, ref damageJet) == FightActionResultEnum.RESULT_END)
-                return FightActionResultEnum.RESULT_END;
-
+            // cancel damages
             damageValue = 0;
 
-            return base.ApplyEffect(ref damageValue, damageInfos);
+            var damageJet = damageInfos.RandomJet;
+
+            damageInfos.IsReturnedDamages = true;
+
+            return DamageEffect.ApplyDamages(damageInfos, CastInfos.Caster, ref damageJet);
         }
     }
 }

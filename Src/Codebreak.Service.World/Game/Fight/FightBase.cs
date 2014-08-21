@@ -1428,14 +1428,10 @@ namespace Codebreak.Service.World.Game.Fight
                         if (CurrentProcessingFighter != null)
                         {
                             Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
-
-                            // Ensure that another effect didnt moved him
-                            if (castInfos.TargetKnownCellId == castInfos.Target.Cell.Id)
-                            {
-                                var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
-                                if (effectResult == FightActionResultEnum.RESULT_END)
-                                    break;
-                            }
+                            
+                            var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
+                            if (effectResult == FightActionResultEnum.RESULT_END)
+                                break;
                         }
                         else
                         {
@@ -1823,8 +1819,10 @@ namespace Codebreak.Service.World.Game.Fight
                                                         0,
                                                         fighter,
                                                         null,
-                                                        weaponTemplate.RangeType(),
-                                                        isMelee: isMelee)
+                                                        weaponTemplate.RangeType(), 
+                                                        0, 
+                                                        -1,
+                                                        isMelee)
                                                      );
                             }
                             else
@@ -1844,6 +1842,7 @@ namespace Codebreak.Service.World.Game.Fight
                                                         effectTarget,
                                                         weaponTemplate.RangeType(),
                                                         effectTarget.Cell.Id,
+                                                        -1,
                                                         isMelee));
                                 }
                             }
@@ -2021,7 +2020,9 @@ namespace Codebreak.Service.World.Game.Fight
                                                     fighter,
                                                     null,
                                                     spellLevel.RangeType,
-                                                    isMelee: isMelee)
+                                                    0,
+                                                    spellLevel.Level,
+                                                    isMelee)
                                                  );
                         }
                         else
@@ -2040,7 +2041,8 @@ namespace Codebreak.Service.World.Game.Fight
                                                     fighter,
                                                     effectTarget,
                                                     spellLevel.RangeType,
-                                                    effectTarget.Cell.Id,
+                                                    effectTarget.Cell.Id, 
+                                                    spellLevel.Level,
                                                     isMelee));
                             }
                         }

@@ -143,6 +143,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect());
             _effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
             _effects.Add(EffectEnum.Punition, new PunishmentDamageEffect());
+            _effects.Add(EffectEnum.ReflectSpell, new ReflectSpellEffect());
 
             // Sacrifice
             _effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());
