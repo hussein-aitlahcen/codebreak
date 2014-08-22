@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Fight.Challenges;
+using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Game.Fight.Effect;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -212,7 +215,7 @@ namespace Codebreak.Service.World.Game.Fight
         private Dictionary<FightOptionTypeEnum, bool> _blockedOption;
         private List<FighterBase> _fighters;
         private List<FightCell> _places;
-        private long partyId = -2;
+        private List<ChallengeBase> _challenges;
 
         /// <summary>
         /// 
@@ -225,6 +228,7 @@ namespace Codebreak.Service.World.Game.Fight
             LeaderId = leaderId;
             FlagCellId = flagCell;
 
+            _challenges = new List<ChallengeBase>();
             _fighters = new List<FighterBase>();
             _places = places;
             _blockedOption = new Dictionary<FightOptionTypeEnum, bool>()
@@ -234,6 +238,16 @@ namespace Codebreak.Service.World.Game.Fight
                 { FightOptionTypeEnum.TYPE_PARTY, false },
                 { FightOptionTypeEnum.TYPE_SPECTATOR, false },
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="challenge"></param>
+        public void AddChallenge(ChallengeBase challenge)
+        {
+            challenge.AddHandler(base.Dispatch);
+            _challenges.Add(challenge);
         }
 
         /// <summary>
@@ -289,6 +303,94 @@ namespace Codebreak.Service.World.Game.Fight
             }
             
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendChallengeInfos()
+        {
+            base.CachedBuffer = true;
+            foreach (var challenge in _challenges)
+                base.Dispatch(WorldMessage.FIGHT_CHALLENGE_INFORMATIONS(challenge.Id,
+                    challenge.ShowTarget,
+                    challenge.TargetId,
+                    challenge.BasicXpBonus,
+                    challenge.TeamXpBonus,
+                    challenge.BasicDropBonus,
+                    challenge.TeamDropBonus,
+                    challenge.Success));
+            base.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        public void SendChallengeInfos(FighterBase fighter)
+        {
+            foreach (var challenge in _challenges)
+                fighter.Dispatch(WorldMessage.FIGHT_CHALLENGE_INFORMATIONS(challenge.Id,
+                    challenge.ShowTarget,
+                    challenge.TargetId,
+                    challenge.BasicXpBonus,
+                    challenge.TeamXpBonus,
+                    challenge.BasicDropBonus,
+                    challenge.TeamDropBonus,
+                    challenge.Success));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        public void BeginTurn(FighterBase fighter)
+        {
+            foreach (var challenge in _challenges)
+                challenge.BeginTurn(fighter);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        /// <param name="castInfos"></param>
+        public void CheckSpell(FighterBase fighter, CastInfos castInfos)
+        {
+            foreach (var challenge in _challenges)
+                challenge.CheckSpell(fighter, castInfos);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        /// <param name="movementLength"></param>
+        public void CheckMovement(int beginCell, int endCell, int movementLength)
+        {
+            foreach (var challenge in _challenges)
+                challenge.CheckMovement(beginCell, endCell, movementLength);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        /// <param name="weapon"></param>
+        public void CheckWeapon(FighterBase fighter, ItemTemplateDAO weapon)
+        {
+            foreach (var challenge in _challenges)
+                challenge.CheckWeapon(fighter, weapon);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        public void EndTurn(FighterBase fighter)
+        {
+            foreach (var challenge in _challenges)
+                challenge.EndTurn(fighter);
         }
 
         /// <summary>
@@ -361,10 +463,8 @@ namespace Codebreak.Service.World.Game.Fight
         public void SendMapFightInfos(EntityBase entity)
         {
             entity.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, LeaderId, Fighters.ToArray()));
-            foreach (var option in _blockedOption)
-            {
+            foreach (var option in _blockedOption)            
                 entity.Dispatch(WorldMessage.FIGHT_OPTION(option.Key, option.Value, LeaderId));
-            }
         }
 
         /// <summary>
@@ -384,6 +484,12 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Fight = null;
             OpponentTeam = null;
+            
+            foreach (var challenge in _challenges)
+                challenge.RemoveHandler(base.Dispatch);
+
+            _challenges.Clear();
+            _challenges = null;
 
             _places.Clear();
             _places = null;

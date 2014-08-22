@@ -347,10 +347,8 @@ namespace Codebreak.Service.World.Game.Map
                         entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
                         entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
                         entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
-                        foreach (var fight in FightManager.Fights)
-                        {
-                            fight.SendMapFightInfos(entity);
-                        }
+                        foreach (var fight in FightManager.Fights)                        
+                            fight.SendMapFightInfos(entity);                        
                         entity.CachedBuffer = false;
                     }
                 }

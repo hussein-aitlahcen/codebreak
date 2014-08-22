@@ -1382,5 +1382,53 @@ namespace Codebreak.Service.World.Game
             message.Remove(message.Length - 1, 1);
             return message.ToString();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string FIGHT_CHALLENGE_FAILED(int id)
+        {
+            return "GdOO" + id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string FIGHT_CHALLENGE_SUCCESS(int id)
+        {
+            return "GdKK" + id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="showTarget"></param>
+        /// <param name="targetId"></param>
+        /// <param name="basicXpBonus"></param>
+        /// <param name="teamXpBonus"></param>
+        /// <param name="basicDropBonus"></param>
+        /// <param name="teamDropBonus"></param>
+        /// <param name="success"></param>
+        /// <returns></returns>
+        public static string FIGHT_CHALLENGE_INFORMATIONS(int id, bool showTarget, long targetId, long basicXpBonus, long teamXpBonus, long basicDropBonus, long teamDropBonus, bool success)
+        {
+            return "Gd" + id + ";" + (showTarget ? "1" : "0") + ";" + targetId + ";" + basicXpBonus + ";" + teamXpBonus + ";" + basicDropBonus + ";" + teamDropBonus + ";" + (success ? "1" : "0");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="fighterId"></param>
+        /// <returns></returns>
+        public static string FIGHT_CELL_FLAG(int cellId, long fighterId = 0)
+        {
+            return "Gf" + fighterId + "|" + cellId;
+        }
     }
 }

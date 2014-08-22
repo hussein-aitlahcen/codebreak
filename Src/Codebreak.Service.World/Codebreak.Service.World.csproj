@@ -102,6 +102,9 @@
     <Compile Include="Game\Exchange\ShopExchange.cs" />
     <Compile Include="Game\Fight\BuffEffectManager.cs" />
     <Compile Include="Game\Fight\ChallengerFight.cs" />
+    <Compile Include="Game\Fight\Challenges\ChallengeBase.cs" />
+    <Compile Include="Game\Fight\Challenges\ChallengeManager.cs" />
+    <Compile Include="Game\Fight\Challenges\ZombieChallenge.cs" />
     <Compile Include="Game\Fight\Effect\BuffBase.cs" />
     <Compile Include="Game\Fight\Effect\CastInfos.cs" />
     <Compile Include="Game\Fight\Effect\EffectBase.cs" />

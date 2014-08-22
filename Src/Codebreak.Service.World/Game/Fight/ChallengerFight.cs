@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Fight.Challenges;
 using Codebreak.Service.World.Game.Map;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,8 @@ namespace Codebreak.Service.World.Game.Fight
             JoinFight(Attacker, Team0);
             JoinFight(Defender, Team1);
 
+            base.Team0.AddChallenge(ChallengeManager.Instance.Generate());
+            base.Team1.AddChallenge(ChallengeManager.Instance.Generate());
             base.Start();
         }
 

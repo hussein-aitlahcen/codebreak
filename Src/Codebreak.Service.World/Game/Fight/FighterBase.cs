@@ -175,7 +175,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool Disconnected
+        public bool IsDisconnected
         {
             get;
             set;
@@ -551,14 +551,14 @@ namespace Codebreak.Service.World.Game.Fight
 
             StopAction(GameActionTypeEnum.FIGHT);
             
-            if (Disconnected)
+            if (IsDisconnected)
                 EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
 
             SetCell(null);
             Team = null;
             Fight = null;
             IsSpectating = false;
-            Disconnected = false;
+            IsDisconnected = false;
             TurnPass = false;
             TurnReady = false;
             Invocator = null;
@@ -613,7 +613,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public virtual FightActionResultEnum EndTurn()
         {
-            if (Disconnected)
+            if (IsDisconnected)
             {
                 if (DisconnectedTurnLeft == 0)
                 {
@@ -931,7 +931,7 @@ namespace Codebreak.Service.World.Game.Fight
             switch(actionType)
             {
                 case GameActionTypeEnum.FIGHT:
-                    if (!Disconnected)
+                    if (!IsDisconnected)
                     {
                         WorldService.Instance.AddUpdatable(this);
                         FrameManager.AddFrame(GameCreationFrame.Instance);
