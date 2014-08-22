@@ -26,7 +26,7 @@ namespace Codebreak.Framework.Command
         {
         }
 
-        public void Execute(C context)
+        public bool Execute(C context)
         {
             if (CanExecute(context))
             {
@@ -37,15 +37,20 @@ namespace Codebreak.Framework.Command
                     {
                         if (subCommand.Aliases.Contains(word))
                         {
-                            subCommand.Execute(context);
-                            return;
+                            if (subCommand.CanExecute(context))
+                            {
+                                return subCommand.Execute(context);
+                            }
                         }
                     }
                     context.TextCommandArgument.Position -= word.Length;
                 }
 
                 Process(context);
+                return true;
             }
+
+            return false;
         }
 
         internal void RegisterNestedSubCommands()

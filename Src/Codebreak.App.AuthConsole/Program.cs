@@ -20,7 +20,8 @@ namespace Codebreak.App.AuthConsole
 
             AuthService.Instance.Start("./Config.json");
 
-            System.Console.ReadLine();
+            while(true)
+                System.Console.ReadLine();
         }
 
         // ReSharper disable once InconsistentNaming

@@ -115,12 +115,18 @@ namespace Codebreak.Service.World
 
                     if (client.CurrentCharacter != null)
                     {
-                        client.CurrentCharacter.FrameManager.ProcessMessage(message);
+                        if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
+                        {
+                            client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        }
                     }
                     else
                     {
-                        client.FrameManager.ProcessMessage(message);
-                    }
+                        if (!client.FrameManager.ProcessMessage(message))
+                        {
+                            client.Send(WorldMessage.BASIC_NO_OPERATION());
+                        }
+                    }                 
                 });
             }
         }

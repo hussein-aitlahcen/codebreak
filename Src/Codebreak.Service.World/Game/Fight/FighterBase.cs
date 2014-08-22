@@ -791,8 +791,8 @@ namespace Codebreak.Service.World.Game.Fight
                     if (realAP == 0)
                         realAP = 1;
 
-                    var percentLastAP = actualAP / realAP;
-                    var chance = 0.5 * (dodgeAPCaster / dodgeAPTarget) * percentLastAP;
+                    var percentLastAP = (double)actualAP / realAP;
+                    var chance = 0.5 * ((double)dodgeAPCaster / dodgeAPTarget) * percentLastAP;
                     var percentChance = chance * 100;
 
                     if (percentChance > 100) 
@@ -818,8 +818,8 @@ namespace Codebreak.Service.World.Game.Fight
                     if (realMP == 0)
                         realMP = 1;
 
-                    var percentLastMP = actualMP / realMP;
-                    var chance = 0.5 * (dodgeMPCaster / dodgeMPTarget) * percentLastMP;
+                    var percentLastMP = (double)actualMP / realMP;
+                    var chance = 0.5 * ((double)dodgeMPCaster / dodgeMPTarget) * percentLastMP;
                     var percentChance = chance * 100;
 
                     if (percentChance > 100) 

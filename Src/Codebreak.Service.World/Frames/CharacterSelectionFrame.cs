@@ -348,7 +348,7 @@ namespace Codebreak.Service.World.Frames
         {
             client.FrameManager.RemoveFrame(CharacterSelectionFrame.Instance);
 
-            client.CurrentCharacter = EntityManager.Instance.CreateCharacter(character);
+            client.CurrentCharacter = EntityManager.Instance.CreateCharacter(client.Account.Power, character);
 
             WorldService.Instance.AddUpdatable(client.CurrentCharacter);
 

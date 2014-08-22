@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Commands;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -467,13 +468,23 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int Power
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private CharacterAlignmentDAO _alignmentRecord;
 
-        public CharacterEntity(CharacterDAO characterDAO)
+        public CharacterEntity(int power, CharacterDAO characterDAO)
             : base(EntityTypEnum.TYPE_CHARACTER, characterDAO.Id)
         {
             _alignmentRecord = characterDAO.GetAlignment();
 
+            Power = power;
             PartyId = -1;
             PartyInvitedPlayerId = -1;
             PartyInviterPlayerId = -1;
@@ -495,7 +506,17 @@ namespace Codebreak.Service.World.Game.Entity
                 case ChatChannelEnum.CHANNEL_GROUP:
                     PartyManager.Instance.PartyMessage(PartyId, Id, Name, message);
                     break;
+
+                case ChatChannelEnum.CHANNEL_GENERAL:
+                    if (message.StartsWith("."))
+                    {
+                        if(!WorldService.Instance.CommandManager.Execute(new WorldCommandContext(this, message.Remove(0, 1))))                        
+                            base.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow command"));
+                        return;
+                    }
+                    break;
             }
+
             base.DispatchChatMessage(channel, message, remoteEntity);
         }
 

@@ -144,6 +144,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
             _effects.Add(EffectEnum.Punition, new PunishmentDamageEffect());
             _effects.Add(EffectEnum.ReflectSpell, new ReflectSpellEffect());
+            _effects.Add(EffectEnum.DamageDropLife, new DropLifeEffect());
+            _effects.Add(EffectEnum.LifeSteal, new PureLifeStealEffect());
 
             // Sacrifice
             _effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());

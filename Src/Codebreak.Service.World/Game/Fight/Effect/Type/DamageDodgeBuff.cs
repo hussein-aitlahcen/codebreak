@@ -36,11 +36,15 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
 
             damageValue = 0; // Annihilation des dommages;
 
+            // cannot apply push if target move with last effects
+            if (Target.Cell.Id != damageInfos.TargetKnownCellId)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             var subInfos = new CastInfos(EffectEnum.PushBack, 0, 0, 0, 0, 0, 0, 0, damageInfos.Caster, null);
             var direction = Pathfinding.GetDirection(Target.Fight.Map, damageInfos.Caster.Cell.Id, Target.Cell.Id);
 
             // Application du push
-            return PushEffect.ApplyPush(subInfos, this.Target, direction, 1);
+            return PushEffect.ApplyPush(subInfos, Target, direction, 1);
         }
     }
 }

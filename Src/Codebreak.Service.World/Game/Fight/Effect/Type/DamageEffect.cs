@@ -41,7 +41,6 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             return FightActionResultEnum.RESULT_NOTHING;
         }
 
-
         /// <summary>
         ///
         /// </summary>
@@ -51,78 +50,75 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         {
             var caster = castInfos.Caster;
 
-            // Perd l'invisibilité s'il inflige des dommages direct
+            // caster stealth goes out of dealing direct damages
             if (!castInfos.IsPoison && !castInfos.IsTrap && !castInfos.IsReflect && caster.StateManager.HasState(FighterStateEnum.STATE_STEALTH))
                 caster.BuffManager.RemoveStealth();
 
-            // Application des buffs avant calcul totaux des dommages, et verification qu'ils n'entrainent pas la fin du combat
+            // poison and reflected damages cannot triggers on hit effect
             if (!castInfos.IsPoison && !castInfos.IsReflect)
             {
                 if (caster.BuffManager.OnAttackPostJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
-                    return FightActionResultEnum.RESULT_END; // Fin du combat
+                    return FightActionResultEnum.RESULT_END; // check out end of fight
 
                 if (target.BuffManager.OnAttackedPostJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
-                    return FightActionResultEnum.RESULT_END; // Fin du combat
+                    return FightActionResultEnum.RESULT_END; // check out end of fight
             }
 
-            // Calcul jet
+            // caster statistics increase damages
             caster.CalculDamages(castInfos.EffectType, ref damageJet);
 
-            // Calcul resistances
+            // target statistics reduce incomming damages
             target.CalculReduceDamages(castInfos.EffectType, ref damageJet);
 
-            // Reduction des dommages grace a l'armure
+            // target armor reduce damages
             if (damageJet > 0)
             {
-                // Si ce n'est pas des dommages direct on ne reduit pas
+                // target armor cannot reduce poison or reflect
                 if (!castInfos.IsPoison && !castInfos.IsReflect)
                 {
                     // Calcul de l'armure par rapport a l'effet
-                    var Armor = target.CalculArmor(castInfos.EffectType);
+                    var armor = target.CalculArmor(castInfos.EffectType);
 
-                    // Si il reduit un minimum
-                    if (Armor != 0)
+                    // if the target has some armor
+                    if (armor != 0)
                     {
-                        // XX Reduit les dommages de X
-                        target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_ARMOR, target.Id, target.Id + "," + Armor));
+                        target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_ARMOR, target.Id, target.Id + "," + armor));
 
-                        // On reduit
-                        damageJet -= Armor;
+                        damageJet -= armor;
 
-                        // Si on suprimme totalement les dommages
                         if (damageJet < 0)
                             damageJet = 0;
                     }
                 }
             }
 
-            // Application des buffs apres le calcul totaux et l'armure
+            // poison and reflected damages cannot triggers on hit effect after jets and armor
             if (!castInfos.IsPoison && !castInfos.IsReflect)
             {
                 if (caster.BuffManager.OnAttackAfterJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
-                    return FightActionResultEnum.RESULT_END; // Fin du combat
+                    return FightActionResultEnum.RESULT_END; // check out end of fight
                 if (target.BuffManager.OnAttackedAfterJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
-                    return FightActionResultEnum.RESULT_END; // Fin du combat
+                    return FightActionResultEnum.RESULT_END; // check out end of fight
             }
 
-            // S'il subit des dommages
+            // check out damages after all calculations
             if (damageJet > 0)
             {
-                // Si c'est pas un poison ou un renvoi on applique le renvoie
-                if (!castInfos.IsPoison && !castInfos.IsReflect)
+                // poison and reflected damages cannot be reflected
+                if (!castInfos.IsPoison && !castInfos.IsReflect && castInfos.EffectType != EffectEnum.DamageBrut)
                 {
                     var reflectDamage = target.ReflectDamage;
 
-                    // Si du renvoi
+                    // check out if he has some reflection
                     if (reflectDamage > 0)
                     {
                         target.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddReflectDamage, target.Id, target.Id + "," + reflectDamage));
 
-                        // Trop de renvois
+                        // too much reflect
                         if (reflectDamage > damageJet)
                             reflectDamage = damageJet;
 
-                        var subInfos = new CastInfos(EffectEnum.DamageBrut, 0, 0, 0, 0, 0, 0, 0, target, null);
+                        var subInfos = new CastInfos(castInfos.EffectType, 0, 0, 0, 0, 0, 0, 0, target, null);
                         subInfos.IsReflect = true;
 
                         // Si le renvoi de dommage entraine la fin de combat on stop
@@ -135,21 +131,21 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                 }
             }
 
-            // Peu pas etre en dessous de 0
+            // cannot be negative
             if (damageJet < 0)
                 damageJet = 0;
 
-            // Dommages superieur a la vie de la cible
+            // more damages than target life
             if (damageJet > target.Life)
                 damageJet = target.Life;
 
-            // Deduit la vie
+            // recude life
             target.Life -= damageJet;
 
-            // Enois du packet combat subit des dommages
+            // display damages
             target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_DAMAGE, caster.Id, target.Id + "," + (-damageJet).ToString()));
 
-            // Tentative de mort et fin de combat
+            // check out the death
             return caster.Fight.TryKillFighter(target, caster.Id);
         }
     }

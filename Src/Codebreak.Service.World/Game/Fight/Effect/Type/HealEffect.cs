@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Spell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,20 +47,16 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         {
             var caster = castInfos.Caster;
 
-            // Boost soin etc
-            caster.CalculHeal(ref heal);
+            if(castInfos.EffectType != EffectEnum.DamageBrut)
+                caster.CalculHeal(ref heal);
 
-            // Si le soin est superieur a sa vie actuelle
             if (target.Life + heal > target.MaxLife)
                 heal = target.MaxLife - target.Life;
 
-            // Affectation
             target.Life += heal;
 
-            // Envoi du packet
             target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_HEAL, caster.Id, target.Id + "," + heal));
 
-            // Le soin entraine la fin du combat ? lol on test quand même :D
             return target.Fight.TryKillFighter(target, caster.Id);
         }
     }

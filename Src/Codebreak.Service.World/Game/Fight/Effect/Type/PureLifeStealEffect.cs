@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PunishmentDamageEffect : EffectBase
+    public sealed class PureLifeStealEffect : EffectBase
     {
         /// <summary>
         /// 
@@ -22,19 +22,19 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
+            var damageJet = castInfos.RandomJet;
             castInfos.EffectType = EffectEnum.DamageBrut;
-            
-            // official formulas
-            var damageCoef = (double)castInfos.RandomJet / 100;
-            var maxLife = castInfos.Caster.MaxLife;
-            var percentLife = (double)castInfos.Caster.Life / castInfos.Caster.MaxLife;
-            var rad = (2 * Math.PI * (percentLife - 0.5));
-            var cos = Math.Cos(rad);
-            var rate = Math.Pow(cos + 1, 2) / 4;
-            var maxDamages = damageCoef * maxLife;
-            var realDamages = (int)(rate * maxDamages);
-            
-            return DamageEffect.ApplyDamages(castInfos, castInfos.Target, ref realDamages);
+
+            // cannot kill the target if hes an ally
+            if (castInfos.Caster.Team == castInfos.Target.Team && damageJet > castInfos.Target.Life)
+                damageJet = castInfos.Target.Life - 1;
+
+            if (DamageEffect.ApplyDamages(castInfos, castInfos.Target, ref damageJet) == FightActionResultEnum.RESULT_END)
+                return FightActionResultEnum.RESULT_END;
+
+            var healJet = damageJet / 2;
+
+            return HealEffect.ApplyHeal(castInfos, castInfos.Caster, ref healJet);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System;
+using System.Linq;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Database.Repository;
@@ -24,13 +26,10 @@ namespace Codebreak.Service.World.Manager
             {
                 _templateById = Serializer.Deserialize<Dictionary<int, SpellTemplate>>(stream);
             }
-            
+
             Logger.Info("SpellManager : " + _templateById.Count + " SpellTemplate loaded.");
         }
 
-        // <summary>
-        
-        // </summary>
         //public void Save()
         //{
         //    var templates = new Dictionary<int, SpellTemplate>();
@@ -45,7 +44,10 @@ namespace Codebreak.Service.World.Manager
         //        newTemplate.Sprite = sort.sprite;
         //        newTemplate.SpriteInfos = sort.spriteInfos;
         //        newTemplate.Levels = oldTemplate.Levels;
-        //        var targets = sort.effectTarget == "" ? new int[] { -1, -1, -1, -1, -1, -1 } : sort.effectTarget.Contains(',') ? sort.effectTarget.Split(',').Select(x => int.Parse(x)).ToArray() : sort.effectTarget.Split(';').Select(x => int.Parse(x)).ToArray();
+        //        var targets = sort.effectTarget == "" ? 
+        //            new int[] { } : 
+        //            sort.effectTarget.Contains(",") ? sort.effectTarget.Split(',').Select(x => int.Parse(x)).ToArray() : 
+        //            sort.effectTarget.Split(';').Select(x => int.Parse(x)).ToArray();
         //        int lvl = 0;
         //        foreach(var level in newTemplate.Levels)
         //        {
@@ -54,10 +56,10 @@ namespace Codebreak.Service.World.Manager
         //            if (level.Effects == null)
         //                level.Effects = new List<SpellEffect>();
         //            level.SpellId = newTemplate.Id;
-        //            if (targets.Length > lvl)
-        //                level.Targets = targets[lvl];
+        //            if (targets.Length > 0)
+        //                level.Targets = targets;
         //            else
-        //                level.Targets = -1;
+        //                level.Targets = new int[] { };
         //            level.Level = ++lvl;
         //            foreach(var effect in level.Effects.Concat(level.CriticalEffects))
         //            {
@@ -67,7 +69,7 @@ namespace Codebreak.Service.World.Manager
         //        }
         //        templates.Add(newTemplate.Id, newTemplate);
         //    }
-        //    using (var stream = File.OpenWrite("Resources/data/spells.bin"))
+        //    using (var stream = File.Open("Resources/data/spells.bin", FileMode.Create))
         //    {
         //         Serializer.Serialize<Dictionary<int, SpellTemplate>>(stream, templates);
         //    }

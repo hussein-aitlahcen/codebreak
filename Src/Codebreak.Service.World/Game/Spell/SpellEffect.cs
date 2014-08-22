@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Game.Spell
         PushFront = 6,
         Transpose = 8,
         Evasion = 9,
-        DamageBrut,
+        DamageBrut = -7,
 
         TurnPass = 140,
 

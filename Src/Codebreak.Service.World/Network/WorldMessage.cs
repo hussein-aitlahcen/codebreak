@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
 using Codebreak.WorldService;
+using System.Drawing;
 
 namespace Codebreak.Service.World.Game
 {
@@ -81,9 +82,9 @@ namespace Codebreak.Service.World.Game
     /// </summary>
     public enum GameMessageEnum
     {
-        MESSAGE_FREE_SOUL = 112,
+        MESSAGE_FREE_SOUL = 12,
     }
-
+    
     /// <summary>
     /// 
     /// </summary>
@@ -638,9 +639,50 @@ namespace Codebreak.Service.World.Game
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static string GAME_MESSAGE(GameMessageEnum message)
+        public static string GAME_MESSAGE(InformationTypeEnum type, GameMessageEnum message)
         {
-            return "M" + (int)message;
+            return "M" + (int)type + "" + (int)message;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string SERVER_MESSAGE(Color color, string message)
+        {
+            return "cs<font color='" + ColorTranslator.ToHtml(Color.FromArgb(color.A, color.R, color.G, color.B)) + "'>" + message + "</font>";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string SERVER_INFO_MESSAGE(string message)
+        {
+            return SERVER_MESSAGE(Color.Green, message);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string SERVER_ERROR_MESSAGE(string message)
+        {
+            return SERVER_MESSAGE(Color.Red, message);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string SERVER_PVP_MESSAGE(string message)
+        {
+            return SERVER_MESSAGE(Color.Yellow, message);
         }
 
         /// <summary>

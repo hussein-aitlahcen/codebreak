@@ -153,10 +153,10 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, EntityBase> entityById = new Dictionary<long, EntityBase>();
-        private Dictionary<string, EntityBase> entityByName = new Dictionary<string, EntityBase>();
-        private Dictionary<int, MapCell> cellById = new Dictionary<int, MapCell>();
-        private List<MapCell> cells = new List<MapCell>();
+        private Dictionary<long, EntityBase> _entityById = new Dictionary<long, EntityBase>();
+        private Dictionary<string, EntityBase> _entityByName = new Dictionary<string, EntityBase>();
+        private Dictionary<int, MapCell> _cellById = new Dictionary<int, MapCell>();
+        private List<MapCell> _cells = new List<MapCell>();
         private SubAreaInstance _subArea;
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             get
             {
-                return entityById.Values;
+                return _entityById.Values;
             }
         }
 
@@ -177,7 +177,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             get
             {
-                return cells;
+                return _cells;
             }
         }
 
@@ -189,6 +189,23 @@ namespace Codebreak.Service.World.Game.Map
             get
             {
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RandomFreeCell
+        {
+            get
+            {
+                var actionCell = _cells.Find(cell => cell.NextMap != 0);
+                if (actionCell != null)
+                    return actionCell.Id;
+                actionCell = _cells.Find(cell => cell.Walkable);
+                if (actionCell != null)
+                    return actionCell.Id;
+                return -1;
             }
         }
 
@@ -257,8 +274,8 @@ namespace Codebreak.Service.World.Game.Map
                 }
 
                 var cell = new MapCell(id, cellData, nextMap, nextCell);
-                cellById.Add(id, cell);
-                cells.Add(cell);
+                _cellById.Add(id, cell);
+                _cells.Add(cell);
             }
 
             _initialized = true;
@@ -272,7 +289,7 @@ namespace Codebreak.Service.World.Game.Map
         public MapCell GetCell(int id)
         {
             MapCell cell = null;
-            cellById.TryGetValue(id, out cell);
+            _cellById.TryGetValue(id, out cell);
             return cell;
         }
 
@@ -298,8 +315,8 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public EntityBase GetEntity(long id)
         {
-            if (entityById.ContainsKey(id))
-                return entityById[id];
+            if (_entityById.ContainsKey(id))
+                return _entityById[id];
             return null;
         }
 
@@ -314,10 +331,10 @@ namespace Codebreak.Service.World.Game.Map
                 if (!_initialized)
                     Initialize();
 
-                if (!entityById.ContainsKey(entity.Id))
+                if (!_entityById.ContainsKey(entity.Id))
                 {
-                    entityById.Add(entity.Id, entity);
-                    entityByName.Add(entity.Name.ToLower(), entity);
+                    _entityById.Add(entity.Id, entity);
+                    _entityByName.Add(entity.Name.ToLower(), entity);
 
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
 
@@ -346,10 +363,10 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="entity"></param>
         public void DestroyEntity(EntityBase entity)
         {
-            if (entityById.ContainsKey(entity.Id))
+            if (_entityById.ContainsKey(entity.Id))
             {
-                entityById.Remove(entity.Id);
-                entityByName.Remove(entity.Name.ToLower());
+                _entityById.Remove(entity.Id);
+                _entityByName.Remove(entity.Name.ToLower());
 
                 base.RemoveUpdatable(entity);
                 base.RemoveHandler(entity.Dispatch);

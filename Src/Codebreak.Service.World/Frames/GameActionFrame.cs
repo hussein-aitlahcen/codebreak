@@ -55,14 +55,12 @@ namespace Codebreak.Service.World.Frames
             var actionId = -1;
             if (!int.TryParse(message.Substring(2, 3), out actionId))
             {
-                Logger.Debug("GameActionFrame::Start failed to parse actionId : " + entity.Name);
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             if(!Enum.IsDefined(typeof(GameActionTypeEnum), actionId))
             {
-                Logger.Debug("GameActionFrame::Start unknow action id  : " + actionId + " : " + entity.Name);
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -174,7 +172,6 @@ namespace Codebreak.Service.World.Frames
         {
             if(!message.Contains(';'))
             {
-                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -182,7 +179,6 @@ namespace Codebreak.Service.World.Frames
             var spellData = message.Substring(5).Split(';');
             if(spellData.Length < 2)
             {
-                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -190,7 +186,6 @@ namespace Codebreak.Service.World.Frames
             var spellId = -1;
             if(!int.TryParse(spellData[0], out spellId))
             {
-                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -237,14 +232,13 @@ namespace Codebreak.Service.World.Frames
         {
             if (entity.Map.FightTeam0Cells.Count == 0 || entity.Map.FightTeam1Cells.Count == 0)
             {
-                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Aucune cell de combat n'est disponible sur cette map."));
+                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Cell pattern not found, unable to fight here"));
                 return;
             }
             
             long distantEntityId = -1;
             if(!long.TryParse(message.Substring(5), out distantEntityId))
             {
-                Logger.Debug("GameActionFrame::ChallengeRequest failed to parse distantEntityId : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -330,7 +324,6 @@ namespace Codebreak.Service.World.Frames
             var actionId = -1;
             if (!int.TryParse(abortData[0].Substring(3), out actionId))
             {
-                Logger.Debug("GameActionFrame::Abort unable to finish action, unknow id : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -358,7 +351,6 @@ namespace Codebreak.Service.World.Frames
             var actionId = -1;
             if (!int.TryParse(message.Substring(3), out actionId))
             {
-                Logger.Debug("GameActionFrame::Finish unable to finish action, unknow id : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }

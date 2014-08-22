@@ -5,12 +5,13 @@ namespace Codebreak.Service.World.Commands
 {
     public class WorldCommandContext : CommandContext
     {
-        public WorldCommandContext(EntityBase entity, string line) : base(line)
+        public WorldCommandContext(CharacterEntity character, string line) 
+            : base(line)
         {
-            Entity = entity;
+            Character = character;
         }
 
-        public EntityBase Entity
+        public CharacterEntity Character
         {
             get; 
             set;

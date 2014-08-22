@@ -1775,12 +1775,11 @@ namespace Codebreak.Service.World.Game.Fight
                         base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
 
                     var effects = weaponTemplate.GetWeaponEffects();
-                    var targetLists = new Dictionary<Tuple<EffectEnum, int, int> , List<FighterBase>>();
+                    var targetLists = new List<Tuple<Tuple<EffectEnum, int, int>, List<FighterBase>>>();
 
                     foreach (var effect in effects)
                     {
-                        targetLists.Add(effect, new List<FighterBase>());
-
+                        var targetList = new List<FighterBase>();
                         if (effect.Item1 != EffectEnum.UseGlyph && effect.Item1 != EffectEnum.UseTrap)
                         {
                             foreach (var currentCellId in CellZone.GetCells(Map, cellId, fighter.Cell.Id, weaponTemplate.RangeType()))
@@ -1790,30 +1789,37 @@ namespace Codebreak.Service.World.Game.Fight
                                 {
                                     if (fightCell.HasObject(FightObstacleTypeEnum.TYPE_FIGHTER))
                                     {
-                                        targetLists[effect].AddRange(fightCell.FightObjects.OfType<FighterBase>());
+                                        targetList.AddRange(fightCell.FightObjects.OfType<FighterBase>());
                                     }
                                 }
                             }
                         }
+                        targetLists.Add(Tuple.Create(effect, targetList));
                     }
 
                     LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
 
                     fighter.UseWeapon(cellId, actionTime, () =>
                     {
-                        foreach (var effect in effects)
+                        if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
                         {
-                            targetLists[effect].RemoveAll(affectedTarget => affectedTarget.IsFighterDead);
+                            fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                            return;
+                        }
 
-                            if (targetLists[effect].Count == 0)
+                        foreach (var targetsByEffect in targetLists)
+                        {
+                            targetsByEffect.Item2.RemoveAll(affectedTarget => affectedTarget.IsFighterDead);
+
+                            if (targetsByEffect.Item2.Count == 0)
                             {
                                 AddProcessingTarget(
                                         new CastInfos(
-                                                        effect.Item1,
+                                                        targetsByEffect.Item1.Item1,
                                                         -1,
                                                         cellId,
-                                                        criticalHit ? effect.Item2 + weaponTemplate.CSBonus : effect.Item2,
-                                                        criticalHit ? effect.Item3 + weaponTemplate.CSBonus : effect.Item3,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item2,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item3 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item3,
                                                         -1,
                                                         -1,
                                                         0,
@@ -1827,21 +1833,21 @@ namespace Codebreak.Service.World.Game.Fight
                             }
                             else
                             {
-                                foreach (var effectTarget in targetLists[effect])
+                                foreach (var target in targetsByEffect.Item2)
                                 {
                                     AddProcessingTarget(new CastInfos(
-                                                        effect.Item1,
+                                                        targetsByEffect.Item1.Item1,
                                                         -1,
                                                         cellId,
-                                                        criticalHit ? effect.Item2 + weaponTemplate.CSBonus : effect.Item2,
-                                                        criticalHit ? effect.Item3 + weaponTemplate.CSBonus : effect.Item3,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item2,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item3 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item3,
                                                         -1,
                                                         -1,
                                                         0,
                                                         fighter,
-                                                        effectTarget,
+                                                        target,
                                                         weaponTemplate.RangeType(),
-                                                        effectTarget.Cell.Id,
+                                                        target.Cell.Id,
                                                         -1,
                                                         isMelee));
                                 }
@@ -1962,10 +1968,13 @@ namespace Codebreak.Service.World.Game.Fight
 
                 var effects = isCritic ? spellLevel.CriticalEffects : spellLevel.Effects;
                 var targetLists = new Dictionary<SpellEffect, List<FighterBase>>();
+                int effectIndex = 0;
 
                 foreach (var effect in effects)
                 {
                     targetLists.Add(effect, new List<FighterBase>());
+
+                    var targetType = spellLevel.Targets != null ? spellLevel.Targets.Length > effectIndex ? spellLevel.Targets[effectIndex] : -1 : -1;
 
                     if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
                     {
@@ -1975,12 +1984,47 @@ namespace Codebreak.Service.World.Game.Fight
                             if (fightCell != null)
                             {
                                 if (fightCell.HasObject(FightObstacleTypeEnum.TYPE_FIGHTER))
-                                {
-                                    targetLists[effect].AddRange(fightCell.FightObjects.OfType<FighterBase>());
+                                {                                    
+                                    foreach (var fighterObject in fightCell.FightObjects.OfType<FighterBase>())
+                                    {
+                                        if (targetType != -1)
+                                        {
+                                            // doesnt affect team mates
+                                            if (((targetType & 1) == 1) && fighter.Team != fighterObject.Team)
+                                                continue;
+
+                                            // doesnt affect the caster
+                                            if ((((targetType >> 1) & 1) == 1) && fighter == fighterObject)
+                                                continue;
+
+                                            // doesnt affect ennemies
+                                            if ((((targetType >> 2) & 1) == 1) && fighter.Team != fighterObject.Team)
+                                                continue;
+
+                                            // only invocation
+                                            if (((((targetType >> 3) & 1) == 1) && (fighter.Invocator == null)))
+                                                continue;
+
+                                            // doesnt affect invocs
+                                            if (((((targetType >> 4) & 1) == 1) && (fighter.Invocator != null)))
+                                                continue;
+
+                                            // only caster
+                                            if (((((targetType >> 5) & 1) == 1) && (fighter.Id != fighterObject.Id)))
+                                            {
+                                                if (!targetLists[effect].Contains(fighter))
+                                                    targetLists[effect].Add(fighter);
+                                                continue;
+                                            }
+                                        }
+
+                                        targetLists[effect].Add(fighterObject);
+                                    }
                                 }
                             }
                         }
                     }
+                    effectIndex++;
                 }
 
                 LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
@@ -1989,6 +2033,12 @@ namespace Codebreak.Service.World.Game.Fight
 
                 fighter.LaunchSpell(castCellId, spellId, spellLevel.Level, template.Sprite.ToString(), template.SpriteInfos, actionTime, () =>
                 {
+                    if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
+                    {
+                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
                     var actualChance = 0;
 
                     foreach (var effect in effects)

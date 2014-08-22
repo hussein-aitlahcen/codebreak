@@ -395,14 +395,7 @@ namespace Codebreak.Service.World.Game.Entity
                             break;
 
                         default:
-                            if (message.StartsWith("."))
-                            {
-                                WorldService.Instance.CommandManager.Execute(new WorldCommandContext(this, message.Remove(0, 1)));
-                            }
-                            else
-                            {
-                                chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
-                            }
+                            chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
                             break;
                     }
                 }
@@ -452,6 +445,10 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
                     return CurrentAction == null 
                         && HasGameAction(GameActionTypeEnum.FIGHT);
+
+                case GameActionTypeEnum.MAP_TELEPORT:
+                    return CurrentAction == null
+                        && HasGameAction(GameActionTypeEnum.MAP);
             }
 
             return CurrentAction == null;

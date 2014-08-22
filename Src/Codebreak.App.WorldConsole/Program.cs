@@ -18,7 +18,8 @@ namespace Codebreak.App.WorldConsole
             InitializeGCServer();
             Service.World.WorldService.Instance.Start("./Config.json");
 
-            System.Console.ReadLine();
+            while(true)
+                System.Console.ReadLine();
         }
 
         // ReSharper disable once InconsistentNaming

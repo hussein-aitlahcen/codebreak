@@ -11,12 +11,15 @@ namespace Codebreak.Framework.Command
 
         public CommandManager() { }
 
-        public void Execute(C context)
+        public bool Execute(C context)
         {
             foreach (var command in _commands.Where(command => command.Aliases.Contains(context.TextCommandArgument.NextWord())))
             {
-                command.Execute(context);
+                if (command.Execute(context))
+                    return true;
             }
+
+            return false;
         }
 
         public void RegisterCommands()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codebreak.Service.World.Game.Spell;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            var damageJet = (castInfos.Target.Life / 100) * castInfos.Value1;
+            var damageInfos = new CastInfos(EffectEnum.DamageBrut, -1, -1, -1, -1, -1, -1, -1, castInfos.Caster, castInfos.Target);
+            var damageJet = (castInfos.Target.Life / 100) * castInfos.RandomJet;
 
-            return DamageEffect.ApplyDamages(castInfos, castInfos.Target, ref damageJet);
+            return DamageEffect.ApplyDamages(damageInfos, damageInfos.Target, ref damageJet);
         }
     }
 }

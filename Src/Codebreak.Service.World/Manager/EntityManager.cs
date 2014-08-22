@@ -41,9 +41,9 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         /// <param name="characterDAO"></param>
         /// <returns></returns>
-        public CharacterEntity CreateCharacter(CharacterDAO characterDAO)
+        public CharacterEntity CreateCharacter(int power, CharacterDAO characterDAO)
         {
-            var character = new CharacterEntity(characterDAO);
+            var character = new CharacterEntity(power, characterDAO);
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
             _onlinePlayer++;
