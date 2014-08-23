@@ -17,7 +17,6 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         STATUE = 2,
         APPOINTED_VOLUNTARY = 3, // designé volontaire
         REPRIEVE = 4, // sursis
-        PEELER = 5, // econome
         VERSATILE = 6,
         BARBARIRAN = 9, // barbare
         CIRCULATE = 21,
@@ -53,6 +52,12 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             _challengeGenerator.Add(() => new CirculateChallenge());
             _challengeGenerator.Add(() => new TightsChallenge());
             _challengeGenerator.Add(() => new AppointedVoluntaryChallenge());
+            _challengeGenerator.Add(() => new BoldChallenge());
+            _challengeGenerator.Add(() => new StatueChallenge());
+            _challengeGenerator.Add(() => new ReprieveChallenge());
+            _challengeGenerator.Add(() => new SightLostChallenge());
+            _challengeGenerator.Add(() => new SurvivorChallenge());
+            _challengeGenerator.Add(() => new PetulantChallenge());
         }
 
         /// <summary>

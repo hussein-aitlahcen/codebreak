@@ -49,8 +49,11 @@ namespace Codebreak.Service.World.Game.Fight
             JoinFight(Attacker, Team0);
             JoinFight(Defender, Team1);
 
-            base.Team0.AddChallenge(ChallengeManager.Instance.Generate());
-            base.Team1.AddChallenge(ChallengeManager.Instance.Generate());
+            for (int i = 0; i < 3; i++)
+            {
+                base.Team0.AddChallenge(ChallengeManager.Instance.Generate());
+                base.Team1.AddChallenge(ChallengeManager.Instance.Generate());
+            }
             base.Start();
         }
 

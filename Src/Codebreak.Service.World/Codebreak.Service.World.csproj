@@ -106,9 +106,15 @@
     <Compile Include="Game\Fight\Challenges\AnachoriteChallenge.cs" />
     <Compile Include="Game\Fight\Challenges\AppointedVoluntaryChallenge.cs" />
     <Compile Include="Game\Fight\Challenges\BarbarianChallenge.cs" />
+    <Compile Include="Game\Fight\Challenges\BoldChallenge.cs" />
     <Compile Include="Game\Fight\Challenges\ChallengeBase.cs" />
     <Compile Include="Game\Fight\Challenges\ChallengeManager.cs" />
     <Compile Include="Game\Fight\Challenges\CirculateChallenge.cs" />
+    <Compile Include="Game\Fight\Challenges\PetulantChallenge.cs" />
+    <Compile Include="Game\Fight\Challenges\ReprieveChallenge.cs" />
+    <Compile Include="Game\Fight\Challenges\SightLostChallenge.cs" />
+    <Compile Include="Game\Fight\Challenges\StatueChallenge.cs" />
+    <Compile Include="Game\Fight\Challenges\SurvivorChallenge.cs" />
     <Compile Include="Game\Fight\Challenges\TightsChallenge.cs" />
     <Compile Include="Game\Fight\Challenges\ZombieChallenge.cs" />
     <Compile Include="Game\Fight\Effect\BuffBase.cs" />

@@ -1235,6 +1235,8 @@ namespace Codebreak.Service.World.Game.Fight
 
                     NextTurnTimeout = TurnTime;
 
+                    CurrentFighter.Team.BeginTurn(CurrentFighter);
+
                     switch (CurrentFighter.BeginTurn())
                     {
                         case FightActionResultEnum.RESULT_END:
@@ -1245,8 +1247,6 @@ namespace Codebreak.Service.World.Game.Fight
                             CurrentFighter.TurnPass = true;
                             return;
                     }
-
-                    CurrentFighter.Team.BeginTurn(CurrentFighter);
 
                     LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
                     NextLoopState = FightLoopStateEnum.STATE_WAIT_TURN;
@@ -1272,6 +1272,8 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
                 {
+                    CurrentFighter.Team.EndTurn(CurrentFighter);
+
                     // fin du combat ?
                     if (!CurrentFighter.IsFighterDead)
                     {
@@ -1292,9 +1294,7 @@ namespace Codebreak.Service.World.Game.Fight
                         _activableObjects[CurrentFighter].RemoveAll(fightObject => fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_GLYPH && fightObject.Duration <= 0);
                     }
 
-                    SetAllUnReady();
-                                        
-                    CurrentFighter.Team.EndTurn(CurrentFighter);
+                    SetAllUnReady();                                        
 
                     base.CachedBuffer = true;
                     base.Dispatch(WorldMessage.FIGHT_TURN_FINISHED(CurrentFighter.Id));
