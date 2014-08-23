@@ -387,10 +387,30 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
+        public void CheckDeath(FighterBase fighter)
+        {
+            foreach (var challenge in _challenges)
+                challenge.CheckDeath(fighter);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
         public void EndTurn(FighterBase fighter)
         {
             foreach (var challenge in _challenges)
                 challenge.EndTurn(fighter);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void FightEnd()
+        {
+            foreach (var challenge in _challenges)
+                if (!challenge.Success && !challenge.Failed)
+                    challenge.OnSuccess();
         }
 
         /// <summary>

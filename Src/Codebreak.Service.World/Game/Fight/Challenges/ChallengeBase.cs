@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        public bool ShowTarget
+        public bool Failed
         {
             get;
             protected set;
@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        public bool Signaled
+        public bool ShowTarget
         {
             get;
             protected set;
@@ -102,8 +102,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public ChallengeBase(ChallengeTypeEnum type)
         {
             Id = (int)type;
-            Success = true;
-            Signaled = false;
+            Success = false;
         }
 
         /// <summary>
@@ -167,10 +166,10 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         public virtual void OnSuccess()
         {
-            if(!Signaled)
+            if (!Success && !Failed)
             {
                 Success = true;
-                Signaled = true;
+                Failed = false;
                 base.Dispatch(WorldMessage.FIGHT_CHALLENGE_SUCCESS(Id));
             }
         }
@@ -180,13 +179,18 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         public virtual void OnFailed()
         {
-            if(Success)
+            if(!Success && !Failed)
             {
                 Success = false;
+                Failed = true;
                 base.Dispatch(WorldMessage.FIGHT_CHALLENGE_FAILED(Id));
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
         public void FlagCell(int cellId)
         {
             base.Dispatch(WorldMessage.FIGHT_CELL_FLAG(cellId));

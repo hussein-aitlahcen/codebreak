@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codebreak.Service.World.Game.Map;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,18 +10,13 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ZombieChallenge : ChallengeBase
+    public sealed class AnachoriteChallenge : ChallengeBase
     {
         /// <summary>
         /// 
         /// </summary>
-        private bool _hasMoved = false;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public ZombieChallenge()
-            : base(ChallengeTypeEnum.ZOMBIE)
+        public AnachoriteChallenge()
+            : base(ChallengeTypeEnum.ANACHORITE)
         {
             BasicDropBonus = 10;
             BasicXpBonus = 10;
@@ -35,18 +31,12 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="beginCell"></param>
-        /// <param name="endCell"></param>
-        /// <param name="length"></param>
-        public override void CheckMovement(int beginCell, int endCell, int length)
+        /// <param name="fighter"></param>
+        public override void BeginTurn(FighterBase fighter)
         {
-            if(length != 1 || _hasMoved)
+            if(fighter.Team.Fighters.Count == 1)
             {
                 base.OnFailed();
-            }
-            else
-            {
-                _hasMoved = true;
             }
         }
 
@@ -56,9 +46,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="fighter"></param>
         public override void EndTurn(FighterBase fighter)
         {
-            if (!_hasMoved)
-                OnFailed();
-            _hasMoved = false;
+            var aroundFighters = Pathfinding.GetFightersNear(fighter.Fight, fighter.Cell.Id);
+            if(aroundFighters.Where(f => f.Team == fighter.Team).Count() > 0)
+            {
+                base.OnFailed();
+            }
         }
     }
 }

@@ -476,6 +476,12 @@ namespace Codebreak.Service.World.Game.Map
             return CellPoints[map.Cells.Count][cell];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="cell"></param>
+        /// <returns></returns>
         public static double GetX(MapInstance map, int cell)
         {
             if (!CellPoints.ContainsKey(map.Cells.Count))
@@ -489,6 +495,12 @@ namespace Codebreak.Service.World.Game.Map
             return -1000;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="cell"></param>
+        /// <returns></returns>
         public static double GetY(MapInstance map, int cell)
         {
             if (!CellPoints.ContainsKey(map.Cells.Count))
@@ -845,9 +857,9 @@ namespace Codebreak.Service.World.Game.Map
         ///// <returns></returns>
         public static int TryTacle(FighterBase fighter)
         {
-            var ennemies = Pathfinding.GetEnnemyNear(fighter.Fight, fighter.Team, fighter.Cell.Id);
+            var ennemies = Pathfinding.GetEnnemiesNear(fighter.Fight, fighter.Team, fighter.Cell.Id);
 
-            if (ennemies.Count == 0 || ennemies.All(ennemy => ennemy.StateManager.HasState(FighterStateEnum.STATE_ROOTED)))
+            if (ennemies.Count() == 0 || ennemies.All(ennemy => ennemy.StateManager.HasState(FighterStateEnum.STATE_ROOTED)))
                 return -1;
 
             return Pathfinding.TryTacle(fighter, ennemies);
@@ -888,7 +900,7 @@ namespace Codebreak.Service.World.Game.Map
             if (fight.GetCell(cellId).HasObject(FightObstacleTypeEnum.TYPE_TRAP))
                 return true;
 
-            if (GetEnnemyNear(fight, team, cellId).Count > 0)
+            if (GetEnnemiesNear(fight, team, cellId).Count() > 0)
                 return true;
 
             return false;
@@ -901,18 +913,29 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="team"></param>
         ///// <param name="cellId"></param>
         ///// <returns></returns>
-        public static List<FighterBase> GetEnnemyNear(FightBase fight, FightTeam team, int cellId)
+        public static IEnumerable<FighterBase> GetEnnemiesNear(FightBase fight, FightTeam team, int cellId)
         {
-            List<FighterBase> ennemies = new List<FighterBase>();
+            return GetFightersNear(fight, cellId).Where(fighter => fighter.Team != team);
+        }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="fight"></param>
+        ///// <param name="team"></param>
+        ///// <param name="cellId"></param>
+        ///// <returns></returns>
+        public static List<FighterBase> GetFightersNear(FightBase fight, int cellId)
+        {
+            List<FighterBase> fighters = new List<FighterBase>();
             foreach (var direction in Pathfinding.FIGHT_DIRECTIONS)
             {
-                var ennemy = fight.GetFighterOnCell(Pathfinding.NextCell(fight.Map, cellId, direction));
-                if (ennemy != null)
-                    if (ennemy.Team != team)
-                        if (!ennemy.IsFighterDead)
-                            ennemies.Add(ennemy);
+                var fighter = fight.GetFighterOnCell(Pathfinding.NextCell(fight.Map, cellId, direction));
+                if (fighter != null)
+                    if (!fighter.IsFighterDead)
+                        fighters.Add(fighter);
             }
-            return ennemies;
+            return fighters;
         }
 
         ///// <summary>

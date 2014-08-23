@@ -1098,6 +1098,8 @@ namespace Codebreak.Service.World.Game.Fight
                 }
 
                 fighter.OnDeath();
+                Team0.CheckDeath(fighter);
+                Team1.CheckDeath(fighter);
 
                 foreach (var invocation in fighter.Team.AliveFighters.Where(ally => ally.Invocator == fighter))
                 {
@@ -1400,8 +1402,6 @@ namespace Codebreak.Service.World.Game.Fight
 
                         CurrentProcessingFighter = castInfos.Target;
                                                 
-                        CurrentFighter.Team.CheckSpell(castInfos.Caster, castInfos);
-
                         if (CurrentProcessingFighter != null)
                         {
                             Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
@@ -1515,6 +1515,8 @@ namespace Codebreak.Service.World.Game.Fight
                     switch (LoopEndState)
                     {
                         case FightEndStateEnum.STATE_INIT_CALCULATION:
+                            Team0.FightEnd();
+                            Team1.FightEnd(); 
                             InitEndCalculation();
                             LoopEndState = FightEndStateEnum.STATE_PROCESS_CALCULATION;
                             break;
@@ -2038,8 +2040,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                         if (targetLists[effect].Count == 0)
                         {
-                            AddProcessingTarget(
-                                    new CastInfos(
+                            var castInfos = new CastInfos(
                                                     effect.TypeEnum,
                                                     spellId,
                                                     castCellId,
@@ -2053,14 +2054,15 @@ namespace Codebreak.Service.World.Game.Fight
                                                     spellLevel.RangeType,
                                                     0,
                                                     spellLevel.Level,
-                                                    isMelee)
-                                                 );
+                                                    isMelee);
+                            AddProcessingTarget(castInfos);
+                            CurrentFighter.Team.CheckSpell(CurrentFighter, castInfos);
                         }
                         else
                         {
                             foreach (var effectTarget in targetLists[effect])
                             {
-                                AddProcessingTarget(new CastInfos(
+                                var castInfos = new CastInfos(
                                                     effect.TypeEnum,
                                                     spellId,
                                                     castCellId,
@@ -2072,9 +2074,11 @@ namespace Codebreak.Service.World.Game.Fight
                                                     fighter,
                                                     effectTarget,
                                                     spellLevel.RangeType,
-                                                    effectTarget.Cell.Id, 
+                                                    effectTarget.Cell.Id,
                                                     spellLevel.Level,
-                                                    isMelee));
+                                                    isMelee);
+                                AddProcessingTarget(castInfos);
+                                CurrentFighter.Team.CheckSpell(CurrentFighter, castInfos);
                             }
                         }
 
@@ -2094,10 +2098,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="looserTeam"></param>
         private void FightEnd()
         {
-            if (State == FightStateEnum.STATE_PLACEMENT)
-            {
-                Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
-            }
+            if (State == FightStateEnum.STATE_PLACEMENT)            
+                Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));            
 
             State = FightStateEnum.STATE_ENDED;
             LoopState = FightLoopStateEnum.STATE_ENDED;
