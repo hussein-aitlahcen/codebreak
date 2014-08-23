@@ -100,6 +100,12 @@
     <Compile Include="Game\Exchange\ExchangeBase.cs" />
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
     <Compile Include="Game\Exchange\ShopExchange.cs" />
+    <Compile Include="Game\Fight\AI\Actions\AIAction.cs" />
+    <Compile Include="Game\Fight\AI\Actions\AIActionResult.cs" />
+    <Compile Include="Game\Fight\AI\Actions\Movement\AIMoveAction.cs" />
+    <Compile Include="Game\Fight\AI\AIFighter.cs" />
+    <Compile Include="Game\Fight\AI\Brains\AIBrain.cs" />
+    <Compile Include="Game\Fight\AI\Brains\DefaultAIBrain.cs" />
     <Compile Include="Game\Fight\BuffEffectManager.cs" />
     <Compile Include="Game\Fight\ChallengerFight.cs" />
     <Compile Include="Game\Fight\Challenges\AbnegationChallenge.cs" />
@@ -239,6 +245,7 @@
       <Name>Codebreak.RPC.Service</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
