@@ -3,7 +3,7 @@ using Codebreak.Service.World.Commands;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Frames;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
@@ -72,7 +72,7 @@ namespace Codebreak.Service.World.Game.Entity
         RESTRICTION_IS_TOMBESTONE = 128,
     }
 
-    public abstract class EntityBase : MessageDispatcher
+    public abstract class EntityBase : MessageDispatcher, IDisposable
     {
         /// <summary>
         /// 
@@ -324,21 +324,22 @@ namespace Codebreak.Service.World.Game.Entity
             Orientation = 1;
 
             _chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
+
             ShopItems = new List<ItemTemplateDAO>();
             FrameManager = new FrameManager<EntityBase, string>(this);
             Spells = new SpellBook(Id, SpellBookEntryRepository.Instance.GetSpellEntries(id));
 
             // set channels
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.Dispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.Dispatch);
+            _chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
+            _chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_ADMIN, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => this.Dispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => this.Dispatch);
+            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => base.Dispatch);
+            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => base.Dispatch);
 
             if (HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
             {
@@ -679,6 +680,32 @@ namespace Codebreak.Service.World.Game.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            CurrentAction = null;
+
+            ShopItems.Clear();
+            ShopItems = null;
+
+            Statistics.Dispose();
+            Statistics = null;
+
+            Spells.Dispose();
+            Spells = null;
+
+            Inventory.Dispose();
+            Inventory = null;
+
+            _chatByChannel.Clear();
+            _chatByChannel = null;
+            _map = null;
+
+            base.Dispose();
+        }
+    
         /// <summary>
         /// 
         /// </summary>

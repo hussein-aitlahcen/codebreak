@@ -3,6 +3,7 @@ using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Frames;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -44,6 +45,9 @@ namespace Codebreak.Service.World.Manager
         public CharacterEntity CreateCharacter(int power, CharacterDAO characterDAO)
         {
             var character = new CharacterEntity(power, characterDAO);
+            var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, character.Id);
+            if (guildMember != null)
+                guildMember.CharacterConnected(character);
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
             _onlinePlayer++;
@@ -57,11 +61,15 @@ namespace Codebreak.Service.World.Manager
         /// <param name="character"></param>
         public void CharacterDisconnect(CharacterEntity character)
         {
+            if (character.PartyId != -1)
+                PartyManager.Instance.PartyLeave(character);
+            if (character.PartyInvitedPlayerId != -1 || character.PartyInviterPlayerId != -1)
+                BasicFrame.Instance.PartyRefuse(character, "");
+            if (character.GuildInvitedPlayerId != -1 || character.GuildInviterPlayerId != -1)
+                BasicFrame.Instance.GuildJoinRefuse(character, "");
+                
             character.AddMessage(() =>
             {
-                if (character.PartyId != -1)                
-                    PartyManager.Instance.LeaveParty(character);
-                
                 if (character.HasGameAction(GameActionTypeEnum.FIGHT))
                 {
                     if (character.CurrentAction != null)
@@ -69,7 +77,9 @@ namespace Codebreak.Service.World.Manager
                     character.AbortAction(GameActionTypeEnum.FIGHT);
                     return;
                 }
-                                
+
+                if (character.CharacterGuild != null)
+                    character.CharacterGuild.CharacterDisconnected();
                 if (character.CurrentAction != null)
                     character.AbortAction(character.CurrentAction.Type, character.Id);
                 if (character.HasGameAction(GameActionTypeEnum.MAP))
@@ -90,6 +100,8 @@ namespace Codebreak.Service.World.Manager
                     _onlinePlayer--;
                     _characterById.Remove(character.Id);
                     _characterByName.Remove(character.Name.ToLower());
+
+                    character.Dispose();
 
                     Logger.Debug("EntityManager online players : " + _onlinePlayer);
                 });

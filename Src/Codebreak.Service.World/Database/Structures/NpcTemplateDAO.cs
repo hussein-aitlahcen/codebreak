@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 
 namespace Codebreak.Service.World.Database.Structures
 {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Database.Repository
+namespace Codebreak.Service.World.Game.Database.Repositories
 {
     public sealed class MapTriggerRepository : Repository<MapTriggerRepository, MapTriggerDAO>
     {

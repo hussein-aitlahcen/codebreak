@@ -1,5 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Manager;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Spell
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SpellBook
+    public sealed class SpellBook : IDisposable
     {
         /// <summary>
         /// 
@@ -36,6 +36,15 @@ namespace Codebreak.Service.World.Game.Spell
             {
                 _spellEntries.Add(spellEntry.SpellId, spellEntry);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _spellEntries.Clear();
+            _spellEntries = null;
         }
 
         /// <summary>

@@ -26,6 +26,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (DamageEffect.ApplyDamages(castInfos, castInfos.Target, ref damageJet) == FightActionResultEnum.RESULT_END)
                 return FightActionResultEnum.RESULT_END;
 
+            castInfos.EffectType = Spell.EffectEnum.DamageBrut;
+
             // On ne se soigne que de 50% des dégats
             var healJet = damageJet / 2;
 

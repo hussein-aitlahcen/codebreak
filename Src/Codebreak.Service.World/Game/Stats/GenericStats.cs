@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 namespace Codebreak.Service.World.Game.Stats
 {
     /// <summary>
-    /// Classe generique pour les statistiques
+    /// 
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
-    public sealed class GenericStats
+    public sealed class GenericStats : IDisposable
     {
         /// <summary>
         /// 
@@ -547,6 +547,21 @@ namespace Codebreak.Service.World.Game.Stats
                     _genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
                 _genericEffects[Effect.Key].UnMerge(Effect.Value);
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _genericEffects.Clear();
+            _genericEffects = null;
+
+            _specialEffects.Clear();
+            _specialEffects = null;
+
+            _weaponEffects.Clear();
+            _weaponEffects = null;
         }
 
         /// <summary>

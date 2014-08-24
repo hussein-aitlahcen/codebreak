@@ -5,6 +5,7 @@ using Codebreak.Framework.Generic;
 using Codebreak.RPC.Protocol;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.RPC;
+using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -31,7 +32,6 @@ namespace Codebreak.Service.World.Manager
 
         private Dictionary<long, WorldClient> _clientByAccount;
         private Dictionary<string, AccountTicket> _accountByTicket;
-        public const int TICKET_TIMEOUT = 5000; // 5 sec
 
         /// <summary>
         /// 
@@ -130,7 +130,7 @@ namespace Codebreak.Service.World.Manager
                     var value = _accountByTicket.ElementAt(i).Value;
                     var elapsedTime = WorldService.Instance.LastUpdate - value.Time;
 
-                    if (elapsedTime >= TICKET_TIMEOUT)
+                    if (elapsedTime >= WorldConfig.RPC_ACCOUNT_TICKET_TIMEOUT)
                     {
                         Logger.Debug("Ticket timed out : " + value.Ticket);
                         _accountByTicket.Remove(value.Ticket);

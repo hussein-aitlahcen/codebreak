@@ -22,6 +22,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
+            if (castInfos.Target != castInfos.Caster)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             var damageInfos = new CastInfos(EffectEnum.DamageBrut, -1, -1, -1, -1, -1, -1, -1, castInfos.Caster, castInfos.Target);
             var damageJet = (castInfos.Target.Life / 100) * castInfos.RandomJet;
 

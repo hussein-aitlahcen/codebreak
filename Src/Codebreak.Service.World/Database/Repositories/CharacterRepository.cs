@@ -6,14 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Database.Repository
+namespace Codebreak.Service.World.Game.Database.Repositories
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class CharacterRepository : Repository<CharacterRepository, CharacterDAO>
     {
         private Dictionary<long, CharacterDAO> _characterById;
         private Dictionary<string, CharacterDAO> _characterByName;
         private Dictionary<long, List<CharacterDAO>> _charactersByAccount;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CharacterRepository()
         {
             _characterById = new Dictionary<long, CharacterDAO>();
@@ -21,6 +27,11 @@ namespace Codebreak.Service.World.Game.Database.Repository
             _charactersByAccount = new Dictionary<long, List<CharacterDAO>>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <returns></returns>
         public CharacterDAO GetById(long characterId)
         {
             if (_characterById.ContainsKey(characterId))
@@ -28,6 +39,11 @@ namespace Codebreak.Service.World.Game.Database.Repository
             return base.Load("Id=@Id", new { Id = characterId}); ;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public CharacterDAO GetByName(string name)
         {
             if (_characterByName.ContainsKey(name.ToLower()))
@@ -35,6 +51,11 @@ namespace Codebreak.Service.World.Game.Database.Repository
             return base.Load("upper(Name)=upper(@Name)", new { Name = name });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
         public List<CharacterDAO> GetByAccount(long accountId)
         {
             List<CharacterDAO> characters = new List<CharacterDAO>();
@@ -45,6 +66,10 @@ namespace Codebreak.Service.World.Game.Database.Repository
             return characters;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
         public override void OnObjectAdded(CharacterDAO character)
         {
             _characterById.Add(character.Id, character);
@@ -54,6 +79,10 @@ namespace Codebreak.Service.World.Game.Database.Repository
             _charactersByAccount[character.AccountId].Add(character);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
         public override void OnObjectRemoved(CharacterDAO character)
         {
             _characterById.Remove(character.Id);

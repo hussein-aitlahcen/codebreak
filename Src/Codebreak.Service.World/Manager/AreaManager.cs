@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Codebreak.Framework.Generic;
-using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Area;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using System.Threading;
 
 namespace Codebreak.Service.World.Manager

@@ -8,6 +8,8 @@ namespace Codebreak.WorldService
 {
     public static class WorldConfig
     {
+        public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000; 
+
         public const int
             WORLD_SAVE_INTERVAL = 60 * 1000,
             WORLD_MAP_START = 7411,

@@ -47,13 +47,10 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         /// <param name="member"></param>
-        public void LeaveParty(CharacterEntity character)
+        public void PartyLeave(CharacterEntity character)
         {
-            WorldService.Instance.AddMessage(() =>
-                {
-                    if (_partyById.ContainsKey(character.PartyId))                    
-                        _partyById[character.PartyId].RemoveMember(character);                    
-                });
+            if (_partyById.ContainsKey(character.PartyId))
+                _partyById[character.PartyId].RemoveMember(character);
         }
 
         /// <summary>

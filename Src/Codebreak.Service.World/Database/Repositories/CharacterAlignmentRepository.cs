@@ -2,7 +2,7 @@
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Structures;
 
-namespace Codebreak.Service.World.Database.Repository
+namespace Codebreak.Service.World.Database.Repositories
 {
     public sealed class CharacterAlignmentRepository : Repository<CharacterAlignmentRepository, CharacterAlignmentDAO>
     {

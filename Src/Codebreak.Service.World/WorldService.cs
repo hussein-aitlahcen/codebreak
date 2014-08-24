@@ -6,10 +6,10 @@ using Codebreak.Framework.Configuration.Providers;
 using Codebreak.Framework.Network;
 using Codebreak.Service.World.Commands;
 using Codebreak.Service.World.Database;
-using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Frames;
 using Codebreak.Service.World.Game;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.RPC;
 
@@ -63,6 +63,7 @@ namespace Codebreak.Service.World
             AreaManager.Instance.Initialize();
             MapManager.Instance.Initialize();
             NpcManager.Instance.Initialize();
+            GuildManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
 
             int minWorkingThreads = -1, minCompletionPortThreads = -1, maxWorkingThreads = -1, maxCompletionPortThreads = -1;
@@ -152,27 +153,20 @@ namespace Codebreak.Service.World
 
                     WorldService.Instance.AddMessage(() =>
                     {
+                        GuildRepository.Instance.UpdateAll();
                         CharacterRepository.Instance.UpdateAll();
+                        CharacterAlignmentRepository.Instance.UpdateAll();
+                        CharacterGuildRepository.Instance.UpdateAll();
+                        SpellBookEntryRepository.Instance.UpdateAll();
+                        InventoryItemRepository.Instance.UpdateAll();
 
                         WorldService.Instance.AddMessage(() =>
                         {
-                            CharacterAlignmentRepository.Instance.UpdateAll();
+                            AreaManager.Instance.ResumeQueues();
 
                             WorldService.Instance.AddMessage(() =>
                             {
-                                SpellBookEntryRepository.Instance.UpdateAll();
-
-                                WorldService.Instance.AddMessage(() =>
-                                {
-                                    InventoryItemRepository.Instance.UpdateAll();
-
-                                    WorldService.Instance.AddMessage(() =>
-                                    {
-                                        AreaManager.Instance.ResumeQueues();
-
-                                        WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING_FINISHED));
-                                    });
-                                });
+                                WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING_FINISHED));
                             });
                         });
                     });

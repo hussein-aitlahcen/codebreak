@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Spell;
 using ProtoBuf;
 

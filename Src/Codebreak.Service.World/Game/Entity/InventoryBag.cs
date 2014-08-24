@@ -1,5 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public abstract class InventoryBag : MessageDispatcher
+    public abstract class InventoryBag : MessageDispatcher, IDisposable
     {
         /// <summary>
         /// 
@@ -315,6 +315,17 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 item.SerializeAs_BagContent(message);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            Entity = null;
+            _entityLookCache = null;
+
+            base.Dispose();
         }
 
         /// <summary>

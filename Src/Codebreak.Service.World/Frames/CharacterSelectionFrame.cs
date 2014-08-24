@@ -2,10 +2,11 @@
 using Codebreak.Framework.Network;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 using Codebreak.WorldService;
+using System.Collections.Generic;
 
 namespace Codebreak.Service.World.Frames
 {
@@ -69,9 +70,9 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void HandleCharacterList(WorldClient client, string message)
         {
-            if (client.Characters == null)            
+            if (client.Characters == null)
                 client.Characters = CharacterRepository.Instance.GetByAccount(client.Account.Id);
-
+            
             foreach(var character in client.Characters)
             {
                 var alreadyConnectedEntity = EntityManager.Instance.GetCharacter(character.Id);
@@ -106,7 +107,7 @@ namespace Codebreak.Service.World.Frames
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
                 client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST());
-                client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
+                client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.CharacterAlignment.AlignmentId));
                 client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
                 client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
                 client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
@@ -276,6 +277,9 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
+            foreach (var item in character.GetItems())
+                item.OwnerId = -1;
+
             client.Characters.Remove(character);
 
             WorldService.Instance.AddMessage(() =>
@@ -357,18 +361,22 @@ namespace Codebreak.Service.World.Frames
             client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
 
             client.CurrentCharacter.CachedBuffer = true;
-            client.CurrentCharacter.SafeDispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.Spells));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_DATE());
-            client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_TIME());
-            client.CurrentCharacter.SafeDispatch(WorldMessage.AREAS_LIST());
-            client.CurrentCharacter.SafeDispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
-            client.CurrentCharacter.SafeDispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.INFORMATION_MESSAGE
+            client.CurrentCharacter.Dispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
+            client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.Spells));
+            client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
+            client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
+            client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST());
+            client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.CharacterAlignment.AlignmentId));
+            client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
+            client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
+            client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
+            if(client.CurrentCharacter.CharacterGuild != null)
+            {
+                client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.CharacterGuild.Guild, client.CurrentCharacter.CharacterGuild.Power));
+            }
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
                 (
                     InformationTypeEnum.INFO,
                     InformationEnum.INFO_BASIC_LAST_CONNECTION,
@@ -379,7 +387,7 @@ namespace Codebreak.Service.World.Frames
                     client.Account.LastConnectionTime.Minute.ToString(),
                     client.Account.LastConnectionIP
                 ));
-            client.CurrentCharacter.SafeDispatch(WorldMessage.INFORMATION_MESSAGE
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
                 (
                     InformationTypeEnum.INFO,
                     InformationEnum.INFO_BASIC_CURRENT_IP,

@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Entity
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class CharacterInventory : InventoryBag
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override long Kamas
         {
             get
@@ -21,6 +27,9 @@ namespace Codebreak.Service.World.Game.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override List<InventoryItemDAO> Items
         {
             get 
@@ -31,6 +40,10 @@ namespace Codebreak.Service.World.Game.Entity
 
         private CharacterEntity _character;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
         public CharacterInventory(CharacterEntity character)
             : base(character)
         {

@@ -11,12 +11,15 @@ namespace Codebreak.Framework.Network
     /// </summary>
     /// <typeparam name="TClient"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public sealed class FrameManager<TClient, TMessage>
+    public sealed class FrameManager<TClient, TMessage> : IDisposable
     {
         private TClient _client;
         private bool _processing;
         private List<IFrame<TClient, TMessage>> _frames, _framesToAdd, _framesToRemove;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsEmpty
         {
             get
@@ -25,6 +28,10 @@ namespace Codebreak.Framework.Network
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public FrameManager(TClient client)
         {
             _client = client;
@@ -34,11 +41,21 @@ namespace Codebreak.Framework.Network
             _framesToRemove = new List<IFrame<TClient,TMessage>>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <returns></returns>
         public bool HasFrame(IFrame<TClient, TMessage> frame)
         {
             return _frames.Contains(frame) || _framesToAdd.Contains(frame);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public bool ProcessMessage(TMessage message)
         {
             _processing = true;
@@ -64,6 +81,10 @@ namespace Codebreak.Framework.Network
             return processed;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
         public void AddFrame(IFrame<TClient, TMessage> frame)
         {
             if (_processing)
@@ -73,6 +94,10 @@ namespace Codebreak.Framework.Network
                     _frames.Add(frame);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
         public void RemoveFrame(IFrame<TClient, TMessage> frame)
         {
             if (_processing)
@@ -80,6 +105,19 @@ namespace Codebreak.Framework.Network
             else
                 if(_frames.Contains(frame))
                     _frames.Remove(frame);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _frames.Clear();
+            _frames = null;
+            _framesToAdd.Clear();
+            _framesToAdd = null;
+            _framesToRemove.Clear();
+            _framesToRemove = null;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Spell;
@@ -13,10 +13,14 @@ using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Commands;
+using Codebreak.Service.World.Game.Guild;
 
 namespace Codebreak.Service.World.Game.Entity
 {
-    public sealed class CharacterEntity : FighterBase
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class CharacterEntity : FighterBase, IDisposable
     {
         /// <summary>
         /// 
@@ -59,8 +63,7 @@ namespace Codebreak.Service.World.Game.Entity
                 DatabaseRecord.CellId = value;
             }
         }
-
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -94,86 +97,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public int AlignmentId
-        {
-            get
-            {
-                return _alignmentRecord.AlignmentId;
-            }
-            set
-            {
-                _alignmentRecord.AlignmentId = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int AlignmentLevel
-        {
-            get
-            {
-                return _alignmentRecord.Level;
-            }
-            set
-            {
-                _alignmentRecord.Level = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public List<InventoryItemDAO> Items
         {
             get
             {
                 return DatabaseRecord.GetItems();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int AlignmentPromotion
-        {
-            get
-            {
-                return _alignmentRecord.Promotion;
-            }
-            set
-            {
-                _alignmentRecord.Promotion = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int AlignmentHonour
-        {
-            get
-            {
-                return _alignmentRecord.Honour;
-            }
-            set
-            {
-                _alignmentRecord.Honour = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int AlignmentDishonour
-        {
-            get
-            {
-                return _alignmentRecord.Dishonour;
-            }
-            set
-            {
-                _alignmentRecord.Dishonour = value;
             }
         }
 
@@ -404,6 +332,24 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             private set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GuildMember CharacterGuild
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CharacterAlignmentDAO CharacterAlignment
+        {
+            get;
+            private set;
+        }
         
         /// <summary>
         /// 
@@ -468,6 +414,24 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public long GuildInvitedPlayerId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long GuildInviterPlayerId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Power
         {
             get;
@@ -477,17 +441,19 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private CharacterAlignmentDAO _alignmentRecord;
-
+        /// <param name="power"></param>
+        /// <param name="characterDAO"></param>
         public CharacterEntity(int power, CharacterDAO characterDAO)
             : base(EntityTypEnum.TYPE_CHARACTER, characterDAO.Id)
-        {
-            _alignmentRecord = characterDAO.GetAlignment();
+        {            
+            CharacterAlignment = characterDAO.GetCharacterAlignment();
 
             Power = power;
             PartyId = -1;
             PartyInvitedPlayerId = -1;
             PartyInviterPlayerId = -1;
+            GuildInvitedPlayerId = -1;
+            GuildInviterPlayerId = -1;
             DatabaseRecord = characterDAO;
             Statistics = new GenericStats(characterDAO);
             Inventory = new CharacterInventory(this);
@@ -505,7 +471,12 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 case ChatChannelEnum.CHANNEL_GROUP:
                     PartyManager.Instance.PartyMessage(PartyId, Id, Name, message);
-                    break;
+                    return;
+
+                case ChatChannelEnum.CHANNEL_GUILD:
+                    if(CharacterGuild != null)                    
+                        CharacterGuild.Guild.SafeDispatchChatMessage(Id, Name, message);                    
+                    return;
 
                 case ChatChannelEnum.CHANNEL_GENERAL:
                     if (message.StartsWith("."))
@@ -621,6 +592,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public void RefreshOnMap()
+        {
+            Map.SafeDispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REFRESH, this));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="operation"></param>
         /// <param name="message"></param>
         public override void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message)
@@ -654,16 +633,19 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(Aura).Append(';');
                         message.Append("").Append(';'); // DisplayEmotes
                         message.Append("").Append(';'); // EmotesTimer
-                        //if (this.HasGuild())
-                        //{
-                        //    message.Append(this.GetGuild().Name).Append(';');
-                        //    message.Append(this.GetGuild().Emblem).Append(';');
-                        //}
-                        //else
-                        //{
-                        message.Append("").Append(';'); // GuildInfos
-                        message.Append("").Append(';');
-                        //}
+                        if (CharacterGuild != null && CharacterGuild.Guild.IsActive)
+                        {
+                            message.Append(CharacterGuild.Guild.Name).Append(';');
+                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.BackgroundId)).Append(',');
+                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.BackgroundColor)).Append(',');
+                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.SymbolId)).Append(',');
+                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.SymbolColor)).Append(';');
+                        }
+                        else
+                        {
+                            message.Append("").Append(';'); // GuildInfos
+                            message.Append("").Append(';');
+                        }
                         message.Append(Util.EncodeBase36(EntityRestriction))
                             .Append(';');
                         message.Append("")
@@ -746,6 +728,18 @@ namespace Codebreak.Service.World.Game.Entity
         public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
         {
             throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            DatabaseRecord = null;
+            CharacterGuild = null;
+            CharacterAlignment = null;
+
+            base.Dispose();
         }
     }
 }

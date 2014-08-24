@@ -38,10 +38,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                         direction = Pathfinding.GetDirection(castInfos.Target.Fight.Map, castInfos.CellId, castInfos.Target.Cell.Id);
                     else if (Pathfinding.InLine(castInfos.Target.Fight.Map, castInfos.Caster.Cell.Id, castInfos.Target.Cell.Id))
                         direction = Pathfinding.GetDirection(castInfos.Target.Fight.Map, castInfos.Caster.Cell.Id, castInfos.Target.Cell.Id);
-                    else
-                    {
-                        return FightActionResultEnum.RESULT_NOTHING;
-                    }
+                    else                    
+                        return FightActionResultEnum.RESULT_NOTHING;                    
                     break;
 
                 case EffectEnum.PushFront:

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Stats;
 
 namespace Codebreak.Service.World.Database.Structures

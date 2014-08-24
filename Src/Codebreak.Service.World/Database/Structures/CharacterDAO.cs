@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Database.Repository;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Game.Database.Repositories;
 
 namespace Codebreak.Service.World.Database.Structures
 { 
@@ -210,11 +210,19 @@ namespace Codebreak.Service.World.Database.Structures
         }
 
         private CharacterAlignmentDAO _alignment;
-        public CharacterAlignmentDAO GetAlignment()
+        public CharacterAlignmentDAO GetCharacterAlignment()
         {
             if (_alignment == null)
                 _alignment = CharacterAlignmentRepository.Instance.GetById(Id);
             return _alignment;
+        }
+
+        private CharacterGuildDAO _guild;
+        public CharacterGuildDAO GetCharacterGuild()
+        {
+            if (_guild == null)
+                _guild = CharacterGuildRepository.Instance.GetById(Id);
+            return _guild;
         }
 
         private List<InventoryItemDAO> _items;

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
 using Codebreak.WorldService;
 using System.Drawing;
+using Codebreak.Service.World.Game.Guild;
 
 namespace Codebreak.Service.World.Game
 {
@@ -61,6 +62,8 @@ namespace Codebreak.Service.World.Game
         INFO_FIGHT_TOGGLE_HELP = 103,
         INFO_FIGHT_UNTOGGLE_HELP = 104,
         INFO_FIGHT_DISCONNECT_TURN_REMAIN = 162,
+        INFO_GUILD_KICKED_HIMSELF = 176,
+        INFO_GUILD_KICKED = 177,
 
         ERROR_WORLD_SAVING = 164,
         ERROR_WORLD_SAVING_FINISHED = 165,
@@ -447,12 +450,12 @@ namespace Codebreak.Service.World.Game
             message.Append(character.SpellPoint).Append('|');
 
             message
-                .Append(character.AlignmentId).Append('~')
-                .Append(character.AlignmentId).Append(',')
-                .Append(character.AlignmentLevel).Append(',')
-                .Append(character.AlignmentPromotion).Append(',')
-                .Append(character.AlignmentHonour).Append(',')
-                .Append(character.AlignmentDishonour).Append(',')
+                .Append(character.CharacterAlignment.AlignmentId).Append('~')
+                .Append(character.CharacterAlignment.AlignmentId).Append(',')
+                .Append(character.CharacterAlignment.Level).Append(',')
+                .Append(character.CharacterAlignment.Promotion).Append(',')
+                .Append(character.CharacterAlignment.Honour).Append(',')
+                .Append(character.CharacterAlignment.Dishonour).Append(',')
                 .Append(0).Append('|'); // Enabled ?
 
             message
@@ -1429,6 +1432,239 @@ namespace Codebreak.Service.World.Game
         public static string FIGHT_CELL_FLAG(int cellId, long fighterId = 0)
         {
             return "Gf" + fighterId + "|" + cellId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guild"></param>
+        /// <param name="power"></param>
+        /// <returns></returns>
+        public static string GUILD_STATS(GuildInstance guild, int power)
+        {
+            return "gS" + guild.Name + "|" + guild.Emblem + "|" + Util.EncodeBase36(power);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public static string GUILD_MEMBERS_INFORMATIONS(IEnumerable<GuildMember> members)
+        {
+            var message = new StringBuilder("gIM+");
+            foreach(var member in members)
+            {
+                member.SerializeAs_GuildMemberInformations(message);
+            }
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public static string GUILD_MEMBERS_INFORMATIONS(GuildMember member)
+        {
+            var message = new StringBuilder("gIM+");
+            member.SerializeAs_GuildMemberInformations(message);
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isActive"></param>
+        /// <param name="level"></param>
+        /// <param name="experienceFloorCurrent"></param>
+        /// <param name="experienceFloorNext"></param>
+        /// <param name="experience"></param>
+        /// <returns></returns>
+        public static string GUILD_GENERAL_INFORMATIONS(bool isActive, int level, int experienceFloorCurrent, int experienceFloorNext, long experience)
+        {
+            return "gIG" + (isActive ? "1" : "0") + "|" + level + "|" + experienceFloorCurrent + "|" + experience + "|" + experienceFloorNext;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_OPEN()
+        {
+            return "gn";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_SUCCESS()
+        {
+            return "gCK";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_ERROR_ALREADY_IN_GUILD()
+        {
+            return "gCKa";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_ERROR_NAME_ALREADY_EXISTS()
+        {
+            return "gCKan";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_ERROR_EMBLEM_ALREADY_EXISTS()
+        {
+            return "gCKae";
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ERROR_UNKNOW()
+        {
+            return "gJEu";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ERROR_OCCUPIED()
+        {
+            return "gJEo";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ERROR_ALREADY_IN_GUILD()
+        {
+            return "gJEa";
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ERROR_RESTRICTED()
+        {
+            return "gJEd";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ERROR_REFUSED_DISTANT(string name)
+        {
+            return "gJEr" + name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ERROR_REFUSED_LOCAL()
+        {
+            return "gJEc";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <param name="characterName"></param>
+        /// <param name="guildName"></param>
+        /// <returns></returns>
+        public static string GUILD_JOIN_REQUEST_DISTANT(long characterId, string characterName, string guildName)
+        {
+            return "gJr" + characterId + "|" + characterName + "|" + guildName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="distantCharacterName"></param>
+        /// <returns></returns>
+        public static string GUILD_JOIN_REQUEST_LOCAL(string distantCharacterName)
+        {
+            return "gJR" + distantCharacterName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_CLOSE()
+        {
+            return "gJC";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ACCEPTED_LOCAL()
+        {
+            return "gJKj";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GUILD_JOIN_ACCEPTED_DISTANT(string distantCharacterName)
+        {
+            return "gJKa" + distantCharacterName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_CLOSE()
+        {
+            return "gV";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="kicker"></param>
+        /// <param name="kicked"></param>
+        /// <returns></returns>
+        public static string GUIL_KICK_SUCCESS(string kicker, string kicked)
+        {
+            return "gKK" + kicker + "|" + kicked;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public static string GUILD_MEMBER_REMOVE(long memberId)
+        {
+            return "gIM-" + memberId;
         }
     }
 }

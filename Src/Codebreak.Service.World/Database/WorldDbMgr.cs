@@ -1,7 +1,7 @@
 ﻿using Codebreak.Framework.Configuration;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Database.Repository;
-using Codebreak.Service.World.Game.Database.Repository;
+using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.Database
@@ -20,6 +20,8 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(ItemTemplateRepository.Instance);
             base.AddRepository(InventoryItemRepository.Instance);
             base.AddRepository(SpellBookEntryRepository.Instance);
+            base.AddRepository(GuildRepository.Instance);
+            base.AddRepository(CharacterGuildRepository.Instance);
             base.AddRepository(CharacterAlignmentRepository.Instance);
             base.AddRepository(CharacterRepository.Instance);
             base.AddRepository(MapTriggerRepository.Instance);

@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public abstract class FighterBase : EntityBase, IFightObstacle
+    public abstract class FighterBase : EntityBase, IFightObstacle, IDisposable
     {
 
         #region IFightObstacle
@@ -986,7 +986,7 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
             }
             base.DispatchChatMessage(channel, message, remoteEntity);
-        }
+        }      
 
         /// <summary>
         /// 
@@ -1012,6 +1012,35 @@ namespace Codebreak.Service.World.Game.Fight
         public int CompareTo(IFightObstacle obj)
         {
             return Priority.CompareTo(obj.Priority);
-        }   
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            Fight = null;
+            Team = null;
+            Cell = null;
+            Invocator = null;
+
+            if (SpellManager != null)
+            {
+                SpellManager.Dispose();
+                SpellManager = null;
+            }
+            if (StateManager != null)
+            {
+                StateManager.Dispose();
+                StateManager = null;
+            }
+            if (BuffManager != null)
+            {
+                BuffManager.Dispose();
+                BuffManager = null;
+            }
+
+            base.Dispose();
+        }
     }
 }

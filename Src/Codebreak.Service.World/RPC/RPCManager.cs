@@ -46,14 +46,20 @@ namespace Codebreak.Service.World.RPC
         
         public void Send(RPCMessageBase message)
         {
-            _rpcConnection.Send(message);
+            AddMessage(() =>
+                {
+                    _rpcConnection.Send(message);
+                });
         }
 
         private void Connect()
         {
-            Logger.Info("RPCManager connecting...");
+            AddMessage(() =>
+                {
+                    Logger.Info("RPCManager connecting...");
 
-            _rpcConnection.Connect(RPCIP, RPCPort);
+                    _rpcConnection.Connect(RPCIP, RPCPort);
+                });
         }
 
         private void OnConnected()
@@ -69,7 +75,7 @@ namespace Codebreak.Service.World.RPC
         {
             Logger.Warn("RPCManager disconnected.");
 
-            AddMessage(() => Connect());
+            Connect();
         }
 
         private void OnMessage(RPCMessageBase message)

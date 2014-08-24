@@ -1272,7 +1272,8 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
                 {
-                    CurrentFighter.Team.EndTurn(CurrentFighter);
+                    if(CurrentFighter != null && CurrentFighter.Team != null)
+                        CurrentFighter.Team.EndTurn(CurrentFighter);
 
                     // fin du combat ?
                     if (!CurrentFighter.IsFighterDead)
@@ -2303,9 +2304,12 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void SendMapFightInfos(EntityBase entity)
         {
-            entity.Dispatch(WorldMessage.FIGHT_FLAG_DISPLAY(this));
-            Team0.SendMapFightInfos(entity);
-            Team1.SendMapFightInfos(entity);
+            if (State == FightStateEnum.STATE_PLACEMENT)
+            {
+                entity.Dispatch(WorldMessage.FIGHT_FLAG_DISPLAY(this));
+                Team0.SendMapFightInfos(entity);
+                Team1.SendMapFightInfos(entity);
+            }
         }
 
         /// <summary>
@@ -2338,6 +2342,7 @@ namespace Codebreak.Service.World.Game.Fight
                         else if (fighter.IsDisconnected)
                         {
                             fighter.IsDisconnected = false;
+                            fighter.Team.SendChallengeInfos(fighter);
                             fighter.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
                             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_RECONNECTED, fighter.Name));
                         }                        
@@ -2345,7 +2350,6 @@ namespace Codebreak.Service.World.Game.Fight
                         fighter.Dispatch(WorldMessage.FIGHT_STARTS());
                         fighter.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
                         fighter.Dispatch(WorldMessage.FIGHT_TURN_STARTS(CurrentFighter.Id, TurnTimeLeft));
-                        fighter.Team.SendChallengeInfos(fighter);
                         break;
                 }
                 fighter.CachedBuffer = false;
