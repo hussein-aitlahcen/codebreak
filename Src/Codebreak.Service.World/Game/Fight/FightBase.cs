@@ -1403,19 +1403,21 @@ namespace Codebreak.Service.World.Game.Fight
 
                         CurrentProcessingFighter = castInfos.Target;
                                                 
-                        if (CurrentProcessingFighter != null)
+                        if (CurrentProcessingFighter != null && !CurrentProcessingFighter.IsFighterDead)
                         {
-                            Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
-                            
+                            Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);                                                        
                             var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
                             if (effectResult == FightActionResultEnum.RESULT_END)
                                 break;
                         }
                         else
                         {
-                            var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
-                            if (effectResult == FightActionResultEnum.RESULT_END)
-                                break;
+                            if (!castInfos.Target.IsFighterDead)
+                            {
+                                var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
+                                if (effectResult == FightActionResultEnum.RESULT_END)
+                                    break;
+                            }
                         }
 
                         LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;

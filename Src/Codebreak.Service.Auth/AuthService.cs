@@ -53,7 +53,6 @@ namespace Codebreak.Service.Auth
                 if (base.Clients.Count() >= AuthMaxClient)
                 {
                     client.Send(AuthMessage.SERVER_BUSY());
-                    client.Disconnect();
                 }
                 else
                 {

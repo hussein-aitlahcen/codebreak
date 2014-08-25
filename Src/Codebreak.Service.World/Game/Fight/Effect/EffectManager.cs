@@ -27,6 +27,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects = new Dictionary<EffectEnum, EffectBase>();
 
             // Dégats
+            _effects.Add(EffectEnum.SelfDamage, new SelfDamageEffect());
             _effects.Add(EffectEnum.DamageEarth, new DamageEffect());
             _effects.Add(EffectEnum.DamageNeutral, new DamageEffect());
             _effects.Add(EffectEnum.DamageFire, new DamageEffect());
@@ -63,6 +64,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.SubMPDodge, new StatsEffect());
 
             // Caracteristiques Ajout/Reduction
+            _effects.Add(EffectEnum.AddReduceDamagePhysic, new StatsEffect());
+            _effects.Add(EffectEnum.AddReduceDamageMagic, new StatsEffect());
+            _effects.Add(EffectEnum.AddPO, new StatsEffect());
+            _effects.Add(EffectEnum.SubPO, new StatsEffect());
             _effects.Add(EffectEnum.AddStrength, new StatsEffect());
             _effects.Add(EffectEnum.AddIntelligence, new StatsEffect());
             _effects.Add(EffectEnum.AddAgility, new StatsEffect());

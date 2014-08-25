@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Database;
+using Codebreak.Service.World.Game.Stats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,10 +82,31 @@ namespace Codebreak.Service.World.Database.Structures
         /// <summary>
         /// 
         /// </summary>
-        //public byte[] Statistics
-        //{
-        //    get;
-        //    set;
-        //}
+        public byte[] Stats
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int BoostPoint
+        {
+            get;
+            set;
+        }
+
+        private GenericStats _statistics;
+        /// <summary>
+        /// 
+        /// </summary>
+        public GenericStats GetStatistics()
+        {
+            if (_statistics == null)
+            {
+                _statistics = GenericStats.Deserialize(Stats);
+            }
+            return _statistics;
+        }
     }
 }

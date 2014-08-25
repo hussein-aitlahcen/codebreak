@@ -12,6 +12,7 @@ using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.RPC;
+using System;
 
 namespace Codebreak.Service.World
 {
@@ -153,12 +154,19 @@ namespace Codebreak.Service.World
 
                     WorldService.Instance.AddMessage(() =>
                     {
-                        GuildRepository.Instance.UpdateAll();
-                        CharacterRepository.Instance.UpdateAll();
-                        CharacterAlignmentRepository.Instance.UpdateAll();
-                        CharacterGuildRepository.Instance.UpdateAll();
-                        SpellBookEntryRepository.Instance.UpdateAll();
-                        InventoryItemRepository.Instance.UpdateAll();
+                        try
+                        {
+                            GuildRepository.Instance.UpdateAll();
+                            CharacterRepository.Instance.UpdateAll();
+                            CharacterAlignmentRepository.Instance.UpdateAll();
+                            CharacterGuildRepository.Instance.UpdateAll();
+                            SpellBookEntryRepository.Instance.UpdateAll();
+                            InventoryItemRepository.Instance.UpdateAll();
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.Error("WorldUpdate failed : " + ex.ToString());
+                        }
 
                         WorldService.Instance.AddMessage(() =>
                         {

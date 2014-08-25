@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Database.Repositories
         {
             if (_characterGuildById.ContainsKey(id))
                 return _characterGuildById[id];
-            return null;
+            return base.Load("Id=@Id", new { Id = id });
         }
 
         /// <summary>

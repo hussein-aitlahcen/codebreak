@@ -685,30 +685,35 @@ namespace Codebreak.Service.World.Game.Fight
                 case EffectEnum.StealNeutral:
                     damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentNeutral) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPNeutral)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageNeutral) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPNeutral);
+                    damages -= Statistics.GetTotal(EffectEnum.AddReduceDamagePhysic);
                     break;
 
                 case EffectEnum.DamageEarth:
                 case EffectEnum.StealEarth:
                     damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentEarth) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPEarth)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageEarth) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPEarth);
+                    damages -= Statistics.GetTotal(EffectEnum.AddReduceDamagePhysic);
                     break;
 
                 case EffectEnum.DamageFire:
                 case EffectEnum.StealFire:
                     damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentFire) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPFire)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageFire) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPFire);
+                    damages -= Statistics.GetTotal(EffectEnum.AddReduceDamageMagic);
                     break;
 
                 case EffectEnum.DamageAir:
                 case EffectEnum.StealAir:
                     damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentAir) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPAir)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageAir) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPAir);
+                    damages -= Statistics.GetTotal(EffectEnum.AddReduceDamageMagic);
                     break;
 
                 case EffectEnum.DamageWater:
                 case EffectEnum.StealWater:
                     damages = damages * (100 - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentWater) - Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPWater)) / 100
                                              - Statistics.GetTotal(EffectEnum.AddReduceDamageWater) - Statistics.GetTotal(EffectEnum.AddReduceDamagePvPWater);
+                    damages -= Statistics.GetTotal(EffectEnum.AddReduceDamageMagic);
                     break;
             }
         }
