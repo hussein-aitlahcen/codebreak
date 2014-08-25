@@ -138,6 +138,27 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="profilName"></param>
+        /// <param name="rank"></param>
+        /// <param name="percent"></param>
+        /// <param name="power"></param>
+        public void MemberProfilUpdate(long profilId, int rank, int percent, int power)
+        {
+            Guild.MemberProfilUpdate(this, profilId, rank, percent, power);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="kickedMemberName"></param>
+        public void MemberKick(string kickedMemberName)
+        {
+            Guild.MemberKick(this, kickedMemberName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         public void CharacterConnected(CharacterEntity character)
         {
@@ -149,14 +170,35 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public void MemberKick()
+        {
+            Guild.MemberKick(this, Name);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void GuildLeave()
+        {
+            GuildId = -1;
+
+            if (_characterEntity != null)
+            {
+                _characterEntity.CharacterGuild = null;
+                _characterEntity.RefreshOnMap();
+            }
+
+            CharacterDisconnected();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         public void CharacterDisconnected()
         {
-            if (_characterEntity != null)
-            {
-                base.RemoveHandler(_characterEntity.SafeDispatch);
-                _characterEntity.CharacterGuild = null;
-            }
+            if (_characterEntity != null)            
+                base.RemoveHandler(_characterEntity.SafeDispatch);            
             _characterEntity = null;
         }
 

@@ -65,6 +65,7 @@ namespace Codebreak.Service.World.Game
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
 
+        ERROR_GUILD_NOT_ENOUGH_RIGHTS = 101,
         ERROR_WORLD_SAVING = 164,
         ERROR_WORLD_SAVING_FINISHED = 165,
 

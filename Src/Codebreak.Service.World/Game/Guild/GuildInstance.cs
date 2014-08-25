@@ -17,7 +17,7 @@ namespace Codebreak.Service.World.Game.Guild
     {
         BOSS = 1,
         MANAGE_BOOST = 2,
-        MANAGE_RIGHT = 4,
+        MANAGE_POWER = 4,
         INVITE = 8,
         BAN = 16,
         MANAGE_EXP_PERCENT = 32,
@@ -214,8 +214,7 @@ namespace Codebreak.Service.World.Game.Guild
             member.CharacterConnected(character);
             member.SendGuildStats();
 
-            character.RefreshOnMap();
-            
+            character.RefreshOnMap();            
 
             AddMember(member);
         }
@@ -224,13 +223,85 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="kickedMember"></param>
-        public void MemberKick(CharacterEntity member, string kickedMemberName)
+        /// <param name="profilName"></param>
+        /// <param name="rank"></param>
+        /// <param name="percent"></param>
+        /// <param name="power"></param>
+        public void MemberProfilUpdate(GuildMember member, long profilId, int rank, int percent, int power)
         {
+            var himSelf = member.Id == profilId;
+            var memberProfil = _members.Find(m => m.Id == profilId);
+            if(memberProfil == null)
+            {
+                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var rankChanged = rank == (int)memberProfil.Rank;
+            var powerChanged = power == memberProfil.Power;
+            var xpShareChanged = percent == memberProfil.XPSharePercent;
+
+            var canManageOwnExp = member.HasRight(GuildRightEnum.MANAGE_OWN_EXP_PERCENT);
+            var canManageOthersExp = member.HasRight(GuildRightEnum.MANAGE_EXP_PERCENT);
+            var canManageRank = member.HasRight(GuildRightEnum.MANAGE_RANK);
+            var canManagePower = member.HasRight(GuildRightEnum.MANAGE_POWER);
+
+            if(!canManageOwnExp && !canManageOthersExp && !canManageRank && !canManagePower)
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
+
+            if(!himSelf && !canManageOthersExp && xpShareChanged)
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
+
+            if(!canManagePower && powerChanged)
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
+
+            if(!canManageRank && rankChanged)
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
+
+            if(!canManageOwnExp && himSelf && xpShareChanged)
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
+
+            memberProfil.XPSharePercent = percent;
+            memberProfil.Rank = (GuildRankEnum)rank;
+            memberProfil.Power = power;
+
+            // update profil
+            member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(memberProfil));
+            memberProfil.Dispatch(WorldMessage.GUILD_STATS(this, power));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="kickedMember"></param>
+        public void MemberKick(GuildMember member, string kickedMemberName)
+        {
+            if (kickedMemberName != member.Name && !member.HasRight(GuildRightEnum.BAN))
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
+
             var kickedMember = _members.Find(m => m.Name == kickedMemberName);
             if(kickedMember == null)
             {
-                member.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -238,25 +309,22 @@ namespace Codebreak.Service.World.Game.Guild
             {
                 if (kickedMemberName == member.Name)
                 {
-                    member.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("As a boss, you are unable to leave the guild."));
+                    member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("As a boss, you are unable to leave the guild."));
                     return;   
                 }
 
-                member.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("The boss cannot be kicked."));
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("The boss cannot be kicked."));
                 return;    
             }
 
-            member.SafeDispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
+            member.Dispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
 
-            if (member.Name == kickedMemberName)
-                kickedMember.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_GUILD_KICKED_HIMSELF));
-            else
+            if (member.Name != kickedMemberName)
                 kickedMember.Dispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
 
             RemoveMember(kickedMember);
 
-            kickedMember.GuildId = -1;
-            kickedMember.CharacterDisconnected();
+            kickedMember.GuildLeave();
 
             base.Dispatch(WorldMessage.GUILD_MEMBER_REMOVE(kickedMember.Id));
         }

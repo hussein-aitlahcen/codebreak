@@ -473,7 +473,7 @@ namespace Codebreak.Service.World.Game.Entity
         public bool HasGameAction(GameActionTypeEnum actionType)
         {
             if (actionType == GameActionTypeEnum.MAP)
-                return MovementHandler.FieldType == FieldTypeEnum.TYPE_MAP;
+                return MovementHandler.FieldType == FieldTypeEnum.TYPE_MAP && Map.GetEntity(Id) != null;
             if (actionType == GameActionTypeEnum.FIGHT)
                 return MovementHandler.FieldType == FieldTypeEnum.TYPE_FIGHT;
             return CurrentAction != null && CurrentAction.Type == actionType;

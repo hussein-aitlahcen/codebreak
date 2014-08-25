@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Frames
                     switch(message[1])
                     {                        
                         case 'P': // member profil update
-                            break;
+                            return GuildProfilUpdate;
                         case 'K': // kick member
                             return GuildKick;
                         case 'V': // creation leave
@@ -172,17 +172,37 @@ namespace Codebreak.Service.World.Frames
             }
 
             var kickedMemberName = message.Substring(2);
-            if(kickedMemberName != character.Name)
-            {
-                // cannot kick others
-                if(!character.CharacterGuild.HasRight(GuildRightEnum.BAN))
+
+            WorldService.Instance.AddMessage(() =>
                 {
-                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                    return;
-                }
+                    character.CharacterGuild.MemberKick(kickedMemberName);
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GuildProfilUpdate(EntityBase entity, string message)
+        {
+            var character = (CharacterEntity)entity;
+            if (character.CharacterGuild == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
             }
 
-            character.CharacterGuild.Guild.MemberKick(character, kickedMemberName);
+            var messageData = message.Substring(2).Split('|');
+            var profilId = long.Parse(messageData[0]);
+            var rank = int.Parse(messageData[1]);
+            var xpSharePercent = int.Parse(messageData[2]);
+            var power = int.Parse(messageData[3]);
+
+            WorldService.Instance.AddMessage(() =>
+                {
+                    character.CharacterGuild.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
+                });
         }
 
         /// <summary>
@@ -310,12 +330,11 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
             
-            // cannot invite
-            //if (!character.CharacterGuild.HasRight(GuildRightEnum.INVITE))
-            //{
-            //    entity.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("You dont have enought right to invite players."));
-            //    return;
-            //}
+            if (!character.CharacterGuild.HasRight(GuildRightEnum.INVITE))
+            {
+                character.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                return;
+            }
 
             character.GuildInvitedPlayerId = distantCharacter.Id;
             distantCharacter.GuildInviterPlayerId = character.Id;
