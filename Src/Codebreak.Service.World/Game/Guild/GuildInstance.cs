@@ -82,13 +82,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public bool IsActive
-        {
-            get
-            {
-                return _members.Count > 0;
-            }
-        }
+        public volatile bool IsActive;
 
         /// <summary>
         /// 
@@ -135,7 +129,7 @@ namespace Codebreak.Service.World.Game.Guild
         }
 
         /// <summary>
-        /// /
+        ///
         /// </summary>
         public int BackgroundId
         {
@@ -163,7 +157,9 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return Util.EncodeBase36(BackgroundId) + "|" + Util.EncodeBase36(BackgroundColor) + "|" + Util.EncodeBase36(SymbolId) + "|" + Util.EncodeBase36(SymbolColor);
+                if(_emblem == null)
+                    _emblem = Util.EncodeBase36(BackgroundId) + "|" + Util.EncodeBase36(BackgroundColor) + "|" + Util.EncodeBase36(SymbolId) + "|" + Util.EncodeBase36(SymbolColor);
+                return _emblem;
             }
         }
 
@@ -185,6 +181,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        private string _emblem;
         private List<GuildMember> _members;
         private GuildDAO _record;
 
@@ -230,7 +227,7 @@ namespace Codebreak.Service.World.Game.Guild
         public void MemberProfilUpdate(GuildMember member, long profilId, int rank, int percent, int power)
         {
             var himSelf = member.Id == profilId;
-            var memberProfil = _members.Find(m => m.Id == profilId);
+            var memberProfil = GetMember(profilId);
             if(memberProfil == null)
             {
                 member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -337,6 +334,8 @@ namespace Codebreak.Service.World.Game.Guild
         {
             _members.Add(member);
             base.AddHandler(member.Dispatch);
+            
+            IsActive = _members.Count > 10;
         }
 
         /// <summary>
@@ -347,6 +346,8 @@ namespace Codebreak.Service.World.Game.Guild
         {
             _members.Remove(member);
             base.RemoveHandler(member.Dispatch);
+            
+            IsActive = _members.Count > 10;
         }
 
         /// <summary>

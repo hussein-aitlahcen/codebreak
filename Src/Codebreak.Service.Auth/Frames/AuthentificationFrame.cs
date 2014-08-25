@@ -22,12 +22,12 @@ namespace Codebreak.Service.Auth.Frames
 
             if(credentials.Length != 2)
             {
-                client.Disconnect();
+                client.Send(AuthMessage.AUTH_FAILED_CREDENTIALS());
                 return;
             }
 
             var account = credentials[0];
-            var password = credentials[1].TrimStart('1');
+            var password = credentials[1].Substring(1);
 
             AuthService.Instance.AddMessage(() => ProcessAuthentification(client, account, password));
         }
