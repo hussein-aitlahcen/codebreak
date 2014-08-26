@@ -3,6 +3,7 @@ using System.Text;
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Database.Repositories;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structures
 { 
@@ -27,8 +28,9 @@ namespace Codebreak.Service.World.Database.Structures
 
     /// <summary>
     /// 
-    /// </summary>
+    /// </summary>    
     [Table("Character")]
+    [ImplementPropertyChanged]
     public sealed class CharacterDAO : DataAccessObject<CharacterDAO>
     {
         [Key]

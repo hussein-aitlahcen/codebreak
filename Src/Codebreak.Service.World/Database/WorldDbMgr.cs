@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Configuration;
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.WorldService;
 

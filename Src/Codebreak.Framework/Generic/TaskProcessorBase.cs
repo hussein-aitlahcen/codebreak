@@ -214,12 +214,8 @@ namespace Codebreak.Framework.Generic
                 _paused = true;
                 _queueTimer.Stop();
 
-                Logger.Warn("TaskQueue[" + Name + "] paused.");
-
                 while (Blocked)
                     Thread.Sleep(1);
-
-                Logger.Warn("TaskQueue[" + Name + "] resumed.");
 
                 _paused = false;
                 _queueTimer.Start();

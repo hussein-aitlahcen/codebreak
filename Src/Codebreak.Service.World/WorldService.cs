@@ -13,6 +13,8 @@ using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.RPC;
 using System;
+using Codebreak.Framework.Database;
+using System.Diagnostics;
 
 namespace Codebreak.Service.World
 {
@@ -44,6 +46,11 @@ namespace Codebreak.Service.World
             get;
             private set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Stopwatch _updateTimer;
 
         public void Start(string configPath)
         {
@@ -154,17 +161,30 @@ namespace Codebreak.Service.World
 
                     WorldService.Instance.AddMessage(() =>
                     {
+                        SqlManager.Instance.BeginTransaction();
+
                         try
                         {
+                            _updateTimer = Stopwatch.StartNew();
+
                             GuildRepository.Instance.UpdateAll();
                             CharacterRepository.Instance.UpdateAll();
                             CharacterAlignmentRepository.Instance.UpdateAll();
                             CharacterGuildRepository.Instance.UpdateAll();
                             SpellBookEntryRepository.Instance.UpdateAll();
                             InventoryItemRepository.Instance.UpdateAll();
+
+                            var updateTime = _updateTimer.ElapsedMilliseconds;
+                            _updateTimer.Stop();
+
+                            Logger.Info("WorldService : World update performed in : " + updateTime + " ms");
+                            
+                            SqlManager.Instance.CommitTransaction();
                         }
                         catch(Exception ex)
                         {
+                            SqlManager.Instance.RollbackTransaction();
+
                             Logger.Error("WorldUpdate failed : " + ex.ToString());
                         }
 

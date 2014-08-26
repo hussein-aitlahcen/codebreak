@@ -71,7 +71,7 @@ namespace Codebreak.Service.World.Frames
                 if (!entity.CanGameAction(actionType))
                 {
                     Logger.Debug("GameActionFrame::Start entity cant game action : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                     return;
                 }
 
@@ -260,8 +260,7 @@ namespace Codebreak.Service.World.Frames
             
             if(!distantEntity.CanGameAction(GameActionTypeEnum.CHALLENGE_REQUEST))
             {
-                Logger.Debug("GameActionFrame::ChallengeRequest distantEntity cannot start a request, probably in another action or restricted : " + distantEntity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
                 return;
             }
 

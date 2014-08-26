@@ -8,6 +8,7 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Guild;
+using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Frames
 {
@@ -46,9 +47,9 @@ namespace Codebreak.Service.World.Frames
                         case 'K': // kick member
                             return GuildKick;
                         case 'V': // creation leave
-                            break;
+                            return GuildCreationLeave;
                         case 'C': // creation
-                            break;
+                            return GuildCreationRequest;
                         case 'B': // boost caract
                             break;
                         case 'H': // hire tax collector
@@ -87,7 +88,7 @@ namespace Codebreak.Service.World.Frames
                                 case 'M': // guildMemberInfos
                                     return GuildMembersInformations;
                                 case 'B': // boost infos
-                                    break;
+                                    return GuildBoostInformations;
                                 case 'G': // general infos
                                     return GuildGeneralInformations;
                                 case 'F': // mount park infos
@@ -155,6 +156,98 @@ namespace Codebreak.Service.World.Frames
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GuildBoostInformations(EntityBase entity, string message)
+        {
+            var characterEntity = (CharacterEntity)entity;
+            if (characterEntity.CharacterGuild == null)
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            characterEntity.CharacterGuild.Guild.SendBoostInformations(characterEntity);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GuildCreationRequest(EntityBase entity, string message)
+        {
+            var character = (CharacterEntity)entity;
+            if(character.CharacterGuild != null)
+            {
+                character.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_ALREADY_IN_GUILD());
+                return;
+            }
+
+            var guildData = message.Substring(2).Split('|');
+            var backId = int.Parse(guildData[0]);
+            var backColor = int.Parse(guildData[1]);
+            var symbolId = int.Parse(guildData[2]);
+            var symbolColor = int.Parse(guildData[3]);
+            var name = guildData[4];
+
+            character.AddMessage(() =>
+            {
+                if (!character.HasGameAction(GameActionTypeEnum.GUILD_CREATE))
+                {
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                WorldService.Instance.AddMessage(() =>
+                    {
+                        if(GuildManager.Instance.Exists(name))
+                        {
+                            character.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_NAME_ALREADY_EXISTS());
+                            return;
+                        }
+
+                        if(!GuildManager.Instance.Create(character, name, backId, backColor, symbolId, symbolColor))
+                        {
+                            character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create the guild, unknow error."));
+                            return;
+                        }
+
+                        character.SafeDispatch(WorldMessage.GUILD_CREATION_SUCCESS());
+                        character.CharacterGuild.SendGuildStats();
+                        character.RefreshOnMap();
+
+                        character.AddMessage(() =>
+                            {
+                                character.StopAction(GameActionTypeEnum.GUILD_CREATE);
+                            });
+                    });
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GuildCreationLeave(EntityBase entity, string message)
+        {
+            entity.AddMessage(() =>
+                {
+                    var character = (CharacterEntity)entity;
+                    if (!character.HasGameAction(GameActionTypeEnum.GUILD_CREATE))
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    character.StopAction(GameActionTypeEnum.GUILD_CREATE);
+                });
         }
 
         /// <summary>

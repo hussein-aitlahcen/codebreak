@@ -1,7 +1,9 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Guild;
+using Codebreak.Service.World.Game.Stats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +36,21 @@ namespace Codebreak.Service.World.Manager
         {            
             foreach(var guild in GuildRepository.Instance.GetAll())
             {
-                var instance = new GuildInstance(guild);
-
-                WorldService.Instance.AddUpdatable(instance);
-                _guildById.Add(guild.Id, instance);
-                _guildByName.Add(guild.Name.ToLower(), instance);
+                AddInstance(new GuildInstance(guild));
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instance"></param>
+        private void AddInstance(GuildInstance instance)
+        {
+            WorldService.Instance.AddUpdatable(instance);
+            _guildById.Add(instance.Id, instance);
+            _guildByName.Add(instance.Name.ToLower(), instance);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -65,6 +74,49 @@ namespace Codebreak.Service.World.Manager
             if (_guildById.ContainsKey(guildId))
                 return _guildById[guildId];
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public bool Create(CharacterEntity character, string name, int backgroundId, int backgroundColor, int symbolId, int symbolColor)
+        {
+            var record = new GuildDAO()
+            {
+                Name = name,
+                BackgroundId = backgroundId,
+                BackgroundColor = backgroundColor,
+                SymbolId = symbolId,
+                SymbolColor = symbolColor,
+                Level = 1,
+                BoostPoint = 0,
+                Experience = 0,
+            };
+
+            var stats = GuildStatistics.Create(record);
+
+            record.Stats = stats.Serialize();
+
+            if (!GuildRepository.Instance.Insert(record))            
+                return false;
+
+            var instance = new GuildInstance(record);
+            instance.MemberBoss(character);
+            AddInstance(new GuildInstance(record));
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool Exists(string name)
+        {
+            return _guildByName.ContainsKey(name.ToLower());
         }
     }
 }

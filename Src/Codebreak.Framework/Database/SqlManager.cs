@@ -16,12 +16,12 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        private SqlConnection sqlConnection;
+        private SqlConnection _sqlConnection;
         
         /// <summary>
         /// 
         /// </summary>
-        private SqlTransaction sqlTransaction;
+        private SqlTransaction _sqlTransaction;
 
         /// <summary>
         /// 
@@ -35,9 +35,9 @@ namespace Codebreak.Framework.Database
         {
             get
             {
-                if (sqlConnection == null)
+                if (_sqlConnection == null)
                     throw new InvalidOperationException("SqlManager : not initialized.");
-                return sqlConnection;
+                return _sqlConnection;
             }
         }
         /// <summary>
@@ -46,13 +46,13 @@ namespace Codebreak.Framework.Database
         /// <param name="connectionString"></param>
         public void Initialize(string connectionString)
         {
-            sqlConnection = new SqlConnection(connectionString);
+            _sqlConnection = new SqlConnection(connectionString);
 
             try
             {
-                sqlConnection.Open();
+                _sqlConnection.Open();
 
-                Logger.Info("SqlManager connection opened : " + sqlConnection.Database);
+                Logger.Info("SqlManager connection opened : " + _sqlConnection.Database);
             }
             catch (Exception ex)
             {
@@ -67,7 +67,8 @@ namespace Codebreak.Framework.Database
         /// <param name="dataObject"></param>
         public bool Insert<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
-            return SqlMapperExtensions.Insert<T>(Connection, dataObject) > 0;
+            lock (SyncLock)
+                return SqlMapperExtensions.Insert<T>(Connection, dataObject, _sqlTransaction) > 0;
         }
 
         /// <summary>
@@ -78,7 +79,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public bool Remove<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
-            return SqlMapperExtensions.Delete<T>(Connection, dataObject);
+            lock (SyncLock)
+                return SqlMapperExtensions.Delete<T>(Connection, dataObject, _sqlTransaction);
         }
 
         /// <summary>
@@ -88,7 +90,8 @@ namespace Codebreak.Framework.Database
         /// <param name="dataObject"></param>
         public bool Update<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
-            return SqlMapperExtensions.Update<T>(Connection, dataObject);
+            lock(SyncLock)
+                return SqlMapperExtensions.Update<T>(Connection, dataObject, _sqlTransaction);
         }
 
         /// <summary>
@@ -96,9 +99,9 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public void BeginTransaction()
         {
-            if (sqlTransaction != null)
+            if (_sqlTransaction != null)
                 throw new InvalidOperationException("SqlManager : starting new transaction meanwhile last one is still alive.");
-            sqlTransaction = Connection.BeginTransaction();
+            _sqlTransaction = Connection.BeginTransaction();
         }
 
         /// <summary>
@@ -106,10 +109,21 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public void CommitTransaction()
         {
-            if (sqlTransaction == null)
-                throw new InvalidOperationException("SqlManager : trying to commit unknow transaction.");
-            sqlTransaction.Commit();
-            sqlTransaction = null;
+            if (_sqlTransaction == null)
+                throw new InvalidOperationException("SqlManager : trying to commit an unknow transaction.");
+            _sqlTransaction.Commit();
+            _sqlTransaction = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RollbackTransaction()
+        {
+            if (_sqlTransaction == null)
+                throw new InvalidOperationException("SqlManager : trying to rollback an unknow transactio.");
+            _sqlTransaction.Rollback();
+            _sqlTransaction = null;
         }
     }
 }

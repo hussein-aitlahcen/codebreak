@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repositories;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// 
     /// </summary>
     [Table("CharacterGuild")]
+    [ImplementPropertyChanged]
     public sealed class CharacterGuildDAO : DataAccessObject<CharacterGuildDAO>
     {
         /// <summary>

@@ -65,6 +65,7 @@ namespace Codebreak.Service.World.Game
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
 
+        ERROR_YOU_ARE_AWAY = 116,
         ERROR_GUILD_NOT_ENOUGH_RIGHTS = 101,
         ERROR_WORLD_SAVING = 164,
         ERROR_WORLD_SAVING_FINISHED = 165,
@@ -1488,52 +1489,8 @@ namespace Codebreak.Service.World.Game
         {
             return "gIG" + (isActive ? "1" : "0") + "|" + level + "|" + experienceFloorCurrent + "|" + experience + "|" + experienceFloorNext;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GUILD_CREATION_OPEN()
-        {
-            return "gn";
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GUILD_CREATION_SUCCESS()
-        {
-            return "gCK";
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GUILD_CREATION_ERROR_ALREADY_IN_GUILD()
-        {
-            return "gCKa";
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GUILD_CREATION_ERROR_NAME_ALREADY_EXISTS()
-        {
-            return "gCKan";
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GUILD_CREATION_ERROR_EMBLEM_ALREADY_EXISTS()
-        {
-            return "gCKae";
-        }
         
+
         /// <summary>
         /// 
         /// </summary>
@@ -1637,16 +1594,7 @@ namespace Codebreak.Service.World.Game
         {
             return "gJKa" + distantCharacterName;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static string GUILD_CREATION_CLOSE()
-        {
-            return "gV";
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1666,6 +1614,83 @@ namespace Codebreak.Service.World.Game
         public static string GUILD_MEMBER_REMOVE(long memberId)
         {
             return "gIM-" + memberId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_OPEN()
+        {
+            return "gn";
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_CLOSE()
+        {
+            return "gV";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_SUCCESS()
+        {
+            return "gCK";
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_ERROR_NAME_ALREADY_EXISTS()
+        {
+            return "gCEan";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_ERROR_ALREADY_IN_GUILD()
+        {
+            return "gCEa";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GUILD_CREATION_ERROR_EMBLEM_ALREADY_EXISTS()
+        {
+            return "gCEae";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stats"></param>
+        /// <returns></returns>
+        public static string GUILD_BOOST_INFORMATIONS(int boostPoint, GuildStatistics stats)
+        { 
+            var message = new StringBuilder("gIB");
+            message.Append(stats.MaxTaxcollector).Append('|');
+            message.Append(0).Append('|'); // currentTaxCollectorCount
+            message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddVitality)).Append('|');
+            message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddDamage)).Append('|');
+            message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddPods)).Append('|');
+            message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddProspection)).Append('|');
+            message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddWisdom)).Append('|');
+            message.Append(stats.MaxTaxcollector).Append('|'); // ???
+            message.Append(boostPoint).Append('|');
+            message.Append(0).Append('|'); // ??
+            stats.Spells.SerializeAs_SpellsList(message);
+
+            return message.ToString();
         }
     }
 }

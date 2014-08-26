@@ -164,7 +164,7 @@ namespace Codebreak.Service.World.Game.Guild
         {
             base.AddHandler(character.SafeDispatch);
             _characterEntity = character;
-            _characterEntity.CharacterGuild = this;
+            _characterEntity.SetCharacterGuild(this);
         }
 
         /// <summary>
@@ -178,13 +178,24 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public void SetBoss()
+        {
+            Rank = GuildRankEnum.BOSS;
+
+            foreach(var value in (GuildRightEnum[])Enum.GetValues(typeof(GuildRightEnum)))           
+                SetRight(value, true);            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void GuildLeave()
         {
             GuildId = -1;
 
             if (_characterEntity != null)
             {
-                _characterEntity.CharacterGuild = null;
+                _characterEntity.SetCharacterGuild(null);
                 _characterEntity.RefreshOnMap();
             }
 

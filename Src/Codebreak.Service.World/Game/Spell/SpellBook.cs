@@ -1,6 +1,7 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Manager;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,15 +90,6 @@ namespace Codebreak.Service.World.Game.Spell
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<SpellBookEntryDAO> GetSpells()
-        {
-            return _spellEntries.Values;
         }
 
         /// <summary>

@@ -289,7 +289,7 @@ namespace Codebreak.Framework.Database
 ﻿  ﻿  ﻿  return AdapterDictionary[name];
 ﻿  ﻿  }
 
-    ﻿  class ProxyGenerator
+    ﻿  public static class ProxyGenerator
        {
            private static readonly Dictionary<Type, object> TypeCache = new Dictionary<Type, object>();
 
@@ -340,7 +340,7 @@ namespace Codebreak.Framework.Database
 
                var generatedType = typeBuilder.CreateType();
 
-               //assemblyBuilder.Save(name + ".dll");  //NOTE: to save, uncomment
+               //assemblyBuilder.Save(moduleBuilder.ScopeName + ".dll");  //NOTE: to save, uncomment
 
                var generatedObject = Activator.CreateInstance(generatedType);
 

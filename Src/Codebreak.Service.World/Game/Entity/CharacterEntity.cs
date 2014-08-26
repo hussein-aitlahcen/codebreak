@@ -339,7 +339,7 @@ namespace Codebreak.Service.World.Game.Entity
         public GuildMember CharacterGuild
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -441,6 +441,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        private string _guildDisplayInfos;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
         public CharacterEntity(int power, CharacterDAO characterDAO)
@@ -458,6 +463,19 @@ namespace Codebreak.Service.World.Game.Entity
             Statistics = new GenericStats(characterDAO);
             Inventory = new CharacterInventory(this);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SetCharacterGuild(GuildMember characterGuild)
+        {
+            CharacterGuild = characterGuild;
+            if (CharacterGuild != null)
+                _guildDisplayInfos = CharacterGuild.Guild.Name + ";" + CharacterGuild.Guild.DisplayEmblem;
+            else
+                _guildDisplayInfos = null;
+        }
+
 
         /// <summary>
         /// 
@@ -489,6 +507,16 @@ namespace Codebreak.Service.World.Game.Entity
             }
 
             base.DispatchChatMessage(channel, message, remoteEntity);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void GuildCreationOpen()
+        {
+            CurrentAction = new GameGuildCreationAction(this);
+
+            StartAction(GameActionTypeEnum.GUILD_CREATE);
         }
 
         /// <summary>
@@ -636,13 +664,9 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(Aura).Append(';');
                         message.Append("").Append(';'); // DisplayEmotes
                         message.Append("").Append(';'); // EmotesTimer
-                        if (CharacterGuild != null && CharacterGuild.Guild.IsActive)
+                        if (_guildDisplayInfos != null) // && CharacterGuild.Guild.IsActive)
                         {
-                            message.Append(CharacterGuild.Guild.Name).Append(';');
-                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.BackgroundId)).Append(',');
-                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.BackgroundColor)).Append(',');
-                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.SymbolId)).Append(',');
-                            message.Append(Util.EncodeBase36(CharacterGuild.Guild.SymbolColor)).Append(';');
+                            message.Append(_guildDisplayInfos).Append(';');
                         }
                         else
                         {

@@ -79,8 +79,8 @@ namespace Codebreak.Framework.Database
         public virtual void Initialize()
         {
             IEnumerable<TDataObject> objects = new List<TDataObject>();
-
-            lock (SqlManager.SyncLock)
+            
+            lock(SqlManager.SyncLock)
                 objects = SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName);
 
             lock (_syncLock)
@@ -89,6 +89,8 @@ namespace Codebreak.Framework.Database
                 foreach (var obj in _dataObjects)
                         OnObjectAdded(obj);
             }
+
+            DataAccessObject<TDataObject>.IsRunning = true;
         }
 
         /// <summary>
@@ -133,8 +135,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public virtual bool Update(TDataObject obj)
         {
-            lock(SqlManager.SyncLock)
-                return SqlManager.Instance.Connection.Update<TDataObject>(obj);
+            return SqlManager.Instance.Update<TDataObject>(obj);
         }
 
         /// <summary>
@@ -144,8 +145,7 @@ namespace Codebreak.Framework.Database
         public virtual bool Remove(TDataObject obj)
         {
             var result = false;
-            lock (SqlManager.SyncLock)
-                result = SqlManager.Instance.Remove<TDataObject>(obj);
+            result = SqlManager.Instance.Remove<TDataObject>(obj);
 
             if (result)
             {
@@ -167,9 +167,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Insert(TDataObject obj)
         {
-            var result = false;
-            lock (SqlManager.Instance)            
-                result = SqlManager.Instance.Insert<TDataObject>(obj);
+            var result = false;         
+            result = SqlManager.Instance.Insert<TDataObject>(obj);
 
             if (result)
             {
@@ -224,7 +223,14 @@ namespace Codebreak.Framework.Database
             {
                 foreach (var obj in _dataObjects)
                 {
-                    Update(obj);
+                    if (obj.IsDirty)
+                    {
+                        obj.OnBeforeUpdate();
+
+                        Update(obj);
+
+                        obj.IsDirty = false;
+                    }
                 }
             }
         }

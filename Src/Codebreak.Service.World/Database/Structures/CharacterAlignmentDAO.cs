@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Database;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structures
 {
@@ -6,6 +7,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// 
     /// </summary>
     [Table("CharacterAlignment")]
+    [ImplementPropertyChanged]
     public sealed class CharacterAlignmentDAO : DataAccessObject<CharacterAlignmentDAO>
     {
         [Key]

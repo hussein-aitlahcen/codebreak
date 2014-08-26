@@ -567,6 +567,7 @@ namespace Codebreak.Service.World.Game.Entity
                     Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
 
+                case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
@@ -606,6 +607,7 @@ namespace Codebreak.Service.World.Game.Entity
                     Map.DestroyEntity(this);
                     break;
 
+                case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:                    
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);

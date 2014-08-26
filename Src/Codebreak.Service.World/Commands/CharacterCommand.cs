@@ -32,6 +32,47 @@ namespace Codebreak.Service.World.Commands
             context.Character.Dispatch(WorldMessage.BASIC_NO_OPERATION()); // nothing to do
         }
 
+        public sealed class GuildCreateCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "guild"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Command destined to create a new guild"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                if (context.Character.CanGameAction(Game.Action.GameActionTypeEnum.GUILD_CREATE))
+                {
+                    context.Character.GuildCreationOpen();
+                }
+                else
+                {
+                    context.Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class TeleportCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
@@ -57,11 +98,11 @@ namespace Codebreak.Service.World.Commands
 
             protected override bool CanExecute(WorldCommandContext context)
             {
-                if (context.Character.Power < 1)
-                {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You're not admin, your attempt was registered"));
-                    return false;
-                }
+                //if (context.Character.Power < 1)
+                //{
+                //    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You're not admin, your attempt was registered"));
+                //    return false;
+                //}
 
                 return true;
             }
@@ -83,7 +124,7 @@ namespace Codebreak.Service.World.Commands
                             }
                             else
                             {
-                                context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You are away"));
+                                context.Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                             }
                         }
                         else
@@ -103,11 +144,14 @@ namespace Codebreak.Service.World.Commands
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class LevelUpSubCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases =
             {
-                "levelup"
+                "level"
             };
 
             public override string[] Aliases
@@ -148,6 +192,9 @@ namespace Codebreak.Service.World.Commands
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class ItemSubCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases =

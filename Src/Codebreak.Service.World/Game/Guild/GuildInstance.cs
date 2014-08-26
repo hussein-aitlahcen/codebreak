@@ -98,6 +98,17 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public GuildStatistics Statistics
+        {
+            get
+            {
+                return _record.GetStatistics();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name
         {
             get
@@ -166,6 +177,19 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public string DisplayEmblem
+        {
+            get
+            {
+                if(_displayEmblem == null)
+                    _displayEmblem = Util.EncodeBase36(BackgroundId) + "," + Util.EncodeBase36(BackgroundColor) + "," + Util.EncodeBase36(SymbolId) + "," + Util.EncodeBase36(SymbolColor);
+                return _displayEmblem;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Level
         {
             get
@@ -181,7 +205,33 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        private string _emblem;
+        public int BoostPoint
+        {
+            get
+            {
+                return _record.BoostPoint;
+            }
+            set
+            {
+                _record.BoostPoint = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int TaxCollectorPrice
+        {
+            get
+            {
+                return 1000 + (Level * 100);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string _emblem, _displayEmblem;
         private List<GuildMember> _members;
         private GuildDAO _record;
 
@@ -210,9 +260,22 @@ namespace Codebreak.Service.World.Game.Guild
             member.Power = 0;
             member.CharacterConnected(character);
             member.SendGuildStats();
+            character.RefreshOnMap();
+            AddMember(member);
+        }
 
-            character.RefreshOnMap();            
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void MemberBoss(CharacterEntity character)
+        {
+            var member = new GuildMember(this, character.DatabaseRecord);
+            member.GuildId = Id;
+            member.SetBoss();
+            member.CharacterConnected(character);
+            member.SendGuildStats();
+            character.RefreshOnMap();
             AddMember(member);
         }
 
@@ -382,9 +445,19 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="character"></param>
+        public void SendBoostInformations(CharacterEntity character)
+        {
+            character.SafeDispatch(WorldMessage.GUILD_BOOST_INFORMATIONS(BoostPoint, Statistics));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
         public void SendGeneralInformations(CharacterEntity character)
         {
-            character.SafeDispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(IsActive, Level, 0, 0, 0));   
+            // TODO : REPLACE TRUE BY ISACTIVE
+            character.SafeDispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(true, Level, 0, 0, 0));   
         }
     }
 }

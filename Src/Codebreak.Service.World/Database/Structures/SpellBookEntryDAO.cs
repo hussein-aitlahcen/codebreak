@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Manager;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structures
 {
@@ -8,6 +9,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// 
     /// </summary>
     [Table("SpellBookEntry")]
+    [ImplementPropertyChanged]
     public sealed class SpellBookEntryDAO : DataAccessObject<SpellBookEntryDAO>
     {
         /// <summary>

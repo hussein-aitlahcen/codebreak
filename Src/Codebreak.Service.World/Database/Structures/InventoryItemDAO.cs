@@ -2,6 +2,7 @@
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Stats;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structures
 {
@@ -9,6 +10,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// 
     /// </summary>
     [Table("InventoryItem")]
+    [ImplementPropertyChanged]
     public sealed class InventoryItemDAO : DataAccessObject<InventoryItemDAO>
     {
         /// <summary>

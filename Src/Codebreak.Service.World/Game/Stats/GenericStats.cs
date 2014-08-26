@@ -268,6 +268,31 @@ namespace Codebreak.Service.World.Game.Stats
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="guild"></param>
+        public GenericStats(GuildDAO guild) 
+        {
+            _genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, 6));
+            _genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, 5));   
+            _genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, 100));
+            _genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
+            _genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
+            _genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, 100 * guild.Level));
+            _genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, guild.Level * 4));
+            _genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, guild.Level));
+            _genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, guild.Level));
+            _genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, guild.Level));
+            _genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, guild.Level));
+            _genericEffects.Add(EffectEnum.AddDamage, new GenericEffect(EffectEnum.AddDamage, guild.Level));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, guild.Level / 2));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, guild.Level / 2));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, guild.Level / 2));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, guild.Level / 2));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, guild.Level / 2));  
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         public GenericStats(CharacterDAO character)
         {
@@ -277,7 +302,6 @@ namespace Codebreak.Service.World.Game.Stats
             _genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
             _genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, 1));
             _genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
-
             _genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, character.Vitality));
             _genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, character.Wisdom));
             _genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, character.Strength));

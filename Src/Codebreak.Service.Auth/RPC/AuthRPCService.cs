@@ -20,7 +20,7 @@ namespace Codebreak.Service.Auth.RPC
             base.RegisterHandler((int)MessageId.WORLD_TO_AUTH_GAMEACCOUNTDISCONNECTED, HandleGameAccountDisconnected);
         }
 
-        public void Start()
+        public new void Start()
         {
             base.Start(RPCServiceIP, RPCServicePort);
         }

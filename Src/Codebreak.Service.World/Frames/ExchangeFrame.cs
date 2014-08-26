@@ -88,7 +88,7 @@ namespace Codebreak.Service.World.Frames
                 if (!entity.CanGameAction(GameActionTypeEnum.EXCHANGE))
                 {
                     Logger.Debug("ExchangeFrame::Request entity cant start an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                     return;
                 }
 
@@ -102,8 +102,7 @@ namespace Codebreak.Service.World.Frames
 
                 if (!distantEntity.CanBeExchanged(exchangeType))
                 {
-                    Logger.Debug("ExchangeFrame::Request distant entity cannot start an exchange : " + distantEntity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
                     return;
                 }
 
@@ -363,14 +362,10 @@ namespace Codebreak.Service.World.Frames
                     return;
                 }
                 
-                if (add)
-                {
-                    ((GameExchangeActionBase)entity.CurrentAction).Exchange.AddItem(entity, itemId, quantity);
-                }
-                else
-                {
-                    ((GameExchangeActionBase)entity.CurrentAction).Exchange.RemoveItem(entity, itemId, quantity);
-                }
+                if (add)                
+                    ((GameExchangeActionBase)entity.CurrentAction).Exchange.AddItem(entity, itemId, quantity);                
+                else                
+                    ((GameExchangeActionBase)entity.CurrentAction).Exchange.RemoveItem(entity, itemId, quantity);                
             });
         }
     }

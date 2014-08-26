@@ -1,5 +1,7 @@
 ﻿using Codebreak.Framework.Database;
+using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Stats;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// 
     /// </summary>
     [Table("Guild")]
+    [ImplementPropertyChanged]
     public sealed class GuildDAO : DataAccessObject<GuildDAO>
     {
         /// <summary>
@@ -87,6 +90,7 @@ namespace Codebreak.Service.World.Database.Structures
             get;
             set;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -96,17 +100,28 @@ namespace Codebreak.Service.World.Database.Structures
             set;
         }
 
-        private GenericStats _statistics;
         /// <summary>
         /// 
         /// </summary>
-        public GenericStats GetStatistics()
+        private GuildStatistics _statistics;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public GuildStatistics GetStatistics()
         {
             if (_statistics == null)
-            {
-                _statistics = GenericStats.Deserialize(Stats);
-            }
+                _statistics = GuildStatistics.Deserialize(Stats);
             return _statistics;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void OnBeforeUpdate()
+        {
+            if (_statistics != null)
+                Stats = _statistics.Serialize();
         }
     }
 }
