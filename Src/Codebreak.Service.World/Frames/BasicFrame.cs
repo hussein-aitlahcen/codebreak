@@ -51,7 +51,7 @@ namespace Codebreak.Service.World.Frames
                         case 'C': // creation
                             return GuildCreationRequest;
                         case 'B': // boost caract
-                            break;
+                            return GuildBoostStats;
                         case 'H': // hire tax collector
                             break;
                         case 'F': // farm tax collector
@@ -61,7 +61,7 @@ namespace Codebreak.Service.World.Frames
                         case 'h': // teleport to guild house
                             break;
                         case 'b': // boost spell
-                            break;
+                            return GuildBoostSpell;
                         case 'J':
                             switch (message[2])
                             {
@@ -156,6 +156,47 @@ namespace Codebreak.Service.World.Frames
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GuildBoostStats(EntityBase entity, string message)
+        {
+            var characterEntity = (CharacterEntity)entity;
+            if (characterEntity.CharacterGuild == null)
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            characterEntity.CharacterGuild.BoostGuildStats(message[2]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void GuildBoostSpell(EntityBase entity, string message)
+        {
+            var characterEntity = (CharacterEntity)entity;
+            if (characterEntity.CharacterGuild == null)
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var spellId = -1;
+            if (!int.TryParse(message.Substring(2), out spellId))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            characterEntity.CharacterGuild.BoostGuildSpell(spellId);
         }
 
         /// <summary>

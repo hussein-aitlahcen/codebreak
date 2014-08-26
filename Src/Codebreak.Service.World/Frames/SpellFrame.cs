@@ -89,7 +89,6 @@ namespace Codebreak.Service.World.Frames
 
             entity.AddMessage(() =>
             {
-
                 if (entity.Spells == null)
                 {
                     entity.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());

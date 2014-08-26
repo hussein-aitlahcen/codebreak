@@ -1,6 +1,7 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -251,6 +252,115 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="member"></param>
+        /// <param name="spellId"></param>
+        public void BoostSpell(GuildMember member, int spellId)
+        {
+            if (!member.HasRight(GuildRightEnum.MANAGE_BOOST))
+            {
+                member.SendHasNotEnoughRights();
+                return;
+            }
+
+            if(!Statistics.Spells.HasSpell(spellId))
+            {
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow spellId"));
+                return;
+            }
+
+            if(BoostPoint < 5)
+            {
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Not enough point to boost this spell."));
+                return;
+            }
+
+            BoostPoint -= 5;
+            Statistics.Spells.LevelUpSpell(spellId);
+
+            SendBoostInformations(member);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="statId"></param>
+        public void BoostStats(GuildMember member, char statId)
+        {
+            if(!member.HasRight(GuildRightEnum.MANAGE_BOOST))
+            {
+                member.SendHasNotEnoughRights();
+                return;
+            }
+
+            if(BoostPoint < 1)
+            {
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You don't have any boost point."));
+                return;
+            } 
+            
+            switch(statId)
+            {
+                case 'o':
+                    if(Statistics.BaseStatistics.GetTotal(EffectEnum.AddPods) >= 5000)
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Pods."));
+                        return;
+                    }
+
+                    Statistics.BaseStatistics.AddBase(EffectEnum.AddPods, 20);
+                    BoostPoint--;
+                    break;
+
+                case 'x':
+                     if(Statistics.BaseStatistics.GetTotal(EffectEnum.AddWisdom) >= 400)
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Wisdom."));
+                        return;
+                    }
+
+                    Statistics.BaseStatistics.AddBase(EffectEnum.AddWisdom, 1);
+                    BoostPoint--;
+                    break;
+
+                case 'p':
+                    if(Statistics.BaseStatistics.GetTotal(EffectEnum.AddProspection) >= 500)
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Prospection."));
+                        return;
+                    }
+
+                    Statistics.BaseStatistics.AddBase(EffectEnum.AddProspection, 1);
+                    BoostPoint--;
+                    break;
+
+                case 'k':
+                    if(BoostPoint < 10)
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You don't have enough boost point."));
+                        return;
+                    } 
+                    if(Statistics.MaxTaxcollector >= 50)
+                    {                        
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already reached the maximum Taxcollector count."));
+                        return;
+                    }
+
+                    Statistics.MaxTaxcollector++;
+                    BoostPoint -= 10;
+                    break;
+
+                default:
+                    member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow boost statId"));
+                    return;
+            }
+
+            SendBoostInformations(member);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         public void MemberJoin(CharacterEntity character)
         {
@@ -308,31 +418,31 @@ namespace Codebreak.Service.World.Game.Guild
 
             if(!canManageOwnExp && !canManageOthersExp && !canManageRank && !canManagePower)
             {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                member.SendHasNotEnoughRights();
                 return;
             }
 
             if(!himSelf && !canManageOthersExp && xpShareChanged)
             {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                member.SendHasNotEnoughRights();
                 return;
             }
 
             if(!canManagePower && powerChanged)
             {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                member.SendHasNotEnoughRights();
                 return;
             }
 
             if(!canManageRank && rankChanged)
             {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                member.SendHasNotEnoughRights();
                 return;
             }
 
             if(!canManageOwnExp && himSelf && xpShareChanged)
             {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                member.SendHasNotEnoughRights();
                 return;
             }
 
@@ -354,7 +464,7 @@ namespace Codebreak.Service.World.Game.Guild
         {
             if (kickedMemberName != member.Name && !member.HasRight(GuildRightEnum.BAN))
             {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                member.SendHasNotEnoughRights();
                 return;
             }
 
@@ -444,10 +554,28 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="member"></param>
+        public void SendMembersInformations(GuildMember member)
+        {
+            member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(_members));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         public void SendBoostInformations(CharacterEntity character)
         {
-            character.SafeDispatch(WorldMessage.GUILD_BOOST_INFORMATIONS(BoostPoint, Statistics));
+            character.SafeDispatch(WorldMessage.GUILD_BOOST_INFORMATIONS(BoostPoint, TaxCollectorPrice, Statistics));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void SendBoostInformations(GuildMember member)
+        {
+            member.Dispatch(WorldMessage.GUILD_BOOST_INFORMATIONS(BoostPoint, TaxCollectorPrice, Statistics));
         }
 
         /// <summary>

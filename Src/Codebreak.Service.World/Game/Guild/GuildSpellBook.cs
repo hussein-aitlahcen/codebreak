@@ -128,6 +128,26 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="spellId"></param>
+        /// <returns></returns>
+        public bool HasSpell(int spellId)
+        {
+            return _spells.ContainsKey(spellId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spellId"></param>
+        /// <returns></returns>
+        public int GetSpellLevel(int spellId)
+        {
+            return _spells[spellId].Level;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
         public void SerializeAs_SpellsList(StringBuilder message)
         {

@@ -159,6 +159,24 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="statId"></param>
+        public void BoostGuildStats(char statId)
+        {
+            Guild.BoostStats(this, statId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spellId"></param>
+        public void BoostGuildSpell(int spellId)
+        {
+            Guild.BoostSpell(this, spellId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         public void CharacterConnected(CharacterEntity character)
         {
@@ -242,6 +260,14 @@ namespace Codebreak.Service.World.Game.Guild
                 Power = Power | (int)right;
             else
                 Power = Power ^ (int)right;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendHasNotEnoughRights()
+        {
+            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
         }
 
         /// <summary>

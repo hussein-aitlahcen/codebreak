@@ -1675,7 +1675,7 @@ namespace Codebreak.Service.World.Game
         /// </summary>
         /// <param name="stats"></param>
         /// <returns></returns>
-        public static string GUILD_BOOST_INFORMATIONS(int boostPoint, GuildStatistics stats)
+        public static string GUILD_BOOST_INFORMATIONS(int boostPoint, int taxCollectorPrice, GuildStatistics stats)
         { 
             var message = new StringBuilder("gIB");
             message.Append(stats.MaxTaxcollector).Append('|');
@@ -1687,9 +1687,8 @@ namespace Codebreak.Service.World.Game
             message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddWisdom)).Append('|');
             message.Append(stats.MaxTaxcollector).Append('|'); // ???
             message.Append(boostPoint).Append('|');
-            message.Append(0).Append('|'); // ??
+            message.Append(taxCollectorPrice).Append('|'); // ??
             stats.Spells.SerializeAs_SpellsList(message);
-
             return message.ToString();
         }
     }

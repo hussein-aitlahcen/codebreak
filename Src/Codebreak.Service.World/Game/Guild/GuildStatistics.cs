@@ -82,7 +82,7 @@ namespace Codebreak.Service.World.Game.Guild
         public int MaxTaxcollector
         {
             get;
-            private set;
+            set;
         }
     }
 }
