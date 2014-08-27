@@ -2,7 +2,7 @@
 using Codebreak.Framework.Network;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 using Codebreak.WorldService;
@@ -10,8 +10,16 @@ using System.Collections.Generic;
 
 namespace Codebreak.Service.World.Frames
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class CharacterSelectionFrame : FrameBase<CharacterSelectionFrame, WorldClient, string>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override Action<WorldClient, string> GetHandler(string message)
         {
             if (message.Length < 2)

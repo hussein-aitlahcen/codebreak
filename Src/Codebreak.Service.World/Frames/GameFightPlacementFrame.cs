@@ -7,9 +7,9 @@ using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Frames
 {
-    public sealed class GameFightPlacementFrame : FrameBase<GameFightPlacementFrame, EntityBase, string>
+    public sealed class GameFightPlacementFrame : FrameBase<GameFightPlacementFrame, CharacterEntity, string>
     {
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)
                 return null;
@@ -50,27 +50,26 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightOption(EntityBase entity, string message)
+        private void FightOption(CharacterEntity entity, string message)
         {
-            var fighter = (FighterBase)entity;
             var optionType = (FightOptionTypeEnum)message[1];
 
-            fighter.AddMessage(() =>
+            entity.AddMessage(() =>
                 {
-                    if (!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                    if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    if (!fighter.IsLeader)
+                    if (!entity.IsLeader)
                     {
                         Logger.Debug("GameFightPlacement::Option non leader player wants to lock : " + entity.Name);
-                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    fighter.Team.OptionLock(optionType);
+                    entity.Team.OptionLock(optionType);
                 });
         }
 
@@ -79,19 +78,17 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightReady(EntityBase entity, string message)
+        private void FightReady(CharacterEntity entity, string message)
         {
-            var fighter = (FighterBase)entity;
-
-            fighter.AddMessage(() =>
+            entity.AddMessage(() =>
                 {
-                    if (!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                    if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    fighter.Fight.FighterReady(fighter);
+                    entity.Fight.FighterReady(entity);
                 });
         }
 
@@ -100,22 +97,20 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightPlacement(EntityBase entity, string message)
+        private void FightPlacement(CharacterEntity entity, string message)
         {
-            var fighter = (FighterBase)entity;
-
-            fighter.AddMessage(() =>
+            entity.AddMessage(() =>
                 {
-                    if (!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                    if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    if (fighter.TurnReady)
+                    if (entity.TurnReady)
                     {
                         Logger.Debug("GameFightPlacement::Placement turn ready, unable to move anymore : " + entity.Name);
-                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
@@ -123,11 +118,11 @@ namespace Codebreak.Service.World.Frames
                     if (!int.TryParse(message.Substring(2), out cellId))
                     {
                         Logger.Debug("GameFightPlacement::Placement unable to parse cell id : " + entity.Name);
-                        fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    fighter.Fight.FighterPlacementChange(fighter, cellId);
+                    entity.Fight.FighterPlacementChange(entity, cellId);
                 });
         }
 
@@ -136,28 +131,26 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void GameQuit(EntityBase entity, string message)
+        private void GameQuit(CharacterEntity entity, string message)
         {
-            var fighter = (FighterBase)entity;
-
-            fighter.AddMessage(() =>
+            entity.AddMessage(() =>
             {
-                if (!fighter.HasGameAction(GameActionTypeEnum.FIGHT))
+                if (!entity.HasGameAction(GameActionTypeEnum.FIGHT))
                 {
-                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
                 if (message == "GQ")
                 {
-                    fighter.Fight.AddMessage(() => fighter.Fight.FightQuit(fighter));
+                    entity.Fight.AddMessage(() => entity.Fight.FightQuit(entity));
                     return;
                 }
 
-                if (!fighter.IsLeader)
+                if (!entity.IsLeader)
                 {
                     Logger.Debug("FightPlacement::Quit non leader player trying to kick : " + entity.Name);
-                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
@@ -165,25 +158,25 @@ namespace Codebreak.Service.World.Frames
                 if (!long.TryParse(message.Substring(2), out fighterId))
                 {
                     Logger.Debug("FightPlacement::Quit unable to parse fighterId : " + entity.Name);
-                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var selectedFighter = fighter.Team.GetFighter(fighterId);
+                var selectedFighter = entity.Team.GetFighter(fighterId);
                 if (selectedFighter == null)
                 {
-                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
                 if (selectedFighter.IsLeader)
                 {
                     Logger.Debug("FightPlacement::Quit unable to kick leader : " + entity.Name);
-                    fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                fighter.Fight.AddMessage(() => fighter.Fight.FightQuit(selectedFighter, true));
+                entity.Fight.AddMessage(() => entity.Fight.FightQuit(selectedFighter, true));
             });
         }
     }

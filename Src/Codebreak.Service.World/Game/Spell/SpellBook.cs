@@ -1,5 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Manager;
 using ProtoBuf;
 using System;

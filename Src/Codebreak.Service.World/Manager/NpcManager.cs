@@ -1,6 +1,6 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -17,9 +17,7 @@ namespace Codebreak.Service.World.Manager
             long currentId = 1;
             foreach(var npcInstance in NpcInstanceRepository.Instance.GetAll())
             {
-                var npc = EntityManager.Instance.CreateNpc(npcInstance, currentId++);
-                if(npc.Map != null)
-                    npc.StartAction(GameActionTypeEnum.MAP);
+                EntityManager.Instance.CreateNpc(npcInstance, currentId++);
             }
 
             Logger.Info("NpcManager : " + currentId + " NpcInstance loaded.");

@@ -9,10 +9,21 @@ namespace Codebreak.Service.World.Game.Fight.AI
 {
     public abstract class AIFighter : FighterBase
     {
+        public override bool TurnReady
+        {
+            get;
+            set;
+        }
+
+        public override bool TurnPass
+        {
+            get;
+            set;
+        }
+
         protected AIFighter(EntityTypEnum type, long id) : base(type, id)
         {
 
         }
-
     }
 }

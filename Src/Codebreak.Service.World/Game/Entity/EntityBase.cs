@@ -3,7 +3,7 @@ using Codebreak.Service.World.Commands;
 using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Frames;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
@@ -73,16 +73,7 @@ namespace Codebreak.Service.World.Game.Entity
     }
 
     public abstract class EntityBase : MessageDispatcher, IDisposable
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public FrameManager<EntityBase, string> FrameManager
-        {
-            get;
-            private set;
-        }
-
+    { 
         /// <summary>
         /// 
         /// </summary>
@@ -326,7 +317,6 @@ namespace Codebreak.Service.World.Game.Entity
             _chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
 
             ShopItems = new List<ItemTemplateDAO>();
-            FrameManager = new FrameManager<EntityBase, string>(this);
             Spells = new SpellBook(Id, SpellBookEntryRepository.Instance.GetSpellEntries(id));
 
             // set channels
@@ -516,23 +506,10 @@ namespace Codebreak.Service.World.Game.Entity
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP:
-                    if (!HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
-                    {
-                        FrameManager.AddFrame(GameMapFrame.Instance);
-                        FrameManager.AddFrame(InventoryFrame.Instance);
-                        FrameManager.AddFrame(ExchangeFrame.Instance);
-                        FrameManager.AddFrame(GameActionFrame.Instance);
-                    }
-                    Map.SpawnEntity(this);
+                    if(Map != null)
+                        Map.SpawnEntity(this);
                     break;
                     
-                case GameActionTypeEnum.EXCHANGE:
-                case GameActionTypeEnum.GUILD_CREATE:
-                    FrameManager.RemoveFrame(GameActionFrame.Instance);
-                    FrameManager.RemoveFrame(InventoryFrame.Instance);
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
-                    break;
-
                 case GameActionTypeEnum.MAP_MOVEMENT:
                     MovementHandler.Dispatch(WorldMessage.GAME_ACTION(actionType, Id, CurrentAction.SerializeAs_GameAction()));
                     break;
@@ -563,22 +540,12 @@ namespace Codebreak.Service.World.Game.Entity
             switch(actionType)
             {
                 case GameActionTypeEnum.MAP_TELEPORT:
-                    FrameManager.AddFrame(GameInformationFrame.Instance);
                     Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
 
-                case GameActionTypeEnum.GUILD_CREATE:
-                case GameActionTypeEnum.EXCHANGE:
-                    FrameManager.AddFrame(GameActionFrame.Instance);
-                    FrameManager.AddFrame(InventoryFrame.Instance);
-                    FrameManager.AddFrame(GameMapFrame.Instance);
-                    break;
-
                 case GameActionTypeEnum.MAP:
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
-                    FrameManager.RemoveFrame(GameActionFrame.Instance);
-                    FrameManager.RemoveFrame(ExchangeFrame.Instance);
-                    Map.DestroyEntity(this);
+                    if(Map != null)
+                        Map.DestroyEntity(this);
                     break;
             }
         }
@@ -600,18 +567,8 @@ namespace Codebreak.Service.World.Game.Entity
             switch(actionType)
             {
                 case GameActionTypeEnum.MAP:
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
-                    FrameManager.RemoveFrame(InventoryFrame.Instance);
-                    FrameManager.RemoveFrame(GameActionFrame.Instance);
-                    FrameManager.RemoveFrame(ExchangeFrame.Instance);
-                    Map.DestroyEntity(this);
-                    break;
-
-                case GameActionTypeEnum.GUILD_CREATE:
-                case GameActionTypeEnum.EXCHANGE:                    
-                    FrameManager.AddFrame(GameActionFrame.Instance);
-                    FrameManager.AddFrame(InventoryFrame.Instance);
-                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    if(Map != null)
+                        Map.DestroyEntity(this);
                     break;
              }
         }

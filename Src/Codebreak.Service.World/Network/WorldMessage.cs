@@ -65,6 +65,8 @@ namespace Codebreak.Service.World.Game
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
 
+        ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED = 168,
+        ERROR_NOT_ENOUGHT_KAMAS = 128,
         ERROR_YOU_ARE_AWAY = 116,
         ERROR_GUILD_NOT_ENOUGH_RIGHTS = 101,
         ERROR_WORLD_SAVING = 164,
@@ -1689,6 +1691,45 @@ namespace Codebreak.Service.World.Game
             message.Append(boostPoint).Append('|');
             message.Append(taxCollectorPrice).Append('|'); // ??
             stats.Spells.SerializeAs_SpellsList(message);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_HIRED(TaxCollectorEntity taxCollector, string owner)
+        {
+            var message = new StringBuilder("gTS");
+            message.Append(taxCollector.Name).Append('|');
+            message.Append(taxCollector.Id).Append('|');
+            message.Append(taxCollector.Map.X).Append('|');
+            message.Append(taxCollector.Map.Y).Append('|');
+            message.Append(owner);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollectors"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_LIST(IEnumerable<TaxCollectorEntity> taxCollectors)
+        {
+            var message = new StringBuilder("gITM+");
+            foreach (var taxCollector in taxCollectors)
+            {
+                message.Append(Util.EncodeBase36(taxCollector.Id)).Append(';');
+                message.Append(taxCollector.Name).Append(';');
+                message.Append(Util.EncodeBase36(taxCollector.MapId)).Append(';');
+                message.Append('0').Append(';'); // State 1 fight, 0 map
+                message.Append('0').Append(';'); // fight timer
+                message.Append("45000").Append(';'); // fight max timer ?
+                message.Append('7').Append('|'); // ???                
+            }
+            message.Remove(message.Length - 1, 1);
             return message.ToString();
         }
     }

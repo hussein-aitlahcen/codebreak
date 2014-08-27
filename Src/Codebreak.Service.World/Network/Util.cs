@@ -48,15 +48,18 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static String EncodeBase36(long input)
         {
-            if (input < 0)
-                throw new ArgumentOutOfRangeException("input", input, "input cannot be negative");
-
             var result = new Stack<char>();
+            bool negative = input < 0;
+            input = Math.Abs(input);
+
             while (input != 0)
             {
                 result.Push(CHAR_LIST[input % 36]);
                 input /= 36;
             }
+
+            if (negative) result.Push('-');
+
             return new string(result.ToArray());
         }
 

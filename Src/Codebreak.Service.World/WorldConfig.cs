@@ -31,6 +31,14 @@ namespace Codebreak.WorldService
             CHARACTER_CREATION_LIFE = 55,
             CHARACTER_CREATION_ENERGY = 10000;
 
+        public const int
+            TAXCOLLECTOR_MIN_NAME = 1,
+            TAXCOLLECTOR_MAX_NAME = 228,
+            TAXCOLLECTOR_MIN_FIRSTNAME = 1,
+            TAXCOLLECTOR_MAX_FIRSTNAME = 130,
+            TAXCOLLECTOR_SKIN_BASE = 6000,
+            TAXCOLLECTOR_SKIN_SIZE_BASE = 100;
+
         public const int FIGHT_DISCONNECTION_TURN = 20;
         public const int FIGHT_PUSH_CELL_TIME = 200;
         public const int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;

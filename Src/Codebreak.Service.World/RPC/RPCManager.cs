@@ -7,25 +7,46 @@ using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.RPC
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class RPCManager : TaskProcessor<RPCManager>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("RPCPassword")]
         public static string RPCPassword = "smarken";
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("RPCIP")]
         public static string RPCIP = "127.0.0.1";
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("RPCPort")]
         public static int RPCPort = 4321;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private AuthServiceRPCConnection _rpcConnection;
         
+        /// <summary>
+        /// 
+        /// </summary>
         public AuthState AuthState
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RPCManager()
             : base("RPCManager")
         {
@@ -36,7 +57,10 @@ namespace Codebreak.Service.World.RPC
             _rpcConnection.OnDisconnectedEvent += () => AddMessage(() => OnDisconnected());
             _rpcConnection.OnMessageEvent += (message) => AddMessage(() => OnMessage(message));
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public void Initialize()
         {
             Logger.Info("RPCManager initializing...");
@@ -44,6 +68,10 @@ namespace Codebreak.Service.World.RPC
             Connect();
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void Send(RPCMessageBase message)
         {
             AddMessage(() =>
@@ -52,6 +80,9 @@ namespace Codebreak.Service.World.RPC
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Connect()
         {
             AddMessage(() =>
@@ -62,6 +93,9 @@ namespace Codebreak.Service.World.RPC
                 });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void OnConnected()
         {
             Logger.Info("RPCManager connected, sending credentials.");
@@ -71,6 +105,9 @@ namespace Codebreak.Service.World.RPC
             _rpcConnection.Send(new AuthentificationMessage(RPCPassword));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void OnDisconnected()
         {
             Logger.Warn("RPCManager disconnected.");
@@ -78,6 +115,28 @@ namespace Codebreak.Service.World.RPC
             Connect();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state"></param>
+        public void UpdateState(GameState state)
+        {
+            Send(new GameStateUpdateMessage(state));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public void AccountDisconnected(long id)
+        {
+            Send(new GameAccountDisconnected(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         private void OnMessage(RPCMessageBase message)
         {
             switch(message.Id)

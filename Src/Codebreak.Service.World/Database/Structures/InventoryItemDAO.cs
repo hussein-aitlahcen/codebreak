@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Stats;
 using PropertyChanged;
 

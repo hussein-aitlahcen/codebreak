@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Generic;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        private static object _syncLock = new object();
+        private object _syncLock = new object();
 
         /// <summary>
         /// 
@@ -78,10 +79,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public virtual void Initialize()
         {
-            IEnumerable<TDataObject> objects = new List<TDataObject>();
-            
-            lock(SqlManager.SyncLock)
-                objects = SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName);
+            IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName);
 
             lock (_syncLock)
             {
@@ -110,20 +108,14 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual List<TDataObject> LoadMultiple(string query, dynamic param = null)
         {
-            IEnumerable<TDataObject> objects = new List<TDataObject>();
+            IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
 
-            lock(SqlManager.SyncLock)
-                objects = SqlManager.Instance.Connection.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
-
-            foreach (var obj in objects)
+            lock (_syncLock)
             {
-                if (obj != null)
+                foreach (var obj in objects)
                 {
-                    lock (_syncLock)
-                    {
-                        _dataObjects.Add(obj);
-                        OnObjectAdded(obj);
-                    }
+                    _dataObjects.Add(obj);
+                    OnObjectAdded(obj);
                 }
             }
 
@@ -144,18 +136,13 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Remove(TDataObject obj)
         {
-            var result = false;
-            result = SqlManager.Instance.Remove<TDataObject>(obj);
-
+            var result = SqlManager.Instance.Remove<TDataObject>(obj);
             if (result)
             {
                 lock (_syncLock)
                 {
-                    if (_dataObjects.Contains(obj))
-                    {
-                        _dataObjects.Remove(obj);
-                        OnObjectRemoved(obj);
-                    }
+                    _dataObjects.Remove(obj);
+                    OnObjectRemoved(obj);
                 }
             }
             return result;                   
@@ -167,9 +154,7 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Insert(TDataObject obj)
         {
-            var result = false;         
-            result = SqlManager.Instance.Insert<TDataObject>(obj);
-
+            var result = SqlManager.Instance.Insert<TDataObject>(obj);
             if (result)
             {
                 lock (_syncLock)
@@ -178,7 +163,6 @@ namespace Codebreak.Framework.Database
                     OnObjectAdded(obj);
                 }
             }
-
             return result;            
         }
         
@@ -226,9 +210,7 @@ namespace Codebreak.Framework.Database
                     if (obj.IsDirty)
                     {
                         obj.OnBeforeUpdate();
-
                         Update(obj);
-
                         obj.IsDirty = false;
                     }
                 }

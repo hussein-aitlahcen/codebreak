@@ -271,11 +271,11 @@ namespace Codebreak.Framework.Generic
 
             var timeStop = _queueTimer.ElapsedMilliseconds;
             var updateTime = timeStop - timeStart;
-            var updateLagged = updateTime >= UpdateInterval;
+            var updateLagged = updateTime > UpdateInterval;
 
             if (!updateLagged)
             {
-                Thread.Sleep(1 + (int)(UpdateInterval - updateTime));
+                Thread.Sleep((int)(UpdateInterval - updateTime));
             }
 
             ThreadPool.QueueUserWorkItem(InternalUpdate);

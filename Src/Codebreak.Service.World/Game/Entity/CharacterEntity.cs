@@ -1,6 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Spell;
@@ -14,6 +14,8 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Commands;
 using Codebreak.Service.World.Game.Guild;
+using Codebreak.Framework.Network;
+using Codebreak.Service.World.Frames;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -22,6 +24,15 @@ namespace Codebreak.Service.World.Game.Entity
     /// </summary>
     public sealed class CharacterEntity : FighterBase, IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public FrameManager<CharacterEntity, string> FrameManager
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -462,6 +473,7 @@ namespace Codebreak.Service.World.Game.Entity
             DatabaseRecord = characterDAO;
             Statistics = new GenericStats(characterDAO);
             Inventory = new CharacterInventory(this);
+            FrameManager = new FrameManager<CharacterEntity, string>(this);
         }
 
         /// <summary>
@@ -626,6 +638,99 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 Map.SafeDispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REFRESH, this));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionType"></param>
+        public override void StartAction(GameActionTypeEnum actionType)
+        {
+            switch (actionType)
+            {
+                case GameActionTypeEnum.MAP:
+                    if (!HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
+                    {
+                        FrameManager.AddFrame(GameMapFrame.Instance);
+                        FrameManager.AddFrame(InventoryFrame.Instance);
+                        FrameManager.AddFrame(ExchangeFrame.Instance);
+                        FrameManager.AddFrame(GameActionFrame.Instance);
+                    }
+                    break;
+
+                case GameActionTypeEnum.FIGHT:
+                    FrameManager.AddFrame(GameFightPlacementFrame.Instance);
+                    break;
+            }
+
+            base.StartAction(actionType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionType"></param>
+        /// <param name="args"></param>
+        public override void AbortAction(GameActionTypeEnum actionType, params object[] args)
+        {
+            switch (actionType)
+            {
+                case GameActionTypeEnum.MAP:
+                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(InventoryFrame.Instance);
+                    FrameManager.RemoveFrame(GameActionFrame.Instance);
+                    FrameManager.RemoveFrame(ExchangeFrame.Instance);
+                    break;
+
+                case GameActionTypeEnum.GUILD_CREATE:
+                case GameActionTypeEnum.EXCHANGE:
+                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    break;
+            }
+
+            base.AbortAction(actionType, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actionType"></param>
+        /// <param name="args"></param>
+        public override void StopAction(GameActionTypeEnum actionType, params object[] args)
+        {
+            switch (actionType)
+            {
+                case GameActionTypeEnum.MAP_TELEPORT:
+                    FrameManager.AddFrame(GameInformationFrame.Instance);
+                    break;
+
+                case GameActionTypeEnum.GUILD_CREATE:
+                case GameActionTypeEnum.EXCHANGE:
+                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    break;
+
+                case GameActionTypeEnum.MAP:
+                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(GameActionFrame.Instance);
+                    FrameManager.RemoveFrame(ExchangeFrame.Instance);
+                    break;
+
+                case GameActionTypeEnum.FIGHT:
+                    if (!IsDisconnected)
+                    {
+                        WorldService.Instance.AddUpdatable(this);
+                        FrameManager.AddFrame(GameCreationFrame.Instance);
+                        FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
+                        FrameManager.RemoveFrame(GameFightFrame.Instance);
+                    }
+                    break;
+            }
+
+            base.StopAction(actionType, args);
         }
 
         /// <summary>

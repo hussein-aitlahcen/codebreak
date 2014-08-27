@@ -9,12 +9,13 @@ using Codebreak.Service.World.Database;
 using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Frames;
 using Codebreak.Service.World.Game;
-using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.RPC;
 using System;
 using Codebreak.Framework.Database;
 using System.Diagnostics;
+using Codebreak.RPC.Protocol;
+using System.Threading.Tasks;
 
 namespace Codebreak.Service.World
 {
@@ -105,7 +106,7 @@ namespace Codebreak.Service.World
             {
                 if (client.CurrentCharacter != null)
                 {
-                    EntityManager.Instance.CharacterDisconnect(client.CurrentCharacter);
+                    EntityManager.Instance.CharacterDisconnected(client.CurrentCharacter);
 
                     client.Characters = null;
                     client.CurrentCharacter = null;
@@ -155,42 +156,44 @@ namespace Codebreak.Service.World
             {
                 WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING));
 
+                RPCManager.Instance.UpdateState(GameState.STARTING);
+
                 WorldService.Instance.AddMessage(() =>
                 {
                     AreaManager.Instance.BlockQueues();
 
                     WorldService.Instance.AddMessage(() =>
                     {
-                        SqlManager.Instance.BeginTransaction();
-
                         try
                         {
                             _updateTimer = Stopwatch.StartNew();
 
-                            GuildRepository.Instance.UpdateAll();
-                            CharacterRepository.Instance.UpdateAll();
-                            CharacterAlignmentRepository.Instance.UpdateAll();
-                            CharacterGuildRepository.Instance.UpdateAll();
-                            SpellBookEntryRepository.Instance.UpdateAll();
-                            InventoryItemRepository.Instance.UpdateAll();
+                            Task.WaitAll
+                            (
+                                Task.Factory.StartNew(GuildRepository.Instance.UpdateAll),
+                                Task.Factory.StartNew(TaxCollectorRepository.Instance.UpdateAll),
+                                Task.Factory.StartNew(CharacterRepository.Instance.UpdateAll),
+                                Task.Factory.StartNew(CharacterAlignmentRepository.Instance.UpdateAll),
+                                Task.Factory.StartNew(CharacterGuildRepository.Instance.UpdateAll),
+                                Task.Factory.StartNew(SpellBookEntryRepository.Instance.UpdateAll),
+                                Task.Factory.StartNew(InventoryItemRepository.Instance.UpdateAll)
+                            );
 
                             var updateTime = _updateTimer.ElapsedMilliseconds;
                             _updateTimer.Stop();
 
                             Logger.Info("WorldService : World update performed in : " + updateTime + " ms");
-                            
-                            SqlManager.Instance.CommitTransaction();
                         }
                         catch(Exception ex)
                         {
-                            SqlManager.Instance.RollbackTransaction();
-
                             Logger.Error("WorldUpdate failed : " + ex.ToString());
                         }
 
                         WorldService.Instance.AddMessage(() =>
                         {
                             AreaManager.Instance.ResumeQueues();
+
+                            RPCManager.Instance.UpdateState(GameState.ONLINE);
 
                             WorldService.Instance.AddMessage(() =>
                             {

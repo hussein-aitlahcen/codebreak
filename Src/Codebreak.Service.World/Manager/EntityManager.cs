@@ -4,6 +4,7 @@ using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Frames;
+using Codebreak.Service.World.Game.Guild;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -15,13 +16,18 @@ namespace Codebreak.Service.World.Manager
         private Dictionary<long, CharacterEntity> _characterById;
         private Dictionary<string, CharacterEntity> _characterByName;
         private Dictionary<long, NonPlayerCharacterEntity> _npcById;
-        private long _onlinePlayer = 0;
+        private Dictionary<long, TaxCollectorEntity> _taxCollectorById;
+        private long _onlinePlayers = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public EntityManager()
         {
             _characterById = new Dictionary<long, CharacterEntity>();
             _characterByName = new Dictionary<string, CharacterEntity>();
             _npcById = new Dictionary<long, NonPlayerCharacterEntity>();
+            _taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
         }
 
         /// <summary>
@@ -33,8 +39,23 @@ namespace Codebreak.Service.World.Manager
         public NonPlayerCharacterEntity CreateNpc(NpcInstanceDAO npcDAO, long id)
         {
             var npc = new NonPlayerCharacterEntity(npcDAO, id);
+            npc.StartAction(GameActionTypeEnum.MAP);
             _npcById.Add(npc.Id, npc);
             return npc;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guild"></param>
+        /// <param name="taxCollectorDAO"></param>
+        /// <returns></returns>
+        public TaxCollectorEntity CreateTaxCollector(GuildInstance guild, TaxCollectorDAO taxCollectorDAO)
+        {
+            var taxCollector = new TaxCollectorEntity(guild, taxCollectorDAO);
+            taxCollector.StartAction(GameActionTypeEnum.MAP);
+            _taxCollectorById.Add(taxCollector.Id, taxCollector);
+            return taxCollector;
         }
 
         /// <summary>
@@ -50,8 +71,8 @@ namespace Codebreak.Service.World.Manager
                 guildMember.CharacterConnected(character);
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
-            _onlinePlayer++;
-            Logger.Debug("EntityManager online players : " + _onlinePlayer);            
+            _onlinePlayers++;
+            Logger.Debug("EntityManager online players : " + _onlinePlayers);            
             return character;
         }
         
@@ -59,7 +80,7 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public void CharacterDisconnect(CharacterEntity character)
+        public void CharacterDisconnected(CharacterEntity character)
         {
             if (character.PartyId != -1)
                 PartyManager.Instance.PartyLeave(character);
@@ -97,13 +118,13 @@ namespace Codebreak.Service.World.Manager
         {
             WorldService.Instance.AddMessage(() =>
                 {
-                    _onlinePlayer--;
+                    _onlinePlayers--;
                     _characterById.Remove(character.Id);
                     _characterByName.Remove(character.Name.ToLower());
 
                     character.Dispose();
 
-                    Logger.Debug("EntityManager online players : " + _onlinePlayer);
+                    Logger.Debug("EntityManager online players : " + _onlinePlayers);
                 });
         }
 

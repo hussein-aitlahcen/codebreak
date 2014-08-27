@@ -1,5 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Area;
-using Codebreak.Service.World.Game.Database.Repositories;
+using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Entity;
 using System;
 using System.Collections.Generic;
@@ -291,6 +291,15 @@ namespace Codebreak.Service.World.Game.Map
             MapCell cell = null;
             _cellById.TryGetValue(id, out cell);
             return cell;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasTaxCollector()
+        {
+            return _entityById.Values.Any(entity => entity.Type == EntityTypEnum.TYPE_TAX_COLLECTOR);
         }
 
         /// <summary>

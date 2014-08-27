@@ -8,9 +8,9 @@ using Codebreak.Service.World.Game.Exchange;
 
 namespace Codebreak.Service.World.Frames
 {
-    public sealed class ExchangeFrame : FrameBase<ExchangeFrame, EntityBase, string>
+    public sealed class ExchangeFrame : FrameBase<ExchangeFrame, CharacterEntity, string>
     {
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)
                 return null;
@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeRequest(EntityBase entity, string message)
+        private void ExchangeRequest(CharacterEntity entity, string message)
         {
             var exchangeData = message.Substring(2).Split('|');
             var exchangeTypeId = int.Parse(exchangeData[0]);
@@ -109,11 +109,11 @@ namespace Codebreak.Service.World.Frames
                 switch (distantEntity.Type)
                 {
                     case EntityTypEnum.TYPE_CHARACTER:
-                        ((CharacterEntity)entity).ExchangePlayer((CharacterEntity)distantEntity);
+                        entity.ExchangePlayer((CharacterEntity)distantEntity);
                         break;
 
                     case EntityTypEnum.TYPE_NPC:
-                        ((CharacterEntity)entity).ExchangeShop(distantEntity);
+                        entity.ExchangeShop(distantEntity);
                         break;
                 }
             });
@@ -124,7 +124,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeAccept(EntityBase entity, string message)
+        private void ExchangeAccept(CharacterEntity entity, string message)
         {            
             entity.AddMessage(() =>
             {
@@ -155,7 +155,7 @@ namespace Codebreak.Service.World.Frames
             });
         }
 
-        private void ExchangeLeave(EntityBase entity, string message)
+        private void ExchangeLeave(CharacterEntity entity, string message)
         {
             entity.AddMessage(() =>
             {
@@ -175,7 +175,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeValidate(EntityBase entity, string message)
+        private void ExchangeValidate(CharacterEntity entity, string message)
         {      
             entity.AddMessage(() =>
                 {
@@ -210,7 +210,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeSell(EntityBase entity, string message)
+        private void ExchangeSell(CharacterEntity entity, string message)
         {
             if (!message.Contains('|'))
             {
@@ -258,7 +258,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeBuy(EntityBase entity, string message)
+        private void ExchangeBuy(CharacterEntity entity, string message)
         {
             if(!message.Contains('|'))
             {
@@ -306,7 +306,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeMoveGold(EntityBase entity, string message)
+        private void ExchangeMoveGold(CharacterEntity entity, string message)
         {
             long kamas = -1;
             if(!long.TryParse(message.Substring(3), out kamas))
@@ -333,7 +333,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ExchangeMoveObject(EntityBase entity, string message)
+        private void ExchangeMoveObject(CharacterEntity entity, string message)
         {
             if (!message.Contains('|'))
             {

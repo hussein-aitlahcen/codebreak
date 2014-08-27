@@ -1192,7 +1192,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             AddMessage(() =>
             {
-                foreach (var fighter in Fighters)
+                foreach (var fighter in Fighters.OfType<CharacterEntity>())
                 {
                     fighter.FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
                     fighter.FrameManager.RemoveFrame(InventoryFrame.Instance);
@@ -1412,7 +1412,7 @@ namespace Codebreak.Service.World.Game.Fight
                         }
                         else
                         {
-                            if (!castInfos.Target.IsFighterDead)
+                            if (castInfos.Target == null || !castInfos.Target.IsFighterDead)
                             {
                                 var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
                                 if (effectResult == FightActionResultEnum.RESULT_END)

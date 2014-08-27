@@ -9,14 +9,14 @@ namespace Codebreak.Service.World.Frames
     /// <summary>
     /// 
     /// </summary>
-    public sealed class InventoryFrame : FrameBase<InventoryFrame, EntityBase, string>
+    public sealed class InventoryFrame : FrameBase<InventoryFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)
                 return null;
@@ -49,7 +49,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ObjectMove(EntityBase entity, string message)
+        private void ObjectMove(CharacterEntity entity, string message)
         {            
             var data = message.Substring(2).Split('|');
 
@@ -91,7 +91,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ObjectUse(EntityBase entity, string message)
+        private void ObjectUse(CharacterEntity entity, string message)
         {
 
         }
@@ -101,7 +101,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void ObjectDelete(EntityBase entity, string message)
+        private void ObjectDelete(CharacterEntity entity, string message)
         {
            
         }

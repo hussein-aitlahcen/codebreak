@@ -2,7 +2,6 @@
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Game.Area;
-using Codebreak.Service.World.Game.Database.Repositories;
 using System.Threading;
 
 namespace Codebreak.Service.World.Manager

@@ -16,7 +16,6 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        private CharacterEntity _characterEntity;
         private CharacterDAO _character;
 
         /// <summary>
@@ -28,6 +27,15 @@ namespace Codebreak.Service.World.Game.Guild
             {
                 return _character.Id;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CharacterEntity Character
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -159,6 +167,14 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public void HireTaxCollector()
+        {
+            Guild.HireTaxCollector(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="statId"></param>
         public void BoostGuildStats(char statId)
         {
@@ -181,8 +197,8 @@ namespace Codebreak.Service.World.Game.Guild
         public void CharacterConnected(CharacterEntity character)
         {
             base.AddHandler(character.SafeDispatch);
-            _characterEntity = character;
-            _characterEntity.SetCharacterGuild(this);
+            Character = character;
+            Character.SetCharacterGuild(this);
         }
 
         /// <summary>
@@ -211,10 +227,10 @@ namespace Codebreak.Service.World.Game.Guild
         {
             GuildId = -1;
 
-            if (_characterEntity != null)
+            if (Character != null)
             {
-                _characterEntity.SetCharacterGuild(null);
-                _characterEntity.RefreshOnMap();
+                Character.SetCharacterGuild(null);
+                Character.RefreshOnMap();
             }
 
             CharacterDisconnected();
@@ -226,9 +242,9 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void CharacterDisconnected()
         {
-            if (_characterEntity != null)            
-                base.RemoveHandler(_characterEntity.SafeDispatch);            
-            _characterEntity = null;
+            if (Character != null)
+                base.RemoveHandler(Character.SafeDispatch);
+            Character = null;
         }
 
         /// <summary>
@@ -273,6 +289,38 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public void SendMembersInformations()
+        {
+            Guild.SendMembersInformations(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendBoostInformations()
+        {
+            Guild.SendBoostInformations(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendTaxCollectorsList()
+        {
+            Guild.SendTaxCollectorsList(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendGeneralInformations()
+        {
+            Guild.SendGeneralInformations(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
         public void SerializeAs_GuildMemberInformations(StringBuilder message)
         {
@@ -284,7 +332,7 @@ namespace Codebreak.Service.World.Game.Guild
             message.Append(XPGiven).Append(";");
             message.Append(XPSharePercent).Append(";");
             message.Append(Power).Append(";");
-            if (_characterEntity != null) // connected ?
+            if (Character != null) // connected ?
                 message.Append("1").Append(";");            
             else            
                 message.Append("0").Append(";");           

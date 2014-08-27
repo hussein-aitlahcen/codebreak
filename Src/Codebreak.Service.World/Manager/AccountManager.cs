@@ -111,10 +111,7 @@ namespace Codebreak.Service.World.Manager
             {
                 _clientByAccount.Remove(client.Account.Id);
 
-                RPCManager.Instance.AddMessage(() =>
-                {
-                    RPCManager.Instance.Send(new GameAccountDisconnected(client.Account.Id));
-                });
+                RPCManager.Instance.AccountDisconnected(client.Account.Id);
             }
         }
 
@@ -136,7 +133,7 @@ namespace Codebreak.Service.World.Manager
                         _accountByTicket.Remove(value.Ticket);
                         Logger.Debug("Ticket count : " + _accountByTicket.Count);
 
-                        RPCManager.Instance.AddMessage(() => RPCManager.Instance.Send(new GameAccountDisconnected(value.Id)));
+                        RPCManager.Instance.AccountDisconnected(value.Id);
                     }
                 }
             }

@@ -1,8 +1,11 @@
-﻿using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Game.Database.Repositories;
+﻿using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Game.Spell;
+using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.WorldService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -234,6 +237,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// </summary>
         private string _emblem, _displayEmblem;
         private List<GuildMember> _members;
+        private List<TaxCollectorEntity> _taxCollectors;
         private GuildDAO _record;
 
         /// <summary>
@@ -243,10 +247,94 @@ namespace Codebreak.Service.World.Game.Guild
         {
             _record = record;
             _members = new List<GuildMember>();
+            _taxCollectors = new List<TaxCollectorEntity>();
             foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.GetCharacterGuild().GuildId == _record.Id))
             {
                 AddMember(new GuildMember(this, character));
             }
+            foreach(var taxCollectorDAO in TaxCollectorRepository.Instance.FindAll(taxC => taxC.GuildId == _record.Id))
+            {
+                AddTaxCollector(EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        public void AddTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            _taxCollectors.Add(taxCollector);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        public void HireTaxCollector(GuildMember member)
+        {
+            if(!member.HasRight(GuildRightEnum.HIRE_TAXCOLLECTOR))
+            {
+                member.SendHasNotEnoughRights();
+                return;
+            }
+
+            if(_taxCollectors.Count >= Statistics.MaxTaxcollector)
+            {
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already hired the maximum TaxCollector."));
+                return;
+            }
+
+            foreach(var collector in _taxCollectors)
+            {            
+                if(collector.Map.SubAreaId == member.Character.Map.SubAreaId)
+                {
+                    member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED, 1)); // MAX COLLECTOR BY SUBAREA
+                    return;
+                }
+            }
+
+            if(member.Character.Map.HasTaxCollector())
+            {
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("There is already a Taxcollector in this map."));
+                return;
+            }
+
+            if(member.Character.Inventory.Kamas < TaxCollectorPrice)
+            {
+                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGHT_KAMAS, TaxCollectorPrice));
+                return;
+            }
+
+            var taxCollectorDAO = new TaxCollectorDAO()
+            {
+                GuildId = Id,
+                OwnerId = member.Id,
+                Name = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_NAME, WorldConfig.TAXCOLLECTOR_MAX_NAME),
+                FirstName = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_FIRSTNAME, WorldConfig.TAXCOLLECTOR_MAX_FIRSTNAME),
+                MapId = member.Character.MapId,
+                CellId = member.Character.CellId,
+                Skin = WorldConfig.TAXCOLLECTOR_SKIN_BASE,
+                SkinSize = WorldConfig.TAXCOLLECTOR_SKIN_SIZE_BASE,
+                Kamas = 0,
+            };
+
+            if(!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))
+            {
+                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create Taxcollector due to unknow error."));
+                return;
+            }
+
+            var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
+
+            AddTaxCollector(taxCollector);
+
+            member.Character.AddMessage(() => 
+                {
+                    member.Character.Inventory.SubKamas(TaxCollectorPrice);
+                });
+
+            base.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_HIRED(taxCollector, member.Character.Name));
         }
 
         /// <summary>
@@ -545,28 +633,10 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
-        public void SendMembersInformations(CharacterEntity character)
-        {
-            character.SafeDispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(_members));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="member"></param>
         public void SendMembersInformations(GuildMember member)
         {
             member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(_members));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="character"></param>
-        public void SendBoostInformations(CharacterEntity character)
-        {
-            character.SafeDispatch(WorldMessage.GUILD_BOOST_INFORMATIONS(BoostPoint, TaxCollectorPrice, Statistics));
         }
 
         /// <summary>
@@ -581,11 +651,22 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
-        public void SendGeneralInformations(CharacterEntity character)
+        /// <param name="member"></param>
+        public void SendTaxCollectorsList(GuildMember member)
         {
-            // TODO : REPLACE TRUE BY ISACTIVE
-            character.SafeDispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(true, Level, 0, 0, 0));   
+            if (_taxCollectors.Count > 0)
+                member.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_LIST(_taxCollectors));
+            else
+                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+        }
+          
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void SendGeneralInformations(GuildMember member)
+        {            
+            member.Dispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(IsActive, Level, 0, 0, 0));   
         }
     }
 }

@@ -8,14 +8,14 @@ namespace Codebreak.Service.World.Frames
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameMapFrame : FrameBase<GameMapFrame, EntityBase, string>
+    public sealed class GameMapFrame : FrameBase<GameMapFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)
                 return null;
@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightList(EntityBase entity, string message)
+        private void FightList(CharacterEntity entity, string message)
         {
             entity.AddMessage(() =>
             {
@@ -59,7 +59,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightDetails(EntityBase entity, string message)
+        private void FightDetails(CharacterEntity entity, string message)
         {
             if (message.Length < 3)
                 return;

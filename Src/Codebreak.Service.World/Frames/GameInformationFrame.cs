@@ -6,14 +6,14 @@ using Codebreak.Service.World.Game.Fight;
 
 namespace Codebreak.Service.World.Frames
 {
-    public sealed class GameInformationFrame : FrameBase<GameInformationFrame, EntityBase, string>
+    public sealed class GameInformationFrame : FrameBase<GameInformationFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message == "GI")
                 return GameInformation;
@@ -25,7 +25,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameInformation(EntityBase entity, string message)
+        private void GameInformation(CharacterEntity entity, string message)
         {
             entity.AddMessage(() =>
                 {
@@ -33,8 +33,7 @@ namespace Codebreak.Service.World.Frames
 
                     if (entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        var fighter = (FighterBase)entity;
-                        fighter.Fight.JoinFight((FighterBase)entity, null);
+                        entity.Fight.JoinFight(entity, null);
                         return;
                     }
 

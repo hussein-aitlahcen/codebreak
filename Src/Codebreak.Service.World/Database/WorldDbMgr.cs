@@ -2,7 +2,6 @@
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Game.Database.Repositories;
 using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.Database
@@ -10,7 +9,7 @@ namespace Codebreak.Service.World.Database
     public sealed class WorldDbMgr : DbManager<WorldDbMgr>
     {
         [Configurable("DbConnection")]
-        public static string DbConnection = "Data Source=SMARKEN;Initial Catalog=codebreak_world;Integrated Security=True;Pooling=False";
+        public static string DbConnection = "Data Source=SMARKEN;Initial Catalog=codebreak_world;Integrated Security=True";
 
         public void Initialize()
         {
@@ -21,6 +20,7 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(ItemTemplateRepository.Instance);
             base.AddRepository(InventoryItemRepository.Instance);
             base.AddRepository(SpellBookEntryRepository.Instance);
+            base.AddRepository(TaxCollectorRepository.Instance);
             base.AddRepository(GuildRepository.Instance);
             base.AddRepository(CharacterGuildRepository.Instance);
             base.AddRepository(CharacterAlignmentRepository.Instance);
@@ -32,22 +32,6 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(SortsRepository.Instance);
 
             base.LoadAll(DbConnection);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void BeginTransaction()
-        {
-            SqlManager.Instance.BeginTransaction();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void CommitTransaction()
-        {
-            SqlManager.Instance.CommitTransaction();
         }
     }
 }

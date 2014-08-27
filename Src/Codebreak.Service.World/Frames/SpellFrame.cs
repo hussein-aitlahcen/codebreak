@@ -8,14 +8,14 @@ namespace Codebreak.Service.World.Frames
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SpellFrame : FrameBase<SpellFrame, EntityBase, string>
+    public sealed class SpellFrame : FrameBase<SpellFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)
                 return null;
@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void SpellMove(EntityBase entity, string message)
+        private void SpellMove(CharacterEntity entity, string message)
         {
             var data = message.Substring(2).Split('|');
             if (data.Length != 2)
@@ -78,7 +78,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void SpellBoost(EntityBase entity, string message)
+        private void SpellBoost(CharacterEntity entity, string message)
         {
             var spellId = -1;
             if (!int.TryParse(message.Substring(2), out spellId))
@@ -102,19 +102,18 @@ namespace Codebreak.Service.World.Frames
                 }
 
                 var spell = entity.Spells.GetSpellLevel(spellId);
-                var characterEntity = (CharacterEntity)entity;
 
-                if (characterEntity.SpellPoint < spell.Level)
+                if (entity.SpellPoint < spell.Level)
                 {
                     entity.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                     return;
                 }
 
                 entity.Spells.LevelUp(spellId);
-                characterEntity.SpellPoint -= spell.Level;
+                entity.SpellPoint -= spell.Level;
 
                 entity.Dispatch(WorldMessage.SPELL_UPGRADE_SUCCESS(spellId, spell.Level + 1));
-                entity.Dispatch(WorldMessage.ACCOUNT_STATS(characterEntity));
+                entity.Dispatch(WorldMessage.ACCOUNT_STATS(entity));
             });
         }
     }

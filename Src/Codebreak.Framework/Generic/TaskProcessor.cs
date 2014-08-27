@@ -75,7 +75,7 @@ namespace Codebreak.Framework.Generic
         /// 
         /// </summary>
         /// <param name="updateInterval"></param>
-        public TaskProcessor(string name, int updateInterval = 5)
+        public TaskProcessor(string name, int updateInterval = 3)
         {
             UpdateInterval = updateInterval;
             Name = name;
@@ -268,7 +268,7 @@ namespace Codebreak.Framework.Generic
 
             if (!updateLagged)
             {
-                Thread.Sleep(1 + (int)(UpdateInterval - updateTime));
+                Thread.Sleep((int)(UpdateInterval - updateTime));
             }
 
             ThreadPool.QueueUserWorkItem(InternalUpdate);

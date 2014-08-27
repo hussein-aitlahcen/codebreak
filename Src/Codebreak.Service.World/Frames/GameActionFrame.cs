@@ -9,9 +9,9 @@ using Codebreak.Service.World.Game.Map;
 
 namespace Codebreak.Service.World.Frames
 {
-    public sealed class GameActionFrame : FrameBase<GameActionFrame, EntityBase, string>
+    public sealed class GameActionFrame : FrameBase<GameActionFrame, CharacterEntity, string>
     {
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)
                 return null;
@@ -50,7 +50,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameActionStart(EntityBase entity, string message)
+        private void GameActionStart(CharacterEntity entity, string message)
         {
             var actionId = -1;
             if (!int.TryParse(message.Substring(2, 3), out actionId))
@@ -113,7 +113,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameWeaponUse(EntityBase entity, string message)
+        private void GameWeaponUse(CharacterEntity entity, string message)
         {
             var cellId = -1;
 
@@ -123,9 +123,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            var fighter = (FighterBase)entity;
-
-            fighter.Fight.TryUseWeapon(fighter, cellId);
+            entity.Fight.TryUseWeapon(entity, cellId);
         }
 
         /// <summary>
@@ -133,7 +131,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameChallengeJoin(EntityBase entity, string message)
+        private void GameChallengeJoin(CharacterEntity entity, string message)
         {
             var fightData = message.Substring(5).Split(';');
             var fightId = int.Parse(fightData[0]);
@@ -160,7 +158,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            fight.TryJoin((FighterBase)entity, leaderId);
+            fight.TryJoin(entity, leaderId);
         }
 
         /// <summary>
@@ -168,7 +166,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameFightSpellLaunch(EntityBase entity, string message)
+        private void GameFightSpellLaunch(CharacterEntity entity, string message)
         {
             if(!message.Contains(';'))
             {
@@ -198,9 +196,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            var fighter = (FighterBase)entity;
-
-            fighter.Fight.TryLaunchSpell(fighter, spellId, cellId);
+            entity.Fight.TryLaunchSpell(entity, spellId, cellId);
         }
 
         /// <summary>
@@ -208,7 +204,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameChallengeDeny(EntityBase entity, string message)
+        private void GameChallengeDeny(CharacterEntity entity, string message)
         {
             entity.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST, entity.Id);
         }
@@ -218,7 +214,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameChallengeAccept(EntityBase entity, string message)
+        private void GameChallengeAccept(CharacterEntity entity, string message)
         {
             entity.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST, entity.Id);
         }
@@ -228,7 +224,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameChallengeRequest(EntityBase entity, string message)
+        private void GameChallengeRequest(CharacterEntity entity, string message)
         {
             if (entity.Map.FightTeam0Cells.Count == 0 || entity.Map.FightTeam1Cells.Count == 0)
             {
@@ -264,7 +260,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            ((CharacterEntity)entity).ChallengePlayer((CharacterEntity)distantEntity);
+            entity.ChallengePlayer((CharacterEntity)distantEntity);
         }
 
         /// <summary>
@@ -272,7 +268,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameMapMovement(EntityBase entity, string message)
+        private void GameMapMovement(CharacterEntity entity, string message)
         {
             if(entity.MovementHandler == null)
             {
@@ -305,7 +301,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameActionAbort(EntityBase entity, string message)
+        private void GameActionAbort(CharacterEntity entity, string message)
         {
             if(!message.Contains('|'))
             {
@@ -345,7 +341,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameActionFinish(EntityBase entity, string message)
+        private void GameActionFinish(CharacterEntity entity, string message)
         {
             var actionId = -1;
             if (!int.TryParse(message.Substring(3), out actionId))

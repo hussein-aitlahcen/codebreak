@@ -903,7 +903,6 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 case GameActionTypeEnum.FIGHT:
                     StopAction(GameActionTypeEnum.MAP);
-                    FrameManager.AddFrame(GameFightPlacementFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.FIGHT_WEAPON_USE:
@@ -933,19 +932,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="args"></param>
         public override void StopAction(GameActionTypeEnum actionType, params object[] args)
         {
-            switch(actionType)
-            {
-                case GameActionTypeEnum.FIGHT:
-                    if (!IsDisconnected)
-                    {
-                        WorldService.Instance.AddUpdatable(this);
-                        FrameManager.AddFrame(GameCreationFrame.Instance);
-                        FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
-                        FrameManager.RemoveFrame(GameFightFrame.Instance);
-                    }
-                    break;
-            }
-
             base.StopAction(actionType, args);
         }
 

@@ -5,14 +5,14 @@ using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Frames
 {
-    public sealed class GameCreationFrame : FrameBase<GameCreationFrame, EntityBase, string>
+    public sealed class GameCreationFrame : FrameBase<GameCreationFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public override Action<EntityBase, string> GetHandler(string message)
+        public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if(message.StartsWith("GC"))
                 return GameCreation;
@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameCreation(EntityBase entity, string message)
+        private void GameCreation(CharacterEntity entity, string message)
         {
             entity.AddMessage(() =>
             {

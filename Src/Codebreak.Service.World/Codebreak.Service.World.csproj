@@ -69,6 +69,7 @@
     <Compile Include="Database\Repositories\NpcTemplateRepository.cs" />
     <Compile Include="Database\Repositories\OLD_REPOSITORIES.cs" />
     <Compile Include="Database\Repositories\SpellBookEntryRepository.cs" />
+    <Compile Include="Database\Repositories\TaxCollectorRepository.cs" />
     <Compile Include="Database\Structures\AreaDAO.cs" />
     <Compile Include="Database\Structures\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structures\CharacterDAO.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Database\Structures\SpellBookEntryDAO.cs" />
     <Compile Include="Database\Structures\SubAreaDAO.cs" />
     <Compile Include="Database\Structures\SuperAreaDAO.cs" />
+    <Compile Include="Database\Structures\TaxCollectorDAO.cs" />
     <Compile Include="Database\WorldDbMgr.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Game\Entity\EntityBase.cs" />
     <Compile Include="Game\Entity\InventoryBag.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
+    <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
+    <Compile Include="Game\Entity\TaxCollectorInventory.cs" />
     <Compile Include="Game\Exchange\ExchangeBase.cs" />
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
     <Compile Include="Game\Exchange\ShopExchange.cs" />
