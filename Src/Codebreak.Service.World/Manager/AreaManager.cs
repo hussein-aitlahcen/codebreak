@@ -86,30 +86,5 @@ namespace Codebreak.Service.World.Manager
         {
             return _subAreaById[id];
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void BlockQueues()
-        {
-            foreach (var area in _areaById.Values)
-            {
-                area.IOQueue.Blocked = true;
-
-                while (!area.IOQueue.IsPaused)
-                    Thread.Sleep(1);
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void ResumeQueues()
-        {
-            foreach (var area in _areaById.Values)
-            {
-                area.IOQueue.Blocked = false;
-            }
-        }
     }
 }

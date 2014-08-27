@@ -22,14 +22,11 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        public SqlConnection Connection
+        public SqlConnection CreateConnection()
         {
-            get
-            {
-                var connection = new SqlConnection(_connectionString);
-                connection.Open();
-                return connection;
-            }
+            var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            return connection;
         }
 
         /// <summary>
@@ -49,7 +46,7 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public IEnumerable<T> Query<T>(string query, object param = null) where T : DataAccessObject<T>, new()
         {
-            using(var connection = Connection)
+            using (var connection = CreateConnection())
             {
                 return connection.Query<T>(query, param);
             }
@@ -62,7 +59,7 @@ namespace Codebreak.Framework.Database
         /// <param name="dataObject"></param>
         public bool Insert<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
-            using (var connection = Connection)
+            using (var connection = CreateConnection())
             {
                 return connection.Insert<T>(dataObject) != 0;
             }
@@ -76,9 +73,25 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public bool Remove<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
-            using (var connection = Connection)
+            using (var connection = CreateConnection())
             {
                 return connection.Delete<T>(dataObject);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataObjects"></param>
+        /// <returns></returns>
+        public void Update<T>(IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
+        {
+            using (var connection = CreateConnection())
+            {
+                var transaction = connection.BeginTransaction();
+                connection.Update<T>(dataObjects, transaction);
+                transaction.Commit();
             }
         }
 
@@ -89,7 +102,7 @@ namespace Codebreak.Framework.Database
         /// <param name="dataObject"></param>
         public bool Update<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
-            using (var connection = Connection)
+            using (var connection = CreateConnection())
             {
                 return connection.Update<T>(dataObject);
             }

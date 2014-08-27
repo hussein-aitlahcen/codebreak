@@ -208,6 +208,47 @@ namespace Codebreak.Framework.Database
       /// <param name="connection">Open SqlConnection</param>
       /// <param name="entityToUpdate">Entity to be updated</param>
       /// <returns>true if updated, false if not found or not modified (tracked entities)</returns>
+      public static int Update<T>(this IDbConnection connection, IEnumerable<T> entitiesToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+      {
+          var type = typeof(T);
+
+          var keyProperties = KeyPropertiesCache(type);
+          if (!keyProperties.Any())
+              throw new ArgumentException("Entity must have at least one [Key] property");
+
+          var name = GetTableName(type);
+
+          var sb = new StringBuilder();
+          sb.AppendFormat("update {0} set ", name);
+
+          var allProperties = TypePropertiesCache(type);
+          var nonIdProps = allProperties.Where(a => !keyProperties.Contains(a));
+
+          for (var i = 0; i < nonIdProps.Count(); i++)
+          {
+              var property = nonIdProps.ElementAt(i);
+              sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+              if (i < nonIdProps.Count() - 1)
+                  sb.AppendFormat(", ");
+          }
+          sb.Append(" where ");
+          for (var i = 0; i < keyProperties.Count(); i++)
+          {
+              var property = keyProperties.ElementAt(i);
+              sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+              if (i < keyProperties.Count() - 1)
+                  sb.AppendFormat(" and ");
+          }
+          return connection.ExecuteQuery(sb.ToString(), entitiesToUpdate, commandTimeout: commandTimeout, transaction: transaction);
+      }
+
+      /// <summary>
+      /// Updates entity in table "Ts", checks if the entity is modified if the entity is tracked by the Get() extension.
+      /// </summary>
+      /// <typeparam name="T">Type to be updated</typeparam>
+      /// <param name="connection">Open SqlConnection</param>
+      /// <param name="entityToUpdate">Entity to be updated</param>
+      /// <returns>true if updated, false if not found or not modified (tracked entities)</returns>
       public static bool Update<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
       {
           var proxy = entityToUpdate as IProxy;

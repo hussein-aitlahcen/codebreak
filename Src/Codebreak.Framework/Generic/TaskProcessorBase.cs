@@ -70,8 +70,12 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        public volatile bool Blocked;
-
+        public ManualResetEventSlim WaitEvent
+        {
+            get;
+            private set;
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -97,6 +101,7 @@ namespace Codebreak.Framework.Generic
             _updatableObjects = new List<Updatable>();
             _timerList = new List<Timer>();
             _queueTimer = new Stopwatch();
+            WaitEvent = new ManualResetEventSlim(true);
 
             Start();
         }
@@ -137,6 +142,38 @@ namespace Codebreak.Framework.Generic
         public void AddMessage(Action message)
         {
             _messageQueue.Enqueue(message);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dispather"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public void AddLinkedMessages(params System.Action[] messages)
+        {
+            AddMessage(() =>
+            {
+                messages[0]();
+                if (messages.Length > 1)
+                    AddLinkedMessages(1, messages);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dispather"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public void AddLinkedMessages(int index = 0, params System.Action[] messages)
+        {
+            AddMessage(() =>
+            {
+                messages[index]();
+                if (messages.Length > ++index)
+                    AddLinkedMessages(index, messages);
+            });
         }
 
         /// <summary>
@@ -209,13 +246,12 @@ namespace Codebreak.Framework.Generic
             if (!_running)
                 return;
             
-            if (Blocked)
+            if (!WaitEvent.IsSet)
             {
                 _paused = true;
                 _queueTimer.Stop();
 
-                while (Blocked)
-                    Thread.Sleep(1);
+                WaitEvent.Wait();
 
                 _paused = false;
                 _queueTimer.Start();

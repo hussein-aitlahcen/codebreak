@@ -100,6 +100,38 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dispather"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public void AddLinkedMessages(params System.Action[] messages)
+        {
+            AddMessage(() =>
+            {
+                messages[0]();
+                if (messages.Length > 1)
+                    AddLinkedMessages(1, messages);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dispather"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public void AddLinkedMessages(int index = 0, params System.Action[] messages)
+        {
+            AddMessage(() =>
+            {
+                messages[index]();
+                if (messages.Length > ++index)
+                    AddLinkedMessages(index, messages);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="updateDelta"></param>
         public virtual void Update(long updateDelta)
         {

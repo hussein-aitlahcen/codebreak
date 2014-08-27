@@ -19,29 +19,50 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class WorldService : TcpServerBase<WorldService, WorldClient>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("WorldSaveInternal")]
         public static int WorldSaveInternal = 60 * 1000;
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("WorldServiceIP")]
         public static string WorldServiceIP = "127.0.0.1";
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("WorldServicePort")]
         public static int WorldServicePort = 5555;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ConfigurationManager ConfigurationManager
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CommandManager<WorldCommandContext> CommandManager
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public MessageDispatcher Dispatcher
         {
             get;
@@ -53,6 +74,10 @@ namespace Codebreak.Service.World
         /// </summary>
         private Stopwatch _updateTimer;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configPath"></param>
         public void Start(string configPath)
         {
             ConfigurationManager = new ConfigurationManager();
@@ -91,6 +116,11 @@ namespace Codebreak.Service.World
         }
 
         #region Network
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         protected override void OnClientConnected(WorldClient client)
         {
             AddMessage(() =>
@@ -100,6 +130,10 @@ namespace Codebreak.Service.World
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         protected override void OnClientDisconnected(WorldClient client)
         {
             AddMessage(() =>
@@ -115,6 +149,13 @@ namespace Codebreak.Service.World
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         protected override void OnDataReceived(WorldClient client, byte[] buffer, int offset, int count)
         {
             foreach (var message in client.Receive(buffer, offset, count))
@@ -141,6 +182,10 @@ namespace Codebreak.Service.World
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void SendToAll(string message)
         {
             base.SendToAll(Encoding.Default.GetBytes(message + (char)0x00));
@@ -150,59 +195,28 @@ namespace Codebreak.Service.World
 
         #region World Management
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void UpdateWorld()
         {
-            WorldService.Instance.AddMessage(() =>
-            {
-                WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING));
-
-                RPCManager.Instance.UpdateState(GameState.STARTING);
-
-                WorldService.Instance.AddMessage(() =>
-                {
-                    AreaManager.Instance.BlockQueues();
-
-                    WorldService.Instance.AddMessage(() =>
-                    {
-                        try
-                        {
-                            _updateTimer = Stopwatch.StartNew();
-
-                            Task.WaitAll
-                            (
-                                Task.Factory.StartNew(GuildRepository.Instance.UpdateAll),
-                                Task.Factory.StartNew(TaxCollectorRepository.Instance.UpdateAll),
-                                Task.Factory.StartNew(CharacterRepository.Instance.UpdateAll),
-                                Task.Factory.StartNew(CharacterAlignmentRepository.Instance.UpdateAll),
-                                Task.Factory.StartNew(CharacterGuildRepository.Instance.UpdateAll),
-                                Task.Factory.StartNew(SpellBookEntryRepository.Instance.UpdateAll),
-                                Task.Factory.StartNew(InventoryItemRepository.Instance.UpdateAll)
-                            );
-
-                            var updateTime = _updateTimer.ElapsedMilliseconds;
-                            _updateTimer.Stop();
-
-                            Logger.Info("WorldService : World update performed in : " + updateTime + " ms");
-                        }
-                        catch(Exception ex)
-                        {
-                            Logger.Error("WorldUpdate failed : " + ex.ToString());
-                        }
-
-                        WorldService.Instance.AddMessage(() =>
-                        {
-                            AreaManager.Instance.ResumeQueues();
-
-                            RPCManager.Instance.UpdateState(GameState.ONLINE);
-
-                            WorldService.Instance.AddMessage(() =>
-                            {
-                                WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING_FINISHED));
-                            });
-                        });
-                    });
-                });
-            });
+            Stopwatch updateTimer = new Stopwatch();
+            WorldService.Instance.AddLinkedMessages( 
+                () => WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING)),
+                () => RPCManager.Instance.UpdateState(GameState.STARTING),
+                updateTimer.Start,
+                GuildRepository.Instance.UpdateAll,
+                TaxCollectorRepository.Instance.UpdateAll,
+                CharacterRepository.Instance.UpdateAll,
+                CharacterAlignmentRepository.Instance.UpdateAll,
+                CharacterGuildRepository.Instance.UpdateAll,
+                SpellBookEntryRepository.Instance.UpdateAll,
+                InventoryItemRepository.Instance.UpdateAll,
+                updateTimer.Stop,
+                () => Logger.Info("WorldService : World update performed in : " + updateTimer.ElapsedMilliseconds + " ms"),
+                () => RPCManager.Instance.UpdateState(GameState.ONLINE),
+                () => WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING_FINISHED))
+            );
         }
 
         #endregion

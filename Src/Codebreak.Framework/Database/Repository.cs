@@ -133,6 +133,16 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="objects"></param>
+        public virtual void Update(List<TDataObject> objects)
+        {
+            if(objects.Count() > 0)
+                SqlManager.Instance.Update<TDataObject>(objects);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public virtual bool Remove(TDataObject obj)
         {
@@ -203,24 +213,40 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public virtual void UpdateAll()
         {
-            lock (_syncLock)
+            lock (_syncLock)            
+                Update(GetDirtyObjects().ToList());            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<TDataObject> GetDirtyObjects()
+        {
+            foreach(var obj in _dataObjects)
             {
-                foreach (var obj in _dataObjects)
+                if(obj.IsDirty)
                 {
-                    if (obj.IsDirty)
-                    {
-                        obj.OnBeforeUpdate();
-                        Update(obj);
-                        obj.IsDirty = false;
-                    }
+                    obj.OnBeforeUpdate();
+                    obj.IsDirty = false;
+
+                    yield return obj;
                 }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
         public virtual void OnObjectAdded(TDataObject obj)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
         public virtual void OnObjectRemoved(TDataObject obj)
         {
         }
