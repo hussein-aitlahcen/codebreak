@@ -168,13 +168,7 @@ namespace Codebreak.Service.World.Frames
         /// <param name="entity"></param>
         /// <param name="message"></param>
         private void GuildHireTaxcollector(CharacterEntity entity, string message)
-        {
-            if (entity.CharacterGuild == null)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
+        {            
             entity.AddMessage(() =>
                 {
                     if (!entity.HasGameAction(GameActionTypeEnum.MAP))
@@ -183,7 +177,16 @@ namespace Codebreak.Service.World.Frames
                         return;
                     }
 
-                    WorldService.Instance.AddMessage(() => entity.CharacterGuild.HireTaxCollector());
+                    WorldService.Instance.AddMessage(() => 
+                        {
+                            if (entity.CharacterGuild == null)
+                            {
+                                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                                return;
+                            }
+
+                            entity.CharacterGuild.HireTaxCollector();
+                        });
                 });
         }
 
@@ -346,12 +349,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            var kickedMemberName = message.Substring(2);
-
-            WorldService.Instance.AddMessage(() =>
-                {
-                    character.CharacterGuild.MemberKick(kickedMemberName);
-                });
+            character.CharacterGuild.MemberKick(message.Substring(2));
         }
 
         /// <summary>
@@ -373,10 +371,7 @@ namespace Codebreak.Service.World.Frames
             var xpSharePercent = int.Parse(messageData[2]);
             var power = int.Parse(messageData[3]);
 
-            WorldService.Instance.AddMessage(() =>
-                {
-                    entity.CharacterGuild.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
-                });
+            entity.CharacterGuild.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
         }
 
         /// <summary>

@@ -273,68 +273,71 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="member"></param>
         public void HireTaxCollector(GuildMember member)
         {
-            if(!member.HasRight(GuildRightEnum.HIRE_TAXCOLLECTOR))
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
-
-            if(_taxCollectors.Count >= Statistics.MaxTaxcollector)
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already hired the maximum TaxCollector."));
-                return;
-            }
-
-            foreach(var collector in _taxCollectors)
-            {            
-                if(collector.Map.SubAreaId == member.Character.Map.SubAreaId)
+            AddMessage(() =>
                 {
-                    member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED, 1)); // MAX COLLECTOR BY SUBAREA
-                    return;
-                }
-            }
+                    if (!member.HasRight(GuildRightEnum.HIRE_TAXCOLLECTOR))
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            if(member.Character.Map.HasTaxCollector())
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("There is already a Taxcollector in this map."));
-                return;
-            }
+                    if (_taxCollectors.Count >= Statistics.MaxTaxcollector)
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already hired the maximum TaxCollector."));
+                        return;
+                    }
 
-            if(member.Character.Inventory.Kamas < TaxCollectorPrice)
-            {
-                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGHT_KAMAS, TaxCollectorPrice));
-                return;
-            }
+                    foreach (var collector in _taxCollectors)
+                    {
+                        if (collector.Map.SubAreaId == member.Character.Map.SubAreaId)
+                        {
+                            member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED, 1)); // MAX COLLECTOR BY SUBAREA
+                            return;
+                        }
+                    }
 
-            var taxCollectorDAO = new TaxCollectorDAO()
-            {
-                GuildId = Id,
-                OwnerId = member.Id,
-                Name = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_NAME, WorldConfig.TAXCOLLECTOR_MAX_NAME),
-                FirstName = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_FIRSTNAME, WorldConfig.TAXCOLLECTOR_MAX_FIRSTNAME),
-                MapId = member.Character.MapId,
-                CellId = member.Character.CellId,
-                Skin = WorldConfig.TAXCOLLECTOR_SKIN_BASE,
-                SkinSize = WorldConfig.TAXCOLLECTOR_SKIN_SIZE_BASE,
-                Kamas = 0,
-            };
+                    if (member.Character.Map.HasTaxCollector())
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("There is already a Taxcollector in this map."));
+                        return;
+                    }
 
-            if(!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create Taxcollector due to unknow error."));
-                return;
-            }
+                    if (member.Character.Inventory.Kamas < TaxCollectorPrice)
+                    {
+                        member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGHT_KAMAS, TaxCollectorPrice));
+                        return;
+                    }
 
-            var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
+                    var taxCollectorDAO = new TaxCollectorDAO()
+                    {
+                        GuildId = Id,
+                        OwnerId = member.Id,
+                        Name = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_NAME, WorldConfig.TAXCOLLECTOR_MAX_NAME),
+                        FirstName = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_FIRSTNAME, WorldConfig.TAXCOLLECTOR_MAX_FIRSTNAME),
+                        MapId = member.Character.MapId,
+                        CellId = member.Character.CellId,
+                        Skin = WorldConfig.TAXCOLLECTOR_SKIN_BASE,
+                        SkinSize = WorldConfig.TAXCOLLECTOR_SKIN_SIZE_BASE,
+                        Kamas = 0,
+                    };
 
-            AddTaxCollector(taxCollector);
+                    if (!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create Taxcollector due to unknow error."));
+                        return;
+                    }
 
-            member.Character.AddMessage(() => 
-                {
-                    member.Character.Inventory.SubKamas(TaxCollectorPrice);
+                    var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
+
+                    AddTaxCollector(taxCollector);
+
+                    member.Character.AddMessage(() =>
+                        {
+                            member.Character.Inventory.SubKamas(TaxCollectorPrice);
+                        });
+
+                    base.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_HIRED(taxCollector, member.Character.Name));
                 });
-
-            base.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_HIRED(taxCollector, member.Character.Name));
         }
 
         /// <summary>
@@ -344,28 +347,31 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="spellId"></param>
         public void BoostSpell(GuildMember member, int spellId)
         {
-            if (!member.HasRight(GuildRightEnum.MANAGE_BOOST))
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+            AddMessage(() =>
+                {
+                    if (!member.HasRight(GuildRightEnum.MANAGE_BOOST))
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            if(!Statistics.Spells.HasSpell(spellId))
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow spellId"));
-                return;
-            }
+                    if (!Statistics.Spells.HasSpell(spellId))
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow spellId"));
+                        return;
+                    }
 
-            if(BoostPoint < 5)
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Not enough point to boost this spell."));
-                return;
-            }
+                    if (BoostPoint < 5)
+                    {
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Not enough point to boost this spell."));
+                        return;
+                    }
 
-            BoostPoint -= 5;
-            Statistics.Spells.LevelUpSpell(spellId);
+                    BoostPoint -= 5;
+                    Statistics.Spells.LevelUpSpell(spellId);
 
-            SendBoostInformations(member);
+                    SendBoostInformations(member);
+                });
         }
 
         /// <summary>
@@ -375,75 +381,78 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="statId"></param>
         public void BoostStats(GuildMember member, char statId)
         {
-            if(!member.HasRight(GuildRightEnum.MANAGE_BOOST))
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
-
-            if(BoostPoint < 1)
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You don't have any boost point."));
-                return;
-            } 
-            
-            switch(statId)
-            {
-                case 'o':
-                    if(Statistics.BaseStatistics.GetTotal(EffectEnum.AddPods) >= 5000)
+            AddMessage(() =>
+                {
+                    if (!member.HasRight(GuildRightEnum.MANAGE_BOOST))
                     {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Pods."));
+                        member.SendHasNotEnoughRights();
                         return;
                     }
 
-                    Statistics.BaseStatistics.AddBase(EffectEnum.AddPods, 20);
-                    BoostPoint--;
-                    break;
-
-                case 'x':
-                     if(Statistics.BaseStatistics.GetTotal(EffectEnum.AddWisdom) >= 400)
+                    if (BoostPoint < 1)
                     {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Wisdom."));
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You don't have any boost point."));
                         return;
                     }
 
-                    Statistics.BaseStatistics.AddBase(EffectEnum.AddWisdom, 1);
-                    BoostPoint--;
-                    break;
-
-                case 'p':
-                    if(Statistics.BaseStatistics.GetTotal(EffectEnum.AddProspection) >= 500)
+                    switch (statId)
                     {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Prospection."));
-                        return;
+                        case 'o':
+                            if (Statistics.BaseStatistics.GetTotal(EffectEnum.AddPods) >= 5000)
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Pods."));
+                                return;
+                            }
+
+                            Statistics.BaseStatistics.AddBase(EffectEnum.AddPods, 20);
+                            BoostPoint--;
+                            break;
+
+                        case 'x':
+                            if (Statistics.BaseStatistics.GetTotal(EffectEnum.AddWisdom) >= 400)
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Wisdom."));
+                                return;
+                            }
+
+                            Statistics.BaseStatistics.AddBase(EffectEnum.AddWisdom, 1);
+                            BoostPoint--;
+                            break;
+
+                        case 'p':
+                            if (Statistics.BaseStatistics.GetTotal(EffectEnum.AddProspection) >= 500)
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your taxcollector has already reached the max Prospection."));
+                                return;
+                            }
+
+                            Statistics.BaseStatistics.AddBase(EffectEnum.AddProspection, 1);
+                            BoostPoint--;
+                            break;
+
+                        case 'k':
+                            if (BoostPoint < 10)
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You don't have enough boost point."));
+                                return;
+                            }
+                            if (Statistics.MaxTaxcollector >= 50)
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already reached the maximum Taxcollector count."));
+                                return;
+                            }
+
+                            Statistics.MaxTaxcollector++;
+                            BoostPoint -= 10;
+                            break;
+
+                        default:
+                            member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow boost statId"));
+                            return;
                     }
 
-                    Statistics.BaseStatistics.AddBase(EffectEnum.AddProspection, 1);
-                    BoostPoint--;
-                    break;
-
-                case 'k':
-                    if(BoostPoint < 10)
-                    {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You don't have enough boost point."));
-                        return;
-                    } 
-                    if(Statistics.MaxTaxcollector >= 50)
-                    {                        
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already reached the maximum Taxcollector count."));
-                        return;
-                    }
-
-                    Statistics.MaxTaxcollector++;
-                    BoostPoint -= 10;
-                    break;
-
-                default:
-                    member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow boost statId"));
-                    return;
-            }
-
-            SendBoostInformations(member);
+                    SendBoostInformations(member);
+                });
         }
 
         /// <summary>
@@ -487,60 +496,63 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="power"></param>
         public void MemberProfilUpdate(GuildMember member, long profilId, int rank, int percent, int power)
         {
-            var himSelf = member.Id == profilId;
-            var memberProfil = GetMember(profilId);
-            if(memberProfil == null)
-            {
-                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+            AddMessage(() =>
+                {
+                    var himSelf = member.Id == profilId;
+                    var memberProfil = GetMember(profilId);
+                    if (memberProfil == null)
+                    {
+                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            var rankChanged = rank == (int)memberProfil.Rank;
-            var powerChanged = power == memberProfil.Power;
-            var xpShareChanged = percent == memberProfil.XPSharePercent;
+                    var rankChanged = rank == (int)memberProfil.Rank;
+                    var powerChanged = power == memberProfil.Power;
+                    var xpShareChanged = percent == memberProfil.XPSharePercent;
 
-            var canManageOwnExp = member.HasRight(GuildRightEnum.MANAGE_OWN_EXP_PERCENT);
-            var canManageOthersExp = member.HasRight(GuildRightEnum.MANAGE_EXP_PERCENT);
-            var canManageRank = member.HasRight(GuildRightEnum.MANAGE_RANK);
-            var canManagePower = member.HasRight(GuildRightEnum.MANAGE_POWER);
+                    var canManageOwnExp = member.HasRight(GuildRightEnum.MANAGE_OWN_EXP_PERCENT);
+                    var canManageOthersExp = member.HasRight(GuildRightEnum.MANAGE_EXP_PERCENT);
+                    var canManageRank = member.HasRight(GuildRightEnum.MANAGE_RANK);
+                    var canManagePower = member.HasRight(GuildRightEnum.MANAGE_POWER);
 
-            if(!canManageOwnExp && !canManageOthersExp && !canManageRank && !canManagePower)
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+                    if (!canManageOwnExp && !canManageOthersExp && !canManageRank && !canManagePower)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            if(!himSelf && !canManageOthersExp && xpShareChanged)
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+                    if (!himSelf && !canManageOthersExp && xpShareChanged)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            if(!canManagePower && powerChanged)
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+                    if (!canManagePower && powerChanged)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            if(!canManageRank && rankChanged)
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+                    if (!canManageRank && rankChanged)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            if(!canManageOwnExp && himSelf && xpShareChanged)
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+                    if (!canManageOwnExp && himSelf && xpShareChanged)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-            memberProfil.XPSharePercent = percent;
-            memberProfil.Rank = (GuildRankEnum)rank;
-            memberProfil.Power = power;
+                    memberProfil.XPSharePercent = percent;
+                    memberProfil.Rank = (GuildRankEnum)rank;
+                    memberProfil.Power = power;
 
-            // update profil
-            member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(memberProfil));
-            memberProfil.Dispatch(WorldMessage.GUILD_STATS(this, power));
+                    // update profil
+                    member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(memberProfil));
+                    memberProfil.Dispatch(WorldMessage.GUILD_STATS(this, power));
+                });
         }
 
         /// <summary>
@@ -550,41 +562,44 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="kickedMember"></param>
         public void MemberKick(GuildMember member, string kickedMemberName)
         {
-            if (kickedMemberName != member.Name && !member.HasRight(GuildRightEnum.BAN))
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
-
-            var kickedMember = _members.Find(m => m.Name == kickedMemberName);
-            if(kickedMember == null)
-            {
-                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            if(kickedMember.Rank == GuildRankEnum.BOSS)
-            {
-                if (kickedMemberName == member.Name)
+            AddMessage(() =>
                 {
-                    member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("As a boss, you are unable to leave the guild."));
-                    return;   
-                }
+                    if (kickedMemberName != member.Name && !member.HasRight(GuildRightEnum.BAN))
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
 
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("The boss cannot be kicked."));
-                return;    
-            }
+                    var kickedMember = _members.Find(m => m.Name == kickedMemberName);
+                    if (kickedMember == null)
+                    {
+                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            member.Dispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
+                    if (kickedMember.Rank == GuildRankEnum.BOSS)
+                    {
+                        if (kickedMemberName == member.Name)
+                        {
+                            member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("As a boss, you are unable to leave the guild."));
+                            return;
+                        }
 
-            if (member.Name != kickedMemberName)
-                kickedMember.Dispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
+                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("The boss cannot be kicked."));
+                        return;
+                    }
 
-            RemoveMember(kickedMember);
+                    member.Dispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
 
-            kickedMember.GuildLeave();
+                    if (member.Name != kickedMemberName)
+                        kickedMember.Dispatch(WorldMessage.GUIL_KICK_SUCCESS(member.Name, kickedMemberName));
 
-            base.Dispatch(WorldMessage.GUILD_MEMBER_REMOVE(kickedMember.Id));
+                    RemoveMember(kickedMember);
+
+                    kickedMember.GuildLeave();
+
+                    base.Dispatch(WorldMessage.GUILD_MEMBER_REMOVE(kickedMember.Id));
+                });
         }
 
         /// <summary>
