@@ -33,7 +33,11 @@ namespace Codebreak.Service.World.Frames
                 var map = entity.Map;
                 entity.CachedBuffer = true;
                 entity.Dispatch(WorldMessage.GAME_CREATION_SUCCESS());
-                entity.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));
+                if (entity.HasGameAction(Game.Action.GameActionTypeEnum.FIGHT))
+                    entity.Dispatch(WorldMessage.GAME_DATA_MAP(entity.Fight.Map.Id, entity.Fight.Map.CreateTime, entity.Fight.Map.DataKey));
+                else                
+                    entity.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));
+                
                 entity.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)entity));
                 entity.CachedBuffer = false;
             });

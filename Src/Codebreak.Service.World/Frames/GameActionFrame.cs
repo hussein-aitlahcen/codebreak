@@ -94,7 +94,7 @@ namespace Codebreak.Service.World.Frames
                         break;
 
                     case GameActionTypeEnum.FIGHT_JOIN:
-                        GameChallengeJoin(entity, message);                        
+                        GameFightJoin(entity, message);                        
                         break;
 
                     case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
@@ -104,8 +104,63 @@ namespace Codebreak.Service.World.Frames
                     case GameActionTypeEnum.FIGHT_WEAPON_USE:
                         GameWeaponUse(entity, message);
                         break;
+
+                    case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
+                        GameTaxcollectorAggression(entity, message);
+                        break;
                 }
             }); 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GameTaxcollectorAggression(CharacterEntity character, string message)
+        {
+            if (character.Map.FightTeam0Cells.Count == 0 || character.Map.FightTeam1Cells.Count == 0)
+            {
+                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Cell pattern not found, unable to fight here"));
+                return;
+            }
+
+            long taxcollectorId = -1;
+            if (!long.TryParse(message.Substring(5), out taxcollectorId))
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var distantEntity = character.Map.GetEntity(taxcollectorId);
+            if (distantEntity == null)
+            {
+                Logger.Debug("GameActionFrame::TaxcollectorAggression unknow taxcollectorId " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+            
+            if (distantEntity.Type != EntityTypEnum.TYPE_TAX_COLLECTOR)
+            {
+                Logger.Debug("GameActionFrame::TaxCollectorAggression trying to aggro non taxcollector entity : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var taxCollector = distantEntity as TaxCollectorEntity;
+            if(character.CharacterGuild != null && character.CharacterGuild.GuildId == taxCollector.Guild.Id)
+            {
+                character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You cannot aggro your own taxcollector."));
+                return;
+            }
+
+            if(!taxCollector.CanGameAction(GameActionTypeEnum.FIGHT))
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.Map.FightManager.StartTaxCollectorAggression(character, taxCollector);
         }
 
         /// <summary>
@@ -116,7 +171,6 @@ namespace Codebreak.Service.World.Frames
         private void GameWeaponUse(CharacterEntity entity, string message)
         {
             var cellId = -1;
-
             if(!int.TryParse(message.Substring(5), out cellId))
             {
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -131,7 +185,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GameChallengeJoin(CharacterEntity entity, string message)
+        private void GameFightJoin(CharacterEntity entity, string message)
         {
             var fightData = message.Substring(5).Split(';');
             var fightId = int.Parse(fightData[0]);

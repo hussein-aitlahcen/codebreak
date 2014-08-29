@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,15 @@ namespace Codebreak.Service.World.Game.Guild
             {
                 return _character.Id;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long TaxCollectorJoinedId
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -139,6 +149,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public GuildMember(GuildInstance guild, CharacterDAO character)
         {
+            TaxCollectorJoinedId = -1;
             Guild = guild;
             _character = character;
         }
@@ -243,7 +254,9 @@ namespace Codebreak.Service.World.Game.Guild
         public void CharacterDisconnected()
         {
             if (Character != null)
+            {
                 base.RemoveHandler(Character.SafeDispatch);
+            }
             Character = null;
         }
 
@@ -305,6 +318,31 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        public void TaxCollectorsInterfaceJoin()
+        {
+            Guild.AddTaxCollectorListener(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void TaxCollectorsInterfaceLeave()
+        {
+            Guild.RemoveTaxCollectorListener(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        public void RemoveTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            Guild.RemoveTaxCollector(this, taxCollector);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void SendTaxCollectorsList()
         {
             Guild.SendTaxCollectorsList(this);
@@ -316,6 +354,23 @@ namespace Codebreak.Service.World.Game.Guild
         public void SendGeneralInformations()
         {
             Guild.SendGeneralInformations(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public void TaxCollectorJoin(long id)
+        {
+            Guild.TaxCollectorJoin(this, id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void TaxCollectorLeave()
+        {
+            Guild.TaxCollectorLeave(this);
         }
 
         /// <summary>
@@ -338,6 +393,21 @@ namespace Codebreak.Service.World.Game.Guild
                 message.Append("0").Append(";");           
             message.Append(_character.GetCharacterAlignment().AlignmentId).Append(";");
             message.Append("-1").Append('|');
+        }
+
+        /// <summary>
+        ///    
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_TaxCollectorDefender(StringBuilder message)
+        {
+            message.Append(Util.EncodeBase36(_character.Id)).Append(';');
+            message.Append(_character.Name).Append(';');
+            message.Append(_character.Skin).Append(';');
+            message.Append(_character.Level).Append(';');
+            message.Append(_character.GetHexColor1()).Append(';');
+            message.Append(_character.GetHexColor2()).Append(';');
+            message.Append(_character.GetHexColor3());
         }
     }
 }

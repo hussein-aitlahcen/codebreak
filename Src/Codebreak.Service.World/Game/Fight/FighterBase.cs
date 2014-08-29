@@ -462,7 +462,7 @@ namespace Codebreak.Service.World.Game.Fight
             Team = team;
             TurnReady = false;
             TurnPass = false;
-
+                       
             Team.AddFighter(this);
             Team.AddUpdatable(this);
             Team.AddHandler(Dispatch);
@@ -522,18 +522,21 @@ namespace Codebreak.Service.World.Game.Fight
         public virtual void EndFight(bool win = false)
         {
             if (!IsSpectating)
-            {
-                switch (Fight.Type)
+            {                
+                if (IsFighterDead)
                 {
-                    // On rend la vie aux joueur en pvp
-                    case FightTypeEnum.TYPE_CHALLENGE:
-                        Life = MaxLife;
-                        break;
+                    switch (Fight.Type)
+                    {
+                        // On rend la vie aux joueurs en pvp
+                        case FightTypeEnum.TYPE_CHALLENGE:
+                            Life = 1;
+                            break;
 
-                    case FightTypeEnum.TYPE_PVM:
-                        if (Type == EntityTypEnum.TYPE_CHARACTER)
-                            Life = MaxLife; // 
-                        break;
+                        case FightTypeEnum.TYPE_PVT:
+                            if (Type == EntityTypEnum.TYPE_CHARACTER)
+                                Life = 1; // 
+                            break;
+                    }
                 }
 
                 Team.RemoveFighter(this);

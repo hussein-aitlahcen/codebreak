@@ -55,7 +55,7 @@ namespace Codebreak.Service.World.Frames
                         case 'H': // hire tax collector
                             return GuildHireTaxcollector;
                         case 'F': // farm tax collector
-                            break;
+                            return GuildTaxCollectorRemove;
                         case 'f': // teleport to guild farm ?? 
                             break;
                         case 'h': // teleport to guild house
@@ -77,9 +77,9 @@ namespace Codebreak.Service.World.Frames
                             switch(message[2])
                             {
                                 case 'J': // join tax collector fight
-                                    break;
+                                    return GuildTaxCollectorJoin;
                                 case 'V': // leave tax collector fight
-                                    break;
+                                    return GuildTaxCollectorLeave;
                             }
                             break;
                         case 'I':
@@ -97,14 +97,9 @@ namespace Codebreak.Service.World.Frames
                                     break;
                                 case 'T':
                                     if(message.Length > 3)
-                                    {
-
-                                    }
+                                        return GuildTaxCollectorInterfaceLeave;
                                     else
-                                    {
                                         return GuildTaxCollectorsList;
-                                    }
-                                    break;
                             }
                             break;
                     }
@@ -160,6 +155,112 @@ namespace Codebreak.Service.World.Frames
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GuildTaxCollectorRemove(CharacterEntity character, string message)
+        {           
+            character.AddMessage(() =>
+                {
+                    if(!character.HasGameAction(GameActionTypeEnum.MAP))
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    long taxCollectorId = -1;
+                    if (!long.TryParse(message.Substring(2), out taxCollectorId))
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    var taxCollector = character.Map.GetEntity(taxCollectorId) as TaxCollectorEntity;
+                    if(taxCollector == null)
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    WorldService.Instance.AddMessage(() =>
+                        {
+                            if (character.CharacterGuild == null)
+                            {
+                                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                                return;
+                            }
+
+                            character.CharacterGuild.RemoveTaxCollector(taxCollector);
+                        });
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GuildTaxCollectorInterfaceLeave(CharacterEntity character, string message)
+        {
+            if (character.CharacterGuild == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.CharacterGuild.TaxCollectorsInterfaceLeave();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        public void GuildTaxCollectorLeave(CharacterEntity character, string message)
+        {
+            if (character.CharacterGuild == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.AddMessage(() =>
+                {
+                    if (!character.HasGameAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION))
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    character.StopAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION);
+                });
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GuildTaxCollectorJoin(CharacterEntity character, string message)
+        {
+            if (character.CharacterGuild == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            long taxCollectorId = -1;
+            if (!long.TryParse(message.Substring(3), out taxCollectorId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.CharacterGuild.TaxCollectorJoin(taxCollectorId);
         }
 
         /// <summary>
@@ -241,8 +342,9 @@ namespace Codebreak.Service.World.Frames
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-
+            
             entity.CharacterGuild.SendTaxCollectorsList();
+            entity.CharacterGuild.TaxCollectorsInterfaceJoin();
         }
 
 

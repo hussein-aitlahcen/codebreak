@@ -1,5 +1,5 @@
-﻿using Codebreak.Service.World.Game.Entity;
-using Codebreak.Service.World.Game.Fight.Challenges;
+﻿using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Map;
 using System;
 using System.Collections.Generic;
@@ -12,10 +12,11 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ChallengerFight : FightBase, IDisposable
+    public sealed class TaxCollectorFight : FightBase, IDisposable
     {
-        public const int CHALLENGE_START_TIMEOUT = 60000;
-        public const int CHALLENGE_TURN_TIME = 30000;
+        public const int PVT_TELEPORT_DEFENDERS_TIMEOUT = 45000;
+        public const int PVT_START_TIMEOUT = 60000;
+        public const int PVT_TURN_TIME = 30000;
 
         /// <summary>
         /// 
@@ -29,7 +30,16 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public CharacterEntity Defender
+        public TaxCollectorEntity TaxCollector
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CanDefend
         {
             get;
             private set;
@@ -43,22 +53,51 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public ChallengerFight(MapInstance map, long id, CharacterEntity attacker, CharacterEntity defender)
-            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, attacker.Id, attacker.CellId, defender.Id, defender.CellId, CHALLENGE_START_TIMEOUT, CHALLENGE_TURN_TIME, true)
+        public TaxCollectorFight(MapInstance map, long id, CharacterEntity attacker, TaxCollectorEntity taxCollector)
+            : base(FightTypeEnum.TYPE_PVT, map, id, attacker.Id, attacker.CellId, taxCollector.Id, taxCollector.CellId, PVT_START_TIMEOUT, PVT_TURN_TIME)
         {
+            CanDefend = true;
             Attacker = attacker;
-            Defender = defender;
-
+            TaxCollector = taxCollector;
+            
             JoinFight(Attacker, Team0);
-            JoinFight(Defender, Team1);
+            JoinFight(TaxCollector, Team1);
 
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    base.Team0.AddChallenge(ChallengeManager.Instance.Generate());
-            //    base.Team1.AddChallenge(ChallengeManager.Instance.Generate());
-            //}
-
+            base.AddTimer(PVT_TELEPORT_DEFENDERS_TIMEOUT, TeleportDefenders, true);
             base.Start();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void TeleportDefenders()
+        {
+            CanDefend = false;
+
+            foreach(var defender in TaxCollector.Defenders)
+            {
+                var character = defender.Character;
+                if(character != null)
+                {
+                    character.AddMessage(() =>
+                    {
+                        character.StopAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION);
+
+                        JoinFight(character, Team1);
+                    });
+                }
+            }
+
+            TaxCollector.Defenders.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
+        public override void OnFighterJoin(FighterBase fighter)
+        {
+            TaxCollector.Guild.TaxCollectorAttackerJoin(TaxCollector.Id, fighter);
         }
 
         /// <summary>
@@ -85,24 +124,29 @@ namespace Codebreak.Service.World.Game.Fight
             switch (State)
             {
                 case FightStateEnum.STATE_PLACEMENT:
-                    if (fighter.IsLeader)
+                    if (base.TryKillFighter(fighter, fighter.Id, true, true) == FightActionResultEnum.RESULT_END)
                     {
-                        foreach (var teamFighter in fighter.Team.Fighters)
-                        {
-                            if (base.TryKillFighter(teamFighter, teamFighter.Id, true, true) == FightActionResultEnum.RESULT_END)
-                            {
-                                return FightActionResultEnum.RESULT_END;
-                            }
-                        }
-
                         return FightActionResultEnum.RESULT_END;
                     }
                     else
                     {
-                        fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
-                        fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
-                        fighter.LeaveFight(true);
-                        fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        if (kick)
+                        {
+                            fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
+                            fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
+                            fighter.LeaveFight(true);
+                            fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        }
+                        else
+                        {                        
+                            // TODO : ON PURPOSE LEAVE 
+                            fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
+                            fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
+                            fighter.LeaveFight();
+                            fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        }
+
+                        TaxCollector.Guild.TaxColectorAttackerLeave(TaxCollector.Id, fighter);
 
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
@@ -162,7 +206,7 @@ namespace Codebreak.Service.World.Game.Fight
             message.Append(UpdateTime).Append(';'); // TODO : Time;
             message.Append("0,-1,"); // TODO : Alignement etc
             message.Append(Team0.AliveFighters.Count()).Append(';');
-            message.Append("0,-1,"); // TODO : Valeur monster "," Alignement monstre
+            message.Append("3,-1,"); // TODO : Valeur monster "," Alignement monstre
             message.Append(Team1.AliveFighters.Count()).Append(';');
             message.Append('|');
         }
@@ -180,11 +224,11 @@ namespace Codebreak.Service.World.Game.Fight
                 _serializedFlag.Append((int)Type).Append('|');
                 _serializedFlag.Append(Team0.LeaderId).Append(';');
                 _serializedFlag.Append(Team0.FlagCellId).Append(';');
-                _serializedFlag.Append('2').Append(';');
-                _serializedFlag.Append("-1").Append('|');
+                _serializedFlag.Append('0').Append(';');
+                _serializedFlag.Append("-1").Append('|'); // neutral
                 _serializedFlag.Append(Team1.LeaderId).Append(';');
                 _serializedFlag.Append(Team1.FlagCellId).Append(';');
-                _serializedFlag.Append('2').Append(';');
+                _serializedFlag.Append('3').Append(';');
                 _serializedFlag.Append("-1");
             }
 
@@ -197,8 +241,8 @@ namespace Codebreak.Service.World.Game.Fight
         public override void Dispose()
         {
             Attacker = null;
-            Defender = null;
-            
+            TaxCollector = null;
+
             _serializedFlag.Clear();
             _serializedFlag = null;
 

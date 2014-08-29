@@ -58,7 +58,17 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="defender"></param>
         public void StartChallenge(CharacterEntity attacker, CharacterEntity defender)
         {
-            this.Add(new ChallengerFight(_map, _fightId++, attacker, defender));            
+            Add(new ChallengerFight(_map, _fightId++, attacker, defender));            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="taxCollector"></param>
+        public void StartTaxCollectorAggression(CharacterEntity attacker, TaxCollectorEntity taxCollector)
+        {
+            Add(new TaxCollectorFight(_map, _fightId++, attacker, taxCollector));
         }
 
         /// <summary>

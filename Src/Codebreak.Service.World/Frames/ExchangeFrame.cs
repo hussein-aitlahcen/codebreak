@@ -100,6 +100,13 @@ namespace Codebreak.Service.World.Frames
                     return;
                 }
 
+                if(!distantEntity.CanGameAction(GameActionTypeEnum.EXCHANGE))
+                {
+                    Logger.Debug("ExchangeFrame::Request distantEntity cant start an exchange : " + distantEntity.Name);
+                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
+                    return;
+                }
+
                 if (!distantEntity.CanBeExchanged(exchangeType))
                 {
                     entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));

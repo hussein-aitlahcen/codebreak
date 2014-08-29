@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Game.Fight.AI
 {
@@ -25,5 +26,17 @@ namespace Codebreak.Service.World.Game.Fight.AI
         {
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fight"></param>
+        /// <param name="team"></param>
+        public override void JoinFight(FightBase fight, FightTeam team)
+        {
+            Life = MaxLife;
+
+            base.JoinFight(fight, team);
+        }     
     }
 }

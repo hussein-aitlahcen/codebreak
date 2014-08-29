@@ -57,6 +57,15 @@ namespace Codebreak.Service.World.Manager
             _taxCollectorById.Add(taxCollector.Id, taxCollector);
             return taxCollector;
         }
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        public void RemoveTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            _taxCollectorById.Remove(taxCollector.Id);
+        }
 
         /// <summary>
         /// 
@@ -99,12 +108,12 @@ namespace Codebreak.Service.World.Manager
                     return;
                 }
 
-                if (character.CharacterGuild != null)
-                    character.CharacterGuild.CharacterDisconnected();
                 if (character.CurrentAction != null)
                     character.AbortAction(character.CurrentAction.Type, character.Id);
                 if (character.HasGameAction(GameActionTypeEnum.MAP))
                     character.AbortAction(GameActionTypeEnum.MAP);
+                if (character.CharacterGuild != null)
+                    character.CharacterGuild.CharacterDisconnected();
 
                 RemoveCharacter(character);
             });

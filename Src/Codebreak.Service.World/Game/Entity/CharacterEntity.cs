@@ -568,6 +568,16 @@ namespace Codebreak.Service.World.Game.Entity
             StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DefendTaxCollector()
+        {
+            CurrentAction = new GameTaxCollectorDefenderAction(this);
+
+            StartAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION);
+        }
+
 
         /// <summary>
         /// 
@@ -646,8 +656,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="actionType"></param>
         public override void StartAction(GameActionTypeEnum actionType)
         {
+            base.StartAction(actionType);
+
             switch (actionType)
             {
+                case GameActionTypeEnum.MAP_TELEPORT:
+                    Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
+                    break;
+
                 case GameActionTypeEnum.MAP:
                     if (!HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
                     {
@@ -658,12 +674,24 @@ namespace Codebreak.Service.World.Game.Entity
                     }
                     break;
 
+                case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
+                case GameActionTypeEnum.GUILD_CREATE:
+                case GameActionTypeEnum.EXCHANGE:                    
+                    FrameManager.RemoveFrame(GameActionFrame.Instance);
+                    FrameManager.RemoveFrame(InventoryFrame.Instance);
+                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    break;
+
                 case GameActionTypeEnum.FIGHT:
+                    if (Fight.Map.Id != MapId)
+                    {
+                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
+                        Dispatch(WorldMessage.GAME_DATA_MAP(Fight.Map.Id, Fight.Map.CreateTime, Fight.Map.DataKey));
+                        FrameManager.AddFrame(GameInformationFrame.Instance);
+                    }
                     FrameManager.AddFrame(GameFightPlacementFrame.Instance);
                     break;
             }
-
-            base.StartAction(actionType);
         }
 
         /// <summary>
@@ -673,15 +701,17 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="args"></param>
         public override void AbortAction(GameActionTypeEnum actionType, params object[] args)
         {
+            base.AbortAction(actionType, args);
+
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP:
                     FrameManager.RemoveFrame(GameMapFrame.Instance);
-                    FrameManager.RemoveFrame(InventoryFrame.Instance);
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
                     break;
-
+                    
+                case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
@@ -689,8 +719,6 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.AddFrame(GameMapFrame.Instance);
                     break;
             }
-
-            base.AbortAction(actionType, args);
         }
 
         /// <summary>
@@ -700,12 +728,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="args"></param>
         public override void StopAction(GameActionTypeEnum actionType, params object[] args)
         {
+            base.StopAction(actionType, args);
+
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP_TELEPORT:
                     FrameManager.AddFrame(GameInformationFrame.Instance);
+                    Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
 
+                case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
@@ -729,8 +761,6 @@ namespace Codebreak.Service.World.Game.Entity
                     }
                     break;
             }
-
-            base.StopAction(actionType, args);
         }
 
         /// <summary>

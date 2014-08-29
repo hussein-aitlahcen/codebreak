@@ -17,8 +17,9 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        private LockFreeQueue<Action> _messagesQueue = new LockFreeQueue<Action>();
-        private List<Updatable> _subUpdatableObjects = new List<Updatable>();
+        private LockFreeQueue<Action> _messagesQueue;
+        private List<Updatable> _subUpdatableObjects;
+        private List<Timer> _timerList;
 
         /// <summary>
         /// 
@@ -38,6 +39,16 @@ namespace Codebreak.Framework.Generic
             {
                 return _messagesQueue.Count + _subUpdatableObjects.Sum(updatable => updatable.MessageCount);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Updatable()
+        {
+            _messagesQueue = new LockFreeQueue<Action>();
+            _subUpdatableObjects = new List<Updatable>();
+            _timerList = new List<Timer>();
         }
 
         /// <summary>
@@ -132,11 +143,68 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="delay"></param>
+        /// <param name="callback"></param>
+        /// <param name="oneshot"></param>
+        public void AddTimer(int delay, Action callback, bool oneshot = false)
+        {
+            AddMessage(() =>
+            {
+                _timerList.Add(new Timer(delay, callback, oneshot));
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timer"></param>
+        public void AddTimer(Timer timer)
+        {
+            AddMessage(() =>
+            {
+                _timerList.Add(timer);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timer"></param>
+        public void RemoveTimer(Timer timer)
+        {
+            AddMessage(() =>
+            {
+                _timerList.Remove(timer);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="updateDelta"></param>
         public virtual void Update(long updateDelta)
         {
             UpdateTime += updateDelta;
             
+            foreach (var timer in _timerList)
+            {
+                if ((UpdateTime - timer.LastActivated) >= timer.Delay)
+                {
+                    try
+                    {
+                        timer.Tick(UpdateTime);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("TaskQueue[" + GetType().Name + "] failed to update timer [" + timer.GetType().Name + "] : " + ex.ToString());
+                    }
+                    if (timer.OneShot)
+                    {
+                        RemoveTimer(timer);
+                    }
+                }
+            }
+
             foreach (var updatableObject in _subUpdatableObjects)
             {
                 try

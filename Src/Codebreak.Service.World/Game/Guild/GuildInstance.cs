@@ -1,6 +1,8 @@
 ﻿using Codebreak.Service.World.Database.Repositories;
 using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Manager;
@@ -239,6 +241,7 @@ namespace Codebreak.Service.World.Game.Guild
         private List<GuildMember> _members;
         private List<TaxCollectorEntity> _taxCollectors;
         private GuildDAO _record;
+        private MessageDispatcher _taxCollectorDispatcher;
 
         /// <summary>
         /// 
@@ -248,6 +251,7 @@ namespace Codebreak.Service.World.Game.Guild
             _record = record;
             _members = new List<GuildMember>();
             _taxCollectors = new List<TaxCollectorEntity>();
+            _taxCollectorDispatcher = new MessageDispatcher();
             foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.GetCharacterGuild().GuildId == _record.Id))
             {
                 AddMember(new GuildMember(this, character));
@@ -262,9 +266,223 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="taxCollector"></param>
+        public void RemoveTaxCollector(GuildMember member, TaxCollectorEntity taxCollector)
+        {
+            AddMessage(() =>
+                {
+                    if(taxCollector.Guild != this)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
+
+                    if(!member.HasRight(GuildRightEnum.COLLECT_TAXCOLLECTOR))
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
+
+                    taxCollector.AddMessage(() =>
+                        {
+                            if(!taxCollector.HasGameAction(GameActionTypeEnum.MAP))
+                            {
+                                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                                return;
+                            }
+
+                            taxCollector.StopAction(GameActionTypeEnum.MAP);
+
+                            AddMessage(() =>
+                                {
+                                    RemoveTaxCollector(taxCollector);
+
+                                    SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_REMOVED(taxCollector, member.Name));
+                                });
+                        });          
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        private void RemoveTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            TaxCollectorRepository.Instance.Remove(taxCollector.DatabaseRecord);
+            EntityManager.Instance.RemoveTaxCollector(taxCollector);
+            _taxCollectors.Remove(taxCollector);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        public void FarmTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            AddMessage(() =>
+                {
+                    
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
         public void AddTaxCollector(TaxCollectorEntity taxCollector)
         {
             _taxCollectors.Add(taxCollector);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        public void AddTaxCollectorListener(GuildMember member)
+        {
+            AddMessage(() =>
+                {
+                    foreach (var taxCollector in _taxCollectors)
+                    {
+                        taxCollector.AddMessage(() =>
+                        {
+                            if (taxCollector.HasGameAction(Action.GameActionTypeEnum.FIGHT))
+                            {
+                                var fight = taxCollector.Fight as TaxCollectorFight;
+                                if (fight.State == FightStateEnum.STATE_PLACEMENT)
+                                {
+                                    member.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_ATTACKER_JOIN(taxCollector.Id, fight.Team0.Fighters.ToArray()));
+                                    if (taxCollector.Defenders.Count > 0)
+                                        member.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_JOIN(taxCollector.Id, taxCollector.Defenders.ToArray()));
+                                }
+                            }
+                        });
+                    }
+
+                    _taxCollectorDispatcher.AddHandler(member.Dispatch);
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        public void RemoveTaxCollectorListener(GuildMember member)
+        {
+            AddMessage(() =>
+                {
+                    _taxCollectorDispatcher.RemoveHandler(member.Dispatch);
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attacker"></param>
+        public void TaxCollectorAttackerJoin(long taxCollectorId, FighterBase attacker)
+        {
+            AddMessage(() =>
+            {
+                _taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_ATTACKER_JOIN(taxCollectorId, attacker));
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollectorId"></param>
+        /// <param name="attacker"></param>
+        public void TaxColectorAttackerLeave(long taxCollectorId, FighterBase attacker)
+        {
+            AddMessage(() =>
+            {
+                _taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_ATTACKER_LEAVE(taxCollectorId, attacker.Id));
+            });
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="taxColectorId"></param>
+        public void TaxCollectorJoin(GuildMember member, long taxCollectorId)
+        {
+            var collector = _taxCollectors.Find(taxCollector => taxCollector.Id == taxCollectorId);
+            if (collector == null)
+            {
+                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            collector.AddMessage(() =>
+                {
+                    if(!collector.CanDefend)
+                    {
+                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    var character = member.Character;
+                    if(character != null)
+                    {
+                        character.AddMessage(() =>
+                        {
+                            if (!character.CanGameAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION))
+                            {
+                                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                                return;
+                            }
+
+                            character.DefendTaxCollector();
+
+                            collector.AddMessage(() =>
+                                {
+                                    collector.DefenderJoin(member);
+                                });
+
+                            // switch back to guild context
+                            AddMessage(() =>
+                            {
+                                member.TaxCollectorJoinedId = taxCollectorId;
+
+                                _taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_JOIN(taxCollectorId, member));
+                            });
+                        });                        
+                    }
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="taxCollectorId"></param>
+        public void TaxCollectorLeave(GuildMember member)
+        {
+            AddMessage(() =>
+                {
+                    if (member.TaxCollectorJoinedId == -1)
+                    {
+                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    var collector = _taxCollectors.Find(taxCollector => taxCollector.Id == member.TaxCollectorJoinedId);
+                    if (collector == null)
+                    {
+                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    member.TaxCollectorJoinedId = -1;
+
+                    collector.AddMessage(() =>
+                        {
+                            collector.DefenderLeft(member);
+                        });
+
+                    _taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_LEAVE(collector.Id, member.Id));
+                });
         }
 
         /// <summary>
@@ -296,47 +514,58 @@ namespace Codebreak.Service.World.Game.Guild
                         }
                     }
 
-                    if (member.Character.Map.HasTaxCollector())
+                    if(member.Character == null)
                     {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("There is already a Taxcollector in this map."));
                         return;
                     }
-
-                    if (member.Character.Inventory.Kamas < TaxCollectorPrice)
-                    {
-                        member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGHT_KAMAS, TaxCollectorPrice));
-                        return;
-                    }
-
-                    var taxCollectorDAO = new TaxCollectorDAO()
-                    {
-                        GuildId = Id,
-                        OwnerId = member.Id,
-                        Name = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_NAME, WorldConfig.TAXCOLLECTOR_MAX_NAME),
-                        FirstName = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_FIRSTNAME, WorldConfig.TAXCOLLECTOR_MAX_FIRSTNAME),
-                        MapId = member.Character.MapId,
-                        CellId = member.Character.CellId,
-                        Skin = WorldConfig.TAXCOLLECTOR_SKIN_BASE,
-                        SkinSize = WorldConfig.TAXCOLLECTOR_SKIN_SIZE_BASE,
-                        Kamas = 0,
-                    };
-
-                    if (!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))
-                    {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create Taxcollector due to unknow error."));
-                        return;
-                    }
-
-                    var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
-
-                    AddTaxCollector(taxCollector);
 
                     member.Character.AddMessage(() =>
                         {
-                            member.Character.Inventory.SubKamas(TaxCollectorPrice);
-                        });
+                            if (member.Character.Map.HasTaxCollector())
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("There is already a Taxcollector in this map."));
+                                return;
+                            }
 
-                    base.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_HIRED(taxCollector, member.Character.Name));
+                            if (member.Character.Inventory.Kamas < TaxCollectorPrice)
+                            {
+                                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGHT_KAMAS, TaxCollectorPrice));
+                                return;
+                            }
+
+                            AddMessage(() =>
+                                {
+                                    var taxCollectorDAO = new TaxCollectorDAO()
+                                    {
+                                        GuildId = Id,
+                                        OwnerId = member.Id,
+                                        Name = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_NAME, WorldConfig.TAXCOLLECTOR_MAX_NAME),
+                                        FirstName = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_FIRSTNAME, WorldConfig.TAXCOLLECTOR_MAX_FIRSTNAME),
+                                        MapId = member.Character.MapId,
+                                        CellId = member.Character.CellId,
+                                        Skin = WorldConfig.TAXCOLLECTOR_SKIN_BASE,
+                                        SkinSize = WorldConfig.TAXCOLLECTOR_SKIN_SIZE_BASE,
+                                        Kamas = 0,
+                                    };
+
+                                    if (!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))
+                                    {
+                                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create Taxcollector due to unknow error."));
+                                        return;
+                                    }
+
+                                    var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
+
+                                    AddTaxCollector(taxCollector);
+
+                                    member.Character.AddMessage(() =>
+                                        {
+                                            member.Character.Inventory.SubKamas(TaxCollectorPrice);
+                                        });
+
+                                    base.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_HIRED(taxCollector, member.Character.Name));
+                                });
+                        });
                 });
         }
 
@@ -669,10 +898,17 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="member"></param>
         public void SendTaxCollectorsList(GuildMember member)
         {
-            if (_taxCollectors.Count > 0)
-                member.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_LIST(_taxCollectors));
-            else
-                member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+            AddMessage(() =>
+                {
+                    if (_taxCollectors.Count > 0)
+                    {
+                        member.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_LIST(_taxCollectors));
+                    }
+                    else
+                    {
+                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    }
+                });
         }
           
         /// <summary>

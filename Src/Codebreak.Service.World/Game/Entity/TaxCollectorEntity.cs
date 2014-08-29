@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Structures;
 using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Fight.AI;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Spell;
@@ -16,7 +17,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public sealed class TaxCollectorEntity : AIFighter
+    public sealed class TaxCollectorEntity : AIFighter, IDisposable
     {
         /// <summary>
         /// 
@@ -55,7 +56,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get 
             {
-                return Util.EncodeBase36(DatabaseRecord.FirstName) + "," + Util.EncodeBase36(DatabaseRecord.FirstName);
+                return Util.EncodeBase36(DatabaseRecord.FirstName) + "," + Util.EncodeBase36(DatabaseRecord.Name);
             }
         }
 
@@ -153,18 +154,131 @@ namespace Codebreak.Service.World.Game.Entity
             private set;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<GuildMember> Defenders
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CanDefend
+        {
+            get
+            {
+                if (!HasGameAction(GameActionTypeEnum.FIGHT))
+                    return false;
+                return (Fight as TaxCollectorFight).CanDefend;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         public TaxCollectorEntity(GuildInstance guild, TaxCollectorDAO record)
             : base(EntityTypEnum.TYPE_TAX_COLLECTOR, record.Id)
-        {
+        {            
             DatabaseRecord = record;
             Guild = guild;
 
+            Defenders = new List<GuildMember>();
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
             Inventory = new TaxCollectorInventory(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            Guild = null;
+
+            Defenders.Clear();
+            Defenders = null;
+
+            base.Dispose();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fight"></param>
+        /// <param name="team"></param>
+        public override void JoinFight(Fight.FightBase fight, Fight.FightTeam team)
+        {
+            base.JoinFight(fight, team);
+
+            SendCollectorAttacked();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="win"></param>
+        public override void EndFight(bool win = false)
+        {
+            base.EndFight(win);
+
+            if (win)
+            {
+                StartAction(GameActionTypeEnum.MAP);
+                SendCollectorSurvived();
+            }
+            else
+            {
+                SendCollectorDied();
+                // TODO : remove collector
+            }
+
+            Defenders.Clear();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void DefenderJoin(GuildMember member)
+        {            
+            Defenders.Add(member);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        public void DefenderLeft(GuildMember member)
+        {
+            Defenders.Remove(member);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendCollectorAttacked()
+        {
+            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_UNDER_ATTACK(Name, Map.X, Map.Y));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendCollectorDied()
+        {
+            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_DIED(Name, Map.X, Map.Y));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendCollectorSurvived()
+        {
+            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
         }
 
         /// <summary>

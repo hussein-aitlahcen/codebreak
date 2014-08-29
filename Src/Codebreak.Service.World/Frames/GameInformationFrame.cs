@@ -33,7 +33,7 @@ namespace Codebreak.Service.World.Frames
 
                     if (entity.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        entity.Fight.JoinFight(entity, null);
+                        entity.Fight.SendFightJoinInfos(entity);
                         return;
                     }
 

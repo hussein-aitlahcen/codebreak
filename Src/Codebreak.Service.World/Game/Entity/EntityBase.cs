@@ -515,7 +515,6 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.MAP_TELEPORT:
-                    Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
                     StopAction(GameActionTypeEnum.MAP);
                     StopAction(GameActionTypeEnum.MAP_TELEPORT);
                     Map.AddUpdatable(this);
@@ -539,10 +538,6 @@ namespace Codebreak.Service.World.Game.Entity
             
             switch(actionType)
             {
-                case GameActionTypeEnum.MAP_TELEPORT:
-                    Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
-                    break;
-
                 case GameActionTypeEnum.MAP:
                     if(Map != null)
                         Map.DestroyEntity(this);

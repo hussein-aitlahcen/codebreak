@@ -20,6 +20,7 @@ namespace Codebreak.Service.World.Game.Action
         CHALLENGE_DECLINE = 902,
         FIGHT_JOIN = 903,
         FIGHT_AGGRESSION = 906,
+        TAXCOLLECTOR_AGGRESSION = 909,
         FIGHT_KILL = 103,
         FIGHT_TACLE = 104,
         FIGHT_ARMOR = 105,

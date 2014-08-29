@@ -296,7 +296,7 @@ namespace Codebreak.Service.World.Game
         /// <returns></returns>
         public static string CHARACTER_LIST(List<CharacterDAO> characters)
         {
-            var message = new StringBuilder("ALK31536000000");
+            var message = new StringBuilder("ALK31536000000", characters.Count * 50);
             if (characters.Count > 0)
             {
                 message.Append('|').Append(characters.Count);
@@ -443,7 +443,7 @@ namespace Codebreak.Service.World.Game
         /// <returns></returns>
         public static string ACCOUNT_STATS(CharacterEntity character)
         {
-            var message = new StringBuilder("As");
+            var message = new StringBuilder("As", 100);
             message
                 .Append(character.Experience).Append(',')                                               // CurExcperience
                 .Append(character.ExperienceFloorCurrent).Append(',')     // LastExperience
@@ -533,7 +533,7 @@ namespace Codebreak.Service.World.Game
         /// <returns></returns>
         public static string GAME_MAP_INFORMATIONS(OperatorEnum operation, params EntityBase[] entities)
         {
-            var message = new StringBuilder("GM");
+            var message = new StringBuilder("GM", entities.Count() * 100);
             foreach (var actor in entities)
             {
                 message.Append("|");
@@ -1456,7 +1456,7 @@ namespace Codebreak.Service.World.Game
         /// <returns></returns>
         public static string GUILD_MEMBERS_INFORMATIONS(IEnumerable<GuildMember> members)
         {
-            var message = new StringBuilder("gIM+");
+            var message = new StringBuilder("gIM+", members.Count() * 40);
             foreach(var member in members)
             {
                 member.SerializeAs_GuildMemberInformations(message);
@@ -1679,7 +1679,7 @@ namespace Codebreak.Service.World.Game
         /// <returns></returns>
         public static string GUILD_BOOST_INFORMATIONS(int boostPoint, int taxCollectorPrice, GuildStatistics stats)
         { 
-            var message = new StringBuilder("gIB");
+            var message = new StringBuilder("gIB", 50);
             message.Append(stats.MaxTaxcollector).Append('|');
             message.Append(0).Append('|'); // currentTaxCollectorCount
             message.Append(stats.BaseStatistics.GetTotal(EffectEnum.AddVitality)).Append('|');
@@ -1714,6 +1714,22 @@ namespace Codebreak.Service.World.Game
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="taxCollector"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_REMOVED(TaxCollectorEntity taxCollector, string remover)
+        {
+            var message = new StringBuilder("gTR");
+            message.Append(taxCollector.Name).Append('|');
+            message.Append(taxCollector.Id).Append('|');
+            message.Append(taxCollector.Map.X).Append('|');
+            message.Append(taxCollector.Map.Y).Append('|');
+            message.Append(remover);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="taxCollectors"></param>
         /// <returns></returns>
         public static string GUILD_TAXCOLLECTOR_LIST(IEnumerable<TaxCollectorEntity> taxCollectors)
@@ -1724,12 +1740,113 @@ namespace Codebreak.Service.World.Game
                 message.Append(Util.EncodeBase36(taxCollector.Id)).Append(';');
                 message.Append(taxCollector.Name).Append(';');
                 message.Append(Util.EncodeBase36(taxCollector.MapId)).Append(';');
-                message.Append('0').Append(';'); // State 1 fight, 0 map
-                message.Append('0').Append(';'); // fight timer
-                message.Append("45000").Append(';'); // fight max timer ?
-                message.Append('7').Append('|'); // ???                
+                if (taxCollector.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    message.Append('1').Append(';');
+                    message.Append(TaxCollectorFight.PVT_TELEPORT_DEFENDERS_TIMEOUT - taxCollector.Fight.UpdateTime).Append(';');
+                }
+                else
+                {
+                    message.Append('0').Append(';');
+                    message.Append('0').Append(';');
+                }
+                message.Append(TaxCollectorFight.PVT_TELEPORT_DEFENDERS_TIMEOUT).Append(';');
+                message.Append('7').Append('|'); // allowed players to join            
             }
             message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="mapX"></param>
+        /// <param name="mapY"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_UNDER_ATTACK(string name, int mapX, int mapY)
+        {
+            return "gAA" + name + "|1|" + mapX + "|" + mapY;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="mapX"></param>
+        /// <param name="mapY"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_SURVIVED(string name, int mapX, int mapY)
+        {
+            return "gAS" + name + "|1|" + mapX + "|" + mapY;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="mapX"></param>
+        /// <param name="mapY"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_DIED(string name, int mapX, int mapY)
+        {
+            return "gAD" + name + "|1|" + mapX + "|" + mapY;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_DEFENDER_LEAVE(long taxCollectorId, long memberId)
+        {
+            return "gITP-" + Util.EncodeBase36(taxCollectorId) + '|' + Util.EncodeBase36(memberId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollectorId"></param>
+        /// <param name="attackerId"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_ATTACKER_LEAVE(long taxCollectorId, long attackerId)
+        {
+            return "gITp-" + Util.EncodeBase36(taxCollectorId) + '|' + Util.EncodeBase36(attackerId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollectorId"></param>
+        /// <param name="attackers"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_ATTACKER_JOIN(long taxCollectorId, params FighterBase[] attackers)
+        {
+            var message = new StringBuilder("gITp+").Append(Util.EncodeBase36(taxCollectorId));
+            foreach (var attacker in attackers)
+            {
+                message.Append('|');
+                message.Append(Util.EncodeBase36(attacker.Id)).Append(';');
+                message.Append(attacker.Name).Append(';');
+                message.Append(attacker.Level);
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollectorId"></param>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_DEFENDER_JOIN(long taxCollectorId, params GuildMember[] members)
+        {
+            var message = new StringBuilder("gITP+").Append(Util.EncodeBase36(taxCollectorId));
+            foreach(var member in members)
+            {
+                message.Append('|');
+                member.SerializeAs_TaxCollectorDefender(message);
+            }
             return message.ToString();
         }
     }

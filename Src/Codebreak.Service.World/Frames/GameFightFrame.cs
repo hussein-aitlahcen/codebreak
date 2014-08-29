@@ -143,7 +143,13 @@ namespace Codebreak.Service.World.Frames
                     return;
                 }
 
-                entity.Fight.AddMessage(() => entity.Fight.FightQuit(entity));
+                if (!entity.Fight.CancelButton && entity.Fight.State != FightStateEnum.STATE_FIGHTING)
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                entity.Fight.AddMessage(() => entity.Fight.FightQuit(entity));                
             });
         }        
     }

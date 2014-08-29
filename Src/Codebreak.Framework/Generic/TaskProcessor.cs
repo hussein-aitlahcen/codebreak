@@ -75,7 +75,7 @@ namespace Codebreak.Framework.Generic
         /// 
         /// </summary>
         /// <param name="updateInterval"></param>
-        public TaskProcessor(string name, int updateInterval = 3)
+        public TaskProcessor(string name, int updateInterval = 5)
         {
             UpdateInterval = updateInterval;
             Name = name;

@@ -194,6 +194,14 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
+                switch(Fight.Type)
+                {
+                        // fight end on taxcollector death
+                    case FightTypeEnum.TYPE_PVT:
+                        if (_fighters[0].IsFighterDead)
+                            return false;
+                        break;
+                }
                 return _fighters.Any(fighter => !fighter.IsFighterDead);
             }
         }
@@ -205,7 +213,9 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return string.Join("", _places.Select(cell => Util.CellToChar(cell.Id)));
+                if(_placesCache == null)
+                    _placesCache = string.Concat(_places.Select(cell => Util.CellToChar(cell.Id)));
+                return _placesCache;
             }
         }
 
@@ -216,6 +226,7 @@ namespace Codebreak.Service.World.Game.Fight
         private List<FighterBase> _fighters;
         private List<FightCell> _places;
         private List<ChallengeBase> _challenges;
+        private string _placesCache;
 
         /// <summary>
         /// 
@@ -282,26 +293,43 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <returns></returns>
-        public bool CanJoinBeforeStart(FighterBase fighter)
+        public bool CanJoinBeforeStart(CharacterEntity character)
         {
-            // monster
-            if (LeaderId < 0)
+            if (LeaderId < 0) // cant join taxcollector or monsters
                 return false;
 
             // No more fighter accepted
             if (FreePlace == null || IsOptionLocked(FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS))
             {
-                fighter.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, fighter.Id, "f"));
+                character.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, character.Id, "f"));
                 return false;
             }
             
-            var character = (CharacterEntity)fighter;
             if (IsOptionLocked(FightOptionTypeEnum.TYPE_PARTY) && character.PartyId != ((CharacterEntity)_fighters[0]).PartyId)
             {
-                fighter.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, fighter.Id, "f"));
+                character.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, character.Id, "f"));
                 return false;
             }
-            
+
+            // no more place
+            if(FreePlace == null)
+            {
+                character.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, character.Id, "c")); // FULL
+                return false;
+            }
+
+            switch(Fight.Type)
+            {
+                case FightTypeEnum.TYPE_PVT:
+                    var taxCollector = OpponentTeam.Fighters[0] as TaxCollectorEntity;
+                    if(character.CharacterGuild != null && character.CharacterGuild.GuildId == taxCollector.Guild.Id)
+                    {
+                        character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You can't take part in a fight against your own TaxCollector."));
+                        return false;
+                    }
+                    break;
+            }
+
             return true;
         }
 

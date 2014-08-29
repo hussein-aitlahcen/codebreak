@@ -26,7 +26,7 @@ namespace Codebreak.Service.World.Frames
                             return FightPlacement;
 
                         case 'Q':
-                            return GameQuit;
+                            return FightQuit;
                     }
                     break;
 
@@ -131,7 +131,7 @@ namespace Codebreak.Service.World.Frames
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void GameQuit(CharacterEntity entity, string message)
+        private void FightQuit(CharacterEntity entity, string message)
         {
             entity.AddMessage(() =>
             {

@@ -101,6 +101,7 @@
     <Compile Include="Game\Action\GameMapTeleportAction.cs" />
     <Compile Include="Game\Action\GamePlayerExchangeAction.cs" />
     <Compile Include="Game\Action\GameShopExchangeAction.cs" />
+    <Compile Include="Game\Action\GameTaxCollectorDefenderAction.cs" />
     <Compile Include="Game\Area\AreaInstance.cs" />
     <Compile Include="Game\Area\SubAreaInstance.cs" />
     <Compile Include="Game\Area\SuperAreaInstance.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Game\Fight\FightTurnProcessor.cs" />
     <Compile Include="Game\Fight\IFightObstacle.cs" />
     <Compile Include="Game\Fight\SpellCastManager.cs" />
+    <Compile Include="Game\Fight\TaxCollectorFight.cs" />
     <Compile Include="Game\Guild\GuildInstance.cs" />
     <Compile Include="Game\Guild\GuildMember.cs" />
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
