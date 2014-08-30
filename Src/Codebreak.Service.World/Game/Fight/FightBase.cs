@@ -1430,7 +1430,7 @@ namespace Codebreak.Service.World.Game.Fight
                     }
                     else if (SynchronizationTimedout)
                     {
-                        var fighters = AliveFighters.Where(fighter => !fighter.TurnReady);
+                        var fighters = AliveFighters.OfType<CharacterEntity>().Where(fighter => !fighter.TurnReady);
                         var fightersName = string.Join(", ", fighters.Select(fighter => fighter.Name));
 
                         base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_WAITING_PLAYERS, fightersName));

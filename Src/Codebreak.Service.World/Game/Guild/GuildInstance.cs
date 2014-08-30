@@ -414,42 +414,44 @@ namespace Codebreak.Service.World.Game.Guild
                 return;
             }
 
-            collector.AddMessage(() =>
+            var character = member.Character;
+            if (character == null)
+            {
+                return;
+            }
+
+            character.AddMessage(() =>
+            {
+                if (!character.CanGameAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION))
                 {
-                    if(!collector.CanDefend)
-                    {
-                        member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                    return;
+                }
 
-                    var character = member.Character;
-                    if(character != null)
+                character.DefendTaxCollector();
+
+                collector.AddMessage(() =>
                     {
-                        character.AddMessage(() =>
+                        if (!collector.CanDefend)
                         {
-                            if (!character.CanGameAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION))
-                            {
-                                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
-                                return;
-                            }
-
-                            character.DefendTaxCollector();
-
-                            collector.AddMessage(() =>
+                            character.AddMessage(() =>
                                 {
-                                    collector.DefenderJoin(member);
+                                    character.StopAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION);
                                 });
+                            return;
+                        }
 
-                            // switch back to guild context
-                            AddMessage(() =>
-                            {
-                                member.TaxCollectorJoinedId = taxCollectorId;
+                        collector.DefenderJoin(member);
 
-                                _taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_JOIN(taxCollectorId, member));
-                            });
-                        });                        
-                    }
-                });
+                        // switch back to guild context
+                        AddMessage(() =>
+                        {
+                            member.TaxCollectorJoinedId = taxCollectorId;
+
+                            _taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_JOIN(taxCollectorId, member));
+                        });
+                    });
+            });
         }
 
         /// <summary>
