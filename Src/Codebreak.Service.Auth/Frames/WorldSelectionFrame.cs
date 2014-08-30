@@ -55,7 +55,11 @@ namespace Codebreak.Service.Auth.Frames
 
             world.Send(new GameTicketMessage(client.Account.Id, client.Account.Name, client.Account.Power, client.Account.RemainingSubscription.ToBinary(), client.Account.LastConnectionDate.ToBinary(), client.Account.LastConnectionIP, ticket));
 
-            AuthService.Instance.AddMessage(() => client.Send(AuthMessage.WORLD_SELECTION_SUCCESS(world.Ip, WorldGamePort, client.Ticket)));
+            AuthService.Instance.AddMessage(() =>
+            {
+                client.Send(AuthMessage.WORLD_SELECTION_SUCCESS(world.Ip, WorldGamePort, client.Ticket));
+                client.Send(AuthMessage.WORLD_SELECTION_SUCCESS_CRYPTED(world.Ip, WorldGamePort, client.Ticket));
+            });
         }
     }
 }

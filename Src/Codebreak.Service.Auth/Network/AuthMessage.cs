@@ -162,5 +162,17 @@ namespace Codebreak.Service.Auth.Network
         {
             return "AYK" + ip + ":" + port + ";" + ticket;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <param name="ticket"></param>
+        /// <returns></returns>
+        public static string WORLD_SELECTION_SUCCESS_CRYPTED(string ip, int port, string ticket)
+        {
+            return "AXK" + Util.CryptIP(ip) + "---" + ticket;
+        }
     }
 }

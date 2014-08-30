@@ -76,5 +76,35 @@ namespace Codebreak.Service.Auth
 
             return crypted.ToString();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public static string CryptIP(string ip)
+        {
+            var numbers = ip.Split('.');
+            var cryptedIP = new StringBuilder();
+            int count = 0;
+            for (int i = 0; i < 50; i++)
+            {
+                for (int o = 0; o < 50; o++)
+                {
+                    if (((i & 15) << 4 | o & 15) == int.Parse(numbers[count]))
+                    {
+                        var a = (char)(i + 48);
+                        var b = (char)(o + 48);
+                        cryptedIP.Append(a + "" + b);
+                        i = 0;
+                        o = 0;
+                        count++;
+                        if (count == 4)
+                            return cryptedIP.ToString();
+                    }
+                }
+            }
+            return "DD";
+        }
     }
 }

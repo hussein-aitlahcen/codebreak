@@ -81,7 +81,7 @@ namespace Codebreak.Service.World.Manager
             _characterById.Add(character.Id, character);
             _characterByName.Add(character.Name.ToLower(), character);
             _onlinePlayers++;
-            Logger.Debug("EntityManager online players : " + _onlinePlayers);            
+            Logger.Info("EntityManager online players : " + _onlinePlayers);            
             return character;
         }
         
@@ -133,7 +133,7 @@ namespace Codebreak.Service.World.Manager
 
                     character.Dispose();
 
-                    Logger.Debug("EntityManager online players : " + _onlinePlayers);
+                    Logger.Info("EntityManager online players : " + _onlinePlayers);
                 });
         }
 

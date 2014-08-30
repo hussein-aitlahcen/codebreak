@@ -11,8 +11,9 @@ namespace Codebreak.App.AuthConsole
 
         private static void Main(string[] args)
         {
-            ConfigureConsole();
             XmlConfigurator.Configure();
+
+            ConfigureConsole();
 
             Logger.Info("Starting the auth service...");
 
@@ -34,6 +35,12 @@ namespace Codebreak.App.AuthConsole
         {
             System.Console.Title = "Codebreak : AuthService";
             System.Console.WindowWidth += 40;
+            Logger.Info("   ###################################");
+            Logger.Info(" #######################################");
+            Logger.Info("#####           CODEBREAK           #####");
+            Logger.Info("#####             AUTH              #####");
+            Logger.Info(" #######################################");
+            Logger.Info("   ###################################");
         }
     }
 }

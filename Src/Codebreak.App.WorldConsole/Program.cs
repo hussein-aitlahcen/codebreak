@@ -10,8 +10,9 @@ namespace Codebreak.App.WorldConsole
 
         private static void Main(string[] args)
         {
-            ConfigureConsole();
             XmlConfigurator.Configure();
+
+            ConfigureConsole();
 
             Logger.Info("Starting the world service...");
 
@@ -32,6 +33,12 @@ namespace Codebreak.App.WorldConsole
         {
             System.Console.Title = "Codebreak : WorldService";
             System.Console.WindowWidth += 40;
+            Logger.Info("   ###################################");
+            Logger.Info(" #######################################");
+            Logger.Info("#####           CODEBREAK           #####");
+            Logger.Info("#####             WORLD             #####");
+            Logger.Info(" #######################################");
+            Logger.Info("   ###################################");
         }
     }
 }
