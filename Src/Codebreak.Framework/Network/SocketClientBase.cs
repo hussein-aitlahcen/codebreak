@@ -58,6 +58,7 @@ namespace Codebreak.Framework.Network
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket.NoDelay = true;
+			_socket.Blocking = false;
 
             _connectSaea = new SocketAsyncEventArgs();
             _connectSaea.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
@@ -105,7 +106,7 @@ namespace Codebreak.Framework.Network
         private void ProcessConnected()
         {
             _connectSaea.Completed -= IOCompleted;
-            if (_connectSaea.SocketError == SocketError.Success)
+            if (_connectSaea.SocketError == SocketError.Success && _socket.Connected)
             {
                 SocketAsyncEventArgs saea = _saeaRecvPool.Pop();
                 saea.Completed += IOCompleted;

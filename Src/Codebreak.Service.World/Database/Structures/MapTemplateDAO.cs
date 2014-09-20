@@ -8,7 +8,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("MapTemplate")]
+    [Table("maptemplate")]
     public sealed class MapTemplateDAO : DataAccessObject<MapTemplateDAO>
     {
         /// <summary>

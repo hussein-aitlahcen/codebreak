@@ -6,7 +6,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("NpcInstance")]
+    [Table("npcinstance")]
     public sealed class NpcInstanceDAO : DataAccessObject<NpcInstanceDAO>
     {
         public int MapId

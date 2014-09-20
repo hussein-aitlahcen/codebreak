@@ -15,7 +15,7 @@ namespace Codebreak.App.AuthConsole
 
             ConfigureConsole();
 
-            Logger.Info("Starting the auth service...");
+            Logger.Info("Starting auth service...");
 
             InitializeGCServer();
 
@@ -34,7 +34,6 @@ namespace Codebreak.App.AuthConsole
         private static void ConfigureConsole()
         {
             System.Console.Title = "Codebreak : AuthService";
-            System.Console.WindowWidth += 40;
             Logger.Info("   ###################################");
             Logger.Info(" #######################################");
             Logger.Info("#####           CODEBREAK           #####");

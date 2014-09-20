@@ -6,7 +6,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("CharacterAlignment")]
+    [Table("characteralignment")]
     [ImplementPropertyChanged]
     public sealed class CharacterAlignmentDAO : DataAccessObject<CharacterAlignmentDAO>
     {

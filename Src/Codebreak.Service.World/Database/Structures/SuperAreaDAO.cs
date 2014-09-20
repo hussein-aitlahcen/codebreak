@@ -2,7 +2,7 @@
 
 namespace Codebreak.Service.World.Database.Structures
 {
-    [Table("SuperAreaTemplate")]
+    [Table("superareatemplate")]
     public sealed class SuperAreaDAO : DataAccessObject<SuperAreaDAO>
     {
         [Key]

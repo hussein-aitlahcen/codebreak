@@ -3,7 +3,7 @@ using Codebreak.Framework.Database;
 
 namespace Codebreak.Service.Auth.Database.Structures
 {
-    [Table("Account")]
+    [Table("account")]
     public sealed class AccountDAO : DataAccessObject<AccountDAO>
     {
         [Key]

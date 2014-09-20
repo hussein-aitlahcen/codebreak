@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace Codebreak.Framework.Database
 {
@@ -22,9 +23,9 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        public SqlConnection CreateConnection()
+        public MySqlConnection CreateConnection()
         {
-            var connection = new SqlConnection(_connectionString);
+            var connection = new MySqlConnection(_connectionString);
             connection.Open();
             return connection;
         }

@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("TaxCollector")]
+    [Table("taxcollector")]
     [ImplementPropertyChanged]
     public sealed class TaxCollectorDAO : DataAccessObject<TaxCollectorDAO>
     {

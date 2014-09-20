@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("InventoryItem")]
+    [Table("inventoryitem")]
     [ImplementPropertyChanged]
     public sealed class InventoryItemDAO : DataAccessObject<InventoryItemDAO>
     {

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,6 +11,8 @@
     <AssemblyName>Codebreak.RPC.Protocol</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +39,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthentificationMessage.cs" />
@@ -55,11 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codebreak.Framework\Codebreak.Framework.csproj">
-      <Project>{f1d9ce36-7f30-43c2-9027-af08a539c525}</Project>
+      <Project>{F1D9CE36-7F30-43C2-9027-AF08A539C525}</Project>
       <Name>Codebreak.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Codebreak.RPC.Service\Codebreak.RPC.Service.csproj">
-      <Project>{a809bfc9-3f6b-4d1a-b6d1-ad299e8f5193}</Project>
+      <Project>{A809BFC9-3F6B-4D1A-B6D1-AD299E8F5193}</Project>
       <Name>Codebreak.RPC.Service</Name>
     </ProjectReference>
   </ItemGroup>
@@ -71,4 +76,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

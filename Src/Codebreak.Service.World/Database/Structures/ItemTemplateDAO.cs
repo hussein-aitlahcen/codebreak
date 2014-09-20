@@ -173,7 +173,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("ItemTemplate")]
+    [Table("itemtemplate")]
     public sealed class ItemTemplateDAO : DataAccessObject<ItemTemplateDAO>
     {
         /// <summary>

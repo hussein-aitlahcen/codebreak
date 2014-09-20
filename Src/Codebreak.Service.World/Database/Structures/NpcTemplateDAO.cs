@@ -7,7 +7,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("NpcTemplate")]
+    [Table("npctemplate")]
     public sealed class NpcTemplateDAO : DataAccessObject<NpcTemplateDAO>
     {
         [Key]

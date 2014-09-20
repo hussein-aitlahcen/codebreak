@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Database
     public sealed class WorldDbMgr : DbManager<WorldDbMgr>
     {
         [Configurable("DbConnection")]
-        public static string DbConnection = "Data Source=SMARKEN;Initial Catalog=codebreak_world;Integrated Security=True";
+		public static string DbConnection = "Server=localhost;Database=codebreak_world;Uid=root;Pwd=;";
 
         public void Initialize()
         {

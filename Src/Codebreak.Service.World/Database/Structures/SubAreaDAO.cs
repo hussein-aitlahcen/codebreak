@@ -5,7 +5,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("SubAreaTemplate")]
+    [Table("subareatemplate")]
     public sealed class SubAreaDAO : DataAccessObject<SubAreaDAO>
     {
         [Key]

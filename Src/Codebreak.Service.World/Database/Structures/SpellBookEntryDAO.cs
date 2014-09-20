@@ -8,7 +8,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("SpellBookEntry")]
+    [Table("spellbookentry")]
     [ImplementPropertyChanged]
     public sealed class SpellBookEntryDAO : DataAccessObject<SpellBookEntryDAO>
     {

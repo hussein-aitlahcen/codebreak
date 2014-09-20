@@ -7,7 +7,7 @@ namespace Codebreak.Service.Auth.RPC
     public sealed class AuthRPCService : RPCService<AuthRPCService, AuthRPCServiceClient, AuthMessageBuilder>
     {
         [Configurable("RPCServiceIP")]
-        public static string RPCServiceIP = "127.0.0.1";
+        public static string RPCServiceIP = "localhost";
 
         [Configurable("RPCServicePort")]
         public static int RPCServicePort = 4321;

@@ -14,7 +14,7 @@ namespace Codebreak.App.WorldConsole
 
             ConfigureConsole();
 
-            Logger.Info("Starting the world service...");
+            Logger.Info("Starting world service...");
 
             InitializeGCServer();
             Service.World.WorldService.Instance.Start("./Config.json");
@@ -32,7 +32,6 @@ namespace Codebreak.App.WorldConsole
         private static void ConfigureConsole()
         {
             System.Console.Title = "Codebreak : WorldService";
-            System.Console.WindowWidth += 40;
             Logger.Info("   ###################################");
             Logger.Info(" #######################################");
             Logger.Info("#####           CODEBREAK           #####");

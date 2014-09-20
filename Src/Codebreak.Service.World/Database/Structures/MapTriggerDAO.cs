@@ -5,7 +5,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("MapTrigger")]
+    [Table("maptrigger")]
     public sealed class MapTriggerDAO : DataAccessObject<MapTriggerDAO>
     {
         public int MapId

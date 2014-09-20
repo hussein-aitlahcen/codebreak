@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("CharacterGuild")]
+    [Table("characterguild")]
     [ImplementPropertyChanged]
     public sealed class CharacterGuildDAO : DataAccessObject<CharacterGuildDAO>
     {

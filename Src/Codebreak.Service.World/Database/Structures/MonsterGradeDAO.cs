@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("MonsterGrade")]
+    [Table("monstergrade")]
     public sealed class MonsterGradeDAO : DataAccessObject<MonsterGradeDAO>
     {
         public int Id

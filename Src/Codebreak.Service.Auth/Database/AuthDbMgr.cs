@@ -8,7 +8,7 @@ namespace Codebreak.Service.Auth.Database
     public sealed class AuthDbMgr : DbManager<AuthDbMgr>
     {
         [Configurable("DbConnection")]
-        public static string DbConnection = "Data Source=SMARKEN;Initial Catalog=codebreak_auth;Integrated Security=True;Pooling=False";
+		public static string DbConnection = "Server=localhost;Database=codebreak_auth;Uid=root;Pwd=;";
 
         public void Initialize()
         {

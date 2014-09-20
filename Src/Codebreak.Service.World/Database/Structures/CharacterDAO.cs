@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>    
-    [Table("Character")]
+    [Table("characterinstance")]
     [ImplementPropertyChanged]
     public sealed class CharacterDAO : DataAccessObject<CharacterDAO>
     {
@@ -243,6 +243,7 @@ namespace Codebreak.Service.World.Database.Structures
                     return item;
             return null;
         }
+
         public void SerializeAs_ActorLookMessage(StringBuilder message)
         {
             var items = GetItems();

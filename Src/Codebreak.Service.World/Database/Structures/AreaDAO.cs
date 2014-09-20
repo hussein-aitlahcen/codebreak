@@ -5,7 +5,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("AreaTemplate")]
+    [Table("areatemplate")]
     public sealed class AreaDAO : DataAccessObject<AreaDAO>
     {
         [Key]

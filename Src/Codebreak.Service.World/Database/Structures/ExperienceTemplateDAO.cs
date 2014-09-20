@@ -5,7 +5,7 @@ namespace Codebreak.Service.World.Database.Structures
     /// <summary>
     /// 
     /// </summary>
-    [Table("ExperienceTemplate")]
+    [Table("experiencetemplate")]
     public sealed class ExperienceTemplateDAO : DataAccessObject<ExperienceTemplateDAO>
     {
         public int Level
