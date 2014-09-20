@@ -75,9 +75,12 @@
     <Compile Include="Generic\ObjectPool.cs" />
     <Compile Include="Generic\PriorityQueueNode.cs" />
     <Compile Include="Generic\Singleton.cs" />
+    <Compile Include="Generic\TaskCompletionSourceExtensions.cs" />
+    <Compile Include="Generic\TaskExtensions.cs" />
+    <Compile Include="Generic\TaskFactoryExtensions.cs" />
     <Compile Include="Generic\TaskProcessor.cs" />
     <Compile Include="Generic\TaskProcessorBase.cs" />
-    <Compile Include="Generic\TaskQueue.cs" />
+    <Compile Include="Generic\TaskSchedulerExtensions.cs" />
     <Compile Include="Generic\Timer.cs" />
     <Compile Include="Generic\Updatable.cs" />
     <Compile Include="IO\BinaryStack.cs" />

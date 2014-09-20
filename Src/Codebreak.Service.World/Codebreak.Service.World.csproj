@@ -65,6 +65,8 @@
     <Compile Include="Database\Repositories\ItemTemplateRepository.cs" />
     <Compile Include="Database\Repositories\MapRepository.cs" />
     <Compile Include="Database\Repositories\MapTriggerRepository.cs" />
+    <Compile Include="Database\Repositories\MonsterGradeRepository.cs" />
+    <Compile Include="Database\Repositories\MonsterRepository.cs" />
     <Compile Include="Database\Repositories\NpcInstanceRepository.cs" />
     <Compile Include="Database\Repositories\NpcTemplateRepository.cs" />
     <Compile Include="Database\Repositories\OLD_REPOSITORIES.cs" />
@@ -80,6 +82,8 @@
     <Compile Include="Database\Structures\ItemTemplateDAO.cs" />
     <Compile Include="Database\Structures\MapTemplateDAO.cs" />
     <Compile Include="Database\Structures\MapTriggerDAO.cs" />
+    <Compile Include="Database\Structures\MonsterDAO.cs" />
+    <Compile Include="Database\Structures\MonsterGradeDAO.cs" />
     <Compile Include="Database\Structures\NpcInstanceDAO.cs" />
     <Compile Include="Database\Structures\NpcTemplateDAO.cs" />
     <Compile Include="Database\Structures\OLD_DATAS.cs" />
@@ -109,6 +113,8 @@
     <Compile Include="Game\Entity\CharacterInventory.cs" />
     <Compile Include="Game\Entity\EntityBase.cs" />
     <Compile Include="Game\Entity\InventoryBag.cs" />
+    <Compile Include="Game\Entity\MonsterEntity.cs" />
+    <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
     <Compile Include="Game\Entity\TaxCollectorInventory.cs" />
@@ -197,6 +203,7 @@
     <Compile Include="Game\Fight\FightTrap.cs" />
     <Compile Include="Game\Fight\FightTurnProcessor.cs" />
     <Compile Include="Game\Fight\IFightObstacle.cs" />
+    <Compile Include="Game\Fight\MonsterFight.cs" />
     <Compile Include="Game\Fight\SpellCastManager.cs" />
     <Compile Include="Game\Fight\TaxCollectorFight.cs" />
     <Compile Include="Game\Guild\GuildInstance.cs" />

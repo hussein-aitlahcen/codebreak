@@ -12,14 +12,14 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        protected static ILog Logger = LogManager.GetLogger(typeof(TaskQueue));
+        protected static ILog Logger = LogManager.GetLogger(typeof(Updatable));
 
         /// <summary>
         /// 
         /// </summary>
         private LockFreeQueue<Action> _messagesQueue;
         private List<Updatable> _subUpdatableObjects;
-        private List<Timer> _timerList;
+        private List<UpdatableTimer> _timerList;
 
         /// <summary>
         /// 
@@ -48,7 +48,7 @@ namespace Codebreak.Framework.Generic
         {
             _messagesQueue = new LockFreeQueue<Action>();
             _subUpdatableObjects = new List<Updatable>();
-            _timerList = new List<Timer>();
+            _timerList = new List<UpdatableTimer>();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Add(new Timer(delay, callback, oneshot));
+                _timerList.Add(new UpdatableTimer(delay, callback, oneshot));
             });
         }
 
@@ -158,7 +158,7 @@ namespace Codebreak.Framework.Generic
         /// 
         /// </summary>
         /// <param name="timer"></param>
-        public void AddTimer(Timer timer)
+        public void AddTimer(UpdatableTimer timer)
         {
             AddMessage(() =>
             {
@@ -170,7 +170,7 @@ namespace Codebreak.Framework.Generic
         /// 
         /// </summary>
         /// <param name="timer"></param>
-        public void RemoveTimer(Timer timer)
+        public void RemoveTimer(UpdatableTimer timer)
         {
             AddMessage(() =>
             {

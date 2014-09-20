@@ -30,6 +30,8 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(NpcTemplateRepository.Instance);
             base.AddRepository(NpcInstanceRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
+            base.AddRepository(MonsterRepository.Instance);
+            base.AddRepository(MonsterGradeRepository.Instance);
 
             base.LoadAll(DbConnection);
         }

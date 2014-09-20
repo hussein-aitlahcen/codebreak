@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Generic
 {
-    public sealed class Timer
+    public sealed class UpdatableTimer
     {
-        private static ILog Logger = LogManager.GetLogger(typeof(Timer));
+        private static ILog Logger = LogManager.GetLogger(typeof(UpdatableTimer));
 
         private Action _callback;
 
@@ -31,7 +31,7 @@ namespace Codebreak.Framework.Generic
             private set;
         }
 
-        public Timer(int delay, Action callback, bool oneshot = false)
+        public UpdatableTimer(int delay, Action callback, bool oneshot = false)
         {
             Delay = delay;
             _callback = callback;

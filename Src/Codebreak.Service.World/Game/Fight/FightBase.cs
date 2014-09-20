@@ -756,10 +756,16 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                if (Team0.Fighters.OfType<CharacterEntity>().Count() == 0)
-                    return false;
-                if (Team1.Fighters.OfType<CharacterEntity>().Count() == 0)
-                    return false;
+                switch(Type)
+                {
+                    case FightTypeEnum.TYPE_PVT:                        
+                        if (Team0.Fighters.OfType<CharacterEntity>().Count() == 0)
+                            return false;
+                        if (Team1.Fighters.OfType<CharacterEntity>().Count() == 0)
+                            return false;
+                        return IsAllReady;
+                }
+
                 return IsAllReady;
             }
         }
@@ -1067,19 +1073,17 @@ namespace Codebreak.Service.World.Game.Fight
 
                 // fight just ended
                 if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)                
-                    return;                
-
+                    return;
+                
                 // disconnected during placement or spectator disconnected
-                if (State == FightStateEnum.STATE_PLACEMENT || fighter.IsSpectating)
+                if (fighter.IsSpectating)
                 {
                     FightQuit(fighter, true);
                     return;
                 }
 
                 Logger.Debug("Fight::Disconnect fighter disconnected : " + fighter.Name);
-
-                fighter.IsDisconnected = true;
-
+                
                 if (fighter.DisconnectedTurnLeft == 0)
                     fighter.DisconnectedTurnLeft = WorldConfig.FIGHT_DISCONNECTION_TURN;
 
@@ -2393,12 +2397,21 @@ namespace Codebreak.Service.World.Game.Fight
 
                 switch (State)
                 {
-                    case FightStateEnum.STATE_PLACEMENT:
+                    case FightStateEnum.STATE_PLACEMENT:                        
                         fighter.Dispatch(WorldMessage.FIGHT_AVAILABLE_PLACEMENTS(fighter.Team.Id, FightPlaces)); // GamePlace
-                        Map.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, fighter.Team.LeaderId, fighter));
-                        if(fighter.MapId != Map.Id)
+                        if (fighter.IsDisconnected)
                         {
+                            fighter.IsDisconnected = false;
                             fighter.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
+                            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_RECONNECTED, fighter.Name));
+                        }
+                        else
+                        {
+                            Map.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, fighter.Team.LeaderId, fighter));
+                            if (fighter.MapId != Map.Id)
+                            {
+                                fighter.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
+                            }
                         }
                         break;
 

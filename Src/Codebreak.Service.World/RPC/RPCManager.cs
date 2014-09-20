@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.RPC
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RPCManager : TaskProcessor<RPCManager>
+    public sealed class RPCManager : Updatable
     {
         /// <summary>
         /// 
@@ -47,15 +47,34 @@ namespace Codebreak.Service.World.RPC
         /// <summary>
         /// 
         /// </summary>
+        public static RPCManager Instance
+        {
+            get
+            {
+                return Singleton<RPCManager>.Instance;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public RPCManager()
-            : base("RPCManager")
         {
             AuthState = AuthState.NEGOTIATING;
-
+            
             _rpcConnection = new AuthServiceRPCConnection();
-            _rpcConnection.OnConnectedEvent += () => AddMessage(() => OnConnected());
-            _rpcConnection.OnDisconnectedEvent += () => AddMessage(() => OnDisconnected());
-            _rpcConnection.OnMessageEvent += (message) => AddMessage(() => OnMessage(message));
+            _rpcConnection.OnConnectedEvent += () =>
+                {
+                    AddMessage(() => OnConnected());
+                };
+            _rpcConnection.OnDisconnectedEvent += () =>
+                {
+                    AddMessage(() => OnDisconnected());
+                };
+            _rpcConnection.OnMessageEvent += (message) =>
+                {
+                    AddMessage(() => OnMessage(message));
+                };
         }
         
         /// <summary>
@@ -85,12 +104,12 @@ namespace Codebreak.Service.World.RPC
         /// </summary>
         private void Connect()
         {
-            AddMessage(() =>
-                {
-                    Logger.Info("RPCManager connecting...");
+            AddMessage(() => 
+            {
+                Logger.Info("RPCManager connecting...");
 
-                    _rpcConnection.Connect(RPCIP, RPCPort);
-                });
+                _rpcConnection.Connect(RPCIP, RPCPort);
+            });
         }
 
         /// <summary>
@@ -148,8 +167,8 @@ namespace Codebreak.Service.World.RPC
 
                         Logger.Info("RPCManager authentification success.");
 
-                        _rpcConnection.Send(new GameIdUpdateMessage(WorldConfig.GAME_ID));
-                        _rpcConnection.Send(new GameStateUpdateMessage(GameState.ONLINE));
+                        Send(new GameIdUpdateMessage(WorldConfig.GAME_ID));
+                        Send(new GameStateUpdateMessage(GameState.ONLINE));
                     }
                     else
                     {

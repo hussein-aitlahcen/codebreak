@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Game.Fight;
+using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -158,6 +160,7 @@ namespace Codebreak.Service.World.Game.Map
         private Dictionary<int, MapCell> _cellById = new Dictionary<int, MapCell>();
         private List<MapCell> _cells = new List<MapCell>();
         private SubAreaInstance _subArea;
+        private long _nextMonsterId = -1;
 
         /// <summary>
         /// 
@@ -195,7 +198,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public int RandomFreeCell
+        public int RandomTeleportCell
         {
             get
             {
@@ -206,6 +209,23 @@ namespace Codebreak.Service.World.Game.Map
                 if (actionCell != null)
                     return actionCell.Id;
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RandomFreeCell
+        {
+            get
+            {
+                MapCell freeCell = null;
+                do
+                {
+                    freeCell = _cells[Util.Next(70, _cells.Count - 100)];
+                }
+                while (freeCell == null || !freeCell.Walkable);
+                return freeCell.Id;
             }
         }
 
@@ -332,6 +352,23 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        public void SpawnMonsters()
+        {
+            SpawnMonsters(RandomFreeCell);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SpawnMonsters(int cellId)
+        {
+            var monsters = new MonsterGroupEntity(_nextMonsterId--, Id, cellId);
+            monsters.StartAction(GameActionTypeEnum.MAP);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         public void SpawnEntity(EntityBase entity)
         {
@@ -417,7 +454,6 @@ namespace Codebreak.Service.World.Game.Map
         public void MovementFinish(EntityBase entity, MovementPath path, int cellId)
         {
             entity.Orientation = path.GetDirection(path.LastStep);
-            entity.CellId = cellId;
 
             if (entity.Type == EntityTypEnum.TYPE_CHARACTER)
             {
@@ -427,9 +463,22 @@ namespace Codebreak.Service.World.Game.Map
                     if (cell.NextMap != 0 && cell.NextCell != 0)
                     {
                         entity.Teleport(cell.NextMap, cell.NextCell);
+                        return;
+                    }
+                }                
+                foreach (var monsterGroup in _entityById.Values.OfType<MonsterGroupEntity>())
+                {
+                    if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
+                    {
+                        monsterGroup.StopAction(GameActionTypeEnum.MAP);
+                        FightManager.StartMonsteFight(entity as CharacterEntity, monsterGroup);
+                        return;
                     }
                 }
             }
+
+
+            entity.CellId = cellId;
         }
     }    
 }

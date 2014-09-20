@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreak.RPC.Protocol", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreak.RPC.Service", "Src\Codebreak.RPC.Service\Codebreak.RPC.Service.csproj", "{A809BFC9-3F6B-4D1A-B6D1-AD299E8F5193}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E422A960-6A34-48FB-9E6F-E1355946521B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4ED0D240-409B-47C6-80AC-9658A587A955}"
 	ProjectSection(SolutionItems) = preProject
 		Performance1.psess = Performance1.psess
 	EndProjectSection
@@ -136,5 +136,8 @@ Global
 		{46EAE51D-7753-4B18-9E67-8D2768F57C87} = {8C7D82DE-7697-4585-B7DE-1863592590FD}
 		{6D8A667C-17B0-4564-B628-782656EE711B} = {8C7D82DE-7697-4585-B7DE-1863592590FD}
 		{A809BFC9-3F6B-4D1A-B6D1-AD299E8F5193} = {8C7D82DE-7697-4585-B7DE-1863592590FD}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

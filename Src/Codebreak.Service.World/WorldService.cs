@@ -16,6 +16,7 @@ using Codebreak.Framework.Database;
 using System.Diagnostics;
 using Codebreak.RPC.Protocol;
 using System.Threading.Tasks;
+using Codebreak.Framework.Generic;
 
 namespace Codebreak.Service.World
 {
@@ -68,12 +69,7 @@ namespace Codebreak.Service.World
             get;
             private set;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Stopwatch _updateTimer;
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -99,6 +95,7 @@ namespace Codebreak.Service.World
             NpcManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
+            AddUpdatable(RPCManager.Instance);
 
             int minWorkingThreads = -1, minCompletionPortThreads = -1, maxWorkingThreads = -1, maxCompletionPortThreads = -1;
 

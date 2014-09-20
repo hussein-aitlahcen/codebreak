@@ -163,7 +163,7 @@ namespace Codebreak.Service.World.Game.Entity
                 return RealLife + Statistics.GetTotal(EffectEnum.AddVitality) + Statistics.GetTotal(EffectEnum.AddLife);
             }
             set
-            {
+            {                
                 RealLife = value - (Statistics.GetTotal(EffectEnum.AddVitality) + Statistics.GetTotal(EffectEnum.AddLife));
             }
         }

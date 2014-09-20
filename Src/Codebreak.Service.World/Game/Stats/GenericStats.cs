@@ -268,6 +268,32 @@ namespace Codebreak.Service.World.Game.Stats
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="monster"></param>
+        public GenericStats(MonsterGradeDAO monster)
+        {
+            _genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, monster.AP));
+            _genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, monster.MP));
+            _genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, monster.MaxInvocation));
+            _genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, monster.Initiative));
+            _genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, monster.Wisdom));
+            _genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, monster.Strenght));
+            _genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, monster.Intelligence));
+            _genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, monster.Agility));
+            _genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, monster.Chance));
+
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, monster.NeutralResistance));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, monster.EarthResistance));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, monster.FireResistance));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, monster.WaterResistance));
+            _genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, monster.AirResistance));
+
+            _genericEffects.Add(EffectEnum.AddAPDodge, new GenericEffect(EffectEnum.AddAPDodge, monster.APDodgePercent));
+            _genericEffects.Add(EffectEnum.AddMPDodge, new GenericEffect(EffectEnum.AddMPDodge, monster.MPDodgePercent));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="guild"></param>
         public GenericStats(GuildDAO guild) 
         {

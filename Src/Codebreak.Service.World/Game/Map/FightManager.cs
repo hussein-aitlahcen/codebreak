@@ -64,6 +64,16 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <param name="monsterGroup"></param>
+        public void StartMonsteFight(CharacterEntity character, MonsterGroupEntity monsterGroup)
+        {
+            Add(new MonsterFight(_map, _fightId++, character, monsterGroup));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="attacker"></param>
         /// <param name="taxCollector"></param>
         public void StartTaxCollectorAggression(CharacterEntity attacker, TaxCollectorEntity taxCollector)

@@ -233,7 +233,7 @@ namespace Codebreak.Service.World.Game.Entity
             else
             {
                 SendCollectorDied();
-                // TODO : remove collector
+                Guild.AddMessage(() => Guild.RemoveTaxCollector(this));
             }
 
             Defenders.Clear();

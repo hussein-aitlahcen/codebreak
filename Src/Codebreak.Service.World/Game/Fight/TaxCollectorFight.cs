@@ -137,14 +137,6 @@ namespace Codebreak.Service.World.Game.Fight
                             fighter.LeaveFight(true);
                             fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
                         }
-                        else
-                        {                        
-                            // TODO : ON PURPOSE LEAVE 
-                            fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
-                            fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
-                            fighter.LeaveFight();
-                            fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
-                        }
 
                         TaxCollector.Guild.TaxColectorAttackerLeave(TaxCollector.Id, fighter);
 
