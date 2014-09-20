@@ -1,0 +1,21 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Src/Codebreak.Service.World/RPC/RPCManager.cs">
+    <Files>
+      <File FileName="Src/Codebreak.App.AuthConsole/Program.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/Database/Structures/CharacterAlignmentDAO.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/Game/Fight/FightBase.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Database/SqlMapper.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.App.WorldConsole/Program.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/Database/Structures/CharacterDAO.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Database/SqlManager.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/RPC/AuthServiceRPCConnection.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/FodyWeavers.xml" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/RPC/RPCManager.cs" Line="7" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
