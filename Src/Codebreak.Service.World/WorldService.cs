@@ -161,6 +161,8 @@ namespace Codebreak.Service.World
                 {
                     Logger.Debug("Client : " + message);
 
+					Stopwatch sw = Stopwatch.StartNew();
+
                     if (client.CurrentCharacter != null)
                     {
                         if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
@@ -174,7 +176,9 @@ namespace Codebreak.Service.World
                         {
                             client.Send(WorldMessage.BASIC_NO_OPERATION());
                         }
-                    }                 
+                    }      
+
+					Logger.Debug("Message processed in : " + sw.ElapsedMilliseconds);
                 });
             }
         }

@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.RPC
         /// 
         /// </summary>
         [Configurable("RPCIP")]
-        public static string RPCIP = "localhost";
+        public static string RPCIP = "127.0.0.1";
 
         /// <summary>
         /// 

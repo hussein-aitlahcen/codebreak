@@ -14,7 +14,7 @@ namespace Codebreak.Service.Auth
     public sealed class AuthService : TcpServerBase<AuthService, AuthClient>
     {
         [Configurable("AuthServiceIP")]
-        public static string AuthServiceIP = "localhost";
+        public static string AuthServiceIP = "127.0.0.1";
 
         [Configurable("AuthServicePort")]
         public static int AuthServicePort = 443;

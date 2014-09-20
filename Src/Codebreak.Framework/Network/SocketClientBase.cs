@@ -143,7 +143,13 @@ namespace Codebreak.Framework.Network
         {
             saea.Completed -= IOCompleted;
 
-            _socket.Shutdown(SocketShutdown.Both);
+			try
+			{
+            	_socket.Shutdown(SocketShutdown.Both);
+			}
+			catch(Exception) 
+			{
+			}
 
             if (_socket.Connected)
                 _socket.Disconnect(false);

@@ -17,7 +17,7 @@ namespace Codebreak.App.WorldConsole
             Logger.Info("Starting world service...");
 
             InitializeGCServer();
-            Service.World.WorldService.Instance.Start("./Config.json");
+            Service.World.WorldService.Instance.Start("./config.json");
 
             while(true)
                 System.Console.ReadLine();

@@ -1,21 +1,26 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Src/Codebreak.Service.World/RPC/RPCManager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Src/Codebreak.Service.World/Game/Exchange/ShopExchange.cs">
     <Files>
-      <File FileName="Src/Codebreak.App.AuthConsole/Program.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Service.World/Database/Structures/CharacterAlignmentDAO.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Service.World/Game/Fight/FightBase.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Framework/Database/SqlMapper.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.App.WorldConsole/Program.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Service.World/Database/Structures/CharacterDAO.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Framework/Database/SqlManager.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Service.World/RPC/AuthServiceRPCConnection.cs" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Service.World/FodyWeavers.xml" Line="1" Column="1" />
-      <File FileName="Src/Codebreak.Service.World/RPC/RPCManager.cs" Line="7" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Generic/TaskProcessorBase.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Generic/TaskProcessor.cs" Line="226" Column="17" />
+      <File FileName="Src/Codebreak.Framework/Generic/TaskFactoryExtensions.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/WorldService.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Database/SqlMapperExtensions.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Configuration/Providers/JsonConfigurationProvider.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Network/TcpServerBase.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Framework/Generic/BasicTaskProcessor.cs" Line="1" Column="1" />
+      <File FileName="Src/Codebreak.Service.World/Game/Fight/FightBase.cs" Line="185" Column="25" />
+      <File FileName="Src/Codebreak.Service.World/Game/Map/Pathfinding.cs" Line="1161" Column="19" />
+      <File FileName="Src/Codebreak.Service.World/Database/Repositories/AreaRepository.cs" Line="56" Column="43" />
+      <File FileName="Src/Codebreak.Service.World/Game/Area/SuperAreaInstance.cs" Line="12" Column="30" />
+      <File FileName="Src/Codebreak.Service.World/Game/Exchange/ShopExchange.cs" Line="15" Column="39" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/home/hussein/Documents/codebreak/Src/Codebreak.Framework/Database/SqlMapperExtensions.cs" line="525" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

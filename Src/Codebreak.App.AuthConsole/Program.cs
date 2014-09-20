@@ -19,7 +19,7 @@ namespace Codebreak.App.AuthConsole
 
             InitializeGCServer();
 
-            AuthService.Instance.Start("./Config.json");
+            AuthService.Instance.Start("./config.json");
 
             while(true)
                 System.Console.ReadLine();

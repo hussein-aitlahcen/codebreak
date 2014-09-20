@@ -53,6 +53,7 @@ namespace Codebreak.Service.World.Database.Repositories
 
         public override void OnObjectAdded(SubAreaDAO subArea)
         {
+			_subAreaById.Add (subArea.Id, subArea);
         }
 
         public override void OnObjectRemoved(SubAreaDAO subArea)

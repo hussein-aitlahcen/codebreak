@@ -47,7 +47,7 @@ namespace Codebreak.Service.World.Game.Area
         {
             _areaRecord = record;
 
-            IOQueue = new BasicTaskProcessor("Area[" + record.Name + "] Task Queue");
+            IOQueue = new BasicTaskProcessor("Area[" + record.Name + "]");
             IOQueue.AddUpdatable(this);
         }
 
