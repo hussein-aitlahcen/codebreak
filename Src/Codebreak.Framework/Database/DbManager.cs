@@ -34,11 +34,18 @@ namespace Codebreak.Framework.Database
         {
             SqlManager.Instance.Initialize(connectionString);
 
-            foreach (var repository in _repositories)
+            try
             {
-                Logger.Info(repository.GetType().Name + " : loading...");
-                repository.Initialize();
-                Logger.Info(repository.GetType().Name + " : " + repository.ObjectCount + " record loaded.");
+                foreach (var repository in _repositories)
+                {
+                    Logger.Info(repository.GetType().Name + " : loading...");
+                    repository.Initialize();
+                    Logger.Info(repository.GetType().Name + " : " + repository.ObjectCount + " record loaded.");
+                }
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                Logger.Error("Fatal error while loading database : " + ex.Message);
             }
         }
 

@@ -8,6 +8,7 @@ using Codebreak.Service.Auth.Database;
 using Codebreak.Service.Auth.Frames;
 using Codebreak.Service.Auth.Network;
 using Codebreak.Service.Auth.RPC;
+using System;
 
 namespace Codebreak.Service.Auth
 {
@@ -39,7 +40,6 @@ namespace Codebreak.Service.Auth
             AuthRPCService.Instance.Start();
 
             base.Start(AuthServiceIP, AuthServicePort);
-
         }
 
         #region Network
