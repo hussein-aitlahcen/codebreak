@@ -64,7 +64,7 @@
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\ICommitableProvider.cs" />
     <Compile Include="Configuration\IConfigurationProvider.cs" />
-    <Compile Include="Configuration\Providers\JsonConfigurationProvider.cs" />
+    <Compile Include="Configuration\Provider\JsonConfigurationProvider.cs" />
     <Compile Include="Database\DataAccessObject.cs" />
     <Compile Include="Database\DbManager.cs" />
     <Compile Include="Database\Repository.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="Network\TcpClientBase.cs" />
     <Compile Include="Network\TcpServerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\FastRandom.cs" />
+    <Compile Include="Util\FastRandom.cs" />
     <Compile Include="Network\LinuxTcpServerBase.cs" />
   </ItemGroup>
   <ItemGroup>

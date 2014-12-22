@@ -1114,8 +1114,9 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="map"></param>
-        public Pathmaker(MapInstance map)
+        public Pathmaker(MapInstance mapInstance)
         {
+            map = mapInstance;
             cellCount = map.Cells.Count;
 
             directions = new int[]

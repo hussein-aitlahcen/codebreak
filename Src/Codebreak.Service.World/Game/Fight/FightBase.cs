@@ -832,6 +832,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<int> Obstacles
+        {
+            get
+            {
+                return Cells.Values.Where(cell => !cell.CanWalk).Select(cell => cell.Id);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected FightTeam _winnerTeam, _loserTeam;
         private long _loopTimeout, _turnTimeout, _subActionTimeout, _synchronizationTimeout;
         private Dictionary<FighterBase, List<FightActivableObject>> _activableObjects;
@@ -1283,7 +1294,11 @@ namespace Codebreak.Service.World.Game.Fight
                             break;
 
                         default:
-                            NextLoopState = FightLoopStateEnum.STATE_WAIT_AI;
+                            NextLoopState = FightLoopStateEnum.STATE_WAIT_AI;                            
+                            if (CurrentFighter is AIFighter)
+                            {
+                                ((AIFighter)CurrentFighter).CurrentBrain.OnTurnStart();
+                            }
                             break;
                     }
                 });
@@ -1449,6 +1464,10 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         EndTurn();
                     }
+                    else if(CurrentFighter is AIFighter)
+                    {
+                        LoopState = FightLoopStateEnum.STATE_WAIT_AI;
+                    }
                     break;
 
                 case FightLoopStateEnum.STATE_PROCESS_EFFECT:
@@ -1567,8 +1586,10 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
 
                 case FightLoopStateEnum.STATE_WAIT_AI:
-                    // TODO : AI CALCULATION
-                    CurrentFighter.TurnPass = true;
+                    if (CurrentFighter is AIFighter)
+                    {
+                        ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                    }
                     LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
                     break;
 
@@ -2334,6 +2355,7 @@ namespace Codebreak.Service.World.Game.Fight
                     fighter.UsedMP += lostMP;
 
                     base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + lostMP));
+                    base.CachedBuffer = false;
 
                     return;
                 }

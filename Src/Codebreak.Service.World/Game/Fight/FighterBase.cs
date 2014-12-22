@@ -209,7 +209,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
 
         #endregion
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -582,7 +582,7 @@ namespace Codebreak.Service.World.Game.Fight
                 BuffManager = null;
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -594,7 +594,7 @@ namespace Codebreak.Service.World.Game.Fight
             var buffResult = BuffManager.BeginTurn();
             if (buffResult != FightActionResultEnum.RESULT_NOTHING)
                 return buffResult;
-
+            
             return Cell.BeginTurn(this);
         }
 

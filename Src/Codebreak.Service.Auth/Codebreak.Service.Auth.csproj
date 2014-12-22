@@ -50,11 +50,11 @@
     <Compile Include="Network\AuthMessage.cs" />
     <Compile Include="AuthService.cs" />
     <Compile Include="Database\AuthDbMgr.cs" />
-    <Compile Include="Database\Repositories\AccountRepository.cs" />
-    <Compile Include="Database\Structures\AccountDAO.cs" />
-    <Compile Include="Frames\AuthentificationFrame.cs" />
-    <Compile Include="Frames\VersionFrame.cs" />
-    <Compile Include="Frames\WorldSelectionFrame.cs" />
+    <Compile Include="Database\Repositorie\AccountRepository.cs" />
+    <Compile Include="Database\Structure\AccountDAO.cs" />
+    <Compile Include="Frame\AuthentificationFrame.cs" />
+    <Compile Include="Frame\VersionFrame.cs" />
+    <Compile Include="Frame\WorldSelectionFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RPC\AuthRPCService.cs" />
     <Compile Include="RPC\AuthRPCServiceClient.cs" />
