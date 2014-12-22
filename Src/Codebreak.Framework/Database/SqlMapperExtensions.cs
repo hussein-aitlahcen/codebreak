@@ -524,7 +524,7 @@ namespace Codebreak.Framework.Database
 ﻿       {
             string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
 
-			﻿var id = int.Parse(connection.Execute(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ToString());
+			﻿var id = int.Parse(connection.Execute(cmd + "; SELECT LAST_INSERT_ID()", entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ToString());
 
 ﻿  ﻿        if (keyProperties.Any())
 ﻿  ﻿  ﻿         keyProperties.First().SetValue(entityToInsert, id, null);
