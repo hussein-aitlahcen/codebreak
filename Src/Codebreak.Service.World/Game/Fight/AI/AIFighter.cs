@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Game.Fight.AI
         /// </summary>
         /// <param name="type"></param>
         /// <param name="id"></param>
-        protected AIFighter(EntityTypEnum type, long id) 
+        protected AIFighter(EntityTypeEnum type, long id) 
             : base(type, id)
         {
             CurrentBrain = new DefaultAIBrain(this);

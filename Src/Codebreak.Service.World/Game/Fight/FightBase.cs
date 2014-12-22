@@ -180,7 +180,7 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (CanWinHonor)
             {
-                if (fighter.Type == EntityTypEnum.TYPE_CHARACTER)
+                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
                     var actorCharacter = (CharacterEntity)fighter;
 
@@ -205,7 +205,7 @@ namespace Codebreak.Service.World.Game.Fight
             }
             else
             {
-                if (fighter.Type == EntityTypEnum.TYPE_CHARACTER)
+                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
                     var actorCharacter = (CharacterEntity)fighter;
 
@@ -1289,7 +1289,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                     switch(CurrentFighter.Type)
                     {
-                        case EntityTypEnum.TYPE_CHARACTER:
+                        case EntityTypeEnum.TYPE_CHARACTER:
                             NextLoopState = FightLoopStateEnum.STATE_WAIT_TURN;
                             break;
 
@@ -1540,7 +1540,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                         switch (CurrentFighter.Type)
                         {
-                            case EntityTypEnum.TYPE_CHARACTER:
+                            case EntityTypeEnum.TYPE_CHARACTER:
                                 LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
                                 break;
 
@@ -2408,7 +2408,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="entity"></param>
         public void SendFightJoinInfos(FighterBase fighter)
         {
-            if (fighter.Type == EntityTypEnum.TYPE_CHARACTER)
+            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
             {
                 fighter.CachedBuffer = true;
                 if(fighter.IsSpectating)

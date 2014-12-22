@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="fighter"></param>
         /// <param name="timeout"></param>
         public GameFightActionBase(GameActionTypeEnum type, FighterBase fighter, long duration)
-            : base(type, fighter)
+            : base(type, fighter, duration)
         {
             Fighter = fighter;
             Timeout = Fighter.Fight.UpdateTime + duration;

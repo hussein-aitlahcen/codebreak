@@ -283,11 +283,11 @@ namespace Codebreak.Service.World.Game.Map
             set;
         }
 
-        public long MovementTime
+        public double MovementTime
         {
             get
             {
-                return (long)Pathfinding.GetPathTime(MovementLength, GetDirection(LastStep));
+                return Pathfinding.GetPathTime(MovementLength, GetDirection(LastStep));
             }
         }
 

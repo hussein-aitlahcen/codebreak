@@ -23,8 +23,8 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 
         public override AIActionResult Initialize()
         {
-            Fighter.Fight.Move(Fighter, Fighter.Cell.Id, new Pathmaker(Fighter.Fight.Map).FindPathAsString(Fighter.Cell.Id, CellId, false, Fighter.MP, Fighter.Fight.Obstacles));
-
+            Fighter.Fight.Move(Fighter, Fighter.Cell.Id, Fighter.Fight.Map.Pathmaker.FindPathAsString(Fighter.Cell.Id, CellId, false, Fighter.MP, Fighter.Fight.Obstacles));
+            
 			return AIActionResult.Running;
         }
 
@@ -32,7 +32,9 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         {
             if (!Timedout)
                 return AIActionResult.Running;
-            
+
+            Logger.Debug("AI MoveAction ended.");
+
             if(Fighter.CurrentAction != null)
                 Fighter.CurrentAction.Stop();
 

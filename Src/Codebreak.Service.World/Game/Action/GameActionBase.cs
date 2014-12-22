@@ -9,6 +9,12 @@ namespace Codebreak.Service.World.Game.Action
 {
     public abstract class GameActionBase
     {
+        public long Duration
+        {
+            get;
+            protected set;
+        }
+
         public GameActionTypeEnum Type
         {
             get;
@@ -32,10 +38,11 @@ namespace Codebreak.Service.World.Game.Action
             protected set;
         }
 
-        public GameActionBase(GameActionTypeEnum type, EntityBase entity)
+        public GameActionBase(GameActionTypeEnum type, EntityBase entity, long duration = -1)
         {
             Type = type;
             Entity = entity;
+            Duration = duration;
         }
 
         public virtual void Start()

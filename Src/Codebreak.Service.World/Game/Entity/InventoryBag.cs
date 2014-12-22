@@ -66,7 +66,7 @@ namespace Codebreak.Service.World.Game.Entity
                 throw new ArgumentException("InventoryBag::AddKamas value should be > 0 : " + Entity.Name);
             Kamas += value;
 
-            if(Entity.Type == EntityTypEnum.TYPE_CHARACTER)
+            if(Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
             {
                 base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
             }
@@ -82,7 +82,7 @@ namespace Codebreak.Service.World.Game.Entity
                 throw new ArgumentException("InventoryBag::SubKamas value should be > 0 : " + Entity.Name);
             Kamas -= value;
 
-            if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)
+            if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
             {
                 base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
             }
@@ -107,7 +107,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             Items.Add(item);
 
-            if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)            
+            if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)            
                 base.Dispatch(WorldMessage.OBJECT_ADD_SUCCESS(item));            
 
             return false;
@@ -130,7 +130,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 Logger.Debug("InventoryBag::TryMerge merged item : " + Entity.Name);
                 sameItem.Quantity += item.Quantity;
-                if(Entity.Type == EntityTypEnum.TYPE_CHARACTER)
+                if(Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                     base.Dispatch(WorldMessage.OBJECT_QUANTITY_UPDATE(sameItem.Id, sameItem.Quantity));
                 return true;
             }
@@ -157,7 +157,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             item.Quantity -= quantity;
 
-            if(Entity.Type == EntityTypEnum.TYPE_CHARACTER)
+            if(Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 base.Dispatch(WorldMessage.OBJECT_QUANTITY_UPDATE(item.Id, item.Quantity));
 
             return item.Clone(quantity);
@@ -207,7 +207,7 @@ namespace Codebreak.Service.World.Game.Entity
                 Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
                                
                 // send new stats
-                if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)
+                if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
                     if (!merged)                    
                         base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, slot));                    
@@ -261,12 +261,12 @@ namespace Codebreak.Service.World.Game.Entity
                 Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
 
                 // send new stats
-                if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)                
+                if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)                
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));                
             }
             else
             {
-                if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)    
+                if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)    
                     base.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
             }
         }
@@ -293,7 +293,7 @@ namespace Codebreak.Service.World.Game.Entity
                     Logger.Debug("InventoryBag::RemoveItem removing item with full quantity : " + Entity.Name);
                     Items.Remove(item);
 
-                    if (Entity.Type == EntityTypEnum.TYPE_CHARACTER)    
+                    if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)    
                         base.Dispatch(WorldMessage.OBJECT_REMOVE_SUCCESS(item.Id));
                 }
                 else

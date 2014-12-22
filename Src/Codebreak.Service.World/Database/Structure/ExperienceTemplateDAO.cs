@@ -8,6 +8,7 @@ namespace Codebreak.Service.World.Database.Structures
     [Table("experiencetemplate")]
     public sealed class ExperienceTemplateDAO : DataAccessObject<ExperienceTemplateDAO>
     {
+        [Key]
         public int Level
         {
             get;

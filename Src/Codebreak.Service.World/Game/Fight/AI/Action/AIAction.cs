@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action
         {
             get
             {
-                return WorldService.Instance.LastUpdate > m_timeout;
+                return m_timeout <= Fighter.Fight.UpdateTime;
             }
         }
 
@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action
         {
             set
             {
-                m_timeout = WorldService.Instance.LastUpdate + value;
+                m_timeout = Fighter.Fight.UpdateTime + value;
             }
         }
 

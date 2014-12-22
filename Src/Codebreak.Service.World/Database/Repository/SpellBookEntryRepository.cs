@@ -19,21 +19,21 @@ namespace Codebreak.Service.World.Database.Repositories
 
         public override void OnObjectAdded(SpellBookEntryDAO spellBookEntry)
         {
-            if (!_spellBookEntriesByOwner.ContainsKey(spellBookEntry.CharacterId))
-                _spellBookEntriesByOwner.Add(spellBookEntry.CharacterId, new List<SpellBookEntryDAO>());
-            _spellBookEntriesByOwner[spellBookEntry.CharacterId].Add(spellBookEntry);
+            if (!_spellBookEntriesByOwner.ContainsKey(spellBookEntry.OwnerId))
+                _spellBookEntriesByOwner.Add(spellBookEntry.OwnerId, new List<SpellBookEntryDAO>());
+            _spellBookEntriesByOwner[spellBookEntry.OwnerId].Add(spellBookEntry);
         }
 
         public override void OnObjectRemoved(SpellBookEntryDAO spellBookEntry)
         {
-            _spellBookEntriesByOwner[spellBookEntry.CharacterId].Remove(spellBookEntry);
+            _spellBookEntriesByOwner[spellBookEntry.OwnerId].Remove(spellBookEntry);
         }
 
-        public List<SpellBookEntryDAO> GetSpellEntries(long ownerId)
+        public List<SpellBookEntryDAO> GetSpellEntries(int ownerType, long ownerId)
         {
             if (_spellBookEntriesByOwner.ContainsKey(ownerId))
                 return _spellBookEntriesByOwner[ownerId];
-            return base.LoadMultiple("CharacterId = @OwnerId", new { OwnerId = ownerId });
+            return base.LoadMultiple("OwnerType = @OwnerType AND OwnerId = @OwnerId", new { OwnerType = ownerType, OwnerId = ownerId });
         }
     }
 }

@@ -24,7 +24,15 @@ namespace Codebreak.Service.World.Database.Structures
         /// <summary>
         /// 
         /// </summary>
-        public long CharacterId
+        public int OwnerType
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long OwnerId
         {
             get;
             set;

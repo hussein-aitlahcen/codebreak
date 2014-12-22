@@ -109,9 +109,9 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         /// <param name="ownerId"></param>
         /// <returns></returns>
-        public List<SpellBookEntryDAO> GetSpells(long ownerId)
+        public List<SpellBookEntryDAO> GetSpells(int ownerType, long ownerId)
         {
-            return SpellBookEntryRepository.Instance.GetSpellEntries(ownerId);
+            return SpellBookEntryRepository.Instance.GetSpellEntries(ownerType, ownerId);
         }
     }
 }

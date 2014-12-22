@@ -11,22 +11,15 @@ namespace Codebreak.Service.World.Game.Action
     public sealed class GameMapMovementAction : GameActionBase
     {
         public GameMapMovementAction(EntityBase entity, MovementPath path)
-            : base(GameActionTypeEnum.MAP_MOVEMENT, entity)
+            : base(GameActionTypeEnum.MAP_MOVEMENT, entity, (long)path.MovementTime)
         {
             Path = path;
-            Duration = path.MovementTime;
         }
 
         /// <summary>
         /// 
         /// </summary>
         public MovementPath Path
-        {
-            get;
-            private set;
-        }
-
-        public double Duration
         {
             get;
             private set;

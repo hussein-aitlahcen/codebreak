@@ -124,7 +124,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="monsterGrade"></param>
         public MonsterEntity(long id, MonsterGradeDAO monsterGrade)
-            : base(EntityTypEnum.TYPE_MONSTER_FIGHTER, id)
+            : base(EntityTypeEnum.TYPE_MONSTER_FIGHTER, id)
         {
             Grade = monsterGrade;
 
@@ -145,7 +145,7 @@ namespace Codebreak.Service.World.Game.Entity
             message.Append('0').Append(';');
             message.Append(Id).Append(';');
             message.Append(Name).Append(';');
-            message.Append((int)EntityTypEnum.TYPE_MONSTER_FIGHTER).Append(';');
+            message.Append((int)EntityTypeEnum.TYPE_MONSTER_FIGHTER).Append(';');
             message.Append(Skin).Append('^').Append(SkinSize).Append(';');
             message.Append(Grade.Grade).Append(';');
             message.Append(Grade.GetTemplate().Colors.Replace(",", ";"));

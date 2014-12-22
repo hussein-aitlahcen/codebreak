@@ -25,18 +25,18 @@ namespace Codebreak.Service.World.Game.Spell
         /// </summary>
         private Dictionary<int, SpellBookEntryDAO> _spellEntries = new Dictionary<int, SpellBookEntryDAO>();
         private long _entityId;
+        private int _entityType;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="spellEntries"></param>
-        public SpellBook(long id, List<SpellBookEntryDAO> entries)
+        public SpellBook(int type, long id)
         {
+            _entityType = type;
             _entityId = id;
-            foreach (var spellEntry in entries)
-            {
-                _spellEntries.Add(spellEntry.SpellId, spellEntry);
-            }
+            foreach (var spellEntry in SpellBookEntryRepository.Instance.GetSpellEntries(type, id))            
+                _spellEntries.Add(spellEntry.SpellId, spellEntry);            
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Codebreak.Service.World.Game.Spell
         {
             if (!HasSpell(spellId))
             {
-                var spellBookEntry = new SpellBookEntryDAO() { CharacterId = _entityId, SpellId = spellId, Level = level, Position = position };
+                var spellBookEntry = new SpellBookEntryDAO() { OwnerId = _entityId, SpellId = spellId, Level = level, Position = position };
                 if(SpellBookEntryRepository.Instance.Insert(spellBookEntry))
                     _spellEntries.Add(spellId, spellBookEntry);
             }

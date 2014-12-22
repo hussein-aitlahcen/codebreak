@@ -99,7 +99,7 @@ namespace Codebreak.Service.World.Game.Entity
         private StringBuilder _cachedEntityMapInformations, _cachedShopListInformations;
 
         public NonPlayerCharacterEntity(NpcInstanceDAO npcDAO, long id)
-            : base(EntityTypEnum.TYPE_NPC, id)
+            : base(EntityTypeEnum.TYPE_NPC, id)
         {
             _npcRecord = npcDAO;
 
@@ -122,7 +122,7 @@ namespace Codebreak.Service.World.Game.Entity
                 _cachedEntityMapInformations.Append('0').Append(';'); // Unknow
                 _cachedEntityMapInformations.Append(Id).Append(';');
                 _cachedEntityMapInformations.Append(_npcRecord.TemplateId).Append(';');
-                _cachedEntityMapInformations.Append((int)EntityTypEnum.TYPE_NPC).Append(';');
+                _cachedEntityMapInformations.Append((int)EntityTypeEnum.TYPE_NPC).Append(';');
                 _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().GfxID).Append('^');
                 _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().ScaleX).Append(';'); // size
                 _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().Sex).Append(';');

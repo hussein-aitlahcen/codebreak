@@ -399,7 +399,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase(EntityTypEnum type, long id)
+        public FighterBase(EntityTypeEnum type, long id)
             : base(type, id)
         {
         }
@@ -533,7 +533,7 @@ namespace Codebreak.Service.World.Game.Fight
                             break;
 
                         case FightTypeEnum.TYPE_PVT:
-                            if (Type == EntityTypEnum.TYPE_CHARACTER)
+                            if (Type == EntityTypeEnum.TYPE_CHARACTER)
                                 Life = 1; // 
                             break;
                     }

@@ -123,7 +123,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="id"></param>
         public MonsterGroupEntity(long id, int mapId, int cellId)
-            : base(EntityTypEnum.TYPE_MONSTER_GROUP, id)
+            : base(EntityTypeEnum.TYPE_MONSTER_GROUP, id)
         {
             _monsters = new List<MonsterEntity>();
             long monsterId = -1;
@@ -170,7 +170,7 @@ namespace Codebreak.Service.World.Game.Entity
                         _serializedMapInformations = new StringBuilder();
                         _serializedMapInformations.Append(Id).Append(";");
                         _serializedMapInformations.Append(mobIds).Append(";");
-                        _serializedMapInformations.Append((int)EntityTypEnum.TYPE_MONSTER_GROUP).Append(';');
+                        _serializedMapInformations.Append((int)EntityTypeEnum.TYPE_MONSTER_GROUP).Append(';');
                         _serializedMapInformations.Append(mobGfxs).Append(";");
                         _serializedMapInformations.Append(mobLevels).Append(";");
                         _serializedMapInformations.Append(mobColors);

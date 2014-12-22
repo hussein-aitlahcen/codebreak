@@ -140,7 +140,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
             
-            if (distantEntity.Type != EntityTypEnum.TYPE_TAX_COLLECTOR)
+            if (distantEntity.Type != EntityTypeEnum.TYPE_TAX_COLLECTOR)
             {
                 Logger.Debug("GameActionFrame::TaxCollectorAggression trying to aggro non taxcollector entity : " + character.Name);
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -301,7 +301,7 @@ namespace Codebreak.Service.World.Frames
                 return;
             }
 
-            if(distantEntity.Type != EntityTypEnum.TYPE_CHARACTER)
+            if(distantEntity.Type != EntityTypeEnum.TYPE_CHARACTER)
             {
                 Logger.Debug("GameActionFrame::ChallengeRequest trying to challenge non player entity : " + entity.Name);
                 entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());

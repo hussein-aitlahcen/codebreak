@@ -115,11 +115,11 @@ namespace Codebreak.Service.World.Frames
 
                 switch (distantEntity.Type)
                 {
-                    case EntityTypEnum.TYPE_CHARACTER:
+                    case EntityTypeEnum.TYPE_CHARACTER:
                         entity.ExchangePlayer((CharacterEntity)distantEntity);
                         break;
 
-                    case EntityTypEnum.TYPE_NPC:
+                    case EntityTypeEnum.TYPE_NPC:
                         entity.ExchangeShop(distantEntity);
                         break;
                 }

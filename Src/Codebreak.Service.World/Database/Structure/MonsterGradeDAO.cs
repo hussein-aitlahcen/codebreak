@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Game.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace Codebreak.Service.World.Database.Structures
     [Table("monstergrade")]
     public sealed class MonsterGradeDAO : DataAccessObject<MonsterGradeDAO>
     {
+        [Key]
         public int Id
         {
             get;
             set;
         }
-
         public int MonsterId
         {
             get;
@@ -51,17 +52,29 @@ namespace Codebreak.Service.World.Database.Structures
             set;
         }
         public int NeutralResistance
-        { get; set; }
+        { 
+            get; set; 
+        }
         public int EarthResistance
-        { get; set; }
+        { 
+            get; set; 
+        }
         public int FireResistance
-        { get; set; }
+        { 
+            get; set; 
+        }
         public int WaterResistance
-        { get; set; }
+        { 
+            get; set; 
+        }
         public int AirResistance
-        { get; set; }
+        { 
+            get; set; 
+        }
         public int APDodgePercent
-        { get; set; }
+        {
+            get; set; 
+        }
         public int MPDodgePercent
         {
             get;
@@ -111,13 +124,11 @@ namespace Codebreak.Service.World.Database.Structures
         {
             get;
             set;
-        }
-
+        }        
         /// <summary>
         /// 
         /// </summary>
         private MonsterDAO _template;
-
         /// <summary>
         /// 
         /// </summary>

@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public enum EntityTypEnum
+    public enum EntityTypeEnum
     {
         TYPE_CHARACTER = 0,
         TYPE_MONSTER_FIGHTER = -2,
@@ -77,7 +77,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public EntityTypEnum Type
+        public EntityTypeEnum Type
         {
             get;
             private set;
@@ -308,7 +308,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public EntityBase(EntityTypEnum type, long id)
+        public EntityBase(EntityTypeEnum type, long id)
         {
             Id = id;
             Type = type;
@@ -317,7 +317,7 @@ namespace Codebreak.Service.World.Game.Entity
             _chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
 
             ShopItems = new List<ItemTemplateDAO>();
-            Spells = new SpellBook(Id, SpellBookEntryRepository.Instance.GetSpellEntries(id));
+            Spells = new SpellBook((int)Type, Id);
 
             // set channels
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);

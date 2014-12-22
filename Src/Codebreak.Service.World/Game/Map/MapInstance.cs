@@ -31,6 +31,12 @@ namespace Codebreak.Service.World.Game.Map
             }
         }
 
+        public Pathmaker Pathmaker
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -260,7 +266,7 @@ namespace Codebreak.Service.World.Game.Map
             CreateTime = createTime;
             FightTeam0Cells = f0teamCells;
             FightTeam1Cells = f1teamCells;
-            FightManager = new FightManager(this);            
+            FightManager = new FightManager(this);
         }
         
         /// <summary>
@@ -296,7 +302,10 @@ namespace Codebreak.Service.World.Game.Map
                 var cell = new MapCell(id, cellData, nextMap, nextCell);
                 _cellById.Add(id, cell);
                 _cells.Add(cell);
+
             }
+
+            Pathmaker = new Pathmaker(this);
 
             _initialized = true;
         }
@@ -319,7 +328,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public bool HasTaxCollector()
         {
-            return _entityById.Values.Any(entity => entity.Type == EntityTypEnum.TYPE_TAX_COLLECTOR);
+            return _entityById.Values.Any(entity => entity.Type == EntityTypeEnum.TYPE_TAX_COLLECTOR);
         }
 
         /// <summary>
@@ -386,7 +395,7 @@ namespace Codebreak.Service.World.Game.Map
 
                     base.AddUpdatable(entity);
 
-                    if (entity.Type == EntityTypEnum.TYPE_CHARACTER)
+                    if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                     {
                         base.AddHandler(entity.Dispatch);
                         entity.CachedBuffer = true;
@@ -455,7 +464,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             entity.Orientation = path.GetDirection(path.LastStep);
 
-            if (entity.Type == EntityTypEnum.TYPE_CHARACTER)
+            if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
             {
                 var cell = GetCell(cellId);
                 if (cell != null)

@@ -181,7 +181,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         public TaxCollectorEntity(GuildInstance guild, TaxCollectorDAO record)
-            : base(EntityTypEnum.TYPE_TAX_COLLECTOR, record.Id)
+            : base(EntityTypeEnum.TYPE_TAX_COLLECTOR, record.Id)
         {            
             DatabaseRecord = record;
             Guild = guild;

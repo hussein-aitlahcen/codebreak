@@ -62,7 +62,15 @@ namespace Codebreak.Framework.Database
         {
             using (var connection = CreateConnection())
             {
-                return connection.Insert<T>(dataObject) != 0;
+                try
+                {
+                    return connection.Insert<T>(dataObject) != 0;
+                }
+                catch(Exception ex)
+                {
+                    Logger.Error("Fatal errror while inserting in database : " + ex.Message);
+                    return false;
+                }
             }
         }
 

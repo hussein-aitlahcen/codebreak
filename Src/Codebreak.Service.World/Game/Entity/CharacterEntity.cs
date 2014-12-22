@@ -460,7 +460,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
         public CharacterEntity(int power, CharacterDAO characterDAO)
-            : base(EntityTypEnum.TYPE_CHARACTER, characterDAO.Id)
+            : base(EntityTypeEnum.TYPE_CHARACTER, characterDAO.Id)
         {            
             CharacterAlignment = characterDAO.GetCharacterAlignment();
 
