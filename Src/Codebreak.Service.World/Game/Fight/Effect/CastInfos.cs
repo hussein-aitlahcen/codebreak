@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Map;
 
 namespace Codebreak.Service.World.Game.Fight.Effect
 {
@@ -318,6 +319,24 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
+        public MapInstance Map
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public FightBase Fight
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int TargetKnownCellId
         {
             get;
@@ -363,6 +382,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             EffectEnum subEffect = EffectEnum.None,
             int damageValue = 0, int fakeValue = 0)
         {
+            Fight = caster.Fight;
+            Map = caster.Fight.Map;
             SpellLevel = spellLevel;
             TargetKnownCellId = targetKnownCellId;
             FakeValue = fakeValue;

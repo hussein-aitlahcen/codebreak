@@ -147,7 +147,7 @@ namespace Codebreak.Service.World.Game.Entity
             message.Append(Name).Append(';');
             message.Append((int)EntityTypEnum.TYPE_MONSTER_FIGHTER).Append(';');
             message.Append(Skin).Append('^').Append(SkinSize).Append(';');
-            message.Append(Level).Append(';');
+            message.Append(Grade.Grade).Append(';');
             message.Append(Grade.GetTemplate().Colors.Replace(",", ";"));
             message.Append(";0,0,0,0;");
             message.Append(Life).Append(';');

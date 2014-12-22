@@ -22,27 +22,27 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <returns></returns>
         public override FightActionResultEnum ApplyEffect(CastInfos castInfos)
         {
-            int direction = Pathfinding.GetDirection(castInfos.Caster.Map, castInfos.Caster.Cell.Id, castInfos.CellId);
-            var targetFighterCell = Pathfinding.NextCell(castInfos.Caster.Map, castInfos.Caster.Cell.Id, direction);
+            int direction = Pathfinding.GetDirection(castInfos.Map, castInfos.Caster.Cell.Id, castInfos.CellId);
+            var targetFighterCell = Pathfinding.NextCell(castInfos.Map, castInfos.Caster.Cell.Id, direction);
 
-            var target = castInfos.Caster.Fight.GetFighterOnCell(targetFighterCell);
+            var target = castInfos.Fight.GetFighterOnCell(targetFighterCell);
             if (target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            var distance = Pathfinding.GoalDistance(target.Map, target.Cell.Id, castInfos.CellId);
+            var distance = Pathfinding.GoalDistance(castInfos.Map, target.Cell.Id, castInfos.CellId);
             var currentCell = target.Cell;
 
             for (int i = 0; i < distance; i++)
             {
-                var nextCell = target.Fight.GetCell(Pathfinding.NextCell(target.Fight.Map, currentCell.Id, direction));
+                var nextCell = castInfos.Fight.GetCell(Pathfinding.NextCell(castInfos.Map, currentCell.Id, direction));
 
                 if (nextCell != null && nextCell.CanWalk)
                 {
                     if (nextCell.HasObject(FightObstacleTypeEnum.TYPE_TRAP))
                     {
-                        target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + nextCell.Id));
+                        castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + nextCell.Id));
 
-                        target.Fight.SetSubAction(() =>
+                        castInfos.Fight.SetSubAction(() =>
                         {
                             return target.SetCell(nextCell);
                         }, 1 + ++i * WorldConfig.FIGHT_PUSH_CELL_TIME);
@@ -54,10 +54,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                 {
                     if (i != 0)
                     {
-                        target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + currentCell.Id));
+                        castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + currentCell.Id));
                     }
 
-                    target.Fight.SetSubAction(() =>
+                    castInfos.Fight.SetSubAction(() =>
                     {
                         return target.SetCell(currentCell);
                     }, 1 + (i * WorldConfig.FIGHT_PUSH_CELL_TIME));
@@ -68,9 +68,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                 currentCell = nextCell;
             }
 
-            target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + currentCell.Id));
+            castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_PUSHBACK, target.Id, target.Id + "," + currentCell.Id));
 
-            target.Fight.SetSubAction(() =>
+            castInfos.Fight.SetSubAction(() =>
             {
                 return target.SetCell(currentCell);
             }, 1 + distance * WorldConfig.FIGHT_PUSH_CELL_TIME);

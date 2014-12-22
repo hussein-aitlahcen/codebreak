@@ -32,9 +32,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         {
             if (!Timedout)
                 return AIActionResult.Running;
-
-            Logger.Debug("AI move action : " + Fighter.Name + " ended.");
-
+            
             if(Fighter.CurrentAction != null)
                 Fighter.CurrentAction.Stop();
 

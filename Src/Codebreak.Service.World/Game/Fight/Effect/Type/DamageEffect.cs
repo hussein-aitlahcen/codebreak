@@ -82,7 +82,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                     // if the target has some armor
                     if (armor != 0)
                     {
-                        target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_ARMOR, target.Id, target.Id + "," + armor));
+                        castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_ARMOR, target.Id, target.Id + "," + armor));
 
                         damageJet -= armor;
 
@@ -143,10 +143,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             target.Life -= damageJet;
 
             // display damages
-            target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_DAMAGE, caster.Id, target.Id + "," + (-damageJet).ToString()));
+            castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_DAMAGE, caster.Id, target.Id + "," + (-damageJet).ToString()));
 
             // check out the death
-            return caster.Fight.TryKillFighter(target, caster.Id);
+            return castInfos.Fight.TryKillFighter(target, caster.Id);
         }
     }
 }

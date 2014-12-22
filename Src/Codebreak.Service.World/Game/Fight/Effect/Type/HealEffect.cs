@@ -55,9 +55,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
 
             target.Life += heal;
 
-            target.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_HEAL, caster.Id, target.Id + "," + heal));
+            castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_HEAL, caster.Id, target.Id + "," + heal));
 
-            return target.Fight.TryKillFighter(target, caster.Id);
+            return castInfos.Fight.TryKillFighter(target, caster.Id);
         }
     }
 }

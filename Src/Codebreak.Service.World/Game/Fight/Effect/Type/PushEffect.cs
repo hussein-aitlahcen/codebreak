@@ -34,16 +34,16 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             switch (castInfos.EffectType)
             {
                 case EffectEnum.PushBack:
-                    if (Pathfinding.InLine(castInfos.Target.Fight.Map, castInfos.CellId, castInfos.Target.Cell.Id) && castInfos.CellId != castInfos.Target.Cell.Id)
-                        direction = Pathfinding.GetDirection(castInfos.Target.Fight.Map, castInfos.CellId, castInfos.Target.Cell.Id);
-                    else if (Pathfinding.InLine(castInfos.Target.Fight.Map, castInfos.Caster.Cell.Id, castInfos.Target.Cell.Id))
-                        direction = Pathfinding.GetDirection(castInfos.Target.Fight.Map, castInfos.Caster.Cell.Id, castInfos.Target.Cell.Id);
+                    if (Pathfinding.InLine(castInfos.Map, castInfos.CellId, castInfos.Target.Cell.Id) && castInfos.CellId != castInfos.Target.Cell.Id)
+                        direction = Pathfinding.GetDirection(castInfos.Map, castInfos.CellId, castInfos.Target.Cell.Id);
+                    else if (Pathfinding.InLine(castInfos.Map, castInfos.Caster.Cell.Id, castInfos.Target.Cell.Id))
+                        direction = Pathfinding.GetDirection(castInfos.Map, castInfos.Caster.Cell.Id, castInfos.Target.Cell.Id);
                     else                    
                         return FightActionResultEnum.RESULT_NOTHING;                    
                     break;
 
                 case EffectEnum.PushFront:
-                    direction = Pathfinding.GetDirection(castInfos.Target.Fight.Map, castInfos.Target.Cell.Id, castInfos.Caster.Cell.Id);
+                    direction = Pathfinding.GetDirection(castInfos.Map, castInfos.Target.Cell.Id, castInfos.Caster.Cell.Id);
                     break;
             }
 
@@ -64,7 +64,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             
             for (int i = 0; i < length; i++)
             {
-                var nextCell = target.Fight.GetCell(Pathfinding.NextCell(target.Fight.Map, currentCell.Id, direction));
+                var nextCell = target.Fight.GetCell(Pathfinding.NextCell(castInfos.Map, currentCell.Id, direction));
 
                 if (nextCell != null && nextCell.CanWalk)
                 {
