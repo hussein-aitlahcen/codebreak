@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Codebreak.Service.World.Game.Map;
+using Codebreak.Service.World.Game.Spell;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +8,34 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 {
+    public enum AttackStateEnum
+    { 
+        STATE_CALCULATE_CELLS,
+        STATE_CALCULATE_EFFECT_TARGETS,
+        STATE_CALCULATE_BEST_SPELL,
+        STATE_ATTACKING,
+    }
+
     public class AttackAction : AIAction
     {
+        private AttackStateEnum AttackState
+        {
+            get;
+            set;
+        }
+
+        private Dictionary<int, List<SpellLevel>> CastCellList
+        {
+            get;
+            set;
+        }
+
+        private Dictionary<int, Dictionary<int, Dictionary<SpellEffect, List<FighterBase>>>> TargetList
+        {
+            get;
+            set;
+        }
+
         private int TargetCell
         {
             get;
@@ -23,32 +51,177 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         public AttackAction(AIFighter fighter)
             : base(fighter)
         {
-            TargetCell = Fighter.Team.OpponentTeam.AliveFighters.OrderBy(f => f.Life).First().Cell.Id;
+            AttackState = AttackStateEnum.STATE_CALCULATE_CELLS;
         }
 
         public override AIActionResult Initialize()
         {
-            if (!Fighter.Spells.Empty)
-            {
-                var bests = Fighter.Spells.GetSpells().Where(spell => Fighter.Fight.CanLaunchSpell(Fighter, spell, spell.SpellId, Fighter.Cell.Id, TargetCell) == FightSpellLaunchResultEnum.RESULT_OK);
-                if (bests.Count() > 0)
-                {
-                    SpellId = bests.OrderByDescending(spell => spell.Level * (spell.Effects.Count(effect => Effect.CastInfos.IsDamageEffect(effect.TypeEnum)) + 1)).First().SpellId;
-                    Fighter.Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 500);
-                    Timeout = 500;
-                    return AIActionResult.Running;
-                }
-            }
-  
-            return AIActionResult.Failure;
+            TargetCell = 0;
+            SpellId = 0;
+            AttackState = AttackStateEnum.STATE_CALCULATE_CELLS;
+
+            return Fighter.AP > 0 && Fighter.Spells.GetSpells().Any(spell => spell.APCost <= Fighter.AP) ? AIActionResult.RUNNING : AIActionResult.FAILURE;
         }
 
         public override AIActionResult Execute()
         {
-            if (!Timedout)
-                return AIActionResult.Running;
+            switch (AttackState)
+            {
+                case AttackStateEnum.STATE_CALCULATE_CELLS:
+                    CastCellList = new Dictionary<int,List<SpellLevel>>();
+                    foreach(var spellLevel in Fighter.Spells.GetSpells())
+                    {
+                        foreach (var castCell in CellZone.GetCircleCells(Map, Fighter.Cell.Id, spellLevel.MaxPO))
+                        {
+                            if (Fight.CanLaunchSpell(Fighter, spellLevel, spellLevel.SpellId, Fighter.Cell.Id, castCell) == FightSpellLaunchResultEnum.RESULT_OK)
+                            {
+                                if (!CastCellList.ContainsKey(castCell))
+                                    CastCellList.Add(castCell, new List<SpellLevel>());
+                                CastCellList[castCell].Add(spellLevel);
+                            }
+                        }
+                    }
 
-            return AIActionResult.Success;
+                    if (CastCellList.Count == 0)
+                        return AIActionResult.FAILURE;
+
+                    AttackState = AttackStateEnum.STATE_CALCULATE_EFFECT_TARGETS;
+                    return AIActionResult.RUNNING;
+
+                case AttackStateEnum.STATE_CALCULATE_EFFECT_TARGETS:
+                    TargetList = new Dictionary<int, Dictionary<int, Dictionary<SpellEffect, List<FighterBase>>>>();
+                    foreach(var castInfos in CastCellList)
+                    {
+                        var castCell = castInfos.Key;
+                        TargetList.Add(castCell, new Dictionary<int, Dictionary<SpellEffect, List<FighterBase>>>());
+                        foreach(var spellLevel in castInfos.Value)
+                        {
+                            if (spellLevel == null || spellLevel.Effects == null)
+                                continue;
+
+                            TargetList[castCell].Add(spellLevel.SpellId, new Dictionary<SpellEffect, List<FighterBase>>());
+
+                            int effectIndex = 0;
+                            foreach (var effect in spellLevel.Effects)
+                            {
+                                TargetList[castCell][spellLevel.SpellId].Add(effect, new List<FighterBase>());
+
+                                var targetType = spellLevel.Targets != null ? spellLevel.Targets.Length > effectIndex ? spellLevel.Targets[effectIndex] : -1 : -1;
+
+                                if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
+                                {
+                                    foreach (var currentCellId in CellZone.GetCells(Map, castCell, Fighter.Cell.Id, spellLevel.RangeType))
+                                    {
+                                        var fightCell = Fight.GetCell(currentCellId);
+                                        if (fightCell != null)
+                                        {
+                                            foreach (var fighterObject in fightCell.FightObjects.OfType<FighterBase>())
+                                            {
+                                                if (targetType != -1)
+                                                {
+                                                    if (((targetType & 1) == 1) && Fighter.Team != fighterObject.Team)
+                                                        continue;
+                                                    if ((((targetType >> 1) & 1) == 1) && Fighter == fighterObject)
+                                                        continue;
+                                                    if ((((targetType >> 2) & 1) == 1) && Fighter.Team != fighterObject.Team)
+                                                        continue;
+                                                    if (((((targetType >> 3) & 1) == 1) && (Fighter.Invocator == null)))
+                                                        continue;
+                                                    if (((((targetType >> 4) & 1) == 1) && (Fighter.Invocator != null)))
+                                                        continue;
+                                                    if (((((targetType >> 5) & 1) == 1) && (Fighter.Id != fighterObject.Id)))
+                                                    {
+                                                        if (!TargetList[castCell][spellLevel.SpellId][effect].Contains(Fighter))
+                                                            TargetList[castCell][spellLevel.SpellId][effect].Add(Fighter);
+                                                        continue;
+                                                    }
+                                                }
+
+                                                if (!TargetList[castCell][spellLevel.SpellId][effect].Contains(fighterObject))
+                                                    TargetList[castCell][spellLevel.SpellId][effect].Add(fighterObject);
+                                            }
+                                        }
+                                    }
+                                }
+                                effectIndex++;
+                            }
+                        }
+                    }
+                        
+                    AttackState = AttackStateEnum.STATE_CALCULATE_BEST_SPELL;
+
+                    return AIActionResult.RUNNING;
+
+                case AttackStateEnum.STATE_CALCULATE_BEST_SPELL:
+                    int bestScore = -1;
+                    foreach(var target in TargetList)
+                    {
+                        if (target.Value.Count == 0)
+                            continue;
+
+                        var castCell = target.Key;
+
+                        foreach (var spell in target.Value)
+                        {
+                            var spellId = spell.Key;
+                            var currentScore = -1;
+                            foreach (var levelInfos in spell.Value)
+                            {
+                                var effect = levelInfos.Key;
+                                foreach (var fighter in levelInfos.Value)
+                                {
+                                    if (Effect.CastInfos.IsDamageEffect(effect.TypeEnum))
+                                    {
+                                        if (fighter.Team.Id != Fighter.Team.Id)
+                                            currentScore += 20;
+                                        else
+                                            currentScore -= 25;
+                                    }
+                                    else if (Effect.CastInfos.IsMalusEffect(effect.TypeEnum))
+                                    {
+                                        if (fighter.Team.Id != Fighter.Team.Id)
+                                            currentScore += 20;
+                                        else
+                                            currentScore -= 25;
+                                    }
+                                    else
+                                    {
+                                        if (fighter.Team.Id != Fighter.Team.Id)
+                                            currentScore -= 15;
+                                        else
+                                            currentScore += 20;
+                                    }
+                                }
+                            }
+
+                            if (currentScore > bestScore)
+                            {
+                                bestScore = currentScore;
+                                SpellId = spellId;
+                                TargetCell = castCell;
+                            }
+                        }
+                    }
+
+                    if (SpellId == 0)
+                        return AIActionResult.FAILURE;
+
+                    Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 500);
+                    Timeout = 500;
+
+                    AttackState = AttackStateEnum.STATE_ATTACKING;
+
+                    return AIActionResult.RUNNING;
+
+                case AttackStateEnum.STATE_ATTACKING:
+                    if (!Timedout)
+                        return AIActionResult.RUNNING;
+                    
+                    return Initialize();
+
+                default:
+                    throw new Exception("AI Attack action invalid state.");
+            }
         }
     }
 }

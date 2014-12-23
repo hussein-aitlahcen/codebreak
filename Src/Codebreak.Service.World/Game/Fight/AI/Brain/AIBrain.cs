@@ -35,7 +35,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Brain
             if(CurrentAction != null)
             {
                 CurrentAction.Update();
-                if (CurrentAction.State == AIActionState.Finish)
+                if (CurrentAction.State == AIActionState.FINISH)
                     CurrentAction = CurrentAction.NextAction;
             }
         }

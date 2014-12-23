@@ -1,18 +1,19 @@
-﻿using log4net;
+﻿using Codebreak.Service.World.Game.Map;
+using log4net;
 namespace Codebreak.Service.World.Game.Fight.AI.Action
 {
     public enum AIActionResult
     {
-        Success,
-        Failure,
-        Running
+        SUCCESS,
+        FAILURE,
+        RUNNING
     }
 
     public enum AIActionState
     {
-        Initialize,
-        Execute,
-        Finish,
+        INITIALIZE,
+        EXECUTE,
+        FINISH,
     }
 
     public abstract class AIAction
@@ -36,6 +37,18 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action
             }
         }
 
+        public MapInstance Map
+        {
+            get;
+            private set;
+        }
+
+        public FightBase Fight
+        {
+            get;
+            private set;
+        }
+
         public AIFighter Fighter
         {
             get; 
@@ -57,31 +70,33 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action
         protected AIAction(AIFighter fighter)
         {
             Fighter = fighter;
-            State = AIActionState.Initialize;
+            Fight = Fighter.Fight;
+            Map = Fight.Map;
+            State = AIActionState.INITIALIZE;
         }
 
         public virtual AIActionResult Initialize()
         {
-            return AIActionResult.Failure;
+            return AIActionResult.FAILURE;
         }
 
         public virtual AIActionResult Execute()
         {
-            return AIActionResult.Failure;
+            return AIActionResult.FAILURE;
         }
 
         public virtual AIActionResult Finish()
         {
-            return AIActionResult.Failure;
+            return AIActionResult.FAILURE;
         }
 
         public virtual void Update()
         {
             switch(State)
             {
-                case AIActionState.Initialize: State = Initialize() != AIActionResult.Running ? AIActionState.Finish : AIActionState.Execute ; break;
-                case AIActionState.Execute: State = Execute() != AIActionResult.Running ? State = AIActionState.Finish : State; break;
-                case AIActionState.Finish: Finish(); break;
+                case AIActionState.INITIALIZE: State = Initialize() != AIActionResult.RUNNING ? AIActionState.FINISH : AIActionState.EXECUTE ; break;
+                case AIActionState.EXECUTE: State = Execute() != AIActionResult.RUNNING ? State = AIActionState.FINISH : State; break;
+                case AIActionState.FINISH: Finish(); break;
             }
         }
 

@@ -7,8 +7,21 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 {
+    public enum MoveStateEnum
+    {
+        STATE_CALCULATE_CELL,
+        STATE_MOVE,
+        STATE_MOVING,
+    }
+
     public class MoveAction : AIAction
     {
+        private MoveStateEnum MoveState
+        {
+            get;
+            set;
+        }
+
         private int CellId
         {
             get; 
@@ -24,38 +37,60 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         public MoveAction(AIFighter fighter) 
             : base(fighter)
         {
-            CellId = Fighter.Team.OpponentTeam.AliveFighters.First().Cell.Id;
+            MoveState = MoveStateEnum.STATE_CALCULATE_CELL;
         }
 
         public override AIActionResult Initialize()
         {
-            var stringPath = Fighter.Fight.Map.Pathmaker.FindPathAsString(Fighter.Cell.Id, CellId, false, Fighter.MP, Fighter.Fight.Obstacles);
-            var path = Fighter.Fight.Map.DecodeMovement(Fighter.Cell.Id, stringPath);
-
-            CellId = path.EndCell;
-            Timeout = (int)path.MovementTime;
-
-            Fighter.Fight.Move(Fighter, Fighter.Cell.Id, stringPath);
-            
-			return AIActionResult.Running;
+            return Fighter.MP > 0 ? AIActionResult.RUNNING : AIActionResult.FAILURE;
         }
 
         public override AIActionResult Execute()
         {
-            if (!Timedout)
-                return AIActionResult.Running;
-            
-            if (Fighter.CurrentAction != null)
-                Fighter.CurrentAction.Stop();
-
-            if (!Fighter.IsFighterDead && Fighter.Fight.CurrentFighter == Fighter && Fighter.Cell.Id != CellId && Fighter.Fight.GetCell(CellId).CanWalk && Fighter.MP > 0)
+            switch (MoveState)
             {
-                return Initialize();
-            }
+                case MoveStateEnum.STATE_CALCULATE_CELL:
+                    CellId = Fighter.Team.OpponentTeam.AliveFighters.OrderBy(fighter => fighter.Life).First().Cell.Id;
+                    MoveState = MoveStateEnum.STATE_MOVE;
 
-            Logger.Debug("AI MoveAction ended.");
-            
-            return AIActionResult.Success;
+                    return AIActionResult.RUNNING;
+
+                case MoveStateEnum.STATE_MOVE:
+
+                    var stringPath = Fighter.Fight.Map.Pathmaker.FindPathAsString(Fighter.Cell.Id, CellId, false, Fighter.MP, Fighter.Fight.Obstacles);
+                    if (stringPath == string.Empty)
+                        return AIActionResult.FAILURE;
+
+                    var path = Fighter.Fight.Map.DecodeMovement(Fighter.Cell.Id, stringPath);
+                    if (path == null)
+                        return AIActionResult.FAILURE;
+
+                    CellId = path.EndCell;
+                    Timeout = (int)path.MovementTime;
+                    Fighter.Fight.Move(Fighter, Fighter.Cell.Id, stringPath);
+
+                    MoveState = MoveStateEnum.STATE_MOVING;
+
+                    return AIActionResult.RUNNING;
+
+                case MoveStateEnum.STATE_MOVING:
+                    if (!Timedout)
+                        return AIActionResult.RUNNING;  
+  
+                    if (Fighter.CurrentAction != null)
+                        Fighter.CurrentAction.Stop();
+
+                    if (!Fighter.IsFighterDead && Fighter.Fight.CurrentFighter == Fighter && Fighter.Cell.Id != CellId && Fighter.Fight.GetCell(CellId).CanWalk)
+                    {
+                        MoveState = MoveStateEnum.STATE_CALCULATE_CELL;
+                        return Initialize();
+                    }
+
+                    return AIActionResult.SUCCESS;
+
+                default:
+                    throw new Exception("AI movement action : invalid state.");
+            }                       
         }
     }
 }

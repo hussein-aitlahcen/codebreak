@@ -72,7 +72,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="Buff"></param>
-        public void AddState(BuffBase Buff)
+        public void AddState(BuffBase Buff)        
         {
             Buff.CastInfos.SubEffect = EffectEnum.AddState;
 
@@ -81,6 +81,9 @@ namespace Codebreak.Service.World.Game.Fight
                 switch (Buff.CastInfos.EffectType)
                 {
                     case EffectEnum.Stealth:
+
+                        if (HasState(FighterStateEnum.STATE_STEALTH))
+                            return;
 
                         _fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, _fighter.Id, _fighter.Id + "," + Buff.Duration));
 
@@ -94,9 +97,12 @@ namespace Codebreak.Service.World.Game.Fight
 
                         break;
                 }
-            }
 
-            _state.Add((FighterStateEnum)Buff.CastInfos.Value3, Buff);
+                if (HasState((FighterStateEnum)Buff.CastInfos.Value3))
+                    return;
+
+                _state.Add((FighterStateEnum)Buff.CastInfos.Value3, Buff);
+            }
         }
 
         /// <summary>

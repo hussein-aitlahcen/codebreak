@@ -15,14 +15,14 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 
         public override AIActionResult Initialize()
         {
-            return AIActionResult.Running;
+            return AIActionResult.RUNNING;
         }
 
         public override AIActionResult Execute()
         {
             Fighter.TurnPass = true;
 
-            return AIActionResult.Success;
+            return AIActionResult.SUCCESS;
         }
     }
 }

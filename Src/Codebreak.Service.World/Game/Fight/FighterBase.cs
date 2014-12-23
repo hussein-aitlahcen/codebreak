@@ -467,6 +467,9 @@ namespace Codebreak.Service.World.Game.Fight
             Team.AddUpdatable(this);
             Team.AddHandler(Dispatch);
 
+            if (Life < 1)
+                Life = 1;
+
             SetCell(team.FreePlace);
 
             StartAction(GameActionTypeEnum.FIGHT);

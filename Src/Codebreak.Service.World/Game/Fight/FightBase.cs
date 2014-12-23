@@ -1066,7 +1066,6 @@ namespace Codebreak.Service.World.Game.Fight
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
                 }
 
-                // will be done in gameInformationFrame
                 if(fighter.MapId == Map.Id)
                     SendFightJoinInfos(fighter);                
             });
@@ -1242,7 +1241,7 @@ namespace Codebreak.Service.World.Game.Fight
                 Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
 
                 base.CachedBuffer = true;
-                base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(Fighters.ToArray()));
+                base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
                 base.Dispatch(WorldMessage.FIGHT_STARTS());
                 base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
                 base.CachedBuffer = false;
@@ -1282,6 +1281,7 @@ namespace Codebreak.Service.World.Game.Fight
                         case FightActionResultEnum.RESULT_END_TURN:
                         case FightActionResultEnum.RESULT_DEATH:
                             CurrentFighter.TurnPass = true;
+                            EndTurn();
                             return;
                     }
 
@@ -1371,12 +1371,12 @@ namespace Codebreak.Service.World.Game.Fight
                 base.Dispatch(WorldMessage.FIGHT_TURN_READY(CurrentFighter.Id));
                 base.CachedBuffer = false;
 
-                SetAllUnReady();
+                if(!CurrentFighter.IsFighterDead)
+                    SetAllUnReady();
 
                 LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
                 NextLoopState = FightLoopStateEnum.STATE_WAIT_READY;
 
-                // turn ready timeout : synchronize players
                 NextSynchroTimeout = 5000;
             });
         }
@@ -1460,7 +1460,7 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
 
                 case FightLoopStateEnum.STATE_WAIT_TURN:
-                    if(TurnTimedout || HasLeft(CurrentFighter) || CurrentFighter.TurnPass)
+                    if(TurnTimedout || HasLeft(CurrentFighter) || CurrentFighter.TurnPass || CurrentFighter.IsFighterDead)
                     {
                         EndTurn();
                     }
@@ -1638,25 +1638,21 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN && LoopState != FightLoopStateEnum.STATE_WAIT_AI)
             {
-                Logger.Debug("Fight::CanLaunchSpell trying to cast spell withouth being in turn wait phase : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
             }
 
             if (CurrentFighter != fighter)
             {
-                Logger.Debug("Fight::CanLaunchSpell fighter try to launch a spell but its not his turn : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
             }
             
             if (GetCell(castCell) == null)
             {
-                Logger.Debug("Fight::CanLaunchSpell null cast cell : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
             }
 
             if (fighter.AP < spellLevel.APCost)
             {
-                Logger.Debug("Fight::CanLaunchSpell not enought AP : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_NO_AP;
             }
 
@@ -1668,13 +1664,19 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (distance > maxPo || distance < spellLevel.MinPO)
             {
-                Logger.Debug("Fight::CanLaunchSpell target cell not in range : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
             }
 
-            //if (spellLevel.LineOfSight && !Pathfinding.CheckView(this, cellId, castCell))
-            //    return FightSpellLaunchResultEnum.RESULT_NO_LOS;
+            if(spellLevel.EmptyCell && !GetCell(castCell).CanWalk)
+            {
+                return FightSpellLaunchResultEnum.RESULT_WRONG_TARGET;
+            }
 
+            if(spellLevel.InLine == 1 && !Pathfinding.InLine(Map, cellId, castCell))
+            {
+                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
+            }
+            
             var target = GetFighterOnCell(castCell);
             if (target == null)
             {
@@ -1683,7 +1685,6 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (!fighter.SpellManager.CanLaunchSpell(spellLevel, spellId, target.Id))
             {
-                Logger.Debug("Fight::CanLaunchSpell unable to hit same target anymore : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_WRONG_TARGET;
             }
 

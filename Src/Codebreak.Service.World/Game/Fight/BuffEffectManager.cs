@@ -176,15 +176,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public FightActionResultEnum EndTurn()
         {
-            var damage = 0;
-            foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ENDTURN].ToArray())
-            {
-                if (buff.ApplyEffect(ref damage) == FightActionResultEnum.RESULT_END)
-                {
-                    return FightActionResultEnum.RESULT_END;
-                }
-            }
-
             foreach (var buff in DecrementBuffs[DecrementType.TYPE_ENDTURN].ToArray())
             {
                 if (buff.DecrementDuration() <= 0)
@@ -192,13 +183,21 @@ namespace Codebreak.Service.World.Game.Fight
                     if (buff.RemoveEffect() == FightActionResultEnum.RESULT_END)
                     {
                         return FightActionResultEnum.RESULT_END;
-                    }                    
+                    }
                     DecrementBuffs[DecrementType.TYPE_ENDTURN].Remove(buff);
                 }
             }
 
             foreach (var buffList in ActiveBuffs.Values)
                 buffList.RemoveAll(Buff => Buff.DecrementType == DecrementType.TYPE_ENDTURN && Buff.Duration <= 0);
+
+            var damage = 0;
+            foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ENDTURN].ToArray())
+            {
+                var result = buff.ApplyEffect(ref damage);
+                if (result != FightActionResultEnum.RESULT_NOTHING)
+                    return result;                    
+            }
 
             return _fighter.Fight.TryKillFighter(_fighter, _fighter.Id);
         }

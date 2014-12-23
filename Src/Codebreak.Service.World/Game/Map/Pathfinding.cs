@@ -725,8 +725,12 @@ namespace Codebreak.Service.World.Game.Map
         {
             var DecodedPath = Pathfinding.DecodePath(map, currentCell, encodedPath);
 
+            if(DecodedPath.TransitCells.Count == 0)
+                return null;
+
             var Index = 0;
             int TransitCell = 0;
+
             do
             {
                 TransitCell = DecodedPath.TransitCells[Index];
