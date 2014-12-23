@@ -156,9 +156,6 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     int bestScore = -1;
                     foreach(var target in TargetList)
                     {
-                        if (target.Value.Count == 0)
-                            continue;
-
                         var castCell = target.Key;
 
                         foreach (var spell in target.Value)
@@ -184,7 +181,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                         else
                                             currentScore -= 25;
                                     }
-                                    else
+                                    else if(Effect.CastInfos.IsBonusEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
                                             currentScore -= 15;

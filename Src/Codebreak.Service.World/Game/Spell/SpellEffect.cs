@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Spell
     /// 
     /// </summary>
     [Flags]
-    public enum EffectEnum
+    public enum EffectEnum : int
     {
         None = -1,
 

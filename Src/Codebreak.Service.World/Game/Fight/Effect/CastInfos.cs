@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <returns></returns>
         public static bool IsMalusEffect(EffectEnum effectType)
         {
-            return !IsDamageEffect(effectType) && !IsBonusEffect(effectType) && !IsFriendlyEffect(effectType) && !IsInvocation(effectType);
+            return !IsDamageEffect(effectType) && !IsBonusEffect(effectType) && !IsFriendlyEffect(effectType) && !IsSpecial(effectType);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// </summary>
         /// <param name="effectType"></param>
         /// <returns></returns>
-        public static bool IsInvocation(EffectEnum effectType)
+        public static bool IsSpecial(EffectEnum effectType)
         {
             switch (effectType)
             {
@@ -37,6 +37,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
                 case EffectEnum.UseGlyph:
                 case EffectEnum.Invocation:
                 case EffectEnum.InvocDouble:
+                case EffectEnum.Teleport:
                     return true;
             }
             return false;

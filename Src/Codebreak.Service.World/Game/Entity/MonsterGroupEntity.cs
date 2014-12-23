@@ -127,15 +127,15 @@ namespace Codebreak.Service.World.Game.Entity
         {
             _monsters = new List<MonsterEntity>();
             long monsterId = -1;
-            while(_monsters.Count < 3)
+            while(_monsters.Count < 5)
             {
-                var random = Util.Next(10, 1000);
+                var random = Util.Next(0, 2000);
                 var template = MonsterRepository.Instance.GetById(random);
                 if (template != null)
                 {
                     if(template.GetGrades().Count() > 0)
                     {                        
-                        _monsters.Add(new MonsterEntity(monsterId--, template.GetGrades().ElementAt(0)));
+                        _monsters.Add(new MonsterEntity(monsterId--, template.GetGrades().Last()));
                     }
                 }
             }
