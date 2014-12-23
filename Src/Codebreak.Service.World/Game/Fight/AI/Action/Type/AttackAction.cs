@@ -170,23 +170,23 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                     if (Effect.CastInfos.IsDamageEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore += 20;
+                                            currentScore += 10 + effect.Value1 + effect.Value2 + effect.Value3;
                                         else
-                                            currentScore -= 25;
+                                            currentScore -= 10 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }
                                     else if (Effect.CastInfos.IsMalusEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore += 20;
+                                            currentScore += 5 + effect.Value1 + effect.Value2 + effect.Value3;
                                         else
-                                            currentScore -= 25;
+                                            currentScore -= 5 + effect.Value1 + effect.Value2 + effect.Value3; ;
                                     }
                                     else if(Effect.CastInfos.IsBonusEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore -= 15;
+                                            currentScore -= effect.Value1 + effect.Value2 + effect.Value3;
                                         else
-                                            currentScore += 20;
+                                            currentScore += effect.Value1 + effect.Value2 + effect.Value3;
                                     }
                                 }
                             }

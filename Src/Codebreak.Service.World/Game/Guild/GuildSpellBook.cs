@@ -148,6 +148,15 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Entry> GetSpells()
+        {
+            return _spells.Values;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
         public void SerializeAs_SpellsList(StringBuilder message)
         {
