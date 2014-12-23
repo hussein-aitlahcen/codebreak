@@ -1,6 +1,6 @@
 ﻿using System;
 using Codebreak.Framework.Network;
-using Codebreak.Service.Auth.Database.Repositories;
+using Codebreak.Service.Auth.Database.Repository;
 using Codebreak.Service.Auth.Network;
 
 namespace Codebreak.Service.Auth.Frames

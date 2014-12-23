@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 using PropertyChanged;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 { 
     /// <summary>
     /// 

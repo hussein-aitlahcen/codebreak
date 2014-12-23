@@ -1,4 +1,4 @@
-﻿using Codebreak.Service.World.Database.Repositories;
+﻿using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;

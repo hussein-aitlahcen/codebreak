@@ -1,6 +1,6 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 
 namespace Codebreak.Service.World.Manager
 {

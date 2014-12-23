@@ -1,9 +1,9 @@
 ﻿using Codebreak.Framework.Network;
-using Codebreak.Service.World.Commands;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Command;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Frames;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;

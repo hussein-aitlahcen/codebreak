@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Codebreak.Framework.Database;
-using Codebreak.Service.Auth.Database.Structures;
+using Codebreak.Service.Auth.Database.Structure;
 
-namespace Codebreak.Service.Auth.Database.Repositories
+namespace Codebreak.Service.Auth.Database.Repository
 {
     public sealed class AccountRepository : Repository<AccountRepository, AccountDAO>
     {

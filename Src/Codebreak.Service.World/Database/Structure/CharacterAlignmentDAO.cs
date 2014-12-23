@@ -1,7 +1,7 @@
 ﻿using Codebreak.Framework.Database;
 using PropertyChanged;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 {
     /// <summary>
     /// 

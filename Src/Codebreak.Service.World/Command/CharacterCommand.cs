@@ -1,12 +1,12 @@
 ﻿using System;
 using Codebreak.Framework.Command;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 
-namespace Codebreak.Service.World.Commands
+namespace Codebreak.Service.World.Command
 {
     public sealed class CharacterCommand : Command<WorldCommandContext>
     {

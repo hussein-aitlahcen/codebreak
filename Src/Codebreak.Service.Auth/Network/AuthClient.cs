@@ -1,5 +1,5 @@
 ﻿using Codebreak.Framework.Network;
-using Codebreak.Service.Auth.Database.Structures;
+using Codebreak.Service.Auth.Database.Structure;
 
 namespace Codebreak.Service.Auth.Network
 {

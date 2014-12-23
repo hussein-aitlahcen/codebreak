@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Structure;
 
 namespace Codebreak.Service.World.Game.Area
 {

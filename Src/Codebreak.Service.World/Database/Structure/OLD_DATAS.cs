@@ -1,6 +1,6 @@
 ﻿using Codebreak.Framework.Database;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 {
     [Table("sorts")]
     public class sorts : DataAccessObject<sorts>

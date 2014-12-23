@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Fight.Challenges;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Fight.Effect;
 
 namespace Codebreak.Service.World.Game.Fight

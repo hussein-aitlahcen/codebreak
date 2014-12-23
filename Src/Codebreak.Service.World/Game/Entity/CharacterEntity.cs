@@ -1,6 +1,6 @@
-﻿using Codebreak.Service.World.Database.Structures;
+﻿using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Spell;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
-using Codebreak.Service.World.Commands;
+using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Framework.Network;
 using Codebreak.Service.World.Frames;

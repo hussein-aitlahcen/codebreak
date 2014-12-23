@@ -1,5 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Area;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Entity;
 using System;
 using System.Collections.Generic;

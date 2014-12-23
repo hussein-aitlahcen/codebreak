@@ -6,7 +6,7 @@ using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Game.Stats;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Action;
 

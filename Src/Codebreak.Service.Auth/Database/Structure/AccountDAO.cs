@@ -1,7 +1,7 @@
 ﻿using System;
 using Codebreak.Framework.Database;
 
-namespace Codebreak.Service.Auth.Database.Structures
+namespace Codebreak.Service.Auth.Database.Structure
 {
     [Table("account")]
     public sealed class AccountDAO : DataAccessObject<AccountDAO>

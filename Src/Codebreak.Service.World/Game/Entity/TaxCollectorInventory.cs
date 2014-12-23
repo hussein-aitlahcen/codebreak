@@ -1,4 +1,4 @@
-﻿using Codebreak.Service.World.Database.Structures;
+﻿using Codebreak.Service.World.Database.Structure;
 using System;
 using System.Collections.Generic;
 using System.Linq;

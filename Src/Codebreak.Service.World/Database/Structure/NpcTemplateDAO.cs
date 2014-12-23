@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Repository;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 {
     /// <summary>
     /// 

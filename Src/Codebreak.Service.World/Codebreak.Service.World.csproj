@@ -54,8 +54,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CharacterCommand.cs" />
-    <Compile Include="Commands\WorldCommandContext.cs" />
+    <Compile Include="Command\CharacterCommand.cs" />
+    <Compile Include="Command\WorldCommandContext.cs" />
     <Compile Include="Database\Repository\AreaRepository.cs" />
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />

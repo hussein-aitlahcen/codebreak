@@ -6,7 +6,7 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 {
     /// <summary>
     /// 

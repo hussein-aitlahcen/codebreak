@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Codebreak.Framework.Database;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Structure;
 
-namespace Codebreak.Service.World.Database.Repositories
+namespace Codebreak.Service.World.Database.Repository
 {
     public sealed class SuperAreaRepository : Repository<SuperAreaRepository, SuperAreaDAO>
     {

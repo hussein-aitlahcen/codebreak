@@ -3,8 +3,8 @@ using System.IO;
 using System;
 using System.Linq;
 using Codebreak.Framework.Generic;
-using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Database.Repositories;
+using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Spell;
 using ProtoBuf;
 

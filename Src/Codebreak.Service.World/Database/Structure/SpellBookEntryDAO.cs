@@ -3,7 +3,7 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Manager;
 using PropertyChanged;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 {
     /// <summary>
     /// 

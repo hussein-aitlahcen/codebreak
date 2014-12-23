@@ -1,7 +1,7 @@
 ﻿using Codebreak.Framework.Command;
 using Codebreak.Service.World.Game.Entity;
 
-namespace Codebreak.Service.World.Commands
+namespace Codebreak.Service.World.Command
 {
     public class WorldCommandContext : CommandContext
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Codebreak.Framework.Generic;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Frames;

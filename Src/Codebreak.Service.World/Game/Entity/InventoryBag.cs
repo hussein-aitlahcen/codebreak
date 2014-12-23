@@ -1,5 +1,5 @@
-﻿using Codebreak.Service.World.Database.Structures;
-using Codebreak.Service.World.Database.Repositories;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Database.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

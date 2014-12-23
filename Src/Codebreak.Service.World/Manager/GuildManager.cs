@@ -1,6 +1,6 @@
 ﻿using Codebreak.Framework.Generic;
-using Codebreak.Service.World.Database.Repositories;
-using Codebreak.Service.World.Database.Structures;
+using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Stats;

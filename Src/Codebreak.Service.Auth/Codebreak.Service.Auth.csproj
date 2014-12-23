@@ -50,7 +50,7 @@
     <Compile Include="Network\AuthMessage.cs" />
     <Compile Include="AuthService.cs" />
     <Compile Include="Database\AuthDbMgr.cs" />
-    <Compile Include="Database\Repositorie\AccountRepository.cs" />
+    <Compile Include="Database\Repository\AccountRepository.cs" />
     <Compile Include="Database\Structure\AccountDAO.cs" />
     <Compile Include="Frame\AuthentificationFrame.cs" />
     <Compile Include="Frame\VersionFrame.cs" />

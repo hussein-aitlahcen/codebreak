@@ -3,7 +3,7 @@ using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Database.Structures
+namespace Codebreak.Service.World.Database.Structure
 {
     /// <summary>
     /// 

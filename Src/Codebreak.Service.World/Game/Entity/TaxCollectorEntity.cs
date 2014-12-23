@@ -1,4 +1,4 @@
-﻿using Codebreak.Service.World.Database.Structures;
+﻿using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Fight.AI;
