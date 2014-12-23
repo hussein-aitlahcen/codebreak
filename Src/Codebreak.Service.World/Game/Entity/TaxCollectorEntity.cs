@@ -187,8 +187,12 @@ namespace Codebreak.Service.World.Game.Entity
             Guild = guild;
 
             Defenders = new List<GuildMember>();
+
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
+
+            Spells = new SpellBook((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
+
             Inventory = new TaxCollectorInventory(this);
         }
 

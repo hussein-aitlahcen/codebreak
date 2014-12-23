@@ -227,7 +227,7 @@ namespace Codebreak.Service.World.Game.Entity
         public SpellBook Spells
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -317,7 +317,6 @@ namespace Codebreak.Service.World.Game.Entity
             _chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
 
             ShopItems = new List<ItemTemplateDAO>();
-            Spells = new SpellBook((int)Type, Id);
 
             // set channels
             _chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);

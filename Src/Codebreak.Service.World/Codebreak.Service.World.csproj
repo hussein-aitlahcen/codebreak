@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -123,6 +123,7 @@
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
     <Compile Include="Game\Exchange\ShopExchange.cs" />
     <Compile Include="Game\Fight\AI\Action\AIAction.cs" />
+    <Compile Include="Game\Fight\AI\Action\Type\AttackAction.cs" />
     <Compile Include="Game\Fight\AI\Action\Type\EndTurnAction.cs" />
     <Compile Include="Game\Fight\AI\Action\Type\MoveAction.cs" />
     <Compile Include="Game\Fight\AI\AIFighter.cs" />

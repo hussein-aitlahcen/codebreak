@@ -9,21 +9,33 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 {
     public class MoveAction : AIAction
     {
-        public int CellId
+        private int CellId
         {
             get; 
-            private set;
+            set;
         }
 
-        public MoveAction(AIFighter fighter, int cellId) 
+        private int RealCellId
+        {
+            get;
+            set;
+        }
+
+        public MoveAction(AIFighter fighter) 
             : base(fighter)
         {
-            CellId = cellId;
+            CellId = Fighter.Team.OpponentTeam.AliveFighters.First().Cell.Id;
         }
 
         public override AIActionResult Initialize()
         {
-            Fighter.Fight.Move(Fighter, Fighter.Cell.Id, Fighter.Fight.Map.Pathmaker.FindPathAsString(Fighter.Cell.Id, CellId, false, Fighter.MP, Fighter.Fight.Obstacles));
+            var stringPath = Fighter.Fight.Map.Pathmaker.FindPathAsString(Fighter.Cell.Id, CellId, false, Fighter.MP, Fighter.Fight.Obstacles);
+            var path = Fighter.Fight.Map.DecodeMovement(Fighter.Cell.Id, stringPath);
+
+            CellId = path.EndCell;
+            Timeout = (int)path.MovementTime;
+
+            Fighter.Fight.Move(Fighter, Fighter.Cell.Id, stringPath);
             
 			return AIActionResult.Running;
         }
@@ -32,12 +44,17 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         {
             if (!Timedout)
                 return AIActionResult.Running;
-
-            Logger.Debug("AI MoveAction ended.");
-
-            if(Fighter.CurrentAction != null)
+            
+            if (Fighter.CurrentAction != null)
                 Fighter.CurrentAction.Stop();
 
+            if (!Fighter.IsFighterDead && Fighter.Fight.CurrentFighter == Fighter && Fighter.Cell.Id != CellId && Fighter.Fight.GetCell(CellId).CanWalk && Fighter.MP > 0)
+            {
+                return Initialize();
+            }
+
+            Logger.Debug("AI MoveAction ended.");
+            
             return AIActionResult.Success;
         }
     }

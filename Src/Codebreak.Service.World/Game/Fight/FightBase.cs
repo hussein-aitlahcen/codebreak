@@ -1636,7 +1636,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public FightSpellLaunchResultEnum CanLaunchSpell(FighterBase fighter, SpellLevel spellLevel, int spellId, int cellId, int castCell)
         {
-            if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN)
+            if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN && LoopState != FightLoopStateEnum.STATE_WAIT_AI)
             {
                 Logger.Debug("Fight::CanLaunchSpell trying to cast spell withouth being in turn wait phase : " + fighter.Name);
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
@@ -2324,12 +2324,12 @@ namespace Codebreak.Service.World.Game.Fight
                 }
 
                 var tacledChance = Pathfinding.TryTacle(fighter);
-
-                base.CachedBuffer = true;
-
+                
                 // Si tacle
                 if (tacledChance != -1 && !CurrentFighter.StateManager.HasState(FighterStateEnum.STATE_ROOTED))
                 {
+                    base.CachedBuffer = true;
+
                     // XX A été taclé
                     base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_TACLE, fighter.Id));
 
@@ -2363,7 +2363,6 @@ namespace Codebreak.Service.World.Game.Fight
                 LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
 
                 base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
-                base.CachedBuffer = false;
 
                 CurrentFighter.Team.CheckMovement(fighter.Cell.Id, movementPath.EndCell, movementPath.MovementLength);
 

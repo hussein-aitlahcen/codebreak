@@ -23,6 +23,17 @@ namespace Codebreak.Service.World.Game.Spell
         /// <summary>
         /// 
         /// </summary>
+        public bool Empty
+        {
+            get
+            {
+                return _spellEntries.Count == 0;
+            }
+        }
+       
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<int, SpellBookEntryDAO> _spellEntries = new Dictionary<int, SpellBookEntryDAO>();
         private long _entityId;
         private int _entityType;
@@ -96,6 +107,15 @@ namespace Codebreak.Service.World.Game.Spell
         /// 
         /// </summary>
         private static SpellLevel _basicFist = SpellManager.Instance.GetSpellLevel(0, 1);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<SpellLevel> GetSpells()
+        {
+            return _spellEntries.Values.Select(entry => entry.GetSpellLevel());
+        }
 
         /// <summary>
         /// 

@@ -473,6 +473,8 @@ namespace Codebreak.Service.World.Game.Entity
             DatabaseRecord = characterDAO;
             Statistics = new GenericStats(characterDAO);
             Inventory = new CharacterInventory(this);
+            Spells = new SpellBook((int)EntityTypeEnum.TYPE_CHARACTER, Id);
+
             FrameManager = new FrameManager<CharacterEntity, string>(this);
         }
 

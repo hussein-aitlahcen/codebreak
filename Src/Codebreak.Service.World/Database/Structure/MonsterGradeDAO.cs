@@ -115,11 +115,6 @@ namespace Codebreak.Service.World.Database.Structures
             get;
             set;
         }
-        public string Spells
-        {
-            get;
-            set;
-        }
         public int Experience
         {
             get;
