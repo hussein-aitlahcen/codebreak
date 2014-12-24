@@ -140,6 +140,7 @@ namespace Codebreak.Service.World.Game.Fight
         public abstract int SkinBase
         {
             get;
+            set;
         }
 
         /// <summary>
@@ -148,6 +149,7 @@ namespace Codebreak.Service.World.Game.Fight
         public abstract int SkinSizeBase
         {
             get;
+            set;
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         STATE_CALCULATE_CELLS,
         STATE_CALCULATE_EFFECT_TARGETS,
         STATE_CALCULATE_BEST_SPELL,
+        STATE_LAUNCH_ATTACK,
         STATE_ATTACKING,
     }
 
@@ -186,7 +187,10 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                         if (fighter.Team.Id != Fighter.Team.Id)
                                             currentScore -= effect.Value1 + effect.Value2 + effect.Value3;
                                         else
-                                            currentScore += effect.Value1 + effect.Value2 + effect.Value3;
+                                            if (effect.TypeEnum == EffectEnum.Heal)
+                                                currentScore += (effect.Value1 + effect.Value2 + effect.Value3) * (1 + ((fighter.MaxLife / 100) * fighter.Life));
+                                            else
+                                                currentScore += effect.Value1 + effect.Value2 + effect.Value3;
                                     }
                                 }
                             }
@@ -202,7 +206,13 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 
                     if (SpellId == 0)
                         return AIActionResult.FAILURE;
+                    
+                    AttackState = AttackStateEnum.STATE_LAUNCH_ATTACK;
 
+                    return AIActionResult.RUNNING;
+
+                case AttackStateEnum.STATE_LAUNCH_ATTACK:
+                                        
                     Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 500);
                     Timeout = 500;
 

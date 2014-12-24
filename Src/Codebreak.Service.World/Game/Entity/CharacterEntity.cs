@@ -281,6 +281,10 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 return DatabaseRecord.Skin;
             }
+            set
+            {
+                DatabaseRecord.Skin = value;
+            }
         }
 
         /// <summary>
@@ -291,6 +295,10 @@ namespace Codebreak.Service.World.Game.Entity
             get
             {
                 return DatabaseRecord.SkinSize;
+            }
+            set
+            {
+                DatabaseRecord.SkinSize = value;
             }
         }
 

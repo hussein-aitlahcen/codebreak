@@ -1461,13 +1461,16 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
 
                 case FightLoopStateEnum.STATE_WAIT_TURN:
-                    if(TurnTimedout || HasLeft(CurrentFighter) || CurrentFighter.TurnPass || CurrentFighter.IsFighterDead)
+                    if (LoopTimedout) // death time
                     {
-                        EndTurn();
-                    }
-                    else if(CurrentFighter is AIFighter)
-                    {
-                        LoopState = FightLoopStateEnum.STATE_WAIT_AI;
+                        if (TurnTimedout || HasLeft(CurrentFighter) || CurrentFighter.TurnPass || CurrentFighter.IsFighterDead)
+                        {
+                            EndTurn();
+                        }
+                        else if (CurrentFighter is AIFighter)
+                        {
+                            LoopState = FightLoopStateEnum.STATE_WAIT_AI;
+                        }
                     }
                     break;
 

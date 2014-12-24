@@ -74,6 +74,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     return AIActionResult.RUNNING;
 
                 case MoveStateEnum.STATE_MOVING:
+
                     if (!Timedout)
                         return AIActionResult.RUNNING;  
   

@@ -79,6 +79,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 return Grade.GetTemplate().GfxId;
             }
+            set { }
         }
 
         /// <summary>
@@ -90,6 +91,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 return 100;
             }
+            set { }
         }
         
         /// <summary>

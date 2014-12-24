@@ -119,6 +119,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             _effects.Add(EffectEnum.SubDamage, new StatsEffect());
             _effects.Add(EffectEnum.SubDamageCritic, new StatsEffect());
             _effects.Add(EffectEnum.AddReflectDamage, new StatsEffect());
+            _effects.Add(EffectEnum.AddReflectDamageItem, new StatsEffect());
 
             // Chatiment sacris
             _effects.Add(EffectEnum.AddChatiment, new PunishmentEffect());

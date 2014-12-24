@@ -32,6 +32,86 @@ namespace Codebreak.Service.World.Command
             context.Character.Dispatch(WorldMessage.BASIC_NO_OPERATION()); // nothing to do
         }
 
+        public sealed class SizeCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "size"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Modify the player size."; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                int size = 0;
+                if (Int32.TryParse(context.TextCommandArgument.NextWord(), out size))
+                {
+                    context.Character.SkinSizeBase = size;
+                    context.Character.RefreshOnMap();
+                }
+                else
+                {
+                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character size %size%"));
+                }
+            }
+        }
+
+        public sealed class MorphCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "morph"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Modify the player skin."; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                int skinId = 0;
+                if(Int32.TryParse(context.TextCommandArgument.NextWord(), out skinId))
+                {
+                    context.Character.SkinBase = skinId;
+                    context.Character.RefreshOnMap();
+                }
+                else
+                {
+                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character morph %skinId%"));
+                }
+            }
+        }
+
         public sealed class GuildCreateCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
@@ -182,7 +262,7 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character teleport mapId"));
+                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character teleport %mapId%"));
                 }
             }
         }
@@ -230,7 +310,7 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character levelup level"));
+                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character levelup %level%"));
                 }
             }
         }
