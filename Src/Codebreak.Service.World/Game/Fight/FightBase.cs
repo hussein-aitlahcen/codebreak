@@ -1122,6 +1122,8 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (fighter.IsFighterDead)
             {
+                Logger.Debug("FightBase::KillFighter on " + fighter.Name);
+
                 if (quit)
                 {
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
@@ -1386,6 +1388,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public bool WillFinish()
         {
+            if (LoopState == FightLoopStateEnum.STATE_WAIT_END)
+                return true;
+
             if (GetWinners() != null)
             {
                 _winnerTeam = GetWinners();

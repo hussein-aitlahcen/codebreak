@@ -213,8 +213,8 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 
                 case AttackStateEnum.STATE_LAUNCH_ATTACK:
                                         
-                    Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 1000);
-                    Timeout = 1000;
+                    Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 800);
+                    Timeout = 800;
 
                     AttackState = AttackStateEnum.STATE_ATTACKING;
 

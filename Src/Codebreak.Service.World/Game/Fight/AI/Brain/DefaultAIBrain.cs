@@ -16,8 +16,10 @@ namespace Codebreak.Service.World.Game.Fight.AI.Brain
 
         public override void OnTurnStart()
         {
-            CurrentAction = new MoveAction(Fighter);
-            CurrentAction.LinkWith(new AttackAction(Fighter))
+            CurrentAction = new AttackAction(Fighter);
+            CurrentAction
+                .LinkWith(new MoveAction(Fighter))
+                .LinkWith(new AttackAction(Fighter))
                 .LinkWith(new EndTurnAction(Fighter));
         }
     }

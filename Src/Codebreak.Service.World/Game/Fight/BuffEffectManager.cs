@@ -146,22 +146,18 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_BEGINTURN].ToArray())
             {
                 var result = buff.ApplyEffect(ref damage);
-                if(result != FightActionResultEnum.RESULT_NOTHING)
-                {
-                    return result;
-                }
+                if(result != FightActionResultEnum.RESULT_NOTHING)                
+                    return result;                
             }            
 
             foreach (var buff in DecrementBuffs[DecrementType.TYPE_BEGINTURN].ToArray())
             {
                 if (buff.DecrementDuration() <= 0)
                 {
-                    var result = buff.RemoveEffect();
-                    if(result != FightActionResultEnum.RESULT_NOTHING)
-                    {
-                        return result;
-                    }
                     DecrementBuffs[DecrementType.TYPE_BEGINTURN].Remove(buff);
+                    var result = buff.RemoveEffect();
+                    if(result != FightActionResultEnum.RESULT_NOTHING)                    
+                        return result;
                 }
             }
 
@@ -180,11 +176,10 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 if (buff.DecrementDuration() <= 0)
                 {
-                    if (buff.RemoveEffect() == FightActionResultEnum.RESULT_END)
-                    {
-                        return FightActionResultEnum.RESULT_END;
-                    }
                     DecrementBuffs[DecrementType.TYPE_ENDTURN].Remove(buff);
+                    var result = buff.RemoveEffect();
+                    if (result != FightActionResultEnum.RESULT_NOTHING)
+                        return result;
                 }
             }
 
@@ -211,10 +206,8 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ENDMOVE].ToArray())
             {
                 var result = buff.ApplyEffect(ref damage);
-                if(result != FightActionResultEnum.RESULT_NOTHING)
-                {
-                    return result;
-                }
+                if(result != FightActionResultEnum.RESULT_NOTHING)                
+                    return result;                
             }
 
             ActiveBuffs[ActiveType.ACTIVE_ENDMOVE].RemoveAll(buff => buff.DecrementType == DecrementType.TYPE_ENDMOVE && buff.Duration <= 0);
