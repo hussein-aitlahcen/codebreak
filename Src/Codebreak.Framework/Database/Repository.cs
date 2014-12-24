@@ -231,9 +231,8 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         public virtual void UpdateAll()
-        {
-            lock (_syncLock)            
-                Update(GetDirtyObjects().ToList());            
+        {          
+            Update(GetDirtyObjects().ToList());            
         }
 
         /// <summary>
@@ -242,14 +241,17 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         private IEnumerable<TDataObject> GetDirtyObjects()
         {
-            foreach(var obj in _dataObjects)
+            lock (_syncLock)
             {
-                if(obj.IsDirty)
+                foreach (var obj in _dataObjects)
                 {
-                    obj.OnBeforeUpdate();
-                    obj.IsDirty = false;
+                    if (obj.IsDirty)
+                    {
+                        obj.OnBeforeUpdate();
+                        obj.IsDirty = false;
 
-                    yield return obj;
+                        yield return obj;
+                    }
                 }
             }
         }
