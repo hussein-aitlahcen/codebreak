@@ -120,16 +120,6 @@ namespace Codebreak.Service.World
 
             //MapTriggerRepository.Instance.Insert(triggers);
 
-            int minWorkingThreads = -1, minCompletionPortThreads = -1, maxWorkingThreads = -1, maxCompletionPortThreads = -1;
-
-            ThreadPool.GetMinThreads(out minWorkingThreads, out minCompletionPortThreads);
-            ThreadPool.GetMaxThreads(out maxWorkingThreads, out maxCompletionPortThreads);
-
-            Logger.Info("Min Working Threads         : " + minWorkingThreads);
-            Logger.Info("Min Completion Port Threads : " + minCompletionPortThreads);
-            Logger.Info("Max Working Threads         : " + maxWorkingThreads);
-            Logger.Info("Max Completion Port Threads : " + maxCompletionPortThreads);
-
             AddTimer(WorldSaveInternal, UpdateWorld);
 
             base.Start(WorldServiceIP, WorldServicePort);
@@ -205,16 +195,7 @@ namespace Codebreak.Service.World
                 });
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        public void SendToAll(string message)
-        {
-            base.SendToAll(Encoding.Default.GetBytes(message + (char)0x00));
-        }
-
+        
         #endregion
 
         #region World Management
