@@ -97,6 +97,29 @@ namespace Codebreak.Service.World
             RPCManager.Instance.Initialize();
             AddUpdatable(RPCManager.Instance);
 
+            // TRIGGER LEECH
+            //var lines = System.IO.File.ReadAllLines(@"D:\Codebreak\triggersFiltered.txt");
+            //var triggers = new System.Collections.Generic.List<Database.Structure.MapTriggerDAO>();
+            //foreach (var line in lines)
+            //{
+            //    //8049~0810171747:276>8036~0706131721:303
+            //    var triggerData = line.Split('>');
+            //    var fromData = triggerData[0].Split(':');
+            //    var toData = triggerData[1].Split(':');
+
+            //    var fromMap = int.Parse(fromData[0].Split('~')[0]);
+            //    var fromCell = int.Parse(fromData[1]);
+
+            //    var toMap = int.Parse(toData[0].Split('~')[0]);
+            //    var toCell = int.Parse(toData[1]);
+
+            //    var trigger = new Database.Structure.MapTriggerDAO() { MapId = fromMap, CellId = fromCell, NewMap = toMap, NewCell = toCell };
+            //    if (MapManager.Instance.GetById(trigger.MapId) != null && MapManager.Instance.GetById(trigger.NewMap) != null)
+            //        triggers.Add(trigger);
+            //}
+
+            //MapTriggerRepository.Instance.Insert(triggers);
+
             int minWorkingThreads = -1, minCompletionPortThreads = -1, maxWorkingThreads = -1, maxCompletionPortThreads = -1;
 
             ThreadPool.GetMinThreads(out minWorkingThreads, out minCompletionPortThreads);

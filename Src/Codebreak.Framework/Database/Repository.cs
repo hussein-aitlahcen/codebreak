@@ -175,7 +175,26 @@ namespace Codebreak.Framework.Database
             }
             return result;            
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Insert(IEnumerable<TDataObject> objects)
+        {
+            var result = SqlManager.Instance.Insert<TDataObject>(objects);
+            if (result)
+            {
+                lock (_syncLock)
+                {
+                    _dataObjects.AddRange(objects);
+                    foreach (var obj in objects)
+                        OnObjectAdded(obj);
+                }
+            }
+            return result;
+        }
+
         /// <summary>
         /// 
         /// </summary>

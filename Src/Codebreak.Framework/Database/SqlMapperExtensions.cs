@@ -203,6 +203,52 @@ namespace Codebreak.Framework.Database
 ﻿  ﻿  ﻿
 			return id;
       }
+
+      /// <summary>
+      /// Inserts entities into table "Ts".
+      /// </summary>
+      /// <param name="connection">Open SqlConnection</param>
+      /// <param name="entityToInsert">Entity to insert</param>
+      /// <returns>Identity of inserted entity</returns>
+      public static void Insert<T>(this IDbConnection connection, IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+      {
+          var type = typeof(T);
+
+          var name = GetTableName(type);
+
+          var sbColumnList = new StringBuilder(null);
+
+﻿  ﻿  ﻿
+			var allProperties = TypePropertiesCache(type);
+            var keyProperties = KeyPropertiesCache(type);
+            var allPropertiesExceptKey = allProperties.Except(keyProperties);
+
+            for (var i = 0; i < allPropertiesExceptKey.Count(); i++)
+            {
+                var property = allPropertiesExceptKey.ElementAt(i);
+﻿  ﻿  ﻿  ﻿
+				sbColumnList.AppendFormat("{0}", property.Name);
+                if (i < allPropertiesExceptKey.Count() - 1)﻿  ﻿  ﻿  ﻿  ﻿
+					sbColumnList.Append(", ");
+            }
+
+﻿  ﻿  ﻿
+			var sbParameterList = new StringBuilder(null);
+﻿  ﻿  ﻿
+			for (var i = 0; i < allPropertiesExceptKey.Count(); i++)
+            {
+                var property = allPropertiesExceptKey.ElementAt(i);
+                sbParameterList.AppendFormat("@{0}", property.Name);
+                if (i < allPropertiesExceptKey.Count() - 1)
+                    sbParameterList.Append(", ");
+            }
+﻿  ﻿  ﻿
+			ISqlAdapter adapter = GetFormatter(connection);
+﻿  ﻿  ﻿
+            foreach(var entityToInsert in entities)
+			    adapter.Insert(connection, transaction, commandTimeout, name, sbColumnList.ToString(), sbParameterList.ToString(), keyProperties, entityToInsert);
+      }
+
       /// <summary>
       /// Updates entity in table "Ts", checks if the entity is modified if the entity is tracked by the Get() extension.
       /// </summary>

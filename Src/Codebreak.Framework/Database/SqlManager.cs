@@ -78,6 +78,34 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="dataObjects"></param>
+        /// <returns></returns>
+        public bool Insert<T>(IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
+        {
+            using(var connection = CreateConnection())
+            {
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.Insert<T>(dataObjects, transaction);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Logger.Error("Fatal errror while inserting in database : " + ex.Message);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="dataObject"></param>
         /// <returns></returns>
         public bool Remove<T>(T dataObject) where T : DataAccessObject<T>, new()
@@ -98,9 +126,19 @@ namespace Codebreak.Framework.Database
         {
             using (var connection = CreateConnection())
             {
-                var transaction = connection.BeginTransaction();
-                connection.Update<T>(dataObjects, transaction);
-                transaction.Commit();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.Update<T>(dataObjects, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Logger.Error("Fatal errror while updating database : " + ex.Message);
+                    }
+                }
             }
         }
 

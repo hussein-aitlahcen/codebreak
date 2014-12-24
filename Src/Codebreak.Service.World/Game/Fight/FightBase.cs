@@ -1664,7 +1664,7 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             var distance = Pathfinding.GoalDistance(Map, cellId, castCell);
-            var maxPo = spellLevel.MaxPO + fighter.Statistics.GetTotal(EffectEnum.AddPO);
+            var maxPo = spellLevel.AllowPOBoost ? spellLevel.MaxPO + fighter.Statistics.GetTotal(EffectEnum.AddPO) : spellLevel.MaxPO;
 
             if (maxPo < spellLevel.MinPO)
                 maxPo = spellLevel.MinPO;
@@ -1744,10 +1744,6 @@ namespace Codebreak.Service.World.Game.Fight
                 return false;
             }
 
-            // TODO : CHECK LOS
-            //if (spellLevel.LineOfSight && !Pathfinding.CheckView(this, cellId, castCell))
-            //    return FightSpellLaunchResultEnum.RESULT_NO_LOS;
-            
             return true;
         }
 
