@@ -334,6 +334,7 @@ namespace Codebreak.Framework.Database
               if (i < keyProperties.Count() - 1)
                   sb.AppendFormat(" and ");
           }
+
           return connection.ExecuteQuery(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction) > 0;
       }
       /// <summary>
@@ -344,10 +345,8 @@ namespace Codebreak.Framework.Database
       /// <param name="entityToDelete">Entity to delete</param>
       /// <returns>true if deleted, false if not found</returns>
       public static bool Delete<T>(this IDbConnection connection, T entityToDelete, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
-      {
-﻿  ﻿  ﻿
-			if (entityToDelete == null)
-﻿  ﻿  ﻿  ﻿
+      {﻿  ﻿  ﻿
+			if (entityToDelete == null)﻿  ﻿  ﻿  ﻿
 				throw new ArgumentException("Cannot Delete null Object", "entityToDelete");
 
             var type = typeof(T);
@@ -370,6 +369,42 @@ namespace Codebreak.Framework.Database
             }
             return connection.ExecuteQuery(sb.ToString(), entityToDelete, transaction: transaction, commandTimeout: commandTimeout) > 0;
       }
+
+      /// <summary>
+      /// Delete entity in table "Ts".
+      /// </summary>
+      /// <typeparam name="T">Type of entity</typeparam>
+      /// <param name="connection">Open SqlConnection</param>
+      /// <param name="entityToDelete">Entity to delete</param>
+      /// <returns>true if deleted, false if not found</returns>
+      public static void Delete<T>(this IDbConnection connection, IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+      {﻿  ﻿  ﻿
+			if (entities.Count() == 0)﻿  ﻿  ﻿  ﻿
+				return;
+
+            var type = typeof(T);
+
+            var keyProperties = KeyPropertiesCache(type);
+            if (keyProperties.Count() == 0)
+                throw new ArgumentException("Entity must have at least one [Key] property");
+
+            var name = GetTableName(type);
+
+            var sb = new StringBuilder();
+            sb.AppendFormat("delete from {0} where ", name);
+
+            for (var i = 0; i < keyProperties.Count(); i++)
+            {
+                var property = keyProperties.ElementAt(i);
+                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+                if (i < keyProperties.Count() - 1)
+                    sb.AppendFormat(" and ");
+            }
+            
+            foreach(var entityToDelete in entities)
+                connection.ExecuteQuery(sb.ToString(), entityToDelete, transaction: transaction, commandTimeout: commandTimeout);
+      }
+
 ﻿  ﻿  public static ISqlAdapter GetFormatter(IDbConnection connection)
       {
 ﻿  ﻿  ﻿

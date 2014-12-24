@@ -211,25 +211,7 @@ namespace Codebreak.Service.World.Game.Entity
                 return (int)Math.Floor((double)(Statistics.GetTotal(EffectEnum.AddChance) / 10)) + Statistics.GetTotal(EffectEnum.AddProspection);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public GenericStats Statistics
-        {
-            get;
-            protected set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public SpellBook Spells
-        {
-            get;
-            protected set;
-        }
-
+                        
         /// <summary>
         /// 
         /// </summary>
@@ -251,22 +233,13 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public InventoryBag Inventory
-        {
-            get;
-            protected set;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
         public MapInstance Map
         {
             get
             {
-                if (_map == null || _map.Id != MapId)
-                    _map = MapManager.Instance.GetById(MapId);
-                return _map;
+                if (m_map == null || m_map.Id != MapId)
+                    m_map = MapManager.Instance.GetById(MapId);
+                return m_map;
             }
         }
 
@@ -302,8 +275,35 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private MapInstance _map;
-        private Dictionary<ChatChannelEnum, Func<Action<string>>> _chatByChannel;
+        public InventoryBag Inventory
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GenericStats Statistics
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SpellBook Spells
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private MapInstance m_map;
+        private Dictionary<ChatChannelEnum, Func<Action<string>>> m_chatByChannel;
 
         /// <summary>
         /// 
@@ -314,22 +314,19 @@ namespace Codebreak.Service.World.Game.Entity
             Type = type;
             Orientation = 1;
 
-            _chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
-
             ShopItems = new List<ItemTemplateDAO>();
-
-            // set channels
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_ADMIN, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => null);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => base.Dispatch);
-            _chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => base.Dispatch);
-
+            m_chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ADMIN, () => null);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, () => null);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, () => null);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => null);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => base.Dispatch);
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => base.Dispatch);
+            
             if (HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
             {
                 SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
@@ -360,7 +357,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="channel"></param>
         public void SetChatChannel(ChatChannelEnum channelType, Func<Action<string>> channel)
         {
-            _chatByChannel[channelType] = channel;
+            m_chatByChannel[channelType] = channel;
         }
 
         /// <summary>
@@ -371,7 +368,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="remoteEntity"></param>
         public virtual void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
         {
-            var raiser = _chatByChannel[channel];
+            var raiser = m_chatByChannel[channel];
             if (raiser != null)
             {
                 var chan = raiser();
@@ -652,9 +649,9 @@ namespace Codebreak.Service.World.Game.Entity
             Inventory.Dispose();
             Inventory = null;
 
-            _chatByChannel.Clear();
-            _chatByChannel = null;
-            _map = null;
+            m_chatByChannel.Clear();
+            m_chatByChannel = null;
+            m_map = null;
 
             base.Dispose();
         }

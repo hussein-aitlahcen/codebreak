@@ -135,17 +135,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public List<InventoryItemDAO> Items
-        {
-            get
-            {
-                return DatabaseRecord.GetItems();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public TaxCollectorDAO DatabaseRecord
         {
             get;
@@ -187,6 +176,21 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public long Kamas
+        {
+            get
+            {
+                return DatabaseRecord.Kamas;
+            }
+            set
+            {
+                DatabaseRecord.Kamas = value;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public TaxCollectorEntity(GuildInstance guild, TaxCollectorDAO record)
             : base(EntityTypeEnum.TYPE_TAX_COLLECTOR, record.Id)
         {            
@@ -198,9 +202,8 @@ namespace Codebreak.Service.World.Game.Entity
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
 
-            Spells = new SpellBook((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
-
-            Inventory = new TaxCollectorInventory(this);
+            Inventory = InventoryBagFactory.Instance.Create(this);
+            Spells = SpellBookFactory.Instance.Create(this);
         }
 
         /// <summary>

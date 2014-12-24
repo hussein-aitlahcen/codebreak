@@ -479,9 +479,10 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
             DatabaseRecord = characterDAO;
-            Statistics = new GenericStats(characterDAO);
-            Inventory = new CharacterInventory(this);
-            Spells = new SpellBook((int)EntityTypeEnum.TYPE_CHARACTER, Id);
+
+            Statistics = new GenericStats(characterDAO);            
+            Inventory = InventoryBagFactory.Instance.Create(this);
+            Spells = SpellBookFactory.Instance.Create(this);
 
             FrameManager = new FrameManager<CharacterEntity, string>(this);
         }

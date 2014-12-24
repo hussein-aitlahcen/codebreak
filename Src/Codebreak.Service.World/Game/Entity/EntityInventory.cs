@@ -10,21 +10,15 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public sealed class CharacterInventory : InventoryBag
+    public sealed class EntityInventory : InventoryBag
     {
         /// <summary>
         /// 
         /// </summary>
         public override long Kamas
         {
-            get
-            {
-                return _character.Kamas;
-            }
-            set
-            {
-                _character.Kamas = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -33,22 +27,22 @@ namespace Codebreak.Service.World.Game.Entity
         public override List<InventoryItemDAO> Items
         {
             get 
-            { 
-                return _character.Items;
+            {
+                return m_items;
             }
         }
 
-        private CharacterEntity _character;
+        private List<InventoryItemDAO> m_items;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public CharacterInventory(CharacterEntity character)
-            : base(character)
+        public EntityInventory(EntityBase entity, long kamas)
+            : base(entity)
         {
-            _character = character;
-
+            m_items = new List<InventoryItemDAO>();
+            m_items.AddRange(Database.Repository.InventoryItemRepository.Instance.GetByOwner((int)entity.Type, entity.Id));
             foreach (var item in Items)            
                 if (item.IsEquiped())                
                     Entity.Statistics.Merge(item.GetStatistics());               

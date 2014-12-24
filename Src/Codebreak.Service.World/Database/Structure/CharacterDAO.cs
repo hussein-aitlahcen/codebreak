@@ -3,6 +3,7 @@ using System.Text;
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repository;
 using PropertyChanged;
+using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Database.Structure
 { 
@@ -229,8 +230,8 @@ namespace Codebreak.Service.World.Database.Structure
         private List<InventoryItemDAO> _items;
         public List<InventoryItemDAO> GetItems()
         {
-            if (_items == null)
-                _items = InventoryItemRepository.Instance.GetByOwner(Id);
+            if (_items == null)                      
+                _items = new List<InventoryItemDAO>(InventoryItemRepository.Instance.GetByOwner((int)EntityTypeEnum.TYPE_CHARACTER, Id));            
             return _items;
         }
 

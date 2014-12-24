@@ -97,20 +97,5 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private List<InventoryItemDAO> _items;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public List<InventoryItemDAO> GetItems()
-        {
-            if (_items == null)
-                _items = InventoryItemRepository.Instance.GetByOwner(Id);
-            return _items;
-        }
     }
 }

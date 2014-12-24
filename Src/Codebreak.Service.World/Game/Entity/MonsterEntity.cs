@@ -131,7 +131,7 @@ namespace Codebreak.Service.World.Game.Entity
             Grade = monsterGrade;
 
             Statistics = new GenericStats(monsterGrade);
-            Spells = new SpellBook((int)EntityTypeEnum.TYPE_MONSTER_FIGHTER, monsterGrade.Id);
+            Spells = SpellBookFactory.Instance.Create(this);
 
             RealLife = MaxLife;
         }
