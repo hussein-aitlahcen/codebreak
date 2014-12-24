@@ -106,7 +106,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public virtual List<TDataObject> LoadMultiple(string query, dynamic param = null)
+        public virtual IEnumerable<TDataObject> LoadMultiple(string query, dynamic param = null)
         {
             IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
 
@@ -119,7 +119,7 @@ namespace Codebreak.Framework.Database
                 }
             }
 
-            return objects.ToList();
+            return objects;
         }
 
         /// <summary>

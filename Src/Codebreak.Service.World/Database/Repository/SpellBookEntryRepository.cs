@@ -29,7 +29,7 @@ namespace Codebreak.Service.World.Database.Repository
             _spellBookEntriesByOwner[spellBookEntry.OwnerId].Remove(spellBookEntry);
         }
 
-        public List<SpellBookEntryDAO> GetSpellEntries(int ownerType, long ownerId)
+        public IEnumerable<SpellBookEntryDAO> GetSpellEntries(int ownerType, long ownerId)
         {
             if (_spellBookEntriesByOwner.ContainsKey(ownerId))
                 return _spellBookEntriesByOwner[ownerId];
