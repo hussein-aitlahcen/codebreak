@@ -41,10 +41,9 @@ namespace Codebreak.Service.World.Database.Repository
         }
 
         public override void UpdateAll()
-        {
-            for (int i = _dataObjects.Count - 1; i > -1; i--)            
-                if (_dataObjects[i].OwnerId == -1)                
-                    Remove(_dataObjects[i]);
+        {         
+            lock(_syncLock)    
+                Remove(_dataObjects.Where(item => item.OwnerId == -1));
             base.UpdateAll();
         }
     }

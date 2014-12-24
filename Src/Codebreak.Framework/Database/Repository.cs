@@ -48,7 +48,7 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        private object _syncLock = new object();
+        protected object _syncLock = new object();
 
         /// <summary>
         /// 
@@ -156,6 +156,27 @@ namespace Codebreak.Framework.Database
                 }
             }
             return result;                   
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Remove(IEnumerable<TDataObject> objects)
+        {
+            var result = SqlManager.Instance.Remove<TDataObject>(objects);
+            if (result)
+            {
+                lock (_syncLock)
+                {
+                    foreach (var obj in objects)
+                    {
+                        _dataObjects.Remove(obj);
+                        OnObjectRemoved(obj);
+                    }
+                }
+            }
+            return result;
         }
 
         /// <summary>
