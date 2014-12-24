@@ -1371,9 +1371,7 @@ namespace Codebreak.Service.World.Game.Fight
                 base.Dispatch(WorldMessage.FIGHT_TURN_READY(CurrentFighter.Id));
                 base.CachedBuffer = false;
 
-                // In case of fighter diying during end of turn, client dont needs to be synchronized back ??
-                if(!CurrentFighter.IsFighterDead)
-                    SetAllUnReady();
+                SetAllUnReady();
 
                 LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
                 NextLoopState = FightLoopStateEnum.STATE_WAIT_READY;

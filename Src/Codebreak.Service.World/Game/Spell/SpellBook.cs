@@ -46,8 +46,11 @@ namespace Codebreak.Service.World.Game.Spell
         {
             _entityType = type;
             _entityId = id;
-            foreach (var spellEntry in SpellBookEntryRepository.Instance.GetSpellEntries(type, id))            
-                _spellEntries.Add(spellEntry.SpellId, spellEntry);            
+            foreach (var spellEntry in SpellBookEntryRepository.Instance.GetSpellEntries(type, id))
+                if (!_spellEntries.ContainsKey(spellEntry.SpellId))
+                    _spellEntries.Add(spellEntry.SpellId, spellEntry);
+                else
+                    _spellEntries[spellEntry.SpellId] = spellEntry;
         }
 
         /// <summary>
