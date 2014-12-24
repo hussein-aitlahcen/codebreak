@@ -37,11 +37,12 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
         public MoveAction(AIFighter fighter) 
             : base(fighter)
         {
-            MoveState = MoveStateEnum.STATE_CALCULATE_CELL;
         }
 
         public override AIActionResult Initialize()
         {
+            MoveState = MoveStateEnum.STATE_CALCULATE_CELL;
+
             return Fighter.MP > 0 ? AIActionResult.RUNNING : AIActionResult.FAILURE;
         }
 
@@ -82,11 +83,8 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                         Fighter.CurrentAction.Stop();
 
                     if (!Fighter.IsFighterDead && Fighter.Fight.CurrentFighter == Fighter && Fighter.Cell.Id != CellId && Fighter.Fight.GetCell(CellId).CanWalk)
-                    {
-                        MoveState = MoveStateEnum.STATE_CALCULATE_CELL;
                         return Initialize();
-                    }
-
+                    
                     return AIActionResult.SUCCESS;
 
                 default:
