@@ -30,6 +30,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
+        public void SummonFighter(FighterBase fighter)
+        {
+            _fighterTurns.Insert(_fighterTurns.IndexOf(fighter.Invocator) + 1, fighter);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fighter"></param>
         public void RemoveFighter(FighterBase fighter)
         {
             if (_fighterTurns.Contains(fighter))

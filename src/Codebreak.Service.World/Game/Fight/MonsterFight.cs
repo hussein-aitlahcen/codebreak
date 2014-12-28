@@ -49,10 +49,8 @@ namespace Codebreak.Service.World.Game.Fight
             MonsterGroup = monsterGroup;
 
             JoinFight(Character, Team0);
-            foreach(var monster in monsterGroup.Monsters)
-            {
-                JoinFight(monster, Team1);
-            }
+            foreach(var monster in monsterGroup.Monsters)            
+                JoinFight(monster, Team1);           
 
             base.Start();
         }

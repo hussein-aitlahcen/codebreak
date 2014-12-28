@@ -476,12 +476,19 @@ namespace Codebreak.Service.World.Game.Map
                     }
                 }                
                 foreach (var monsterGroup in _entityById.Values.OfType<MonsterGroupEntity>())
-                {
+                {                    
                     if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
                     {
-                        monsterGroup.StopAction(GameActionTypeEnum.MAP);
-                        FightManager.StartMonsteFight(entity as CharacterEntity, monsterGroup);
-                        return;
+                        if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 1)
+                        {
+                            entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
+                        }
+                        else
+                        {
+                            monsterGroup.StopAction(GameActionTypeEnum.MAP);
+                            FightManager.StartMonsteFight(entity as CharacterEntity, monsterGroup);
+                            return;
+                        }
                     }
                 }
             }

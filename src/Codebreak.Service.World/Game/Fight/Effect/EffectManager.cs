@@ -163,6 +163,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             // Augmente de X les domamges de base du sort Y
             _effects.Add(EffectEnum.IncreaseSpellDamage, new IncreaseSpellJetEffect());
 
+            // Invocation
+            _effects.Add(EffectEnum.Invocation, new SummoningEffect());
 
             // Debuff
             _effects.Add(EffectEnum.DeleteAllBonus, new BuffRemoveEffect());

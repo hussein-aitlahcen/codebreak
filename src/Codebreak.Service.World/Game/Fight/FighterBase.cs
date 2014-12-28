@@ -472,8 +472,8 @@ namespace Codebreak.Service.World.Game.Fight
             if (Life < 1)
                 Life = 1;
 
-            SetCell(team.FreePlace);
-
+            if(fight.State == FightStateEnum.STATE_PLACEMENT)
+                SetCell(team.FreePlace);
             StartAction(GameActionTypeEnum.FIGHT);
         }
 

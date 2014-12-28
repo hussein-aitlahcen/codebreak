@@ -160,6 +160,7 @@
     <Compile Include="Game\Fight\Effect\Type\DropLifeEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceBuff.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\SummoningEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\PunishmentDamageEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\PureLifeStealEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\PushFearEffect.cs" />

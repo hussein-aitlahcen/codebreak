@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Fight.AI;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
@@ -125,7 +126,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="monsterGrade"></param>
-        public MonsterEntity(long id, MonsterGradeDAO monsterGrade)
+        public MonsterEntity(long id, MonsterGradeDAO monsterGrade, FighterBase invocator = null)
             : base(EntityTypeEnum.TYPE_MONSTER_FIGHTER, id)
         {
             Grade = monsterGrade;
@@ -134,6 +135,7 @@ namespace Codebreak.Service.World.Game.Entity
             Spells = SpellBookFactory.Instance.Create(this);
 
             RealLife = MaxLife;
+            Invocator = invocator;
         }
 
         /// <summary>
