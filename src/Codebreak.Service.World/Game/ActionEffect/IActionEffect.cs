@@ -9,8 +9,12 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.ActionEffect
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IActionEffect
     {
-        bool Process(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell, Dictionary<string, string> parameters = null);
+        bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell);
+        void Process(EntityBase entity, Dictionary<string, string> parameters);
     }
 }

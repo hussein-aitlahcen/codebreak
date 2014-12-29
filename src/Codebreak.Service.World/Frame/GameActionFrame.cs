@@ -8,7 +8,7 @@ using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Frames
+namespace Codebreak.Service.World.Frame
 {
     public sealed class GameActionFrame : FrameBase<GameActionFrame, CharacterEntity, string>
     {
@@ -41,9 +41,51 @@ namespace Codebreak.Service.World.Frames
                         default:
                             return null;
                     }
+
+                case 'D':
+                    switch(message[1])
+                    {
+                        case 'C':
+                            return DialogCreate;
+                    }
+                    break;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void DialogCreate(CharacterEntity entity, string message)
+        {
+            long npcId = -1;
+            if (!long.TryParse(message.Substring(2), out npcId))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            entity.AddMessage(() =>
+                {
+                    var target = entity.Map.GetEntity(npcId);
+                    if(target == null || target.Type != EntityTypeEnum.TYPE_NPC)
+                    {
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    var npc = (NonPlayerCharacterEntity)target;
+                    if(npc.InitialQuestion == null)
+                    {
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    entity.NpcDialogStart(npc);
+                });
         }
 
         /// <summary>

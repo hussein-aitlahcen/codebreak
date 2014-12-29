@@ -4,7 +4,7 @@ using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Frames
+namespace Codebreak.Service.World.Frame
 {
     public sealed class AuthentificationFrame : FrameBase<AuthentificationFrame, WorldClient, string>
     {

@@ -186,8 +186,12 @@ namespace Codebreak.Service.World.Game.Spell
         Stealth = 150,
         DeleteAllBonus = 132,
 
+        /* Potion rappel */
+        TeleportSavedZaap = 600,
+
         /* Parchemins */
         AddSpell = 604,
+        AddExperience = 605,
         AddCaractStrength = 607,
         AddCaractWisdom = 678,
         AddCaractChance = 608,
@@ -222,6 +226,10 @@ namespace Codebreak.Service.World.Game.Spell
         LivingXp = 974,
 
         CanBeExchange = 983,
+        
+        /* ACTION BDD NPC RESPONSES */
+        NpcDialogReply = 2000,
+        NpcDialogLeave = 2001,
     }
 
     /// <summary>

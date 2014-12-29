@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Database.Structure;
+﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Network;
 using System;
@@ -9,52 +10,73 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Entity
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class NonPlayerCharacterEntity : EntityBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override string Name
         {
             get
             {
-                return "Npc_" + _npcRecord.GetTemplate().Id + "_" + Id;
+                return "Npc_" + m_npcRecord.GetTemplate().Id + "_" + Id;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int MapId
         {
             get
             {
-                return _npcRecord.MapId;
+                return m_npcRecord.MapId;
             }
             set
             {
-                _npcRecord.MapId = value;
+                m_npcRecord.MapId = value;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int CellId
         {
             get
             {
-                return _npcRecord.CellId;
+                return m_npcRecord.CellId;
             }
             set
             {
-                _npcRecord.CellId = value;
+                m_npcRecord.CellId = value;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int Level
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int RealLife
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int BaseLife
         {
             get 
@@ -63,92 +85,143 @@ namespace Codebreak.Service.World.Game.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int Restriction
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string HexColor1
         {
             get
             {
-                if (_npcRecord.GetTemplate().Color3 == -1)
+                if (m_npcRecord.GetTemplate().Color3 == -1)
                     return "-1";
-                return _npcRecord.GetTemplate().Color3.ToString("x");
+                return m_npcRecord.GetTemplate().Color3.ToString("x");
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string HexColor2
         {
             get
             {
-                if (_npcRecord.GetTemplate().Color3 == -1)
+                if (m_npcRecord.GetTemplate().Color3 == -1)
                     return "-1";
-                return _npcRecord.GetTemplate().Color3.ToString("x");
+                return m_npcRecord.GetTemplate().Color3.ToString("x");
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string HexColor3
         {
             get
             {
-                if (_npcRecord.GetTemplate().Color3 == -1)
+                if (m_npcRecord.GetTemplate().Color3 == -1)
                     return "-1";
-                return _npcRecord.GetTemplate().Color3.ToString("x");
+                return m_npcRecord.GetTemplate().Color3.ToString("x");
             }
         }
-        private NpcInstanceDAO _npcRecord;
-        private StringBuilder _cachedEntityMapInformations, _cachedShopListInformations;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public NpcQuestionDAO InitialQuestion
+        {
+            get
+            {
+                if (m_initialQuestion == null && m_npcRecord.QuestionId != -1)
+                    m_initialQuestion = NpcQuestionRepository.Instance.GetById(m_npcRecord.QuestionId);
+                return m_initialQuestion;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private NpcInstanceDAO m_npcRecord;
+        private NpcQuestionDAO m_initialQuestion;
+        private StringBuilder m_cachedEntityMapInformations, m_cachedShopListInformations;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="npcDAO"></param>
+        /// <param name="id"></param>
         public NonPlayerCharacterEntity(NpcInstanceDAO npcDAO, long id)
             : base(EntityTypeEnum.TYPE_NPC, id)
         {
-            _npcRecord = npcDAO;
+            m_npcRecord = npcDAO;
 
-            Orientation = _npcRecord.Orientation;
+            Orientation = m_npcRecord.Orientation;
             ShopItems.AddRange(npcDAO.GetTemplate().GetShopList());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exchangeType"></param>
+        /// <returns></returns>
         public override bool CanBeExchanged(ExchangeTypeEnum exchangeType)
         {
             return base.CanBeExchanged(exchangeType) && exchangeType == ExchangeTypeEnum.EXCHANGE_SHOP && ShopItems.Count > 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <param name="message"></param>
         public override void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message)
         {
-            if (_cachedEntityMapInformations == null)
+            if (m_cachedEntityMapInformations == null)
             {
-                _cachedEntityMapInformations = new StringBuilder();
-                _cachedEntityMapInformations.Append(CellId).Append(';');
-                _cachedEntityMapInformations.Append(Orientation).Append(';');
-                _cachedEntityMapInformations.Append('0').Append(';'); // Unknow
-                _cachedEntityMapInformations.Append(Id).Append(';');
-                _cachedEntityMapInformations.Append(_npcRecord.TemplateId).Append(';');
-                _cachedEntityMapInformations.Append((int)EntityTypeEnum.TYPE_NPC).Append(';');
-                _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().GfxID).Append('^');
-                _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().ScaleX).Append(';'); // size
-                _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().Sex).Append(';');
-                _cachedEntityMapInformations.Append(HexColor1 + ';' + HexColor2 + ';' + HexColor3).Append(';');
-                _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().EntityLook);
-                _cachedEntityMapInformations.Append(';');
-                _cachedEntityMapInformations.Append("").Append(';'); // ExtraClip
-                _cachedEntityMapInformations.Append(_npcRecord.GetTemplate().CustomArtwork);
+                m_cachedEntityMapInformations = new StringBuilder();
+                m_cachedEntityMapInformations.Append(CellId).Append(';');
+                m_cachedEntityMapInformations.Append(Orientation).Append(';');
+                m_cachedEntityMapInformations.Append('0').Append(';'); // Unknow
+                m_cachedEntityMapInformations.Append(Id).Append(';');
+                m_cachedEntityMapInformations.Append(m_npcRecord.TemplateId).Append(';');
+                m_cachedEntityMapInformations.Append((int)EntityTypeEnum.TYPE_NPC).Append(';');
+                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().GfxID).Append('^');
+                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().ScaleX).Append(';'); // size
+                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().Sex).Append(';');
+                m_cachedEntityMapInformations.Append(HexColor1 + ';' + HexColor2 + ';' + HexColor3).Append(';');
+                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().EntityLook);
+                m_cachedEntityMapInformations.Append(';');
+                m_cachedEntityMapInformations.Append("").Append(';'); // ExtraClip
+                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().CustomArtwork);
             }
 
-            message.Append(_cachedEntityMapInformations);
+            message.Append(m_cachedEntityMapInformations);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
         {
-            if (_cachedShopListInformations == null)
+            if (m_cachedShopListInformations == null)
             {
-                _cachedShopListInformations = new StringBuilder();
+                m_cachedShopListInformations = new StringBuilder();
                 foreach(var template in ShopItems)
                 {
-                    _cachedShopListInformations.Append(template.Id).Append(';');
-                    _cachedShopListInformations.Append(template.Effects).Append('|');
+                    m_cachedShopListInformations.Append(template.Id).Append(';');
+                    m_cachedShopListInformations.Append(template.Effects).Append('|');
                 }
             }
-            message.Append(_cachedShopListInformations);
+            message.Append(m_cachedShopListInformations);
         }
     }
 }

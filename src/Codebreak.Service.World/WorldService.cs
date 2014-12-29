@@ -7,7 +7,7 @@ using Codebreak.Framework.Network;
 using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Database;
 using Codebreak.Service.World.Database.Repository;
-using Codebreak.Service.World.Frames;
+using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.RPC;

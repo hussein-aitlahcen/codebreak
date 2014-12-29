@@ -1,7 +1,7 @@
 ﻿using Codebreak.Framework.Network;
 using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Database.Structure;
-using Codebreak.Service.World.Frames;
+using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Exchange;

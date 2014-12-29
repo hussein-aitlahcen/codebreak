@@ -43,6 +43,7 @@ namespace Codebreak.Service.World.Game.Action
         EXCHANGE,
         PLAYER_EXCHANGE,
         NPC_EXCHANGE,
+        NPC_DIALOG,
         PARTY_REQUEST,
         FIGHT,
         GUILD_CREATE,

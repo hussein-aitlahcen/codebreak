@@ -57,6 +57,8 @@ namespace Codebreak.Service.World.Network
                 _cachedBuffer.Clear();
             OnMessage = null;
             _cachedBuffer = null;
+
+            base.Dispose();
         }
 
         /// <summary>

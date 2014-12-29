@@ -29,6 +29,8 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(MapRepository.Instance);
             base.AddRepository(NpcTemplateRepository.Instance);
             base.AddRepository(NpcInstanceRepository.Instance);
+            base.AddRepository(NpcQuestionRepository.Instance);
+            base.AddRepository(NpcResponseRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
             base.AddRepository(MonsterRepository.Instance);
             base.AddRepository(MonsterGradeRepository.Instance);

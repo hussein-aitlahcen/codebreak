@@ -29,9 +29,13 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
+        public int QuestionId
+        {
+            get;
+            set;
+        }
 
         private NpcTemplateDAO _template;
-
         public NpcTemplateDAO GetTemplate()
         {
             if (_template == null)

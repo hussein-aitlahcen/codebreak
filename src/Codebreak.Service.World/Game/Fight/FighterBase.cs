@@ -1,4 +1,4 @@
-﻿using Codebreak.Service.World.Frames;
+﻿using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Map;

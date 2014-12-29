@@ -9,7 +9,7 @@ using Codebreak.WorldService;
 using System.Collections.Generic;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Frames
+namespace Codebreak.Service.World.Frame
 {
     /// <summary>
     /// 

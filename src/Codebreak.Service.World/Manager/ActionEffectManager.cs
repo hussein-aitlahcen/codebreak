@@ -1,5 +1,7 @@
 ﻿using Codebreak.Framework.Generic;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.ActionEffect;
+using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Spell;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,8 @@ namespace Codebreak.Service.World.Manager
         {
             m_effectById = new Dictionary<EffectEnum, IActionEffect>();
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
+            m_effectById.Add(EffectEnum.NpcDialogLeave, NpcDialogLeaveEffect.Instance);
+            m_effectById.Add(EffectEnum.NpcDialogReply, NpcReplyEffect.Instance);
         }
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         /// <param name="?"></param>
         /// <param name="item"></param>
-        public void ApplyEffects(Game.Entity.EntityBase entity, Database.Structure.InventoryItemDAO item, long targetId = -1, int targetCell = -1, Dictionary<string, string> parameters = null)
+        public void ApplyEffects(EntityBase entity, InventoryItemDAO item, long targetId = -1, int targetCell = -1, Dictionary<string, string> parameters = null)
         {
             if(targetId != -1)
             {
@@ -46,8 +50,22 @@ namespace Codebreak.Service.World.Manager
             {
                 if (m_effectById.ContainsKey(effect.Key))
                 {
-                    m_effectById[effect.Key].Process(entity, item, effect.Value, targetId, targetCell);
+                    m_effectById[effect.Key].ProcessItem(entity, item, effect.Value, targetId, targetCell);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="effect"></param>
+        /// <param name="parameters"></param>
+        public void ApplyEffect(EntityBase entity, EffectEnum effect, Dictionary<string, string> parameters)
+        {
+            if(m_effectById.ContainsKey(effect))
+            {
+                m_effectById[effect].Process(entity, parameters);
             }
         }
     }

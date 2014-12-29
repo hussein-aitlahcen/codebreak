@@ -1860,5 +1860,37 @@ namespace Codebreak.Service.World.Network
         {
             return "eUK" + targetId + "|" + emoteId + "|" + time;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="npcId"></param>
+        /// <param name="parameters"></param>
+        /// <param name="responses"></param>
+        /// <returns></returns>
+        public static string DIALOG_CREATE(long npcId)
+        {
+            return "DCK" + npcId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string DIALOG_LEAVE()
+        {
+            return "DV";
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="responses"></param>
+        /// <returns></returns>
+        public static string DIALOG_QUESTION(int questionId, string parameters, IEnumerable<int> responseIds)
+        {
+            return "DQ" + questionId + ";" + parameters + "|" + string.Join(";", responseIds);
+        }
     }
 }

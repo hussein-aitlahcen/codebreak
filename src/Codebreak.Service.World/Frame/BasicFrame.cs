@@ -11,7 +11,7 @@ using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Frames
+namespace Codebreak.Service.World.Frame
 {
     public sealed class BasicFrame : FrameBase<BasicFrame, CharacterEntity, string>
     {

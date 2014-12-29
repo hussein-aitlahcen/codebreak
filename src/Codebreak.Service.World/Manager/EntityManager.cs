@@ -3,7 +3,7 @@ using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
-using Codebreak.Service.World.Frames;
+using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game.Guild;
 
 namespace Codebreak.Service.World.Manager

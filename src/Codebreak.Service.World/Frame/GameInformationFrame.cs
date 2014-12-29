@@ -4,7 +4,7 @@ using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Fight;
 
-namespace Codebreak.Service.World.Frames
+namespace Codebreak.Service.World.Frame
 {
     public sealed class GameInformationFrame : FrameBase<GameInformationFrame, CharacterEntity, string>
     {

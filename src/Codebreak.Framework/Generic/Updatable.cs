@@ -59,6 +59,7 @@ namespace Codebreak.Framework.Generic
             foreach (var subUpdatableObj in _subUpdatableObjects)
                 subUpdatableObj.Dispose();
             _subUpdatableObjects.Clear();
+            _subUpdatableObjects = null;
 
             _messagesQueue.Clear();
             _messagesQueue = null;

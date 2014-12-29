@@ -6,7 +6,7 @@ using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Manager;
 
-namespace Codebreak.Service.World.Frames
+namespace Codebreak.Service.World.Frame
 {
     /// <summary>
     /// 

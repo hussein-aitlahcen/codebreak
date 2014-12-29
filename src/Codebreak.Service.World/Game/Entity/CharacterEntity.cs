@@ -15,7 +15,8 @@ using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Framework.Network;
-using Codebreak.Service.World.Frames;
+using Codebreak.Service.World.Frame;
+using Codebreak.Service.World.Frame;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -545,6 +546,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="npc"></param>
+        public void NpcDialogStart(NonPlayerCharacterEntity npc)
+        {
+            CurrentAction = new GameNpcDialogAction(this, npc);
+            StartAction(GameActionTypeEnum.NPC_DIALOG);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         public void ExchangePlayer(CharacterEntity player)
         {
@@ -685,12 +696,14 @@ namespace Codebreak.Service.World.Game.Entity
                     }
                     break;
 
+                case GameActionTypeEnum.NPC_DIALOG:
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:                    
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(InventoryFrame.Instance);
                     FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.AddFrame(NpcDialogFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.FIGHT:
@@ -721,13 +734,15 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
                     break;
-                    
+
+                case GameActionTypeEnum.NPC_DIALOG:
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
                     FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(NpcDialogFrame.Instance);
                     break;
             }
         }
@@ -748,12 +763,14 @@ namespace Codebreak.Service.World.Game.Entity
                     Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
 
+                case GameActionTypeEnum.NPC_DIALOG:
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
                     FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(NpcDialogFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.MAP:

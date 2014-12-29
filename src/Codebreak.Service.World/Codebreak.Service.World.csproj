@@ -75,6 +75,8 @@
     <Compile Include="Database\Repository\MonsterGradeRepository.cs" />
     <Compile Include="Database\Repository\MonsterRepository.cs" />
     <Compile Include="Database\Repository\NpcInstanceRepository.cs" />
+    <Compile Include="Database\Repository\NpcQuestionRepository.cs" />
+    <Compile Include="Database\Repository\NpcResponseRepository.cs" />
     <Compile Include="Database\Repository\NpcTemplateRepository.cs" />
     <Compile Include="Database\Repository\OLD_REPOSITORIES.cs" />
     <Compile Include="Database\Repository\SpellBookEntryRepository.cs" />
@@ -92,6 +94,8 @@
     <Compile Include="Database\Structure\MonsterDAO.cs" />
     <Compile Include="Database\Structure\MonsterGradeDAO.cs" />
     <Compile Include="Database\Structure\NpcInstanceDAO.cs" />
+    <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
+    <Compile Include="Database\Structure\NpcResponseDAO.cs" />
     <Compile Include="Database\Structure\NpcTemplateDAO.cs" />
     <Compile Include="Database\Structure\OLD_DATAS.cs" />
     <Compile Include="Database\Structure\SpellBookEntryDAO.cs" />
@@ -99,12 +103,16 @@
     <Compile Include="Database\Structure\SuperAreaDAO.cs" />
     <Compile Include="Database\Structure\TaxCollectorDAO.cs" />
     <Compile Include="Database\WorldDbMgr.cs" />
+    <Compile Include="Frame\NpcDialogFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
+    <Compile Include="Game\ActionEffect\NpcDialogLeaveEffect.cs" />
+    <Compile Include="Game\ActionEffect\NpcReplyEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
+    <Compile Include="Game\Action\GameNpcDialogAction.cs" />
     <Compile Include="Game\Action\GameExchangeActionBase.cs" />
     <Compile Include="Game\Action\GameFightActionBase.cs" />
     <Compile Include="Game\Action\GameFightMovementAction.cs" />
@@ -120,8 +128,6 @@
     <Compile Include="Game\Area\SubAreaInstance.cs" />
     <Compile Include="Game\Area\SuperAreaInstance.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
-    <Compile Include="Game\Dialog\NpcQuestion.cs" />
-    <Compile Include="Game\Dialog\NpcResponse.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\EntityInventory.cs" />
     <Compile Include="Game\Entity\EntityBase.cs" />
