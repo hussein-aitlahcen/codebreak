@@ -1666,58 +1666,41 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public FightSpellLaunchResultEnum CanLaunchSpell(FighterBase fighter, SpellLevel spellLevel, int spellId, int cellId, int castCell)
         {
-            if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN && LoopState != FightLoopStateEnum.STATE_WAIT_AI)
-            {
+            if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN && LoopState != FightLoopStateEnum.STATE_WAIT_AI)            
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
-            }
-
-            if (CurrentFighter != fighter)
-            {
-                return FightSpellLaunchResultEnum.RESULT_ERROR;
-            }
             
-            if (GetCell(castCell) == null)
-            {
+            if (CurrentFighter != fighter)            
+                return FightSpellLaunchResultEnum.RESULT_ERROR;            
+            
+            if (GetCell(castCell) == null)            
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
-            }
-
-            if (fighter.AP < spellLevel.APCost)
-            {
+            
+            if (fighter.AP < spellLevel.APCost)            
                 return FightSpellLaunchResultEnum.RESULT_NO_AP;
-            }
-
+           
             var distance = Pathfinding.GoalDistance(Map, cellId, castCell);
             var maxPo = spellLevel.AllowPOBoost ? spellLevel.MaxPO + fighter.Statistics.GetTotal(EffectEnum.AddPO) : spellLevel.MaxPO;
-
+          
             if (maxPo < spellLevel.MinPO)
                 maxPo = spellLevel.MinPO;
 
-            if (distance > maxPo || distance < spellLevel.MinPO)
-            {
-                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
-            }
+            if (distance > maxPo || distance < spellLevel.MinPO)            
+                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;            
 
-            if(spellLevel.EmptyCell && !GetCell(castCell).CanWalk)
-            {
-                return FightSpellLaunchResultEnum.RESULT_WRONG_TARGET;
-            }
+            if(spellLevel.EmptyCell && !GetCell(castCell).CanWalk)            
+                return FightSpellLaunchResultEnum.RESULT_WRONG_TARGET;            
 
-            if(spellLevel.InLine == 1 && !Pathfinding.InLine(Map, cellId, castCell))
-            {
-                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
-            }
+            if(spellLevel.InLine && !Pathfinding.InLine(Map, cellId, castCell))            
+                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;            
             
             var target = GetFighterOnCell(castCell);
-            if (target == null)
-            {
-                return FightSpellLaunchResultEnum.RESULT_OK;
-            }
+            long targetId = 0;
+            if (target != null)
+                targetId = target.Id;
 
-            if (!fighter.SpellManager.CanLaunchSpell(spellLevel, spellId, target.Id))
-            {
+            if (!fighter.SpellManager.CanLaunchSpell(spellLevel, spellId, targetId))            
                 return FightSpellLaunchResultEnum.RESULT_WRONG_TARGET;
-            }
-
+            
             return FightSpellLaunchResultEnum.RESULT_OK;
         }
 
@@ -2011,9 +1994,9 @@ namespace Codebreak.Service.World.Game.Fight
                 base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
 
                 var isEchec = false;
-                if (spellLevel.ESCRate != 0)
+                if (spellLevel.ECSRate != 0)
                 {
-                    var echecRate = spellLevel.ESCRate - fighter.Statistics.GetTotal(EffectEnum.AddEchecCritic);
+                    var echecRate = spellLevel.ECSRate - fighter.Statistics.GetTotal(EffectEnum.AddEchecCritic);
 
                     if (echecRate < 2)
                         echecRate = 2;

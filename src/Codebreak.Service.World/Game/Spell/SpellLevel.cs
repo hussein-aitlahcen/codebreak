@@ -19,8 +19,8 @@ namespace Codebreak.Service.World.Game.Spell
         public int MinPO;
         public int MaxPO;
         public int CSRate;
-        public int ESCRate;
-        public int InLine;
+        public int ECSRate;
+        public bool InLine;
         public bool LOS;
         public bool EmptyCell;
         public bool AllowPOBoost;

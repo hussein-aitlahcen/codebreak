@@ -84,8 +84,9 @@ namespace Codebreak.Service.World
             CommandManager = new CommandManager<WorldCommandContext>();
             CommandManager.RegisterCommands();
 
-            Dispatcher = new MessageDispatcher();
-            AddUpdatable(Dispatcher);
+            AddUpdatable(Dispatcher = new MessageDispatcher());
+            AddUpdatable(RPCManager.Instance);
+            AddTimer(WorldSaveInternal, UpdateWorld);
 
             WorldDbMgr.Instance.Initialize();
             AccountManager.Instance.Initialize();
@@ -95,8 +96,8 @@ namespace Codebreak.Service.World
             NpcManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
-            AddUpdatable(RPCManager.Instance);
-
+            SpellManager.Instance.Save();
+            
             // TRIGGER LEECH
             //var lines = System.IO.File.ReadAllLines(@"D:\Codebreak\triggersFiltered.txt");
             //var triggers = new System.Collections.Generic.List<Database.Structure.MapTriggerDAO>();
@@ -119,9 +120,7 @@ namespace Codebreak.Service.World
             //}
 
             //MapTriggerRepository.Instance.Insert(triggers);
-
-            AddTimer(WorldSaveInternal, UpdateWorld);
-
+            
             base.Start(WorldServiceIP, WorldServicePort);
         }
 

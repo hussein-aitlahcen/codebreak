@@ -68,6 +68,9 @@ namespace Codebreak.Service.World.Game.Fight
                 }
             }
 
+            if (targetId == 0)
+                return true;
+
             if (spell.MaxLaunchPerTarget > 0)
             {
                 if (_targets.ContainsKey(spellId))
