@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            using (var stream = File.OpenRead("resources/data/spells.bin"))            
+            using (var stream = File.OpenRead(ResourceManager.SPELLS_BINARY_PATH))            
                 _templateById = Serializer.Deserialize<Dictionary<int, SpellTemplate>>(stream);
 
             Logger.Info("SpellManager : " + _templateById.Count + " SpellTemplate loaded.");
@@ -111,7 +111,7 @@ namespace Codebreak.Service.World.Manager
                 templates.Add(newTemplate.Id, newTemplate);
             }
 
-            using (var stream = File.Open("resources/data/spells.bin", FileMode.Create))            
+            using (var stream = File.Open(ResourceManager.SPELLS_BINARY_PATH, FileMode.Create))            
                 Serializer.Serialize<Dictionary<int, SpellTemplate>>(stream, templates);            
         }
 

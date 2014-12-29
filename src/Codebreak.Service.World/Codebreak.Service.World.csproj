@@ -252,6 +252,7 @@
     <Compile Include="Manager\MapManager.cs" />
     <Compile Include="Manager\NpcManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
+    <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
     <Compile Include="Network\Util.cs" />
