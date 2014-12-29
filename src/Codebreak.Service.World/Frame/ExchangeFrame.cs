@@ -5,6 +5,7 @@ using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Exchange;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Frames
 {

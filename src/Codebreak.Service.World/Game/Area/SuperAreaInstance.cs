@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Game.Area
 {

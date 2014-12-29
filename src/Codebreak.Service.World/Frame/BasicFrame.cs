@@ -9,6 +9,7 @@ using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Frames
 {

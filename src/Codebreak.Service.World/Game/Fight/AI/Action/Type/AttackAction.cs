@@ -178,11 +178,11 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                     else if (Effect.CastInfos.IsMalusEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore += 5 + effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore += 5;
                                         else
-                                            currentScore -= 5 + effect.Value1 + effect.Value2 + effect.Value3; ;
+                                            currentScore -= 5 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }
-                                    else if(Effect.CastInfos.IsBonusEffect(effect.TypeEnum))
+                                    else if(Effect.CastInfos.IsBonusEffect(effect.TypeEnum) || Effect.CastInfos.IsFriendlyEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
                                             currentScore -= effect.Value1 + effect.Value2 + effect.Value3;
@@ -193,8 +193,11 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                                 currentScore += effect.Value1 + effect.Value2 + effect.Value3;
                                     }
                                 }
-                            }
 
+                                if(levelInfos.Value.Count == 0 && Effect.CastInfos.IsSpecial(effect.TypeEnum))                                
+                                    currentScore += 50;                                
+                            }
+                              
                             if (currentScore > bestScore)
                             {
                                 bestScore = currentScore;
@@ -213,8 +216,8 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 
                 case AttackStateEnum.STATE_LAUNCH_ATTACK:
                                         
-                    Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 800);
-                    Timeout = 800;
+                    Fight.TryLaunchSpell(Fighter, SpellId, TargetCell, 1000);
+                    Timeout = 1000;
 
                     AttackState = AttackStateEnum.STATE_ATTACKING;
 

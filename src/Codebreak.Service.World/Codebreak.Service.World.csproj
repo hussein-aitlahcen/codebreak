@@ -99,6 +99,9 @@
     <Compile Include="Database\Structure\SuperAreaDAO.cs" />
     <Compile Include="Database\Structure\TaxCollectorDAO.cs" />
     <Compile Include="Database\WorldDbMgr.cs" />
+    <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
+    <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
+    <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
@@ -116,6 +119,9 @@
     <Compile Include="Game\Area\AreaInstance.cs" />
     <Compile Include="Game\Area\SubAreaInstance.cs" />
     <Compile Include="Game\Area\SuperAreaInstance.cs" />
+    <Compile Include="Game\Dialog\NpcDialog.cs" />
+    <Compile Include="Game\Dialog\NpcQuestion.cs" />
+    <Compile Include="Game\Dialog\NpcResponse.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\EntityInventory.cs" />
     <Compile Include="Game\Entity\EntityBase.cs" />
@@ -244,6 +250,7 @@
     <Compile Include="Frame\InventoryFrame.cs" />
     <Compile Include="Frame\SpellFrame.cs" />
     <Compile Include="Manager\AccountManager.cs" />
+    <Compile Include="Manager\ActionEffectManager.cs" />
     <Compile Include="Manager\AreaManager.cs" />
     <Compile Include="Manager\EntityManager.cs" />
     <Compile Include="Manager\ExperienceManager.cs" />
@@ -255,7 +262,7 @@
     <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
-    <Compile Include="Network\Util.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="Network\WorldClient.cs" />
     <Compile Include="Network\WorldMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -289,6 +296,7 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

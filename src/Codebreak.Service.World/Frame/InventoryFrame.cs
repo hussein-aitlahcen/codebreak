@@ -3,6 +3,8 @@ using Codebreak.Framework.Network;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Manager;
 
 namespace Codebreak.Service.World.Frames
 {
@@ -93,7 +95,47 @@ namespace Codebreak.Service.World.Frames
         /// <param name="message"></param>
         private void ObjectUse(CharacterEntity entity, string message)
         {
+            var data = message.Substring(2);
+            var useData = data.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
+            long itemId = -1;
+            if (!long.TryParse(useData[0], out itemId))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            long targetId = -1;
+            if (useData.Length > 1)
+            {
+                if (!long.TryParse(useData[1], out targetId))
+                {
+                    entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+            }
+
+            int targetCell = -1;
+            if (useData.Length > 2)
+            {
+                if (!int.TryParse(useData[2], out targetCell))
+                {
+                    entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+            }
+
+            entity.AddMessage(() => 
+                {
+                    var item = entity.Inventory.RemoveItem(itemId);
+                    if(item == null)
+                    {
+                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    ActionEffectManager.Instance.ApplyEffects(entity, item, targetId, targetCell);
+                });
         }
 
         /// <summary>

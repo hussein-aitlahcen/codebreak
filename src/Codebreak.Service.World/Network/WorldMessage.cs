@@ -9,12 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Codebreak.Service.World.Network;
 using Codebreak.WorldService;
 using System.Drawing;
 using Codebreak.Service.World.Game.Guild;
 
-namespace Codebreak.Service.World.Game
+namespace Codebreak.Service.World.Network
 {
     /// <summary>
     /// 
@@ -1848,6 +1847,18 @@ namespace Codebreak.Service.World.Game
                 member.SerializeAs_TaxCollectorDefender(message);
             }
             return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="targetId"></param>
+        /// <param name="emoteId"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static string EMOTE_PLAY(long targetId, int emoteId, long time = 360000)
+        {
+            return "eUK" + targetId + "|" + emoteId + "|" + time;
         }
     }
 }

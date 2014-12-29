@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Codebreak.Framework.Utils;
 
-namespace Codebreak.Service.World.Network
+namespace Codebreak.Service.World
 {
     public static class Util
     {

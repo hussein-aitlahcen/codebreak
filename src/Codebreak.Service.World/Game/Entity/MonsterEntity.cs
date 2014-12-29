@@ -3,6 +3,7 @@ using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Fight.AI;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;

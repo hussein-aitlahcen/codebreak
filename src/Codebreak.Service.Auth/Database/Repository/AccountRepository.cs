@@ -25,10 +25,8 @@ namespace Codebreak.Service.Auth.Database.Repository
         public AccountDAO GetByName(string accountName)
         {
             AccountDAO account = null;
-            if(!_accountByName.TryGetValue(accountName.ToLower(), out account))
-            {
-                account = Load("upper(name)=upper(@name)", new { name = accountName });
-            }            
+            if(!_accountByName.TryGetValue(accountName.ToLower(), out account))            
+                account = Load("upper(name)=upper(@name)", new { name = accountName });            
             return account;
         }
 

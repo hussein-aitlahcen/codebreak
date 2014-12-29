@@ -6,6 +6,7 @@ using Codebreak.RPC.Protocol;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.RPC;
 using Codebreak.WorldService;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Manager
 {

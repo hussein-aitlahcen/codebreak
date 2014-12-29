@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game
+namespace Codebreak.Service.World.Network
 {    
     /// <summary>
     /// 

@@ -5,6 +5,7 @@ using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Command
 {
@@ -76,7 +77,7 @@ namespace Codebreak.Service.World.Command
         {
             private readonly string[] _aliases = 
             {
-                "morph"  
+                "skin"  
             };
 
             public override string[] Aliases

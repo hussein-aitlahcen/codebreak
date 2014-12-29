@@ -17,6 +17,7 @@ using System.Diagnostics;
 using Codebreak.RPC.Protocol;
 using System.Threading.Tasks;
 using Codebreak.Framework.Generic;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World
 {

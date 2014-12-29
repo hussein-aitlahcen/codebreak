@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 
-namespace Codebreak.Service.World.Game
+namespace Codebreak.Service.World.Network
 {
     public sealed class WorldClient : DofusClient<WorldClient>
     {

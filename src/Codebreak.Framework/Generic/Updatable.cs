@@ -196,7 +196,7 @@ namespace Codebreak.Framework.Generic
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error("TaskQueue[" + GetType().Name + "] failed to update timer [" + timer.GetType().Name + "] : " + ex.ToString());
+                        Logger.Error("TaskQueue[" + GetType().Name + "] timer update failed [" + timer.GetType().Name + "] : " + ex.ToString());
                     }
                     if (timer.OneShot)
                     {
@@ -213,7 +213,7 @@ namespace Codebreak.Framework.Generic
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("UpdatableObject[" + GetType().Name + "] failed to update : " + ex.ToString()); 
+                    Logger.Error("UpdatableObject[" + GetType().Name + "] update failed : " + ex.ToString()); 
                 }
             }
 
@@ -226,7 +226,7 @@ namespace Codebreak.Framework.Generic
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Updatable message failed to process : " + ex.ToString());
+                    Logger.Error("UpdatableObject[" + GetType().Name + "] message failed to process : " + ex.ToString());
                 }
             }
         }

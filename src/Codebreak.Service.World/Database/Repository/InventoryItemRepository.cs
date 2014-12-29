@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Database.Repository
         public override void UpdateAll()
         {         
             lock(_syncLock)    
-                Remove(_dataObjects.Where(item => item.OwnerId == -1));
+                Remove(_dataObjects.Where(item => item.OwnerId == -1).ToList());
             base.UpdateAll();
         }
     }

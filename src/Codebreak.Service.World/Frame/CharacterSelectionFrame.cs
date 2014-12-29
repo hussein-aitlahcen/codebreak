@@ -7,6 +7,7 @@ using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 using Codebreak.WorldService;
 using System.Collections.Generic;
+using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Frames
 {

@@ -2,6 +2,7 @@
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Party;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;

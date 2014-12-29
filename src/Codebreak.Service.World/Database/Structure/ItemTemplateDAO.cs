@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Database.Structure
         TYPE_MALEDICTION = 30,
         TYPE_RP_BUFF = 31,
         TYPE_PERSO_SUIVEUR = 32,
-        TYPE_APIN = 33,
+        TYPE_PAIN = 33,
         TYPE_CEREALE = 34,
         TYPE_FLEUR = 35,
         TYPE_PLANTE = 36,
