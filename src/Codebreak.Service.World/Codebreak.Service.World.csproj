@@ -108,7 +108,7 @@
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\NpcDialogLeaveEffect.cs" />
-    <Compile Include="Game\ActionEffect\NpcReplyEffect.cs" />
+    <Compile Include="Game\ActionEffect\NpcDialogReplyEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
