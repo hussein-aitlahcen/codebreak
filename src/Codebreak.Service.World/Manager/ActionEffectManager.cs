@@ -29,7 +29,7 @@ namespace Codebreak.Service.World.Manager
             m_effectById = new Dictionary<EffectEnum, IActionEffect>();
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
             m_effectById.Add(EffectEnum.NpcDialogLeave, NpcDialogLeaveEffect.Instance);
-            m_effectById.Add(EffectEnum.NpcDialogReply, NpcReplyEffect.Instance);
+            m_effectById.Add(EffectEnum.NpcDialogReply, NpcDialogReplyEffect.Instance);
         }
 
         /// <summary>
