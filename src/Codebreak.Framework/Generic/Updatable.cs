@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Generic
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Updatable : IDisposable
     {
         /// <summary>
@@ -17,9 +20,9 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        private LockFreeQueue<Action> _messagesQueue;
-        private List<Updatable> _subUpdatableObjects;
-        private List<UpdatableTimer> _timerList;
+        private LockFreeQueue<Action> m_messagesQueue;
+        private List<Updatable> m_subUpdatableObjects;
+        private List<UpdatableTimer> m_timerList;
 
         /// <summary>
         /// 
@@ -37,7 +40,7 @@ namespace Codebreak.Framework.Generic
         {
             get
             {
-                return _messagesQueue.Count + _subUpdatableObjects.Sum(updatable => updatable.MessageCount);
+                return m_messagesQueue.Count + m_subUpdatableObjects.Sum(updatable => updatable.MessageCount);
             }
         }
 
@@ -46,9 +49,9 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         public Updatable()
         {
-            _messagesQueue = new LockFreeQueue<Action>();
-            _subUpdatableObjects = new List<Updatable>();
-            _timerList = new List<UpdatableTimer>();
+            m_messagesQueue = new LockFreeQueue<Action>();
+            m_subUpdatableObjects = new List<Updatable>();
+            m_timerList = new List<UpdatableTimer>();
         }
 
         /// <summary>
@@ -56,13 +59,11 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         public virtual void Dispose()
         {
-            foreach (var subUpdatableObj in _subUpdatableObjects)
+            foreach (var subUpdatableObj in m_subUpdatableObjects)
                 subUpdatableObj.Dispose();
-            _subUpdatableObjects.Clear();
-            _subUpdatableObjects = null;
-
-            _messagesQueue.Clear();
-            _messagesQueue = null;
+            m_subUpdatableObjects.Clear();
+            m_messagesQueue.Clear();
+            m_timerList.Clear();
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
                 {
-                    _messagesQueue.Clear();
+                    m_messagesQueue.Clear();
                 });
         }
 
@@ -82,7 +83,7 @@ namespace Codebreak.Framework.Generic
         /// <param name="message"></param>
         public void AddMessage(Action message)
         {
-            _messagesQueue.Enqueue(message);
+            m_messagesQueue.Enqueue(message);
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
                 {
-                    _subUpdatableObjects.Add(updatable);
+                    m_subUpdatableObjects.Add(updatable);
                 });
         }
 
@@ -105,7 +106,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _subUpdatableObjects.Remove(updatable);
+                m_subUpdatableObjects.Remove(updatable);
             });
         }
 
@@ -151,7 +152,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Add(new UpdatableTimer(delay, callback, oneshot));
+                m_timerList.Add(new UpdatableTimer(delay, callback, oneshot));
             });
         }
 
@@ -163,7 +164,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Add(timer);
+                m_timerList.Add(timer);
             });
         }
 
@@ -175,7 +176,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Remove(timer);
+                m_timerList.Remove(timer);
             });
         }
 
@@ -187,7 +188,7 @@ namespace Codebreak.Framework.Generic
         {
             UpdateTime += updateDelta;
             
-            foreach (var timer in _timerList)
+            foreach (var timer in m_timerList)
             {
                 if ((UpdateTime - timer.LastActivated) >= timer.Delay)
                 {
@@ -206,7 +207,8 @@ namespace Codebreak.Framework.Generic
                 }
             }
 
-            foreach (var updatableObject in _subUpdatableObjects)
+
+            foreach (var updatableObject in m_subUpdatableObjects)
             {
                 try
                 {
@@ -219,7 +221,7 @@ namespace Codebreak.Framework.Generic
             }
 
             Action msg = null;
-            while (_messagesQueue.TryDequeue(out msg))
+            while (m_messagesQueue.TryDequeue(out msg))
             {
                 try
                 {

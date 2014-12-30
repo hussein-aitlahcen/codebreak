@@ -63,6 +63,9 @@
     <Compile Include="Command\CharacterCommand.cs" />
     <Compile Include="Command\WorldCommandContext.cs" />
     <Compile Include="Database\Repository\AreaRepository.cs" />
+    <Compile Include="Database\Repository\AuctionHouseEntryRepository.cs" />
+    <Compile Include="Database\Repository\AuctionHouseItemTemplateRepository.cs" />
+    <Compile Include="Database\Repository\AuctionHouseRepository.cs" />
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
@@ -82,6 +85,8 @@
     <Compile Include="Database\Repository\TaxCollectorRepository.cs" />
     <Compile Include="Database\Structure\AreaDAO.cs" />
     <Compile Include="Database\Structure\AuctionHouseDAO.cs" />
+    <Compile Include="Database\Structure\AuctionHouseEntryDAO.cs" />
+    <Compile Include="Database\Structure\AuctionHouseItemTemplateDAO.cs" />
     <Compile Include="Database\Structure\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
@@ -126,7 +131,10 @@
     <Compile Include="Game\Area\AreaInstance.cs" />
     <Compile Include="Game\Area\SubAreaInstance.cs" />
     <Compile Include="Game\Area\SuperAreaInstance.cs" />
+    <Compile Include="Game\AuctionHouse\AuctionCategory.cs" />
+    <Compile Include="Game\AuctionHouse\AuctionEntry.cs" />
     <Compile Include="Game\AuctionHouse\AuctionHouseInstance.cs" />
+    <Compile Include="Game\AuctionHouse\AuctionHouseTemplate.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\EntityInventory.cs" />

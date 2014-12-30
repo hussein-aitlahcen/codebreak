@@ -593,6 +593,24 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="entity"></param>
+        public void ExchangeAuctionHouseBuy(NonPlayerCharacterEntity entity)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void ExchangeAuctionHouseSell(NonPlayerCharacterEntity entity)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void DefendTaxCollector()
         {
             CurrentAction = new GameTaxCollectorDefenderAction(this);

@@ -13,7 +13,10 @@ namespace Codebreak.Service.World.Game.Exchange
     /// </summary>
     public sealed class ShopExchange : ExchangeBase
     {
-        private EntityBase _buyer, _shop;
+        /// <summary>
+        /// 
+        /// </summary>
+        private EntityBase m_buyer, m_shop;
 
         /// <summary>
         /// 
@@ -23,8 +26,8 @@ namespace Codebreak.Service.World.Game.Exchange
         public ShopExchange(EntityBase buyer, EntityBase shop)
             : base(ExchangeTypeEnum.EXCHANGE_SHOP)
         {
-            _buyer = buyer;
-            _shop = shop;
+            m_buyer = buyer;
+            m_shop = shop;
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace Codebreak.Service.World.Game.Exchange
         public override void Create()
         {
             base.Create();
-            base.Dispatch(WorldMessage.EXCHANCE_ITEMS_LIST(_shop));
+            base.Dispatch(WorldMessage.EXCHANCE_ITEMS_LIST(m_shop));
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <returns></returns>
         protected override string SerializeAs_ExchangeCreate()
         {
-            return _shop.Id.ToString();
+            return m_shop.Id.ToString();
         }
 
         /// <summary>
@@ -60,8 +63,7 @@ namespace Codebreak.Service.World.Game.Exchange
                 return;
             }
 
-            var template = _shop.ShopItems.Find(x => x.Id == templateId);
-
+            var template = m_shop.ShopItems.Find(x => x.Id == templateId);
             if (template == null)
             {
                 Logger.Debug("ShopExchange unable to buy null template : " + entity.Name);

@@ -92,6 +92,12 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
+                    if(!entity.CanGameAction(GameActionTypeEnum.NPC_DIALOG))
+                    {
+                        entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                        return;
+                    }
+
                     entity.NpcDialogStart(npc);
                 });
         }

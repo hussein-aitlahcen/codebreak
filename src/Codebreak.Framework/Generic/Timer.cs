@@ -7,42 +7,67 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Generic
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class UpdatableTimer
     {
         private static ILog Logger = LogManager.GetLogger(typeof(UpdatableTimer));
 
-        private Action _callback;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Action m_callback;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public long LastActivated
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Delay
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool OneShot
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <param name="callback"></param>
+        /// <param name="oneshot"></param>
         public UpdatableTimer(int delay, Action callback, bool oneshot = false)
         {
             Delay = delay;
-            _callback = callback;
+            m_callback = callback;
             OneShot = oneshot;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentTime"></param>
         public void Tick(long currentTime)
         {
             try
             {
-                _callback();
+                m_callback();
             }
             catch(Exception ex)
             {

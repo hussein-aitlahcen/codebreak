@@ -33,6 +33,10 @@ namespace Codebreak.Service.World.Game.Entity
         TYPE_MUTANT = -8,
         TYPE_MOUNT_PARK = -9,
         TYPE_PRISM = -10,
+
+        // TYPE SPECIAL BDD ITEMS
+        TYPE_BANK = -20,
+        TYPE_AUCTION_HOUSE = -21,
     }
 
     /// <summary>

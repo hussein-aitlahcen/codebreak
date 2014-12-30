@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Codebreak.Service.World.Database.Structure
 {
     [Table("auctionhouse")]
-    public sealed class AuctionHouse : DataAccessObject<AuctionHouse>
+    public sealed class AuctionHouseDAO : DataAccessObject<AuctionHouseDAO>
     {
         [Key]
         public int Id

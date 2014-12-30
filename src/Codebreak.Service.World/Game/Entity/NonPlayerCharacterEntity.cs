@@ -174,7 +174,22 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public override bool CanBeExchanged(ExchangeTypeEnum exchangeType)
         {
-            return base.CanBeExchanged(exchangeType) && exchangeType == ExchangeTypeEnum.EXCHANGE_SHOP && ShopItems.Count > 0;
+            bool Can = false;
+            switch(exchangeType)
+            {
+                case ExchangeTypeEnum.EXCHANGE_SHOP:
+                    Can = ShopItems.Count > 0;
+                    break;
+
+                case ExchangeTypeEnum.EXCHANGE_BIGSTORE_BUY:
+
+                    break;
+
+                case ExchangeTypeEnum.EXCHANGE_BIGSTORE_SELL:
+
+                    break;                    
+            }
+            return base.CanBeExchanged(exchangeType) && Can;
         }
 
         /// <summary>
