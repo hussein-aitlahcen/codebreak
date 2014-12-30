@@ -3,44 +3,70 @@ using Codebreak.Framework.IO;
 
 namespace Codebreak.RPC.Service
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class RPCMessageBase : BinaryQueue
     {
-        private byte[] _cache;
-                
+        /// <summary>
+        /// 
+        /// </summary>
+        private byte[] m_cache;
+               
+        /// <summary>
+        /// 
+        /// </summary>
         public byte[] Data
         {
             get
             {
-                if (_cache == null)
+                if (m_cache == null)
                 {
                     var count = base.Count;
                     var data = base.ReadBytes(count);
                     var idBytes = BitConverter.GetBytes((int)Id);
                     var lengthBytes = BitConverter.GetBytes(count);
-                    _cache = new byte[8 + count];
-                    Buffer.BlockCopy(lengthBytes, 0, _cache, 0, 4);
-                    Buffer.BlockCopy(idBytes, 0, _cache, 4, 4);
-                    Buffer.BlockCopy(data, 0, _cache, 8, count);
+                    m_cache = new byte[8 + count];
+                    Buffer.BlockCopy(lengthBytes, 0, m_cache, 0, 4);
+                    Buffer.BlockCopy(idBytes, 0, m_cache, 4, 4);
+                    Buffer.BlockCopy(data, 0, m_cache, 8, count);
                 }
-                return _cache;
+                return m_cache;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract int Id
         {
             get;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected RPCMessageBase()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         public void SetData(byte[] data)
         {
             base.WriteBytes(data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract void Deserialize();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract void Serialize();
     }
 }

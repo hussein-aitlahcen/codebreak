@@ -2,12 +2,18 @@
 
 namespace Codebreak.RPC.Protocol
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class WorldMessageBuilder : RPCMessageBuilder
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public WorldMessageBuilder()
         {
-            base.Register<AuthentificationResult>((int)MessageId.AUTH_TO_WORLD_CREDENTIALRESULT);
-            base.Register<GameTicketMessage>((int)MessageId.AUTH_TO_WORLD_GAMETICKET);
+            base.Register<AuthentificationResult>((int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIALRESULT);
+            base.Register<GameTicketMessage>((int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET);
         }
     }
 }

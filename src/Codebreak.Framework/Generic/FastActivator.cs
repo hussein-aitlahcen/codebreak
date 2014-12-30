@@ -9,10 +9,25 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Generic
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class FastActivator
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
         public delegate object DynamicCreationDelegate(object[] arguments);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="restrictedSkipVisibility"></param>
+        /// <param name="returnType"></param>
+        /// <param name="paramTypes"></param>
+        /// <returns></returns>
         private static DynamicMethod MakeCreationMethodBoxed(bool restrictedSkipVisibility, Type returnType, params Type[] paramTypes)
         {
             var constructor = returnType.GetConstructor(paramTypes);
@@ -86,6 +101,14 @@ namespace Codebreak.Framework.Generic
 
             return method;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="restrictedSkipVisibility"></param>
+        /// <param name="returnType"></param>
+        /// <param name="paramTypes"></param>
+        /// <returns></returns>
         private static DynamicMethod MakeCreationMethodTypeSafe(bool restrictedSkipVisibility, Type returnType, params Type[] paramTypes)
         {
             var constructor = returnType.GetConstructor(paramTypes);
@@ -128,11 +151,24 @@ namespace Codebreak.Framework.Generic
             return method;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnType"></param>
+        /// <param name="paramTypes"></param>
+        /// <returns></returns>
         public static DynamicCreationDelegate GenerateDelegate(Type returnType, params Type[] paramTypes)
         {
             return GenerateDelegate(false, returnType, paramTypes);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="restrictedSkipVisibility"></param>
+        /// <param name="returnType"></param>
+        /// <param name="paramTypes"></param>
+        /// <returns></returns>
         public static DynamicCreationDelegate GenerateDelegate(bool restrictedSkipVisibility, Type returnType, params Type[] paramTypes)
         {
             var constructor = returnType.GetConstructor(paramTypes);
@@ -147,18 +183,35 @@ namespace Codebreak.Framework.Generic
             return (DynamicCreationDelegate)creator.CreateDelegate(typeof(DynamicCreationDelegate));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static Func<T> GenerateDelegate<T>(Type type)
         {
             var creator = MakeCreationMethodTypeSafe(false, type, new Type[] { });
             return (Func<T>)creator.CreateDelegate(typeof(Func<T>));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T GenerateFunc<T>()
             where T : class
         {
             return GenerateFunc<T>(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="restrictedSkipVisibility"></param>
+        /// <returns></returns>
         public static T GenerateFunc<T>(bool restrictedSkipVisibility)
             where T : class
         {

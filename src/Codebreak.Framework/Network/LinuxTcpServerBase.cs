@@ -10,57 +10,85 @@ using System.Net;
 
 namespace Codebreak.Framework.Network
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TServer"></typeparam>
+    /// <typeparam name="TClient"></typeparam>
 	public abstract class LinuxTcpServerBase<TServer, TClient> : TaskProcessor<TServer>, IServer<TClient>
 		where TServer : LinuxTcpServerBase<TServer, TClient>, new()
 			where TClient : TcpClientBase<TClient>, new()
 	{
-		private Socket _socket;
-		private ObjectPool<SocketAsyncEventArgs> _sendPool;
-		private ObjectPool<SocketAsyncEventArgs> _recvPool;
-		private BufferManager _bufferManager;
-		private ConcurrentStack<int> _freeId;
-		private ConcurrentDictionary<int, TClient> _clients;
+        /// <summary>
+        /// 
+        /// </summary>
+		private Socket m_socket;
+		private ObjectPool<SocketAsyncEventArgs> m_sendPool;
+		private ObjectPool<SocketAsyncEventArgs> m_recvPool;
+		private BufferManager m_bufferManager;
+		private ConcurrentStack<int> m_freeId;
+		private ConcurrentDictionary<int, TClient> m_clients;
 		public const int MAX_CLIENT = 10000;
 
+        /// <summary>
+        /// 
+        /// </summary>
 		public string Host
 		{
 			get;
 			private set;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
 		public int Port
 		{
 			get;
 			private set;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
 		public int BackLog
 		{
 			get;
 			private set;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
 		public IEnumerable<TClient> Clients
 		{
 			get
 			{
-				return _clients.Values;
+				return m_clients.Values;
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxClient"></param>
 		protected LinuxTcpServerBase(int maxClient = MAX_CLIENT)
 			: base(typeof(TServer).Name)
 		{
-			_bufferManager = new BufferManager(1024, 20000);
-			_sendPool = new ObjectPool<SocketAsyncEventArgs>(CreateSendSaea, 10000);
-			_recvPool = new ObjectPool<SocketAsyncEventArgs>(CreateRecvSaea, 10000);
-			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-			_clients = new ConcurrentDictionary<int, TClient>();
-			_freeId = new ConcurrentStack<int>();
+			m_bufferManager = new BufferManager(1024, 20000);
+			m_sendPool = new ObjectPool<SocketAsyncEventArgs>(CreateSendSaea, 10000);
+			m_recvPool = new ObjectPool<SocketAsyncEventArgs>(CreateRecvSaea, 10000);
+			m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			m_clients = new ConcurrentDictionary<int, TClient>();
+			m_freeId = new ConcurrentStack<int>();
 			for (int i = maxClient; i > 0; i--)
-				_freeId.Push(i);
+				m_freeId.Push(i);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		private SocketAsyncEventArgs CreateSendSaea()
 		{
 			var saea = new SocketAsyncEventArgs();
@@ -68,22 +96,32 @@ namespace Codebreak.Framework.Network
 			return saea;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		private PoolableSocketAsyncEventArgs CreateRecvSaea()
 		{
-			var saea = new PoolableSocketAsyncEventArgs(_bufferManager);
+			var saea = new PoolableSocketAsyncEventArgs(m_bufferManager);
 			saea.Completed += IOCompleted;
 			return saea;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="port"></param>
+        /// <param name="backLog"></param>
 		protected void Start(string host, int port, int backLog = 100)
 		{
 			Host = host;
 			Port = port;
 			BackLog = backLog;
 
-			_socket.NoDelay = true;
-			_socket.Bind(new IPEndPoint(IPAddress.Parse(Host), Port));
-			_socket.Listen(BackLog);
+			m_socket.NoDelay = true;
+			m_socket.Bind(new IPEndPoint(IPAddress.Parse(Host), Port));
+			m_socket.Listen(BackLog);
 
 			for(int i = 0; i < BackLog; i++)
 			{
@@ -91,12 +129,22 @@ namespace Codebreak.Framework.Network
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="arg"></param>
 		private void AsyncSafe(Func<SocketAsyncEventArgs, bool> func, SocketAsyncEventArgs arg)
 		{
 			if (!func(arg))
 				IOCompleted(this, arg);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="saea"></param>
 		private void IOCompleted(object sender, SocketAsyncEventArgs saea)
 		{
 			switch (saea.LastOperation)
@@ -110,11 +158,19 @@ namespace Codebreak.Framework.Network
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
 		private void ProcessDisconnected(SocketAsyncEventArgs saea)
 		{
 			Disconnect((TClient)saea.UserToken);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
 		private void StartAccept(SocketAsyncEventArgs saea)
 		{
 			if(saea == null)
@@ -127,14 +183,19 @@ namespace Codebreak.Framework.Network
 				saea.AcceptSocket = null;
 			}
 
-			AsyncSafe(_socket.AcceptAsync, saea);
+			AsyncSafe(m_socket.AcceptAsync, saea);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
+        /// <param name="client"></param>
 		private void StartReceive(SocketAsyncEventArgs saea, TClient client)
 		{
 			if (saea == null)
 			{
-				saea = _recvPool.Pop();
+				saea = m_recvPool.Pop();
 				saea.UserToken = client;
 				saea.AcceptSocket = client.Socket;
 			}
@@ -142,15 +203,24 @@ namespace Codebreak.Framework.Network
 			AsyncSafe(client.Socket.ReceiveAsync, saea);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
 		private bool AddClient(TClient client)
 		{
 			int clientId = -1;
-			if (!_freeId.TryPop(out clientId))
+			if (!m_freeId.TryPop(out clientId))
 				return false;
 			client.Id = clientId;
-			return _clients.AddOrUpdate(clientId, client, (id, cl) => client) == client;
+			return m_clients.AddOrUpdate(clientId, client, (id, cl) => client) == client;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
 		private void ProcessAccepted(SocketAsyncEventArgs saea)
 		{
 			// get connected socket
@@ -180,6 +250,10 @@ namespace Codebreak.Framework.Network
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
 		private void ProcessReceived(SocketAsyncEventArgs saea)
 		{
 			var client = (TClient)saea.UserToken;
@@ -198,12 +272,20 @@ namespace Codebreak.Framework.Network
 			StartReceive(saea, client);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
 		private void ProcessSent(SocketAsyncEventArgs saea)
 		{
 			saea.SetBuffer(null, 0, 0);
-			_sendPool.Push(saea);
+			m_sendPool.Push(saea);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
 		public void Disconnect(TClient client)
 		{
 			if (client == null)
@@ -218,37 +300,61 @@ namespace Codebreak.Framework.Network
 
 			if (client.Id != -1)
 			{
-				_clients.TryRemove(client.Id, out client);
+				m_clients.TryRemove(client.Id, out client);
 
 				if (client != null)
 				{
-					_freeId.Push(client.Id);
+					m_freeId.Push(client.Id);
 
 					OnClientDisconnected(client);
 				}
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="data"></param>
 		public void Send(TClient client, byte[] data)
 		{
 			if (client == null)
 				return;
 
-			var saea = _sendPool.Pop();
+			var saea = m_sendPool.Pop();
 			saea.SetBuffer(data, 0, data.Length);
 			AsyncSafe(client.Socket.SendAsync, saea);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
 		public void SendToAll(byte[] data)
 		{
-			foreach (var client in _clients.Values)
+			foreach (var client in m_clients.Values)
 				Send(client, data);
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
 		protected abstract void OnClientConnected(TClient client);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
 		protected abstract void OnClientDisconnected(TClient client);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
 		protected abstract void OnDataReceived(TClient client, byte[] buffer, int offset, int count);
 	}
 }

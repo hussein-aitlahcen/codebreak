@@ -22,17 +22,17 @@ namespace Codebreak.Framework.Generic
     /// <typeparam name="T"></typeparam>
     public sealed class LockFreeQueue<T> : IEnumerable<T>
     {
-        private SingleLinkNode<T> _head;
-        private SingleLinkNode<T> _tail;
-        private int _count;
+        private SingleLinkNode<T> m_head;
+        private SingleLinkNode<T> m_tail;
+        private int m_count;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public LockFreeQueue()
         {
-            _head = new SingleLinkNode<T>();
-            _tail = _head;
+            m_head = new SingleLinkNode<T>();
+            m_tail = m_head;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         public int Count
         {
-            get { return Thread.VolatileRead(ref _count); }
+            get { return Thread.VolatileRead(ref m_count); }
         }
 
         /// <summary>
@@ -71,25 +71,25 @@ namespace Codebreak.Framework.Generic
 
             while (!newNodeWasAdded)
             {
-                oldTail = _tail;
+                oldTail = m_tail;
                 oldTailNext = oldTail.Next;
 
-                if (_tail == oldTail)
+                if (m_tail == oldTail)
                 {
                     if (oldTailNext == null)
                     {
                         newNodeWasAdded =
-                            Interlocked.CompareExchange<SingleLinkNode<T>>(ref _tail.Next, newNode, null) == null;
+                            Interlocked.CompareExchange<SingleLinkNode<T>>(ref m_tail.Next, newNode, null) == null;
                     }
                     else
                     {
-                        Interlocked.CompareExchange<SingleLinkNode<T>>(ref _tail, oldTailNext, oldTail);
+                        Interlocked.CompareExchange<SingleLinkNode<T>>(ref m_tail, oldTailNext, oldTail);
                     }
                 }
             }
 
-            Interlocked.CompareExchange<SingleLinkNode<T>>(ref _tail, newNode, oldTail);
-            Interlocked.Increment(ref _count);
+            Interlocked.CompareExchange<SingleLinkNode<T>>(ref m_tail, newNode, oldTail);
+            Interlocked.Increment(ref m_count);
         }
 
         /// <summary>
@@ -122,30 +122,30 @@ namespace Codebreak.Framework.Generic
             bool haveAdvancedHead = false;
             while (!haveAdvancedHead)
             {
-                oldHead = _head;
-                SingleLinkNode<T> oldTail = _tail;
+                oldHead = m_head;
+                SingleLinkNode<T> oldTail = m_tail;
                 SingleLinkNode<T> oldHeadNext = oldHead.Next;
 
-                if (oldHead == _head)
+                if (oldHead == m_head)
                 {
                     if (oldHead == oldTail)
                     {
                         if (oldHeadNext == null)
                             return false;
 
-                        Interlocked.CompareExchange<SingleLinkNode<T>>(ref _tail, oldHeadNext, oldTail);
+                        Interlocked.CompareExchange<SingleLinkNode<T>>(ref m_tail, oldHeadNext, oldTail);
                     }
 
                     else
                     {
                         item = oldHeadNext.Item;
                         haveAdvancedHead =
-                          Interlocked.CompareExchange<SingleLinkNode<T>>(ref _head, oldHeadNext, oldHead) == oldHead;
+                          Interlocked.CompareExchange<SingleLinkNode<T>>(ref m_head, oldHeadNext, oldHead) == oldHead;
                     }
                 }
             }
 
-            Interlocked.Decrement(ref _count);
+            Interlocked.Decrement(ref m_count);
             return true;
         }
 
@@ -173,7 +173,7 @@ namespace Codebreak.Framework.Generic
         /// <returns>an enumerator for the queue</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            SingleLinkNode<T> currentNode = _head;
+            SingleLinkNode<T> currentNode = m_head;
 
             do
             {
@@ -213,7 +213,7 @@ namespace Codebreak.Framework.Generic
         public void Clear()
         {
             SingleLinkNode<T> tempNode;
-            SingleLinkNode<T> currentNode = _head;
+            SingleLinkNode<T> currentNode = m_head;
 
             while (currentNode != null)
             {
@@ -224,9 +224,9 @@ namespace Codebreak.Framework.Generic
                 tempNode.Next = null;
             }
 
-            _head = new SingleLinkNode<T>();
-            _tail = _head;
-            _count = 0;
+            m_head = new SingleLinkNode<T>();
+            m_tail = m_head;
+            m_count = 0;
         }
 
     }

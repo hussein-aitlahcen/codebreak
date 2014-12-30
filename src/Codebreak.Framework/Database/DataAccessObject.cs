@@ -63,10 +63,8 @@ namespace Codebreak.Framework.Database
         /// <param name="propertyName"></param>
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
-            if (IsRunning)
-            {
-                IsDirty = true;
-            }
+            if (IsRunning)            
+                IsDirty = true;            
         }
 
         /// <summary>

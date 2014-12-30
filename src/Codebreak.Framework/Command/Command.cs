@@ -9,23 +9,50 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Command
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="C"></typeparam>
     public abstract class Command<C> where C : CommandContext
     {
-        private readonly IList<SubCommand<C>> _subCommands = new List<SubCommand<C>>(); 
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IList<SubCommand<C>> m_subCommands = new List<SubCommand<C>>(); 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract string[] Aliases { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract string Description { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         protected virtual bool CanExecute(C context)
         {
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         protected virtual void Process(C context)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public bool Execute(C context)
         {
             if (CanExecute(context))
@@ -33,7 +60,7 @@ namespace Codebreak.Framework.Command
                 string word = context.TextCommandArgument.NextWord();
                 if (word != null)
                 {
-                    foreach (var subCommand in _subCommands)
+                    foreach (var subCommand in m_subCommands)
                     {
                         if (subCommand.Aliases.Contains(word))
                         {
@@ -53,6 +80,9 @@ namespace Codebreak.Framework.Command
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         internal void RegisterNestedSubCommands()
         {
             var type = GetType();
@@ -65,13 +95,17 @@ namespace Codebreak.Framework.Command
                     {
                         var subCommand = Activator.CreateInstance(nestedType) as SubCommand<C>;
                         if(subCommand != null)
-                            _subCommands.Add(subCommand);
+                            m_subCommands.Add(subCommand);
                     }
                 }
             }
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="C"></typeparam>
     public abstract class SubCommand<C> : Command<C> where C : CommandContext
     {
     }

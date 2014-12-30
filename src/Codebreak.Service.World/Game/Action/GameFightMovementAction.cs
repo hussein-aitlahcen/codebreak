@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Action
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GameFightMovementAction : GameFightActionBase
     {
         /// <summary>
@@ -46,7 +49,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)
         {
             Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
-
             base.Stop(args);
         }
 

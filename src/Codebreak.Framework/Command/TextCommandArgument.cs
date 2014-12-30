@@ -2,35 +2,57 @@
 
 namespace Codebreak.Framework.Command
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TextCommandArgument
     {
-        private readonly string _data;
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly string m_data;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Position
         {
             get; 
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="line"></param>
         public TextCommandArgument(string line)
         {
-            _data = line;
+            m_data = line;
             Position = 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string NextWord()
         {
             return NextWord(" ");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <returns></returns>
         public string NextWord(string separator)
         {
-            int length = _data.Length;
+            int length = m_data.Length;
             if (Position >= length)
                 return null;
 
             int x;
-            if ((x = _data.IndexOf(separator, Position, StringComparison.Ordinal)) == Position)
+            if ((x = m_data.IndexOf(separator, Position, StringComparison.Ordinal)) == Position)
             {
                 Position += separator.Length;
                 return "";
@@ -43,7 +65,7 @@ namespace Codebreak.Framework.Command
                 x = length;
             }
 
-            var word = _data.Substring(Position, x - Position);
+            var word = m_data.Substring(Position, x - Position);
 
             Position = x + separator.Length;
             if (Position > length)

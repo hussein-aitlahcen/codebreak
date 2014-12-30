@@ -10,10 +10,20 @@ namespace Codebreak.Framework.Network
     /// </summary>
     public interface IBufferHandler
     {
-        void SetBuffer(byte[] buffer, int offset, int count);
+        /// <summary>
+        /// 
+        /// </summary>
         int Offset
         {
             get;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        void SetBuffer(byte[] buffer, int offset, int count);
     }
 }

@@ -8,46 +8,74 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Network
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class TcpClientBase<T> 
         where T : TcpClientBase<T>, new()
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected static ILog Logger = LogManager.GetLogger(typeof(T));
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TcpClientBase()
         {
             Id = -1;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public int Id
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Socket Socket
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IServer<T> Server
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Ip
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         public void Send(byte[] data)
         {
             Server.Send((T)this, data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Disconnect()
         {
             Server.Disconnect((T)this);

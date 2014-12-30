@@ -308,6 +308,16 @@ namespace Codebreak.Service.World.Game.Entity
             }
             return item;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public InventoryItemDAO GetItem(long id)
+        {
+            return Items.Find(item => item.Id == id);
+        }
 
         /// <summary>
         /// 

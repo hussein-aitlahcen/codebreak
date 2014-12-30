@@ -3,29 +3,49 @@ using System.Collections.Generic;
 
 namespace Codebreak.RPC.Service
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class RPCMessageBuilder
     {
-        private Dictionary<int, Func<RPCMessageBase>> _messageById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, Func<RPCMessageBase>> m_messageById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected RPCMessageBuilder()
         {
-            _messageById = new Dictionary<int, Func<RPCMessageBase>>();
+            m_messageById = new Dictionary<int, Func<RPCMessageBase>>();
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="messageId"></param>
         public void Register<T>(int messageId)
             where T : RPCMessageBase, new()
         {
-            _messageById.Add(messageId, () => new T());
+            m_messageById.Add(messageId, () => new T());
         }
                 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public RPCMessageBase BuildMessage(int messageId, byte[] data)
         {
-            if(!_messageById.ContainsKey(messageId))
+            if(!m_messageById.ContainsKey(messageId))
             {
                 throw new NotImplementedException(string.Format("RPCMessageBuilder::BuildMessage unknow messageId : {0}", messageId));
             }
 
-            var message = _messageById[messageId]();
+            var message = m_messageById[messageId]();
             message.SetData(data);
             message.Deserialize();
             return message;

@@ -206,8 +206,7 @@ namespace Codebreak.Framework.Generic
                     }
                 }
             }
-
-
+            
             foreach (var updatableObject in m_subUpdatableObjects)
             {
                 try

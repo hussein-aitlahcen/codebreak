@@ -10,10 +10,18 @@ using System.Net;
 
 namespace Codebreak.Framework.Network
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TServer"></typeparam>
+    /// <typeparam name="TClient"></typeparam>
     public abstract class TcpServerBase<TServer, TClient> : TaskProcessor<TServer>, IServer<TClient>
         where TServer : TcpServerBase<TServer, TClient>, new()
         where TClient : TcpClientBase<TClient>, new()
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Socket _socket;
         private ObjectPool<SocketAsyncEventArgs> _sendPool;
         private ObjectPool<SocketAsyncEventArgs> _recvPool;

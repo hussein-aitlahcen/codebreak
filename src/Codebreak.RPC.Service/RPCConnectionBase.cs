@@ -4,75 +4,117 @@ using Codebreak.Framework.Network;
 
 namespace Codebreak.RPC.Service
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TMessageBuilder"></typeparam>
     public abstract class RPCConnectionBase<TMessageBuilder> : SocketClientBase
         where TMessageBuilder : RPCMessageBuilder, new()
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public event Action<RPCMessageBase> OnMessageEvent;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public RPCMessageBuilder MessageBuilder
         {
             get;
             private set;
         }
 
-        private int _messageId;
-        private int _messageLength;
-        private BinaryQueue _messageData;
+        /// <summary>
+        /// 
+        /// </summary>
+        private int m_messageId;
+        private int m_messageLength;
+        private BinaryQueue m_messageData;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected RPCConnectionBase()
         {
             MessageBuilder = new TMessageBuilder();
 
-            _messageId = -1;
-            _messageLength = -1;
-            _messageData = new BinaryQueue();
+            m_messageId = -1;
+            m_messageLength = -1;
+            m_messageData = new BinaryQueue();
 
             OnMessageEvent += OnMessage;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         ~RPCConnectionBase()
         {
             OnMessageEvent = null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void Send(RPCMessageBase message)
         {
             message.Serialize();
             base.Send(message.Data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
         protected override void OnBytesRead(byte[] buffer, int offset, int length)
         {
             for (int i = offset; i < offset + length; i++)
             {
-                _messageData.WriteByte(buffer[i]);
+                m_messageData.WriteByte(buffer[i]);
             }
 
             do
             {
-                if (_messageLength == -1 && _messageData.Count > 3)
+                if (m_messageLength == -1 && m_messageData.Count > 3)
                 {
-                    _messageLength = _messageData.ReadInt();
+                    m_messageLength = m_messageData.ReadInt();
                 }
-                if (_messageLength != -1 && _messageId == -1 && _messageData.Count > 3)
+                if (m_messageLength != -1 && m_messageId == -1 && m_messageData.Count > 3)
                 {
-                    _messageId = _messageData.ReadInt();
+                    m_messageId = m_messageData.ReadInt();
                 }
-                if (_messageLength != -1 && _messageId != -1 && _messageData.Count >= _messageLength)
+                if (m_messageLength != -1 && m_messageId != -1 && m_messageData.Count >= m_messageLength)
                 {
-                    var message = MessageBuilder.BuildMessage(_messageId, _messageData.ReadBytes(_messageLength));
+                    var message = MessageBuilder.BuildMessage(m_messageId, m_messageData.ReadBytes(m_messageLength));
 
                     if (OnMessageEvent != null)
                         OnMessageEvent(message);
                     
-                    _messageId = -1;
-                    _messageLength = -1;
+                    m_messageId = -1;
+                    m_messageLength = -1;
                 }
             }
-            while ((_messageLength == -1 || _messageId == -1) && _messageData.Count > 3);
+            while ((m_messageLength == -1 || m_messageId == -1) && m_messageData.Count > 3);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override abstract void OnConnected();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected override abstract void OnDisconnected();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         protected abstract void OnMessage(RPCMessageBase message);
     }
 }

@@ -48,14 +48,14 @@
     <Compile Include="AuthentificationMessage.cs" />
     <Compile Include="AuthentificationResult.cs" />
     <Compile Include="AuthMessageBuilder.cs" />
-    <Compile Include="AuthResult.cs" />
-    <Compile Include="AuthState.cs" />
+    <Compile Include="AuthResultEnum.cs" />
+    <Compile Include="AuthStateEnum.cs" />
     <Compile Include="GameAccountDisconnected.cs" />
     <Compile Include="GameIdUpdateMessage.cs" />
-    <Compile Include="GameState.cs" />
+    <Compile Include="GameStateEnum.cs" />
     <Compile Include="GameStateUpdateMessage.cs" />
     <Compile Include="GameTicketMessage.cs" />
-    <Compile Include="MessageId.cs" />
+    <Compile Include="MessageIdEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorldMessageBuilder.cs" />
   </ItemGroup>

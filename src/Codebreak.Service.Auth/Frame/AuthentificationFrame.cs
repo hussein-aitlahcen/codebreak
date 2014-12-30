@@ -5,8 +5,16 @@ using Codebreak.Service.Auth.Network;
 
 namespace Codebreak.Service.Auth.Frames
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AuthentificationFrame : FrameBase<AuthentificationFrame, AuthClient, string>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override Action<AuthClient, string> GetHandler(string message)
         {
             if(message != "Af")
@@ -14,6 +22,11 @@ namespace Codebreak.Service.Auth.Frames
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
         private void HandleAuthentification(AuthClient client, string message)
         {
             client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
@@ -32,6 +45,12 @@ namespace Codebreak.Service.Auth.Frames
             AuthService.Instance.AddMessage(() => ProcessAuthentification(client, account, password));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="accountName"></param>
+        /// <param name="password"></param>
         private void ProcessAuthentification(AuthClient client, string accountName, string password)
         {
             var account = AccountRepository.Instance.GetByName(accountName);

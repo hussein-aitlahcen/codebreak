@@ -39,7 +39,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Start()
         {
             Entity.Dispatch(WorldMessage.GUILD_CREATION_OPEN());
-
             base.Start();
         }
 
@@ -50,7 +49,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Abort(params object[] args)
         {
             Entity.Dispatch(WorldMessage.GUILD_CREATION_CLOSE());
-
             base.Abort(args);
         }
 
@@ -61,7 +59,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)
         {
             Entity.Dispatch(WorldMessage.GUILD_CREATION_CLOSE());
-
             base.Stop(args);
         }
     }

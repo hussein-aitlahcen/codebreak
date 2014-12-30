@@ -4,42 +4,67 @@ using Codebreak.Service.Auth.Database.Structure;
 
 namespace Codebreak.Service.Auth.Database.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AccountRepository : Repository<AccountRepository, AccountDAO>
-    {
-        private Dictionary<long, AccountDAO> _accountById;
-        private Dictionary<string, AccountDAO> _accountByName;
+    {        
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<long, AccountDAO> m_accountById;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<string, AccountDAO> m_accountByName;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public AccountRepository()
         {
-            _accountById = new Dictionary<long, AccountDAO>();
-            _accountByName = new Dictionary<string, AccountDAO>();
+            m_accountById = new Dictionary<long, AccountDAO>();
+            m_accountByName = new Dictionary<string, AccountDAO>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AccountDAO GetById(long accountId)
         {
             AccountDAO account = null;
-            _accountById.TryGetValue(accountId, out account);
+            m_accountById.TryGetValue(accountId, out account);
             return account;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AccountDAO GetByName(string accountName)
         {
             AccountDAO account = null;
-            if(!_accountByName.TryGetValue(accountName.ToLower(), out account))            
+            if(!m_accountByName.TryGetValue(accountName.ToLower(), out account))            
                 account = Load("upper(name)=upper(@name)", new { name = accountName });            
             return account;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnObjectAdded(AccountDAO account)
         {
-            _accountById.Add(account.Id, account);
-            _accountByName.Add(account.Name.ToLower(), account);
+            m_accountById.Add(account.Id, account);
+            m_accountByName.Add(account.Name.ToLower(), account);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void OnObjectRemoved(AccountDAO account)
         {
-            _accountById.Remove(account.Id);
-            _accountByName.Remove(account.Name.ToLower());
+            m_accountById.Remove(account.Id);
+            m_accountByName.Remove(account.Name.ToLower());
         }
     }
 }

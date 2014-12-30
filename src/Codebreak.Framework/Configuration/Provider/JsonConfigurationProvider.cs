@@ -5,16 +5,29 @@ using Newtonsoft.Json;
 
 namespace Codebreak.Framework.Configuration.Providers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class JsonConfigurationProvider : IConfigurationProvider, ICommitableProvider
     {
-        private Dictionary<string, object> _entries = new Dictionary<string, object>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<string, object> m_entries = new Dictionary<string, object>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Path
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
         public JsonConfigurationProvider(string path)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentException("path");
@@ -22,26 +35,41 @@ namespace Codebreak.Framework.Configuration.Providers
             Path = path;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGet(string key, out object value)
         {
-            if (!_entries.ContainsKey(key))
+            if (!m_entries.ContainsKey(key))
             {
                 value = null;
                 return false;
             }
 
-            value = _entries[key];
+            value = m_entries[key];
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Set(string key, object value)
         {
-            if (!_entries.ContainsKey(key))
-                _entries.Add(key, value);
+            if (!m_entries.ContainsKey(key))
+                m_entries.Add(key, value);
             else
-                _entries[key] = value;
+                m_entries[key] = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canCreate"></param>
         public void Load(bool canCreate = true)
         {
 
@@ -69,7 +97,7 @@ namespace Codebreak.Framework.Configuration.Providers
                         reader.Read();
                     }
 
-                    _entries = entries;
+                    m_entries = entries;
 
                 }
             }
@@ -80,6 +108,9 @@ namespace Codebreak.Framework.Configuration.Providers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Commit()
         {
             var file = new FileStream(Path, FileMode.Create);
@@ -104,13 +135,17 @@ namespace Codebreak.Framework.Configuration.Providers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outputStream"></param>
         internal void GenerateFile(Stream outputStream)
         {
             var outputWriter = new JsonTextWriter(new StreamWriter(outputStream));
             outputWriter.Formatting = Formatting.Indented;
 
             outputWriter.WriteStartObject();
-            foreach (var entry in _entries)
+            foreach (var entry in m_entries)
             {
                 outputWriter.WritePropertyName(entry.Key);
                 outputWriter.WriteValue(entry.Value);

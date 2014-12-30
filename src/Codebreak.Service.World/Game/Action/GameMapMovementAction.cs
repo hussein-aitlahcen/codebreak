@@ -8,14 +8,11 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Action
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GameMapMovementAction : GameActionBase
     {
-        public GameMapMovementAction(EntityBase entity, MovementPath path)
-            : base(GameActionTypeEnum.MAP_MOVEMENT, entity, (long)path.MovementTime)
-        {
-            Path = path;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -25,18 +22,31 @@ namespace Codebreak.Service.World.Game.Action
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool CanAbort
         {
-            get 
+            get
             {
                 return true;
             }
         }
-
-        public override void Start()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="path"></param>
+        public GameMapMovementAction(EntityBase entity, MovementPath path)
+            : base(GameActionTypeEnum.MAP_MOVEMENT, entity, (long)path.MovementTime)
         {
+            Path = path;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public override void Abort(params object[] args)
         {
             int stopCell = 0;
@@ -58,13 +68,20 @@ namespace Codebreak.Service.World.Game.Action
             base.Abort(args);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public override void Stop(params object[] args)
         {
             Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
-
             base.Stop(args);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string SerializeAs_GameAction()
         {
             return Path.ToString();

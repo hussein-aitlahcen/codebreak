@@ -31,9 +31,11 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="parameters"></param>
-        public override void Process(EntityBase entity, Dictionary<string, string> parameters)
+        public override bool Process(EntityBase entity, Dictionary<string, string> parameters)
         {
             entity.StopAction(Action.GameActionTypeEnum.NPC_DIALOG);
+
+            return true;
         }
     }
 }

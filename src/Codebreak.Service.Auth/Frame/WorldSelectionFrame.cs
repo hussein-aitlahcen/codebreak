@@ -7,11 +7,22 @@ using Codebreak.Service.Auth.Network;
 
 namespace Codebreak.Service.Auth.Frames
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class WorldSelectionFrame : FrameBase<WorldSelectionFrame, AuthClient, string>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("WorldGamePort")]
         public static int WorldGamePort = 5555;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override Action<AuthClient, string> GetHandler(string message)
         {
             if (message.Length < 2)
@@ -30,18 +41,28 @@ namespace Codebreak.Service.Auth.Frames
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
         private void WorldCharacterList(AuthClient client, string message)
         {
             AuthService.Instance.SendWorldCharacterList(client);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
         private void WorldSelection(AuthClient client, string message)
         {
             var worldId = int.Parse(message.Substring(2));
 
             var world = AuthService.Instance.GetById(worldId);
 
-            if(world == null || world.GameState != GameState.ONLINE)
+            if(world == null || world.GameState != GameStateEnum.ONLINE)
             {
                 client.Send(AuthMessage.WORLD_SELECTION_FAILED());
                 return;

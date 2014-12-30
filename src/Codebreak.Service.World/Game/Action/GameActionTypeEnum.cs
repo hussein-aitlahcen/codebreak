@@ -43,6 +43,8 @@ namespace Codebreak.Service.World.Game.Action
         EXCHANGE,
         PLAYER_EXCHANGE,
         NPC_EXCHANGE,
+        AUCTION_HOUSE_BUY,
+        AUCTION_HOUSE_SELL,
         NPC_DIALOG,
         PARTY_REQUEST,
         FIGHT,

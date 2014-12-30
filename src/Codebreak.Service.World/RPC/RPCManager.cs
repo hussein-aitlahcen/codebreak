@@ -38,7 +38,7 @@ namespace Codebreak.Service.World.RPC
         /// <summary>
         /// 
         /// </summary>
-        public AuthState AuthState
+        public AuthStateEnum AuthState
         {
             get;
             private set;
@@ -60,7 +60,7 @@ namespace Codebreak.Service.World.RPC
         /// </summary>
         public RPCManager()
         {
-            AuthState = AuthState.NEGOTIATING;
+            AuthState = AuthStateEnum.NEGOTIATING;
             
             _rpcConnection = new AuthServiceRPCConnection();
             _rpcConnection.OnConnectedEvent += () =>
@@ -119,7 +119,7 @@ namespace Codebreak.Service.World.RPC
         {
             Logger.Info("RPCManager connected, sending credentials.");
 
-            AuthState = AuthState.NEGOTIATING;
+            AuthState = AuthStateEnum.NEGOTIATING;
 
             _rpcConnection.Send(new AuthentificationMessage(RPCPassword));
         }
@@ -138,7 +138,7 @@ namespace Codebreak.Service.World.RPC
         /// 
         /// </summary>
         /// <param name="state"></param>
-        public void UpdateState(GameState state)
+        public void UpdateState(GameStateEnum state)
         {
             Send(new GameStateUpdateMessage(state));
         }
@@ -160,25 +160,25 @@ namespace Codebreak.Service.World.RPC
         {
             switch(message.Id)
             {
-                case (int)MessageId.AUTH_TO_WORLD_CREDENTIALRESULT:
-                    if(((AuthentificationResult)message).Result == AuthResult.SUCCESS)
+                case (int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIALRESULT:
+                    if(((AuthentificationResult)message).Result == AuthResultEnum.SUCCESS)
                     {
-                        AuthState = AuthState.SUCCESS;
+                        AuthState = AuthStateEnum.SUCCESS;
 
                         Logger.Info("RPCManager authentification success.");
 
                         Send(new GameIdUpdateMessage(WorldConfig.GAME_ID));
-                        Send(new GameStateUpdateMessage(GameState.ONLINE));
+                        Send(new GameStateUpdateMessage(GameStateEnum.ONLINE));
                     }
                     else
                     {
-                        AuthState = AuthState.FAILED;
+                        AuthState = AuthStateEnum.FAILED;
 
                         Logger.Error("RPCManager authentification failed : wrong credentials.");
                     }
                     break;
 
-                case (int)MessageId.AUTH_TO_WORLD_GAMETICKET:
+                case (int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET:
                     var ticketMessage = (GameTicketMessage)message;
 
                     AccountManager.Instance.AddTicket

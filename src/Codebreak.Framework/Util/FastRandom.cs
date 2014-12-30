@@ -2,6 +2,9 @@
 
 namespace Codebreak.Framework.Utils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class FastRandom
     {
         // The +1 ensures NextDouble doesn't generate 1.0

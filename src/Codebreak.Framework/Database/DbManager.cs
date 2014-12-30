@@ -17,14 +17,14 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        private List<IRepository> _repositories;
+        private List<IRepository> m_repositories;
    
         /// <summary>
         /// 
         /// </summary>
         public DbManager()
         {
-            _repositories = new List<IRepository>();
+            m_repositories = new List<IRepository>();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Codebreak.Framework.Database
 
             try
             {
-                foreach (var repository in _repositories)
+                foreach (var repository in m_repositories)
                 {
                     Logger.Info(repository.GetType().Name + " : loading...");
                     repository.Initialize();
@@ -55,7 +55,7 @@ namespace Codebreak.Framework.Database
         /// <param name="repository"></param>
         public void AddRepository(IRepository repository)
         {
-            _repositories.Add(repository);
+            m_repositories.Add(repository);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public void UpdateAll()
         {
-            foreach(var repository in _repositories)
+            foreach(var repository in m_repositories)
             {
                 repository.UpdateAll();
             }

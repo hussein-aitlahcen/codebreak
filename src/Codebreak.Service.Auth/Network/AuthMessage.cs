@@ -120,7 +120,7 @@ namespace Codebreak.Service.Auth.Network
                 message.Append(service.GameId).Append(';');
                 message.Append((int)service.GameState).Append(';'); // Service status ?
                 message.Append(0).Append(';'); // Completion
-                message.Append(service.GameState == GameState.ONLINE ? '1' : '0'); // CanLog
+                message.Append(service.GameState == GameStateEnum.ONLINE ? '1' : '0'); // CanLog
             }
             return message.ToString();
         }

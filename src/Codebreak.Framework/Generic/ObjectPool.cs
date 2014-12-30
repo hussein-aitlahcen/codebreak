@@ -15,20 +15,17 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// Thread-safe queue of pooled object
         /// </summary>        
-        private LockFreeQueue<T> _objects = new LockFreeQueue<T>();
-        private Func<T> _creator;
+        private LockFreeQueue<T> m_objects = new LockFreeQueue<T>();
+        private Func<T> m_creator;
 
         /// <summary>
         /// 
         /// </summary>
         public ObjectPool(Func<T> creator, int baseObjectCount = 0)
         {
-            _creator = creator;
-
-            for (int i = 0; i < baseObjectCount; i++)
-            {
-                _objects.Enqueue(_creator());
-            }
+            m_creator = creator;
+            for (int i = 0; i < baseObjectCount; i++)            
+                m_objects.Enqueue(m_creator());            
         }
 
         /// <summary>
@@ -38,10 +35,8 @@ namespace Codebreak.Framework.Generic
         public T Pop()
         {
             T obj = null;
-            if (!_objects.TryDequeue(out obj))
-            {
-                obj = _creator();
-            }
+            if (!m_objects.TryDequeue(out obj))            
+                obj = m_creator();            
             return obj;
         }
 
@@ -51,12 +46,10 @@ namespace Codebreak.Framework.Generic
         /// <param name="obj"></param>
         public void Push(T obj)
         {
-            if (obj is IPoolable)
-            {
+            if (obj is IPoolable)            
                 ((IPoolable)obj).Cleanup();
-            }
-
-            _objects.Enqueue(obj);
+            
+            m_objects.Enqueue(obj);
         }
 
         /// <summary>
@@ -64,7 +57,7 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         public void Dispose()
         {
-            while (_objects.Count > 0)
+            while (m_objects.Count > 0)
             {
                 var obj = Pop();
                 if (obj is IPoolable)

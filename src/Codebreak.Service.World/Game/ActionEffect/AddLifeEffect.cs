@@ -42,9 +42,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
                     break;
             }
 
-            Process(entity, new Dictionary<string, string>() { { "life", effect.Items.ToString() } });
-
-            return true;
+            return Process(entity, new Dictionary<string, string>() { { "life", effect.Items.ToString() } });
         }
 
         /// <summary>
@@ -52,14 +50,14 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="parameters"></param>
-        public override void Process(EntityBase entity, Dictionary<string, string> parameters)
+        public override bool Process(EntityBase entity, Dictionary<string, string> parameters)
         {
             var heal = int.Parse(parameters["life"]);
-
             if (entity.Life + heal > entity.MaxLife)
                 heal = entity.MaxLife - entity.Life;
-
             entity.Life += heal;
+
+            return true;
         }
     }
 }

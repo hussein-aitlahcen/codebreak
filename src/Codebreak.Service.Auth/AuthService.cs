@@ -12,23 +12,42 @@ using System;
 
 namespace Codebreak.Service.Auth
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AuthService : TcpServerBase<AuthService, AuthClient>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("AuthServiceIP")]
         public static string AuthServiceIP = "127.0.0.1";
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("AuthServicePort")]
         public static int AuthServicePort = 443;
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Configurable("AuthMaxClient")]
         public static int AuthMaxClient = 500;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ConfigurationManager ConfigurationManager
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configPath"></param>
         public void Start(string configPath)
         {
             ConfigurationManager = new ConfigurationManager();
@@ -44,6 +63,10 @@ namespace Codebreak.Service.Auth
 
         #region Network
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         protected override void OnClientConnected(AuthClient client)
         {
             Logger.Debug("Connected : " + client.Ip);
@@ -63,6 +86,10 @@ namespace Codebreak.Service.Auth
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         protected override void OnClientDisconnected(AuthClient client)
         {
             AddMessage(() =>
@@ -75,9 +102,16 @@ namespace Codebreak.Service.Auth
                     }
 
                     AuthService.Instance.ClientDisconnected(client);
-                });
+            });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         protected override void OnDataReceived(AuthClient client, byte[] buffer, int offset, int count)
         {
             foreach (var message in client.Receive(buffer, offset, count))
@@ -91,6 +125,10 @@ namespace Codebreak.Service.Auth
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void SendToAll(string message)
         {
             base.SendToAll(Encoding.Default.GetBytes(message + (char)0x00));
@@ -100,34 +138,58 @@ namespace Codebreak.Service.Auth
 
         #region Authentication
 
-        private Dictionary<long, AuthClient>  _clientByAccount = new Dictionary<long, AuthClient>();
-        private List<long> _clientConnected = new List<long>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<long, AuthClient>  m_clientByAccount = new Dictionary<long, AuthClient>();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<long> m_clientConnected = new List<long>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
         public bool IsConnected(long accountId)
         {
-            return _clientByAccount.ContainsKey(accountId) || _clientConnected.Contains(accountId);
+            return m_clientByAccount.ContainsKey(accountId) || m_clientConnected.Contains(accountId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void ClientAuthentified(AuthClient client)
         {
-            _clientByAccount.Add(client.Account.Id, client);
-            _clientConnected.Add(client.Account.Id);
+            m_clientByAccount.Add(client.Account.Id, client);
+            m_clientConnected.Add(client.Account.Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"></param>
         public void GameAccountDisconnect(long accountId)
         {
-            _clientConnected.Remove(accountId);
+            m_clientConnected.Remove(accountId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void ClientDisconnected(AuthClient client)
         {
             if (client.Account != null)
             {
                 if (client.Ticket == null)
                 {
-                    _clientConnected.Remove(client.Account.Id);
+                    m_clientConnected.Remove(client.Account.Id);
                 }
-                _clientByAccount.Remove(client.Account.Id);
+                m_clientByAccount.Remove(client.Account.Id);
             }
         }
 
@@ -135,50 +197,78 @@ namespace Codebreak.Service.Auth
 
         #region World Management
 
-        private Dictionary<int, AuthRPCServiceClient> _worldById = new Dictionary<int, AuthRPCServiceClient>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, AuthRPCServiceClient> m_worldById = new Dictionary<int, AuthRPCServiceClient>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worldId"></param>
+        /// <returns></returns>
         public AuthRPCServiceClient GetById(int worldId)
         {
-            if (_worldById.ContainsKey(worldId))
-                return _worldById[worldId];
+            if (m_worldById.ContainsKey(worldId))
+                return m_worldById[worldId];
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worldId"></param>
+        /// <param name="client"></param>
         public void RegisterWorld(int worldId, AuthRPCServiceClient client)
         {
             Instance.AddMessage(() =>
             {
-                if (!_worldById.ContainsKey(worldId))
-                    _worldById.Add(worldId, client);
+                if (!m_worldById.ContainsKey(worldId))
+                    m_worldById.Add(worldId, client);
             });
 
             RefreshWorldList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worldId"></param>
         public void DeleteWorld(int worldId)
         {
             Instance.AddMessage(() =>
             {
-                if (_worldById.ContainsKey(worldId))
-                    _worldById.Remove(worldId);
+                if (m_worldById.ContainsKey(worldId))
+                    m_worldById.Remove(worldId);
             });
 
             RefreshWorldList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void SendWorldList(AuthClient client)
         {
-            AddMessage(() => client.Send(AuthMessage.WORLD_HOST_LIST(_worldById.Values)));
+            AddMessage(() => client.Send(AuthMessage.WORLD_HOST_LIST(m_worldById.Values)));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void SendWorldCharacterList(AuthClient client)
         {
-            AddMessage(() => client.Send(AuthMessage.WORLD_CHARACTER_LIST(_worldById.Values)));
+            AddMessage(() => client.Send(AuthMessage.WORLD_CHARACTER_LIST(m_worldById.Values)));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void RefreshWorldList()
         {
-            AddMessage(() => AuthService.Instance.SendToAll(AuthMessage.WORLD_HOST_LIST(_worldById.Values)));
+            AddMessage(() => AuthService.Instance.SendToAll(AuthMessage.WORLD_HOST_LIST(m_worldById.Values)));
         }
         #endregion
     }

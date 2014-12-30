@@ -18,14 +18,14 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        private string _connectionString;
+        private string m_connectionString;
 
         /// <summary>
         /// 
         /// </summary>
         public MySqlConnection CreateConnection()
         {
-            var connection = new MySqlConnection(_connectionString);
+            var connection = new MySqlConnection(m_connectionString);
             connection.Open();
             return connection;
         }
@@ -36,7 +36,7 @@ namespace Codebreak.Framework.Database
         /// <param name="connectionString"></param>
         public void Initialize(string connectionString)
         {
-            _connectionString = connectionString;
+            m_connectionString = connectionString;
         }
 
         /// <summary>

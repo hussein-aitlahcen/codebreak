@@ -2,33 +2,58 @@
 
 namespace Codebreak.RPC.Protocol
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AuthentificationResult : RPCMessageBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override int Id
         {
-            get { return (int)MessageId.AUTH_TO_WORLD_CREDENTIALRESULT; }
+            get 
+            { 
+                return (int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIALRESULT;
+            }
         }
 
-        public AuthResult Result
+        /// <summary>
+        /// 
+        /// </summary>
+        public AuthResultEnum Result
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AuthentificationResult()
         {
         }
 
-        public AuthentificationResult(AuthResult result)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        public AuthentificationResult(AuthResultEnum result)
         {
             Result = result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Deserialize()
         {
-            Result = (AuthResult)base.ReadInt();
+            Result = (AuthResultEnum)base.ReadInt();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Serialize()
         {
             base.WriteInt((int)Result);

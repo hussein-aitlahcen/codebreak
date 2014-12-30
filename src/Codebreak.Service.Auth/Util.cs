@@ -4,6 +4,9 @@ using Codebreak.Framework.Utils;
 
 namespace Codebreak.Service.Auth
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Util
     {
         private const int KEY_LENGHT = 32;

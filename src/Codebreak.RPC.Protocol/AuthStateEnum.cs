@@ -1,6 +1,6 @@
 ﻿namespace Codebreak.RPC.Protocol
 {
-    public enum AuthState
+    public enum AuthStateEnum
     {
         NEGOTIATING,
         SUCCESS,

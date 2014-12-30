@@ -2,55 +2,95 @@
 
 namespace Codebreak.RPC.Protocol
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GameTicketMessage : RPCMessageBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override int Id
         {
-            get { return (int)MessageId.AUTH_TO_WORLD_GAMETICKET; }
+            get 
+            {
+                return (int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET;
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public long AccountId
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Power
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public long RemainingSubscription
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public long LastConnectionDate
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string LastConnectionIP
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Ticket
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="name"></param>
+        /// <param name="power"></param>
+        /// <param name="remainingSub"></param>
+        /// <param name="lastConnection"></param>
+        /// <param name="lastIp"></param>
+        /// <param name="ticket"></param>
         public GameTicketMessage(long accountId, string name, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
         {
             AccountId = accountId;
@@ -62,10 +102,16 @@ namespace Codebreak.RPC.Protocol
             Ticket = ticket;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public GameTicketMessage()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Deserialize()
         {
             AccountId = base.ReadLong();
@@ -77,6 +123,9 @@ namespace Codebreak.RPC.Protocol
             Ticket = base.ReadString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Serialize()
         {
             base.WriteLong(AccountId);

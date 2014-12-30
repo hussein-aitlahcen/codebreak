@@ -50,7 +50,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public List<MapTemplateDAO> GetMaps()
         {
-            return _dataObjects;
+            return m_dataObjects;
         }
     }
 }

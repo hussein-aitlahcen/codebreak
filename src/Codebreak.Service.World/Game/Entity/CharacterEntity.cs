@@ -1,22 +1,21 @@
-﻿using Codebreak.Service.World.Database.Structure;
-using Codebreak.Service.World.Game.Action;
+﻿using Codebreak.Framework.Network;
+using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Frame;
+using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
+using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
+using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Codebreak.Service.World.Manager;
-using Codebreak.Service.World.Network;
-using Codebreak.Service.World.Command;
-using Codebreak.Service.World.Game.Guild;
-using Codebreak.Framework.Network;
-using Codebreak.Service.World.Frame;
-using Codebreak.Service.World.Frame;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -103,17 +102,6 @@ namespace Codebreak.Service.World.Game.Entity
             set
             {
                 DatabaseRecord.Restriction = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<InventoryItemDAO> Items
-        {
-            get
-            {
-                return DatabaseRecord.GetItems();
             }
         }
 
@@ -946,6 +934,9 @@ namespace Codebreak.Service.World.Game.Entity
             DatabaseRecord = null;
             CharacterGuild = null;
             CharacterAlignment = null;
+
+            FrameManager.Dispose();
+            FrameManager = null;
 
             base.Dispose();
         }

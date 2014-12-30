@@ -9,20 +9,33 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Framework.Network
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class PoolableSocketAsyncEventArgs : SocketAsyncEventArgs, IBufferHandler, IDisposable
     {
-        private BufferManager _buffManager;
+        /// <summary>
+        /// 
+        /// </summary>
+        private BufferManager m_buffManager;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bufferManager"></param>
         public PoolableSocketAsyncEventArgs(BufferManager bufferManager)
         {
-            _buffManager = bufferManager;
-            _buffManager.SetBuffer(this);
+            m_buffManager = bufferManager;
+            m_buffManager.SetBuffer(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public new void Dispose()
         {
-            _buffManager.FreeBuffer(this);
-            _buffManager = null;
+            m_buffManager.FreeBuffer(this);
+            m_buffManager = null;
 
             base.Dispose();
         }

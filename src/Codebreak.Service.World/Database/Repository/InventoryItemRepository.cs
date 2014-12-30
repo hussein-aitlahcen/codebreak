@@ -65,7 +65,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public IEnumerable<InventoryItemDAO> GetByOwner(int ownerType, long ownerId)
         {
-            return _dataObjects.Where(item => item.OwnerType == ownerType && item.OwnerId == ownerId);
+            return m_dataObjects.Where(item => item.OwnerType == ownerType && item.OwnerId == ownerId);
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// </summary>
         public override void UpdateAll()
         {         
-            lock(_syncLock)    
-                Remove(_dataObjects.Where(item => item.OwnerId == -1).ToList());
+            lock(m_syncLock)    
+                Remove(m_dataObjects.Where(item => item.OwnerId == -1).ToList());
             base.UpdateAll();
         }
     }

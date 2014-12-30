@@ -4,54 +4,78 @@ using Codebreak.Framework.Network;
 
 namespace Codebreak.RPC.Service
 {
-    public abstract class RPCClient<TClient> : TcpClientBase<TClient>
-        where TClient : RPCClient<TClient>, new()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TClient"></typeparam>
+    public abstract class RPCClientBase<TClient> : TcpClientBase<TClient>
+        where TClient : RPCClientBase<TClient>, new()
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public RPCMessageBuilder MessageBuilder
         {
             get;
             set;
         }
 
-        private int _messageId;
-        private int _messageLength;
-        private BinaryQueue _messageData;
+        /// <summary>
+        /// 
+        /// </summary>
+        private int m_messageId;
+        private int m_messageLength;
+        private BinaryQueue m_messageData;
 
-        protected RPCClient()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected RPCClientBase()
         {
-            _messageId = -1;
-            _messageLength = -1;
-            _messageData = new BinaryQueue();
+            m_messageId = -1;
+            m_messageLength = -1;
+            m_messageData = new BinaryQueue();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public IEnumerable<RPCMessageBase> GetMessages(byte[] buffer, int offset, int length)
         {
             for (int i = offset; i < offset + length; i++)
             {
-                _messageData.WriteByte(buffer[i]);
+                m_messageData.WriteByte(buffer[i]);
             }
 
             do
             {
-                if (_messageLength == -1 && _messageData.Count > 3)
+                if (m_messageLength == -1 && m_messageData.Count > 3)
                 {
-                    _messageLength = _messageData.ReadInt();
+                    m_messageLength = m_messageData.ReadInt();
                 }
-                if (_messageLength != -1 && _messageId == -1 && _messageData.Count > 3)
+                if (m_messageLength != -1 && m_messageId == -1 && m_messageData.Count > 3)
                 {
-                    _messageId = _messageData.ReadInt();
+                    m_messageId = m_messageData.ReadInt();
                 }
-                if (_messageLength != -1 && _messageId != -1 && _messageData.Count >= _messageLength)
+                if (m_messageLength != -1 && m_messageId != -1 && m_messageData.Count >= m_messageLength)
                 {
-                    yield return MessageBuilder.BuildMessage(_messageId, _messageData.ReadBytes(_messageLength));
+                    yield return MessageBuilder.BuildMessage(m_messageId, m_messageData.ReadBytes(m_messageLength));
 
-                    _messageId = -1;
-                    _messageLength = -1;
+                    m_messageId = -1;
+                    m_messageLength = -1;
                 }
             }
-            while ((_messageLength == -1 || _messageId == -1) && _messageData.Count > 3);
+            while ((m_messageLength == -1 || m_messageId == -1) && m_messageData.Count > 3);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void Send(RPCMessageBase message)
         {
             message.Serialize();

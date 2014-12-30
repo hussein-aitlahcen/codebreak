@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Action
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class GameFightActionBase : GameActionBase
     {
         /// <summary>

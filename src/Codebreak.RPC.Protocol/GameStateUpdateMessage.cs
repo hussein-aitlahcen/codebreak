@@ -2,33 +2,58 @@
 
 namespace Codebreak.RPC.Protocol
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GameStateUpdateMessage : RPCMessageBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override int Id
         {
-            get { return (int)MessageId.WORLD_TO_AUTH_GAMESTATEUPDATE; }
+            get 
+            { 
+                return (int)MessageIdEnum.WORLD_TO_AUTH_GAMESTATEUPDATE; 
+            }
         }
 
-        public GameState State
+        /// <summary>
+        /// 
+        /// </summary>
+        public GameStateEnum State
         {
             get;
             private set;
         }
         
-        public GameStateUpdateMessage(GameState state)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state"></param>
+        public GameStateUpdateMessage(GameStateEnum state)
         {
             State = state;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public GameStateUpdateMessage()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Deserialize()
         {
-            State = (GameState)base.ReadInt();
+            State = (GameStateEnum)base.ReadInt();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Serialize()
         {
             base.WriteInt((int)State);

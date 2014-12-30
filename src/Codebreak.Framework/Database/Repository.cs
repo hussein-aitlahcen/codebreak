@@ -48,12 +48,12 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        protected object _syncLock = new object();
+        protected object m_syncLock = new object();
 
         /// <summary>
         /// 
         /// </summary>
-        protected List<TDataObject> _dataObjects;
+        protected List<TDataObject> m_dataObjects;
 
         /// <summary>
         /// 
@@ -62,7 +62,7 @@ namespace Codebreak.Framework.Database
         {
             get
             {
-                return _dataObjects.Count;
+                return m_dataObjects.Count;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public Repository()
         {
-            _dataObjects = new List<TDataObject>();
+            m_dataObjects = new List<TDataObject>();
         }
 
         /// <summary>
@@ -81,10 +81,10 @@ namespace Codebreak.Framework.Database
         {
             IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName);
 
-            lock (_syncLock)
+            lock (m_syncLock)
             {
-                _dataObjects.AddRange(objects);
-                foreach (var obj in _dataObjects)
+                m_dataObjects.AddRange(objects);
+                foreach (var obj in m_dataObjects)
                         OnObjectAdded(obj);
             }
 
@@ -110,11 +110,11 @@ namespace Codebreak.Framework.Database
         {
             IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
 
-            lock (_syncLock)
+            lock (m_syncLock)
             {
                 foreach (var obj in objects)
                 {
-                    _dataObjects.Add(obj);
+                    m_dataObjects.Add(obj);
                     OnObjectAdded(obj);
                 }
             }
@@ -149,9 +149,9 @@ namespace Codebreak.Framework.Database
             var result = SqlManager.Instance.Remove<TDataObject>(obj);
             if (result)
             {
-                lock (_syncLock)
+                lock (m_syncLock)
                 {
-                    _dataObjects.Remove(obj);
+                    m_dataObjects.Remove(obj);
                     OnObjectRemoved(obj);
                 }
             }
@@ -167,11 +167,11 @@ namespace Codebreak.Framework.Database
             var result = SqlManager.Instance.Remove<TDataObject>(objects);
             if (result)
             {
-                lock (_syncLock)
+                lock (m_syncLock)
                 {
                     foreach (var obj in objects)
                     {
-                        _dataObjects.Remove(obj);
+                        m_dataObjects.Remove(obj);
                         OnObjectRemoved(obj);
                     }
                 }
@@ -188,9 +188,9 @@ namespace Codebreak.Framework.Database
             var result = SqlManager.Instance.Insert<TDataObject>(obj);
             if (result)
             {
-                lock (_syncLock)
+                lock (m_syncLock)
                 {
-                    _dataObjects.Add(obj);
+                    m_dataObjects.Add(obj);
                     OnObjectAdded(obj);
                 }
             }
@@ -206,9 +206,9 @@ namespace Codebreak.Framework.Database
             var result = SqlManager.Instance.Insert<TDataObject>(objects);
             if (result)
             {
-                lock (_syncLock)
+                lock (m_syncLock)
                 {
-                    _dataObjects.AddRange(objects);
+                    m_dataObjects.AddRange(objects);
                     foreach (var obj in objects)
                         OnObjectAdded(obj);
                 }
@@ -223,8 +223,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public TDataObject Find(Predicate<TDataObject> match)
         {
-            lock(_syncLock)
-                return _dataObjects.Find(match);
+            lock(m_syncLock)
+                return m_dataObjects.Find(match);
         }
 
         /// <summary>
@@ -234,8 +234,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public IEnumerable<TDataObject> FindAll(Predicate<TDataObject> match)
         {
-            lock (_syncLock)
-                return _dataObjects.FindAll(match);
+            lock (m_syncLock)
+                return m_dataObjects.FindAll(match);
         }
 
         /// <summary>
@@ -244,8 +244,8 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public IEnumerable<TDataObject> GetAll()
         {
-            lock (_syncLock)
-                return _dataObjects.ToArray();
+            lock (m_syncLock)
+                return m_dataObjects.ToArray();
         }
 
         /// <summary>
@@ -262,9 +262,9 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         private IEnumerable<TDataObject> GetDirtyObjects()
         {
-            lock (_syncLock)
+            lock (m_syncLock)
             {
-                foreach (var obj in _dataObjects)
+                foreach (var obj in m_dataObjects)
                 {
                     if (obj.IsDirty)
                     {

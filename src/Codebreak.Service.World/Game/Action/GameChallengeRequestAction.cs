@@ -53,7 +53,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)        
         {
             IsFinished = true;
-
             if (int.Parse(args[0].ToString()) == Entity.Id)
                 Defender.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST);
             else
@@ -73,7 +72,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Abort(params object[] args)
         {
             IsFinished = true;
-
             if (int.Parse(args[0].ToString()) == Entity.Id)
                 Defender.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST);
             else

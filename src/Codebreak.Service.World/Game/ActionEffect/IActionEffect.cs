@@ -14,7 +14,23 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// </summary>
     public interface IActionEffect
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="item"></param>
+        /// <param name="effect"></param>
+        /// <param name="targetId"></param>
+        /// <param name="targetCell"></param>
+        /// <returns></returns>
         bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell);
-        void Process(EntityBase entity, Dictionary<string, string> parameters);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        bool Process(EntityBase entity, Dictionary<string, string> parameters);
     }
 }

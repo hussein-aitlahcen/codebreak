@@ -3,32 +3,45 @@ using Codebreak.RPC.Service;
 
 namespace Codebreak.Service.Auth.RPC
 {
-
-// ReSharper disable once InconsistentNaming
-    public sealed class AuthRPCServiceClient : RPCClient<AuthRPCServiceClient>
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class AuthRPCServiceClient : RPCClientBase<AuthRPCServiceClient>
     {
-        public GameState GameState
+        /// <summary>
+        /// 
+        /// </summary>
+        public GameStateEnum GameState
         {
             get;
             set;
         }
 
-        public AuthState AuthState
+        /// <summary>
+        /// 
+        /// </summary>
+        public AuthStateEnum AuthState
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int GameId
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AuthRPCServiceClient()
         {
-            GameState = GameState.OFFLINE;
-            AuthState = AuthState.NEGOTIATING;
+            GameState = GameStateEnum.OFFLINE;
+            AuthState = AuthStateEnum.NEGOTIATING;
             GameId = -1;
         }
     }

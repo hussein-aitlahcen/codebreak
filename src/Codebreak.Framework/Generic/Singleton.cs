@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Codebreak.Framework.Generic
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class Singleton<T>
         where T : class, new()
     {

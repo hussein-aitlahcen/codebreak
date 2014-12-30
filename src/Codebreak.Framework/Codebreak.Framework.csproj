@@ -90,7 +90,7 @@
     <Compile Include="Generic\TaskSchedulerExtensions.cs" />
     <Compile Include="Generic\Timer.cs" />
     <Compile Include="Generic\Updatable.cs" />
-    <Compile Include="IO\BinaryStack.cs" />
+    <Compile Include="IO\BinaryQueue.cs" />
     <Compile Include="IO\BufferManager.cs" />
     <Compile Include="IO\IBufferHandler.cs" />
     <Compile Include="Network\DofusClient.cs" />

@@ -2,8 +2,11 @@
 
 namespace Codebreak.RPC.Protocol
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Flags]
-    public enum MessageId : int
+    public enum MessageIdEnum : int
     {
         WORLD_TO_AUTH_CREDENTIAL,
         AUTH_TO_WORLD_CREDENTIALRESULT,

@@ -1,6 +1,9 @@
 ﻿namespace Codebreak.RPC.Protocol
 {
-    public enum GameState
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum GameStateEnum
     {
         OFFLINE = 0,
         ONLINE = 1,

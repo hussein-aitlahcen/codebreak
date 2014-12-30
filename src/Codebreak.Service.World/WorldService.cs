@@ -184,7 +184,7 @@ namespace Codebreak.Service.World
             Stopwatch updateTimer = new Stopwatch();
             WorldService.Instance.AddLinkedMessages( 
                 () => WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING)),
-                () => RPCManager.Instance.UpdateState(GameState.STARTING),
+                () => RPCManager.Instance.UpdateState(GameStateEnum.STARTING),
                 updateTimer.Start,
                 TaxCollectorRepository.Instance.UpdateAll,
                 GuildRepository.Instance.UpdateAll,
@@ -195,7 +195,7 @@ namespace Codebreak.Service.World
                 InventoryItemRepository.Instance.UpdateAll,
                 updateTimer.Stop,
                 () => Logger.Info("WorldService : World update performed in : " + updateTimer.ElapsedMilliseconds + " ms"),
-                () => RPCManager.Instance.UpdateState(GameState.ONLINE),
+                () => RPCManager.Instance.UpdateState(GameStateEnum.ONLINE),
                 () => WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING_FINISHED))
             );
         }

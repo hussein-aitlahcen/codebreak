@@ -14,15 +14,21 @@ namespace Codebreak.Framework.Network
     /// </summary>
     public abstract class SocketClientBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public event Action OnConnectedEvent;
         public event Action OnDisconnectedEvent;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private const int BUFF_SIZE = 1024;
         private Socket _socket;
-        private SocketAsyncEventArgs _connectSaea;
-        private BufferManager _bufferManager;
-        private ObjectPool<SocketAsyncEventArgs> _saeaSendPool;
-        private ObjectPool<PoolableSocketAsyncEventArgs> _saeaRecvPool;
+        private SocketAsyncEventArgs m_connectSaea;
+        private BufferManager m_bufferManager;
+        private ObjectPool<SocketAsyncEventArgs> m_saeaSendPool;
+        private ObjectPool<PoolableSocketAsyncEventArgs> m_saeaRecvPool;
 
         /// <summary>
         /// 
@@ -40,11 +46,11 @@ namespace Codebreak.Framework.Network
         /// </summary>
         public SocketClientBase()
         {
-            _bufferManager = new BufferManager(1024, 1000);
-            _saeaRecvPool = new ObjectPool<PoolableSocketAsyncEventArgs>(() => new PoolableSocketAsyncEventArgs(_bufferManager));
-            _saeaSendPool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs());
-            _connectSaea = new SocketAsyncEventArgs();
-            _connectSaea.Completed += IOCompleted;
+            m_bufferManager = new BufferManager(1024, 1000);
+            m_saeaRecvPool = new ObjectPool<PoolableSocketAsyncEventArgs>(() => new PoolableSocketAsyncEventArgs(m_bufferManager));
+            m_saeaSendPool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs());
+            m_connectSaea = new SocketAsyncEventArgs();
+            m_connectSaea.Completed += IOCompleted;
 
             OnConnectedEvent += OnConnected;
             OnDisconnectedEvent += OnDisconnected;
@@ -60,20 +66,24 @@ namespace Codebreak.Framework.Network
             _socket.NoDelay = true;
 			_socket.Blocking = false;
 
-            _connectSaea = new SocketAsyncEventArgs();
-            _connectSaea.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
-            _connectSaea.Completed += IOCompleted;
+            m_connectSaea = new SocketAsyncEventArgs();
+            m_connectSaea.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
+            m_connectSaea.Completed += IOCompleted;
 
-            if (!_socket.ConnectAsync(_connectSaea))
+            if (!_socket.ConnectAsync(m_connectSaea))
                 ProcessConnected();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         public void Send(byte[] data)
         {
             if (!_socket.Connected)
                 return;
 
-            SocketAsyncEventArgs saea = _saeaSendPool.Pop();
+            SocketAsyncEventArgs saea = m_saeaSendPool.Pop();
             saea.Completed += IOCompleted;
             saea.SetBuffer(data, 0, data.Length);
 
@@ -81,6 +91,11 @@ namespace Codebreak.Framework.Network
                 ProcessSent(saea);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="saea"></param>
         private void IOCompleted(object sender, SocketAsyncEventArgs saea)
         {
             switch(saea.LastOperation)
@@ -103,12 +118,15 @@ namespace Codebreak.Framework.Network
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void ProcessConnected()
         {
-            _connectSaea.Completed -= IOCompleted;
-            if (_connectSaea.SocketError == SocketError.Success && _socket.Connected)
+            m_connectSaea.Completed -= IOCompleted;
+            if (m_connectSaea.SocketError == SocketError.Success && _socket.Connected)
             {
-                SocketAsyncEventArgs saea = _saeaRecvPool.Pop();
+                SocketAsyncEventArgs saea = m_saeaRecvPool.Pop();
                 saea.Completed += IOCompleted;
                 if (!_socket.ReceiveAsync(saea))
                     ProcessReceived(saea);
@@ -121,6 +139,10 @@ namespace Codebreak.Framework.Network
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
         private void ProcessReceived(SocketAsyncEventArgs saea)
         {
             int bytesRead = saea.BytesTransferred;
@@ -133,12 +155,16 @@ namespace Codebreak.Framework.Network
             }
             else
             {
-                _saeaRecvPool.Push((PoolableSocketAsyncEventArgs)saea);
+                m_saeaRecvPool.Push((PoolableSocketAsyncEventArgs)saea);
 
                 ProcessDisconnect(saea);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
         private void ProcessDisconnect(SocketAsyncEventArgs saea)
         {
             saea.Completed -= IOCompleted;
@@ -159,27 +185,48 @@ namespace Codebreak.Framework.Network
             OnDisconnectedEvent();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Disconnect()
         {
             if (!_socket.Connected)
                 return;
 
-            var saea = _saeaSendPool.Pop();
+            var saea = m_saeaSendPool.Pop();
             saea.Completed += IOCompleted;
 
             if (!_socket.DisconnectAsync(saea))
                 ProcessDisconnect(saea);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="saea"></param>
         private void ProcessSent(SocketAsyncEventArgs saea)
         {
             saea.Completed -= IOCompleted;
             saea.SetBuffer(null, 0, 0);
-            _saeaSendPool.Push(saea);
+            m_saeaSendPool.Push(saea);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
         protected abstract void OnBytesRead(byte[] buffer, int offset, int length);
+        
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract void OnDisconnected();
+        
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract void OnConnected();
     }
 }

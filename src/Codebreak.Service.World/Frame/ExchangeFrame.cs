@@ -18,6 +18,45 @@ namespace Codebreak.Service.World.Frame
 
             switch (message[0])
             {
+                case 'H':
+                    switch(message[1])
+                    {
+                        case 'T':
+
+                            break;
+
+                        case 'l':
+
+                            break;
+
+                        case 'B':
+
+                            break;
+
+                        case 'S':
+
+                            break;
+
+                        case 'P':
+
+                            break;
+                        
+                                //Case "T" 'type (Id)
+                                //    BigStoreGetItemTypeList(Packet.Substring(3))
+
+                                //Case "l" 'ItemLits (UnicId)
+                                //    BigStoreGetItemList(Packet.Substring(3))
+
+                                //Case "B" 'Buy (Id|quant|price)
+                                //    BigStoreBuyItem(Packet.Substring(3))
+
+                                //Case "S" 'Buy (type|unicId)
+
+                                //Case "P" 'Middle price (itemId)
+                                //    BigStoreGetMiddlePrice(Packet.Substring(3))
+                    }
+                    break;
+
                 case 'E':
                     switch (message[1])
                     {
@@ -54,14 +93,11 @@ namespace Codebreak.Service.World.Frame
                                 default:
                                     return null;
                             }
-
-                        default:
-                            return null;
                     }
-
-                default:
-                    return null;
+                    break;
             }
+
+            return null;
         }
 
         /// <summary>

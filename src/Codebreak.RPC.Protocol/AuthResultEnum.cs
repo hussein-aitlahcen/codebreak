@@ -1,6 +1,9 @@
 ﻿namespace Codebreak.RPC.Protocol
 {
-    public enum AuthResult
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum AuthResultEnum
     {
         SUCCESS,
         FAILED,
