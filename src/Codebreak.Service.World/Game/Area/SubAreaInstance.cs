@@ -9,24 +9,41 @@ using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Game.Area
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class SubAreaInstance : MessageDispatcher
     {
-        private SubAreaDAO _subAreaRecord;
-        private AreaInstance _area;
+        /// <summary>
+        /// 
+        /// </summary>
+        private SubAreaDAO m_subAreaRecord;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private AreaInstance m_area;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AreaInstance Area
         {
             get
             {
-                if (_area == null)
-                    _area = AreaManager.Instance.GetArea(_subAreaRecord.AreaId);
-                return _area;
+                if (m_area == null)
+                    m_area = AreaManager.Instance.GetArea(m_subAreaRecord.AreaId);
+                return m_area;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="record"></param>
         public SubAreaInstance(SubAreaDAO record)
         {
-            _subAreaRecord = record;
+            m_subAreaRecord = record;
         }
     }
 }

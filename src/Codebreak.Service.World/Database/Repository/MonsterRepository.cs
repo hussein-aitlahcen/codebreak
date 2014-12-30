@@ -16,14 +16,14 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, MonsterDAO> _monsterById;
+        private Dictionary<int, MonsterDAO> m_monsterById;
 
         /// <summary>
         /// 
         /// </summary>
         public MonsterRepository()
         {
-            _monsterById = new Dictionary<int, MonsterDAO>();
+            m_monsterById = new Dictionary<int, MonsterDAO>();
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public MonsterDAO GetById(int id)
         {
-            if (_monsterById.ContainsKey(id))
-                return _monsterById[id];
+            if (m_monsterById.ContainsKey(id))
+                return m_monsterById[id];
             return null;
         }
 
@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="monster"></param>
         public override void OnObjectAdded(MonsterDAO monster)
         {
-            _monsterById.Add(monster.Id, monster);
+            m_monsterById.Add(monster.Id, monster);
         }
     }
 }

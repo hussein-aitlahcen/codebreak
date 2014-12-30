@@ -6,6 +6,9 @@ using Codebreak.Service.World.Game.Fight;
 
 namespace Codebreak.Service.World.Frame
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GameInformationFrame : FrameBase<GameInformationFrame, CharacterEntity, string>
     {
         /// <summary>

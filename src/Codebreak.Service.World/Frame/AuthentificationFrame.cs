@@ -6,13 +6,26 @@ using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Frame
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AuthentificationFrame : FrameBase<AuthentificationFrame, WorldClient, string>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override Action<WorldClient, string> GetHandler(string message)
         {
             return HandleTicket;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
         private void HandleTicket(WorldClient client, string message)
         {
             client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);

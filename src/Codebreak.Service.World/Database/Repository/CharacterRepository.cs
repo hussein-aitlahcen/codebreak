@@ -13,18 +13,18 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class CharacterRepository : Repository<CharacterRepository, CharacterDAO>
     {
-        private Dictionary<long, CharacterDAO> _characterById;
-        private Dictionary<string, CharacterDAO> _characterByName;
-        private Dictionary<long, List<CharacterDAO>> _charactersByAccount;
+        private Dictionary<long, CharacterDAO> m_characterById;
+        private Dictionary<string, CharacterDAO> m_characterByName;
+        private Dictionary<long, List<CharacterDAO>> m_charactersByAccount;
 
         /// <summary>
         /// 
         /// </summary>
         public CharacterRepository()
         {
-            _characterById = new Dictionary<long, CharacterDAO>();
-            _characterByName = new Dictionary<string, CharacterDAO>();
-            _charactersByAccount = new Dictionary<long, List<CharacterDAO>>();
+            m_characterById = new Dictionary<long, CharacterDAO>();
+            m_characterByName = new Dictionary<string, CharacterDAO>();
+            m_charactersByAccount = new Dictionary<long, List<CharacterDAO>>();
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public CharacterDAO GetById(long characterId)
         {
-            if (_characterById.ContainsKey(characterId))
-                return _characterById[characterId];
+            if (m_characterById.ContainsKey(characterId))
+                return m_characterById[characterId];
             return base.Load("Id=@Id", new { Id = characterId}); ;
         }
 
@@ -46,8 +46,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public CharacterDAO GetByName(string name)
         {
-            if (_characterByName.ContainsKey(name.ToLower()))
-                return _characterByName[name.ToLower()];
+            if (m_characterByName.ContainsKey(name.ToLower()))
+                return m_characterByName[name.ToLower()];
             return base.Load("upper(Name)=upper(@Name)", new { Name = name });
         }
 
@@ -59,8 +59,8 @@ namespace Codebreak.Service.World.Database.Repository
         public List<CharacterDAO> GetByAccount(long accountId)
         {
             List<CharacterDAO> characters = new List<CharacterDAO>();
-            if (_charactersByAccount.ContainsKey(accountId))
-                characters.AddRange(_charactersByAccount[accountId]);
+            if (m_charactersByAccount.ContainsKey(accountId))
+                characters.AddRange(m_charactersByAccount[accountId]);
             else
                 characters.AddRange(base.LoadMultiple("AccountId=@AccountId", new { AccountId = accountId }));
             return characters;
@@ -72,11 +72,11 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="character"></param>
         public override void OnObjectAdded(CharacterDAO character)
         {
-            _characterById.Add(character.Id, character);
-            _characterByName.Add(character.Name.ToLower(), character);
-            if (!_charactersByAccount.ContainsKey(character.AccountId))
-                _charactersByAccount.Add(character.AccountId, new List<CharacterDAO>());
-            _charactersByAccount[character.AccountId].Add(character);
+            m_characterById.Add(character.Id, character);
+            m_characterByName.Add(character.Name.ToLower(), character);
+            if (!m_charactersByAccount.ContainsKey(character.AccountId))
+                m_charactersByAccount.Add(character.AccountId, new List<CharacterDAO>());
+            m_charactersByAccount[character.AccountId].Add(character);
         }
 
         /// <summary>
@@ -85,9 +85,9 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="character"></param>
         public override void OnObjectRemoved(CharacterDAO character)
         {
-            _characterById.Remove(character.Id);
-            _characterByName.Remove(character.Name.ToLower()); 
-            _charactersByAccount[character.AccountId].Remove(character);
+            m_characterById.Remove(character.Id);
+            m_characterByName.Remove(character.Name.ToLower()); 
+            m_charactersByAccount[character.AccountId].Remove(character);
         }
     }
 }

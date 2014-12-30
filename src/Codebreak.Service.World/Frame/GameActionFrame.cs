@@ -10,8 +10,16 @@ using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Frame
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GameActionFrame : FrameBase<GameActionFrame, CharacterEntity, string>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public override Action<CharacterEntity, string> GetHandler(string message)
         {
             if (message.Length < 2)

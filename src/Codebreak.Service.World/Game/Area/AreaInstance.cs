@@ -15,8 +15,15 @@ namespace Codebreak.Service.World.Game.Area
     /// </summary>
     public sealed class AreaInstance : MessageDispatcher
     {
-        private AreaDAO _areaRecord;
-        private SuperAreaInstance _superArea;
+        /// <summary>
+        /// 
+        /// </summary>
+        private AreaDAO m_areaRecord;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private SuperAreaInstance m_superArea;
         
         /// <summary>
         /// 
@@ -25,9 +32,9 @@ namespace Codebreak.Service.World.Game.Area
         {
             get
             {
-                if (_superArea == null)
-                    _superArea = AreaManager.Instance.GetSuperArea(_areaRecord.SuperAreaId);
-                return _superArea;
+                if (m_superArea == null)
+                    m_superArea = AreaManager.Instance.GetSuperArea(m_areaRecord.SuperAreaId);
+                return m_superArea;
             }
         }
 
@@ -46,7 +53,7 @@ namespace Codebreak.Service.World.Game.Area
         /// <param name="record"></param>
         public AreaInstance(AreaDAO record)
         {
-            _areaRecord = record;
+            m_areaRecord = record;
 
             IOQueue = new BasicTaskProcessor("Area[" + record.Name + "]");
             IOQueue.AddUpdatable(this);

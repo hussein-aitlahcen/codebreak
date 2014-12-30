@@ -13,14 +13,17 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class CharacterGuildRepository : Repository<CharacterGuildRepository, CharacterGuildDAO>
     {
-        private Dictionary<long, CharacterGuildDAO> _characterGuildById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<long, CharacterGuildDAO> m_characterGuildById;
 
         /// <summary>
         /// 
         /// </summary>
         public CharacterGuildRepository()
         {
-            _characterGuildById = new Dictionary<long, CharacterGuildDAO>();
+            m_characterGuildById = new Dictionary<long, CharacterGuildDAO>();
         }
 
         /// <summary>
@@ -30,8 +33,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public CharacterGuildDAO GetById(long id)
         {
-            if (_characterGuildById.ContainsKey(id))
-                return _characterGuildById[id];
+            if (m_characterGuildById.ContainsKey(id))
+                return m_characterGuildById[id];
             return base.Load("Id=@Id", new { Id = id });
         }
 
@@ -41,7 +44,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="characterGuild"></param>
         public override void OnObjectAdded(CharacterGuildDAO characterGuild)
         {
-            _characterGuildById.Add(characterGuild.Id, characterGuild);
+            m_characterGuildById.Add(characterGuild.Id, characterGuild);
         }
 
         /// <summary>
@@ -50,7 +53,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="characterGuild"></param>
         public override void OnObjectRemoved(CharacterGuildDAO characterGuild)
         {
-            _characterGuildById.Remove(characterGuild.Id);
+            m_characterGuildById.Remove(characterGuild.Id);
         }
     }
 }

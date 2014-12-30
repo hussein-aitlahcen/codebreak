@@ -43,8 +43,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private StringBuilder _entityLookCache;
-        private bool _entityLookRefresh;
+        private StringBuilder m_entityLookCache;
+        private bool m_entityLookRefresh;
 
         /// <summary>
         /// 
@@ -200,7 +200,7 @@ namespace Codebreak.Service.World.Game.Entity
                 Logger.Debug("InventoryBag::MoveItem moving item from entity to inventory : " + Entity.Name);
                 
                 item.SlotId = (int)slot;
-                _entityLookRefresh = true;
+                m_entityLookRefresh = true;
                 bool merged = AddItem(MoveQuantity(item, 1));
 
                 Entity.Statistics.UnMerge(item.GetStatistics());
@@ -252,7 +252,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 Logger.Debug("InventoryBag::MoveItem equipped an item : " + Entity.Name);
 
-                _entityLookRefresh = true;
+                m_entityLookRefresh = true;
                 var newItem = MoveQuantity(item, 1);
                 newItem.SlotId = (int)slot;
                 AddItem(newItem, false);
@@ -327,7 +327,7 @@ namespace Codebreak.Service.World.Game.Entity
         public override void Dispose()
         {
             Entity = null;
-            _entityLookCache = null;
+            m_entityLookCache = null;
 
             base.Dispose();
         }
@@ -338,9 +338,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="message"></param>
         public void SerializeAs_ActorLookMessage(StringBuilder message)
         {
-            if (_entityLookRefresh || _entityLookCache == null)
+            if (m_entityLookRefresh || m_entityLookCache == null)
             {
-                _entityLookCache = new StringBuilder();
+                m_entityLookCache = new StringBuilder();
 
                 var weapon = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_WEAPON);
                 var hat = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_HAT);
@@ -349,25 +349,25 @@ namespace Codebreak.Service.World.Game.Entity
                 var shield = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_SHIELD);
 
                 if (weapon != null)
-                    _entityLookCache.Append(weapon.TemplateId.ToString("x"));
-                _entityLookCache.Append(',');
+                    m_entityLookCache.Append(weapon.TemplateId.ToString("x"));
+                m_entityLookCache.Append(',');
                 if (hat != null)
-                    _entityLookCache.Append(hat.TemplateId.ToString("x"));
-                _entityLookCache.Append(',');
+                    m_entityLookCache.Append(hat.TemplateId.ToString("x"));
+                m_entityLookCache.Append(',');
                 if (cape != null)
-                    _entityLookCache.Append(cape.TemplateId.ToString("x"));
-                _entityLookCache.Append(',');
+                    m_entityLookCache.Append(cape.TemplateId.ToString("x"));
+                m_entityLookCache.Append(',');
                 if (pet != null)
-                    _entityLookCache.Append(pet.TemplateId.ToString("x"));
-                _entityLookCache.Append(',');
+                    m_entityLookCache.Append(pet.TemplateId.ToString("x"));
+                m_entityLookCache.Append(',');
                 if (shield != null)
-                    _entityLookCache.Append(shield.TemplateId.ToString("x"));
-                _entityLookCache.Append(',');
+                    m_entityLookCache.Append(shield.TemplateId.ToString("x"));
+                m_entityLookCache.Append(',');
 
-                _entityLookRefresh = false;
+                m_entityLookRefresh = false;
             }
 
-            message.Append(_entityLookCache.ToString());
+            message.Append(m_entityLookCache.ToString());
         }
     }
 }

@@ -461,7 +461,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private string _guildDisplayInfos;
+        private string m_guildDisplayInfos;
 
         /// <summary>
         /// 
@@ -495,9 +495,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             CharacterGuild = characterGuild;
             if (CharacterGuild != null)
-                _guildDisplayInfos = CharacterGuild.Guild.Name + ";" + CharacterGuild.Guild.DisplayEmblem;
+                m_guildDisplayInfos = CharacterGuild.Guild.Name + ";" + CharacterGuild.Guild.DisplayEmblem;
             else
-                _guildDisplayInfos = null;
+                m_guildDisplayInfos = null;
         }
 
 
@@ -827,9 +827,9 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(Aura).Append(';');
                         message.Append("").Append(';'); // DisplayEmotes
                         message.Append("").Append(';'); // EmotesTimer
-                        if (_guildDisplayInfos != null) // && CharacterGuild.Guild.IsActive)
+                        if (m_guildDisplayInfos != null) // && CharacterGuild.Guild.IsActive)
                         {
-                            message.Append(_guildDisplayInfos).Append(';');
+                            message.Append(m_guildDisplayInfos).Append(';');
                         }
                         else
                         {

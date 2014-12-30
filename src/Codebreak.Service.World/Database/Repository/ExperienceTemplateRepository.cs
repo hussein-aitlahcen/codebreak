@@ -16,14 +16,14 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, ExperienceTemplateDAO> _experienceByLevel;
+        private Dictionary<int, ExperienceTemplateDAO> m_experienceByLevel;
 
         /// <summary>
         /// 
         /// </summary>
         public ExperienceTemplateRepository()
         {
-            _experienceByLevel = new Dictionary<int, ExperienceTemplateDAO>();
+            m_experienceByLevel = new Dictionary<int, ExperienceTemplateDAO>();
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public ExperienceTemplateDAO GetByLevel(int level)
         {
-            if(_experienceByLevel.ContainsKey(level))
-                return _experienceByLevel[level];
+            if(m_experienceByLevel.ContainsKey(level))
+                return m_experienceByLevel[level];
             return null;
         }
 
@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="experienceTemplate"></param>
         public override void OnObjectAdded(ExperienceTemplateDAO experienceTemplate)
         {
-            _experienceByLevel.Add(experienceTemplate.Level, experienceTemplate);
+            m_experienceByLevel.Add(experienceTemplate.Level, experienceTemplate);
 
             base.OnObjectAdded(experienceTemplate);
         }
@@ -55,7 +55,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="obj"></param>
         public override void OnObjectRemoved(ExperienceTemplateDAO experienceTemplate)
         {
-            _experienceByLevel.Remove(experienceTemplate.Level);
+            m_experienceByLevel.Remove(experienceTemplate.Level);
 
             base.OnObjectRemoved(experienceTemplate);
         }

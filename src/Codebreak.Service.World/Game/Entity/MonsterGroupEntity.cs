@@ -108,15 +108,19 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return _monsters;
+                return m_monsters;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private StringBuilder _serializedMapInformations;
-        private List<MonsterEntity> _monsters;
+        private StringBuilder m_serializedMapInformations;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<MonsterEntity> m_monsters;
 
         /// <summary>
         /// 
@@ -125,9 +129,9 @@ namespace Codebreak.Service.World.Game.Entity
         public MonsterGroupEntity(long id, int mapId, int cellId)
             : base(EntityTypeEnum.TYPE_MONSTER_GROUP, id)
         {
-            _monsters = new List<MonsterEntity>();
+            m_monsters = new List<MonsterEntity>();
             long monsterId = -1;
-            while(_monsters.Count < 5)
+            while(m_monsters.Count < 5)
             {
                 var random = Util.Next(0, 2000);
                 var template = MonsterRepository.Instance.GetById(random);
@@ -135,12 +139,12 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     if(template.GetGrades().Count() > 0)
                     {                        
-                        _monsters.Add(new MonsterEntity(monsterId--, template.GetGrades().Last()));
+                        m_monsters.Add(new MonsterEntity(monsterId--, template.GetGrades().Last()));
                     }
                 }
             }
 
-            AggressionRange = _monsters.Max(monster => monster.Grade.GetTemplate().AggressionRange);
+            AggressionRange = m_monsters.Max(monster => monster.Grade.GetTemplate().AggressionRange);
             MapId = mapId;
             CellId = cellId;
         }
@@ -160,27 +164,27 @@ namespace Codebreak.Service.World.Game.Entity
 
                 case OperatorEnum.OPERATOR_ADD:
                 case OperatorEnum.OPERATOR_REFRESH:
-                    if (_serializedMapInformations == null)
+                    if (m_serializedMapInformations == null)
                     {
-                        string mobIds = string.Join(",", _monsters.Select(monster => monster.Grade.MonsterId.ToString()));
-                        string mobGfxs = string.Join(",", _monsters.Select(monster => monster.Grade.GetTemplate().GfxId + "^100"));
-                        string mobLevels = string.Join(",", _monsters.Select(monster => monster.Grade.Level.ToString()));
-                        string mobColors = string.Join("", _monsters.Select(monster => monster.Grade.GetTemplate().Colors + ";0,0,0,0;"));
+                        string mobIds = string.Join(",", m_monsters.Select(monster => monster.Grade.MonsterId.ToString()));
+                        string mobGfxs = string.Join(",", m_monsters.Select(monster => monster.Grade.GetTemplate().GfxId + "^100"));
+                        string mobLevels = string.Join(",", m_monsters.Select(monster => monster.Grade.Level.ToString()));
+                        string mobColors = string.Join("", m_monsters.Select(monster => monster.Grade.GetTemplate().Colors + ";0,0,0,0;"));
 
-                        _serializedMapInformations = new StringBuilder();
-                        _serializedMapInformations.Append(Id).Append(";");
-                        _serializedMapInformations.Append(mobIds).Append(";");
-                        _serializedMapInformations.Append((int)EntityTypeEnum.TYPE_MONSTER_GROUP).Append(';');
-                        _serializedMapInformations.Append(mobGfxs).Append(";");
-                        _serializedMapInformations.Append(mobLevels).Append(";");
-                        _serializedMapInformations.Append(mobColors);
+                        m_serializedMapInformations = new StringBuilder();
+                        m_serializedMapInformations.Append(Id).Append(";");
+                        m_serializedMapInformations.Append(mobIds).Append(";");
+                        m_serializedMapInformations.Append((int)EntityTypeEnum.TYPE_MONSTER_GROUP).Append(';');
+                        m_serializedMapInformations.Append(mobGfxs).Append(";");
+                        m_serializedMapInformations.Append(mobLevels).Append(";");
+                        m_serializedMapInformations.Append(mobColors);
                     }
 
                     // cell/orientation/bonus may change
                     message.Append(CellId).Append(";");
                     message.Append(Orientation).Append(';');
                     message.Append('0').Append(';');
-                    message.Append(_serializedMapInformations.ToString());
+                    message.Append(m_serializedMapInformations.ToString());
                     break;
             }
         }

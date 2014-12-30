@@ -8,31 +8,53 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Database.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class MapTriggerRepository : Repository<MapTriggerRepository, MapTriggerDAO>
     {
-        private Dictionary<int, List<MapTriggerDAO>> _triggersByMap;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, List<MapTriggerDAO>> m_triggersByMap;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public MapTriggerRepository()
         {
-            _triggersByMap = new Dictionary<int, List<MapTriggerDAO>>();
+            m_triggersByMap = new Dictionary<int, List<MapTriggerDAO>>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mapTrigger"></param>
         public override void OnObjectAdded(MapTriggerDAO mapTrigger)
         {
-            if (!_triggersByMap.ContainsKey(mapTrigger.MapId))
-                _triggersByMap.Add(mapTrigger.MapId, new List<MapTriggerDAO>());
-            _triggersByMap[mapTrigger.MapId].Add(mapTrigger);
+            if (!m_triggersByMap.ContainsKey(mapTrigger.MapId))
+                m_triggersByMap.Add(mapTrigger.MapId, new List<MapTriggerDAO>());
+            m_triggersByMap[mapTrigger.MapId].Add(mapTrigger);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mapTrigger"></param>
         public override void OnObjectRemoved(MapTriggerDAO mapTrigger)
         {
-            _triggersByMap.Remove(mapTrigger.MapId);
+            m_triggersByMap.Remove(mapTrigger.MapId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mapId"></param>
+        /// <returns></returns>
         public List<MapTriggerDAO> GetTriggers(int mapId)
         {
-            if (_triggersByMap.ContainsKey(mapId))
-                return _triggersByMap[mapId];
+            if (m_triggersByMap.ContainsKey(mapId))
+                return m_triggersByMap[mapId];
             return new List<MapTriggerDAO>();
         }
     }

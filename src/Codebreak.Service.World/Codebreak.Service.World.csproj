@@ -78,10 +78,10 @@
     <Compile Include="Database\Repository\NpcQuestionRepository.cs" />
     <Compile Include="Database\Repository\NpcResponseRepository.cs" />
     <Compile Include="Database\Repository\NpcTemplateRepository.cs" />
-    <Compile Include="Database\Repository\OLD_REPOSITORIES.cs" />
     <Compile Include="Database\Repository\SpellBookEntryRepository.cs" />
     <Compile Include="Database\Repository\TaxCollectorRepository.cs" />
     <Compile Include="Database\Structure\AreaDAO.cs" />
+    <Compile Include="Database\Structure\AuctionHouseDAO.cs" />
     <Compile Include="Database\Structure\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
@@ -97,7 +97,6 @@
     <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
     <Compile Include="Database\Structure\NpcResponseDAO.cs" />
     <Compile Include="Database\Structure\NpcTemplateDAO.cs" />
-    <Compile Include="Database\Structure\OLD_DATAS.cs" />
     <Compile Include="Database\Structure\SpellBookEntryDAO.cs" />
     <Compile Include="Database\Structure\SubAreaDAO.cs" />
     <Compile Include="Database\Structure\SuperAreaDAO.cs" />
@@ -127,6 +126,7 @@
     <Compile Include="Game\Area\AreaInstance.cs" />
     <Compile Include="Game\Area\SubAreaInstance.cs" />
     <Compile Include="Game\Area\SuperAreaInstance.cs" />
+    <Compile Include="Game\AuctionHouse\AuctionHouseInstance.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\EntityInventory.cs" />
@@ -137,7 +137,9 @@
     <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
+    <Compile Include="Game\Exchange\EntityExchange.cs" />
     <Compile Include="Game\Exchange\ExchangeBase.cs" />
+    <Compile Include="Game\Exchange\NpcExchange.cs" />
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
     <Compile Include="Game\Exchange\ShopExchange.cs" />
     <Compile Include="Game\Fight\AI\Action\AIAction.cs" />
@@ -258,6 +260,7 @@
     <Compile Include="Manager\AccountManager.cs" />
     <Compile Include="Manager\ActionEffectManager.cs" />
     <Compile Include="Manager\AreaManager.cs" />
+    <Compile Include="Manager\AuctionHouseManager.cs" />
     <Compile Include="Manager\EntityManager.cs" />
     <Compile Include="Manager\ExperienceManager.cs" />
     <Compile Include="Game\Map\FightManager.cs" />

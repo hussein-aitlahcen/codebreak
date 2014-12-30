@@ -13,16 +13,16 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class GuildRepository : Repository<GuildRepository, GuildDAO>
     {
-        private Dictionary<long, GuildDAO> _guildById;
-        private Dictionary<string, GuildDAO> _guildByName;
+        private Dictionary<long, GuildDAO> m_guildById;
+        private Dictionary<string, GuildDAO> m_guildByName;
 
         /// <summary>
         /// 
         /// </summary>
         public GuildRepository()
         {
-            _guildById = new Dictionary<long, GuildDAO>();
-            _guildByName = new Dictionary<string, GuildDAO>();
+            m_guildById = new Dictionary<long, GuildDAO>();
+            m_guildByName = new Dictionary<string, GuildDAO>();
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace Codebreak.Service.World.Database.Repository
         public GuildDAO GetByName(string name)
         {
             name = name.ToLower();
-            if (_guildByName.ContainsKey(name))
-                return _guildByName[name];
+            if (m_guildByName.ContainsKey(name))
+                return m_guildByName[name];
             return null;
         }
 
@@ -45,8 +45,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public GuildDAO GetById(long id)
         {
-            if (_guildById.ContainsKey(id))
-                return _guildById[id];
+            if (m_guildById.ContainsKey(id))
+                return m_guildById[id];
             return null;
         }
         
@@ -56,8 +56,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="guild"></param>
         public override void OnObjectAdded(GuildDAO guild)
         {
-            _guildById.Add(guild.Id, guild);
-            _guildByName.Add(guild.Name.ToLower(), guild);
+            m_guildById.Add(guild.Id, guild);
+            m_guildByName.Add(guild.Name.ToLower(), guild);
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="obj"></param>
         public override void OnObjectRemoved(GuildDAO guild)
         {
-            _guildById.Remove(guild.Id);
-            _guildByName.Remove(guild.Name.ToLower());
+            m_guildById.Remove(guild.Id);
+            m_guildByName.Remove(guild.Name.ToLower());
         }
     }
 }

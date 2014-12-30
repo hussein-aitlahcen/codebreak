@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Entity
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class InventoryBagFactory : Singleton<InventoryBagFactory>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public InventoryBag Create(EntityBase entity)
         {
             switch(entity.Type)

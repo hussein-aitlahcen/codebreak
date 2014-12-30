@@ -13,6 +13,9 @@ using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Frame
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class BasicFrame : FrameBase<BasicFrame, CharacterEntity, string>
     {
         /// <summary>

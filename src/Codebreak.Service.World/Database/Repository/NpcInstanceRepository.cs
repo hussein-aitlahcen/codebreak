@@ -13,12 +13,5 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class NpcInstanceRepository : Repository<NpcInstanceRepository, NpcInstanceDAO>
     {
-        public override void OnObjectAdded(NpcInstanceDAO instance)
-        {
-        }
-
-        public override void OnObjectRemoved(NpcInstanceDAO instance)
-        {
-        }
     }
 }

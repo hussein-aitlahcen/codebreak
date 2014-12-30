@@ -8,29 +8,51 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Database.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class NpcTemplateRepository : Repository<NpcTemplateRepository, NpcTemplateDAO>
     {
-        private Dictionary<int, NpcTemplateDAO> _templateById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, NpcTemplateDAO> m_templateById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public NpcTemplateRepository()
         {
-            _templateById = new Dictionary<int, NpcTemplateDAO>();
+            m_templateById = new Dictionary<int, NpcTemplateDAO>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="template"></param>
         public override void OnObjectAdded(NpcTemplateDAO template)
         {
-            _templateById.Add(template.Id, template);
+            m_templateById.Add(template.Id, template);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="template"></param>
         public override void OnObjectRemoved(NpcTemplateDAO template)
         {
-            _templateById.Remove(template.Id);
+            m_templateById.Remove(template.Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public NpcTemplateDAO GetTemplate(int id)
         {
-            if (_templateById.ContainsKey(id))
-                return _templateById[id];
+            if (m_templateById.ContainsKey(id))
+                return m_templateById[id];
             return null;
         }
     }

@@ -8,29 +8,51 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Database.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class ItemTemplateRepository : Repository<ItemTemplateRepository, ItemTemplateDAO>
     {
-        private Dictionary<int, ItemTemplateDAO> _templateById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, ItemTemplateDAO> m_templateById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ItemTemplateRepository()
         {
-            _templateById = new Dictionary<int, ItemTemplateDAO>();
+            m_templateById = new Dictionary<int, ItemTemplateDAO>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="template"></param>
         public override void OnObjectAdded(ItemTemplateDAO template)
         {
-            _templateById.Add(template.Id, template);
+            m_templateById.Add(template.Id, template);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="template"></param>
         public override void OnObjectRemoved(ItemTemplateDAO template)
         {
-            _templateById.Remove(template.Id);
+            m_templateById.Remove(template.Id);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
         public ItemTemplateDAO GetTemplate(int templateId)
         {
-            if(_templateById.ContainsKey(templateId))
-                return _templateById[templateId];
+            if(m_templateById.ContainsKey(templateId))
+                return m_templateById[templateId];
             return null;
         }
     }

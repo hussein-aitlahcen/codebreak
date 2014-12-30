@@ -4,58 +4,109 @@ using Codebreak.Service.World.Database.Structure;
 
 namespace Codebreak.Service.World.Database.Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class SuperAreaRepository : Repository<SuperAreaRepository, SuperAreaDAO>
     {
-        private Dictionary<int, SuperAreaDAO> _superAreaById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, SuperAreaDAO> m_superAreaById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SuperAreaRepository()
         {
-            _superAreaById = new Dictionary<int, SuperAreaDAO>();
+            m_superAreaById = new Dictionary<int, SuperAreaDAO>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="superArea"></param>
         public override void OnObjectAdded(SuperAreaDAO superArea)
         {
-            _superAreaById.Add(superArea.Id, superArea);
+            m_superAreaById.Add(superArea.Id, superArea);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="superArea"></param>
         public override void OnObjectRemoved(SuperAreaDAO superArea)
         {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class AreaRepository : Repository<AreaRepository, AreaDAO>
     {
-        private Dictionary<int, AreaDAO> _areaById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, AreaDAO> m_areaById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public AreaRepository()
         {
-            _areaById = new Dictionary<int, AreaDAO>();
+            m_areaById = new Dictionary<int, AreaDAO>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="area"></param>
         public override void OnObjectAdded(AreaDAO area)
         {
-            _areaById.Add(area.Id, area);
+            m_areaById.Add(area.Id, area);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="area"></param>
         public override void OnObjectRemoved(AreaDAO area)
         {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class SubAreaRepository : Repository<SubAreaRepository, SubAreaDAO>
     {
-        private Dictionary<int, SubAreaDAO> _subAreaById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, SubAreaDAO> m_subAreaById;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SubAreaRepository()
         {
-            _subAreaById = new Dictionary<int, SubAreaDAO>();
+            m_subAreaById = new Dictionary<int, SubAreaDAO>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subArea"></param>
         public override void OnObjectAdded(SubAreaDAO subArea)
         {
-			_subAreaById.Add (subArea.Id, subArea);
+			m_subAreaById.Add (subArea.Id, subArea);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subArea"></param>
         public override void OnObjectRemoved(SubAreaDAO subArea)
         {
         }

@@ -8,13 +8,23 @@ using Codebreak.Service.World.Network;
 
 namespace Codebreak.Service.World.Game.Area
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed  class SuperAreaInstance : MessageDispatcher
     {
-        private SuperAreaDAO _superAreaRecord;
+        /// <summary>
+        /// 
+        /// </summary>
+        private SuperAreaDAO m_superAreaRecord;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="record"></param>
         public SuperAreaInstance(SuperAreaDAO record)
         {
-            _superAreaRecord = record;
+            m_superAreaRecord = record;
         }
     }
 }
