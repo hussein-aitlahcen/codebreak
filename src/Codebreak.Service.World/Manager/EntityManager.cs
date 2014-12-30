@@ -13,21 +13,21 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class EntityManager : Singleton<EntityManager>
     {
-        private Dictionary<long, CharacterEntity> _characterById;
-        private Dictionary<string, CharacterEntity> _characterByName;
-        private Dictionary<long, NonPlayerCharacterEntity> _npcById;
-        private Dictionary<long, TaxCollectorEntity> _taxCollectorById;
-        private long _onlinePlayers = 0;
+        private Dictionary<long, CharacterEntity> m_characterById;
+        private Dictionary<string, CharacterEntity> m_characterByName;
+        private Dictionary<long, NonPlayerCharacterEntity> m_npcById;
+        private Dictionary<long, TaxCollectorEntity> m_taxCollectorById;
+        private long m_onlinePlayers = 0;
 
         /// <summary>
         /// 
         /// </summary>
         public EntityManager()
         {
-            _characterById = new Dictionary<long, CharacterEntity>();
-            _characterByName = new Dictionary<string, CharacterEntity>();
-            _npcById = new Dictionary<long, NonPlayerCharacterEntity>();
-            _taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
+            m_characterById = new Dictionary<long, CharacterEntity>();
+            m_characterByName = new Dictionary<string, CharacterEntity>();
+            m_npcById = new Dictionary<long, NonPlayerCharacterEntity>();
+            m_taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
         }
 
         /// <summary>
@@ -36,11 +36,11 @@ namespace Codebreak.Service.World.Manager
         /// <param name="npcDAO"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public NonPlayerCharacterEntity CreateNpc(NpcInstanceDAO npcDAO, long id)
+        public NonPlayerCharacterEntity CreateNpc(NpcInstanceDAO npcDAO)
         {
-            var npc = new NonPlayerCharacterEntity(npcDAO, id);
+            var npc = new NonPlayerCharacterEntity(npcDAO, npcDAO.Id);
             npc.StartAction(GameActionTypeEnum.MAP);
-            _npcById.Add(npc.Id, npc);
+            m_npcById.Add(npc.Id, npc);
             return npc;
         }
 
@@ -54,7 +54,7 @@ namespace Codebreak.Service.World.Manager
         {
             var taxCollector = new TaxCollectorEntity(guild, taxCollectorDAO);
             taxCollector.StartAction(GameActionTypeEnum.MAP);
-            _taxCollectorById.Add(taxCollector.Id, taxCollector);
+            m_taxCollectorById.Add(taxCollector.Id, taxCollector);
             return taxCollector;
         }
        
@@ -64,7 +64,7 @@ namespace Codebreak.Service.World.Manager
         /// <param name="taxCollector"></param>
         public void RemoveTaxCollector(TaxCollectorEntity taxCollector)
         {
-            _taxCollectorById.Remove(taxCollector.Id);
+            m_taxCollectorById.Remove(taxCollector.Id);
         }
 
         /// <summary>
@@ -78,10 +78,10 @@ namespace Codebreak.Service.World.Manager
             var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, character.Id);
             if (guildMember != null)
                 guildMember.CharacterConnected(character);
-            _characterById.Add(character.Id, character);
-            _characterByName.Add(character.Name.ToLower(), character);
-            _onlinePlayers++;
-            Logger.Info("EntityManager online players : " + _onlinePlayers);            
+            m_characterById.Add(character.Id, character);
+            m_characterByName.Add(character.Name.ToLower(), character);
+            m_onlinePlayers++;
+            Logger.Info("EntityManager online players : " + m_onlinePlayers);            
             return character;
         }
         
@@ -127,13 +127,13 @@ namespace Codebreak.Service.World.Manager
         {
             WorldService.Instance.AddMessage(() =>
                 {
-                    _onlinePlayers--;
-                    _characterById.Remove(character.Id);
-                    _characterByName.Remove(character.Name.ToLower());
+                    m_onlinePlayers--;
+                    m_characterById.Remove(character.Id);
+                    m_characterByName.Remove(character.Name.ToLower());
 
                     character.Dispose();
 
-                    Logger.Info("EntityManager online players : " + _onlinePlayers);
+                    Logger.Info("EntityManager online players : " + m_onlinePlayers);
                 });
         }
 
@@ -144,8 +144,20 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public CharacterEntity GetCharacter(long id)
         {
-            if (_characterById.ContainsKey(id))
-                return _characterById[id];
+            if (m_characterById.ContainsKey(id))
+                return m_characterById[id];
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public NonPlayerCharacterEntity GetNpc(long id)
+        {
+            if (m_npcById.ContainsKey(id))
+                return m_npcById[id];
             return null;
         }
 
@@ -157,8 +169,8 @@ namespace Codebreak.Service.World.Manager
         public CharacterEntity GetCharacter(string name)
         {
             name = name.ToLower();
-            if (_characterByName.ContainsKey(name))
-                return _characterByName[name];
+            if (m_characterByName.ContainsKey(name))
+                return m_characterByName[name];
             return null;
         }
     }

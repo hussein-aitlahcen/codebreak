@@ -117,6 +117,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public virtual long Kamas
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract int CellId
         {
             get;
@@ -283,7 +292,7 @@ namespace Codebreak.Service.World.Game.Entity
         public InventoryBag Inventory
         {
             get;
-            protected set;
+            private set;
         }
 
         /// <summary>
@@ -319,6 +328,7 @@ namespace Codebreak.Service.World.Game.Entity
             Type = type;
             Orientation = 1;
 
+            Inventory = new EntityInventory(this);
             ShopItems = new List<ItemTemplateDAO>();
             m_chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);
@@ -518,7 +528,8 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.MAP_TELEPORT:
                     StopAction(GameActionTypeEnum.MAP);
                     StopAction(GameActionTypeEnum.MAP_TELEPORT);
-                    Map.AddUpdatable(this);
+                    if(Map != null)
+                        Map.AddUpdatable(this);
                     break;
             }
         }

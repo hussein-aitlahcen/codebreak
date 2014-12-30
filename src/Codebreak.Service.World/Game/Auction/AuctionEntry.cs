@@ -81,11 +81,22 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        public DateTime InitialDate
+        public DateTime ExpireDate
         {
             get
             {
-                return m_databaseRecord.InitialDate;
+                return m_databaseRecord.ExpireDate;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int HoursLeft
+        {
+            get
+            {
+                return (int)Math.Floor(ExpireDate.Subtract(DateTime.Now).TotalHours);
             }
         }
 

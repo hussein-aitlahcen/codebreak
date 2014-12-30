@@ -18,8 +18,8 @@ namespace Codebreak.Service.World.Game.Exchange
         EXCHANGE_STORAGE = 5,
         EXCHANGE_TAXCOLLECTOR = 8,
         EXCHANGE_PERSONAL_SHOP_EDIT = 6,
-        EXCHANGE_BIGSTORE_SELL = 10,
-        EXCHANGE_BIGSTORE_BUY = 11,
+        EXCHANGE_AUCTION_HOUSE_SELL = 10,
+        EXCHANGE_AUCTION_HOUSE_BUY = 11,
         EXCHANGE_MOUNT_STORAGE = 16,
         EXCHANGE_MOUNT = 15
     }
@@ -55,7 +55,7 @@ namespace Codebreak.Service.World.Game.Exchange
             return "";
         }
 
-        public virtual void AddItem(EntityBase actor, long guid, int quantity)
+        public virtual void AddItem(EntityBase actor, long guid, int quantity, long price = -1)
         {
         }
 
@@ -71,7 +71,7 @@ namespace Codebreak.Service.World.Game.Exchange
         {
         }
 
-        public virtual void SellItem(EntityBase actor, long guid, int quantity)
+        public virtual void SellItem(EntityBase actor, long guid, int quantity, long price = -1)
         {
         }
     }

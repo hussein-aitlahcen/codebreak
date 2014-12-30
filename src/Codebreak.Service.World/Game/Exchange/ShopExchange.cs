@@ -38,16 +38,7 @@ namespace Codebreak.Service.World.Game.Exchange
             base.Create();
             base.Dispatch(WorldMessage.EXCHANCE_ITEMS_LIST(m_shop));
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        protected override string SerializeAs_ExchangeCreate()
-        {
-            return m_shop.Id.ToString();
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -98,7 +89,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override void SellItem(EntityBase entity, long guid, int quantity)
+        public override void SellItem(EntityBase entity, long guid, int quantity, long price = -1)
         {
             if (quantity < 1)
             {
@@ -119,10 +110,19 @@ namespace Codebreak.Service.World.Game.Exchange
             if (quantity > item.Quantity)
                 quantity = item.Quantity;
 
-            var price = (item.GetTemplate().Price / 10) * quantity;
+            var realPrice = (item.GetTemplate().Price / 10) * quantity;
 
             entity.Inventory.RemoveItem(guid, quantity);
-            entity.Inventory.AddKamas(price);
+            entity.Inventory.AddKamas(realPrice);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override string SerializeAs_ExchangeCreate()
+        {
+            return m_shop.Id.ToString();
         }
     }
 }

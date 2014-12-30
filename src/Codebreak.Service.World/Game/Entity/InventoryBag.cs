@@ -17,10 +17,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public abstract long Kamas
+        public long Kamas
         {
-            get;
-            set;
+            get
+            {
+                return Entity.Kamas;
+            }
+            set
+            {
+                Entity.Kamas = value;
+            }
         }
 
         /// <summary>
@@ -55,6 +61,16 @@ namespace Codebreak.Service.World.Game.Entity
             Entity = entity;
 
             AddHandler(entity.Dispatch);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Initialize()
+        {
+            foreach (var item in Items)
+                if (item.IsEquiped())
+                    Entity.Statistics.Merge(item.GetStatistics());
         }
         
         /// <summary>

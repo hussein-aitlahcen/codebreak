@@ -531,7 +531,7 @@ namespace Codebreak.Service.World.Game.Guild
 
                             if (member.Character.Inventory.Kamas < TaxCollectorPrice)
                             {
-                                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGHT_KAMAS, TaxCollectorPrice));
+                                member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS, TaxCollectorPrice));
                                 return;
                             }
 

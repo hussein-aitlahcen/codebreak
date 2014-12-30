@@ -9,6 +9,12 @@ namespace Codebreak.Service.World.Database.Structure
     [Table("npcinstance")]
     public sealed class NpcInstanceDAO : DataAccessObject<NpcInstanceDAO>
     {
+        [Key]
+        public int Id
+        {
+            get;
+            set;
+        }
         public int MapId
         {
             get;

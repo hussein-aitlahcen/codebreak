@@ -64,9 +64,32 @@ namespace Codebreak.Framework.Database
             {
                 try
                 {
-                    return connection.Insert<T>(dataObject) != 0;
+                    connection.Insert<T>(dataObject);
+                    return true;
                 }
                 catch(Exception ex)
+                {
+                    Logger.Error("Fatal errror while inserting in database : " + ex.Message);
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataObject"></param>
+        public bool InsertWithKey<T>(T dataObject) where T : DataAccessObject<T>, new()
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    connection.InsertWithKey<T>(dataObject);
+                    return true;
+                }
+                catch (Exception ex)
                 {
                     Logger.Error("Fatal errror while inserting in database : " + ex.Message);
                     return false;

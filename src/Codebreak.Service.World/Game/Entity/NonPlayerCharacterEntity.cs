@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Auction;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Network;
 using System;
@@ -149,6 +150,29 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public AuctionHouseInstance AuctionHouse
+        {
+            get
+            {
+                return m_auctionInstance;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int TemplateId
+        {
+            get
+            {
+                return m_npcRecord.TemplateId;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private AuctionHouseInstance m_auctionInstance;
         private NpcInstanceDAO m_npcRecord;
         private NpcQuestionDAO m_initialQuestion;
         private StringBuilder m_cachedEntityMapInformations, m_cachedShopListInformations;
@@ -166,6 +190,15 @@ namespace Codebreak.Service.World.Game.Entity
             Orientation = m_npcRecord.Orientation;
             ShopItems.AddRange(npcDAO.GetTemplate().GetShopList());
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instance"></param>
+        public void SetAuctionHouse(AuctionHouseInstance instance)
+        {
+            m_auctionInstance = instance;
+        }
 
         /// <summary>
         /// 
@@ -181,12 +214,9 @@ namespace Codebreak.Service.World.Game.Entity
                     Can = ShopItems.Count > 0;
                     break;
 
-                case ExchangeTypeEnum.EXCHANGE_BIGSTORE_BUY:
-
-                    break;
-
-                case ExchangeTypeEnum.EXCHANGE_BIGSTORE_SELL:
-
+                case ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_BUY:
+                case ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_SELL:
+                    Can = AuctionHouse != null;
                     break;                    
             }
             return base.CanBeExchanged(exchangeType) && Can;

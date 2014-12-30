@@ -70,7 +70,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override void AddItem(EntityBase entity, long guid, int quantity)
+        public override void AddItem(EntityBase entity, long guid, int quantity, long price = -1)
         {
             if (quantity < 1)
                 return;

@@ -95,6 +95,7 @@ namespace Codebreak.Service.World
             AreaManager.Instance.Initialize();
             MapManager.Instance.Initialize();
             NpcManager.Instance.Initialize();
+            AuctionHouseManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
             

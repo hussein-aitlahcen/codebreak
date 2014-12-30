@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Database.Structure
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Table("auctionhouse")]
     public sealed class AuctionHouseDAO : DataAccessObject<AuctionHouseDAO>
     {
         [Key]
         public int Id
-        {
-            get;
-            set;
-        }
-
-        public int MapId
         {
             get;
             set;

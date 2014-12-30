@@ -108,7 +108,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public long Kamas
+        public override long Kamas
         {
             get
             {
@@ -344,6 +344,17 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public long AccountId
+        {
+            get
+            {
+                return DatabaseRecord.AccountId;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public GuildMember CharacterGuild
         {
             get;
@@ -469,11 +480,11 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInviterPlayerId = -1;
             DatabaseRecord = characterDAO;
 
-            Statistics = new GenericStats(characterDAO);            
-            Inventory = InventoryBagFactory.Instance.Create(this);
+            Statistics = new GenericStats(characterDAO);
             Spells = SpellBookFactory.Instance.Create(this);
-
             FrameManager = new FrameManager<CharacterEntity, string>(this);
+
+            Inventory.Initialize();
         }
 
         /// <summary>
@@ -527,7 +538,6 @@ namespace Codebreak.Service.World.Game.Entity
         public void GuildCreationOpen()
         {
             CurrentAction = new GameGuildCreationAction(this);
-
             StartAction(GameActionTypeEnum.GUILD_CREATE);
         }
 
@@ -574,7 +584,6 @@ namespace Codebreak.Service.World.Game.Entity
         public void ExchangeShop(EntityBase entity)
         {
             CurrentAction = new GameShopExchangeAction(this, entity);
-
             StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
@@ -584,7 +593,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="entity"></param>
         public void ExchangeAuctionHouseBuy(NonPlayerCharacterEntity entity)
         {
-
+            CurrentAction = new GameAuctionHouseBuyAction(this, entity);
+            StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
         /// <summary>
@@ -593,7 +603,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="entity"></param>
         public void ExchangeAuctionHouseSell(NonPlayerCharacterEntity entity)
         {
-
+            CurrentAction = new GameAuctionHouseSellAction(this, entity);
+            StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
         /// <summary>
@@ -602,7 +613,6 @@ namespace Codebreak.Service.World.Game.Entity
         public void DefendTaxCollector()
         {
             CurrentAction = new GameTaxCollectorDefenderAction(this);
-
             StartAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION);
         }
 
@@ -702,14 +712,20 @@ namespace Codebreak.Service.World.Game.Entity
                     }
                     break;
 
-                case GameActionTypeEnum.NPC_DIALOG:
+                    
+                case GameActionTypeEnum.NPC_DIALOG:                          
+                    FrameManager.RemoveFrame(GameActionFrame.Instance);
+                    FrameManager.RemoveFrame(InventoryFrame.Instance);
+                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.AddFrame(NpcDialogFrame.Instance);
+                    break;
+
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:                    
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(InventoryFrame.Instance);
                     FrameManager.RemoveFrame(GameMapFrame.Instance);
-                    FrameManager.AddFrame(NpcDialogFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.FIGHT:
@@ -742,13 +758,18 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.NPC_DIALOG:
+                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(NpcDialogFrame.Instance);
+                    break;
+
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
                     FrameManager.AddFrame(GameMapFrame.Instance);
-                    FrameManager.RemoveFrame(NpcDialogFrame.Instance);
                     break;
             }
         }
@@ -768,15 +789,20 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.AddFrame(GameInformationFrame.Instance);
                     Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
-
+                    
                 case GameActionTypeEnum.NPC_DIALOG:
+                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(NpcDialogFrame.Instance);
+                    break;
+
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                 case GameActionTypeEnum.GUILD_CREATE:
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
                     FrameManager.AddFrame(GameMapFrame.Instance);
-                    FrameManager.RemoveFrame(NpcDialogFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.MAP:

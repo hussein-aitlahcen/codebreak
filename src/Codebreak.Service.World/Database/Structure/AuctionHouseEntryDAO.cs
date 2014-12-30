@@ -11,6 +11,7 @@ namespace Codebreak.Service.World.Database.Structure
     /// <summary>
     /// 
     /// </summary>
+    [Table("auctionhouseentry")]
     public sealed class AuctionHouseEntryDAO : DataAccessObject<AuctionHouseEntryDAO>
     {
         /// <summary>
@@ -53,7 +54,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        public DateTime InitialDate
+        public DateTime ExpireDate
         {
             get;
             set;
@@ -67,7 +68,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="ownerId"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public static AuctionHouseEntryDAO Create(long itemId, int houseId, long ownerId, long price)
+        public static AuctionHouseEntryDAO Create(long itemId, int houseId, long ownerId, long price, long time)
         {
             var entry = new AuctionHouseEntryDAO()
             {
@@ -75,9 +76,9 @@ namespace Codebreak.Service.World.Database.Structure
                 AuctionHouseId = houseId,
                 OwnerId = ownerId,
                 Price = price,
-                InitialDate = DateTime.Now
+                ExpireDate = DateTime.Now.AddHours((double)time),
             };
-            if (!AuctionHouseEntryRepository.Instance.Insert(entry))
+            if (!AuctionHouseEntryRepository.Instance.InsertWithKey(entry))
                 return null;
             return entry;
         }

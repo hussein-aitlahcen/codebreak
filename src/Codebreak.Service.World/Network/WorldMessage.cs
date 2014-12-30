@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Codebreak.WorldService;
 using System.Drawing;
 using Codebreak.Service.World.Game.Guild;
+using Codebreak.Service.World.Game.Auction;
 
 namespace Codebreak.Service.World.Network
 {
@@ -64,8 +65,11 @@ namespace Codebreak.Service.World.Network
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
 
+        ERROR_AUCTION_HOUSE_TOO_MANY_ITEMS = 66,
+        ERROR_INVALID_PRICE = 99,
+        ERROR_NOT_ENOUGH_KAMAS_FOR_TAXE = 65,
         ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED = 168,
-        ERROR_NOT_ENOUGHT_KAMAS = 128,
+        ERROR_NOT_ENOUGH_KAMAS = 128,
         ERROR_YOU_ARE_AWAY = 116,
         ERROR_GUILD_NOT_ENOUGH_RIGHTS = 101,
         ERROR_WORLD_SAVING = 164,
@@ -1891,6 +1895,54 @@ namespace Codebreak.Service.World.Network
         public static string DIALOG_QUESTION(int questionId, string parameters, IEnumerable<int> responseIds)
         {
             return "DQ" + questionId + ";" + parameters + "|" + string.Join(";", responseIds);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entries"></param>
+        /// <returns></returns>
+        public static string AUCTION_HOUSE_AUCTION_OWNER_LIST(IEnumerable<AuctionEntry> entries)
+        {
+            StringBuilder message = new StringBuilder("EL");
+            foreach (var entry in entries)
+            {
+                message.Append(entry.Item.Id).Append(';');
+                message.Append(entry.Item.Quantity).Append(';');
+                message.Append(entry.Item.TemplateId).Append(';');
+                message.Append(entry.Item.StringEffects).Append(';');
+                message.Append(entry.Price).Append(';');
+                message.Append(entry.HoursLeft).Append('|');
+            }
+            if (message.Length > 2)
+                message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static string AUCTION_HOUSE_TEMPLATE_LIST(int type, IEnumerable<int> templates)
+        {
+            return "EHL" + type + "|" + String.Join(";", templates);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="entries"></param>
+        /// <returns></returns>
+        public static string AUCTION_HOUSE_AUCTION_LIST(int templateId, IEnumerable<AuctionCategory> entries)
+        {
+            var message = new StringBuilder("EHl").Append(templateId);
+            foreach(var entry in entries)
+            {
+                message.Append(entry.SerializeAs_BuyExchange());
+            }
+            return message.ToString();
         }
     }
 }

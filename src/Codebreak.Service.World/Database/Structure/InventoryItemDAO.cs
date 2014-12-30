@@ -105,10 +105,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         public GenericStats GetStatistics()
         {
-            if (_statistics == null)
-            {
-                _statistics = GenericStats.Deserialize(Effects);
-            }
+            if (_statistics == null)            
+                _statistics = GenericStats.Deserialize(Effects);            
             return _statistics;
         }
 

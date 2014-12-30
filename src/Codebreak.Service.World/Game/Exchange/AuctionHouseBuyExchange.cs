@@ -11,36 +11,16 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuctionHouseBuyExchange : ExchangeBase
+    public sealed class AuctionHouseBuyExchange : AuctionHouseExchange
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public CharacterEntity Character
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public AuctionHouseInstance AuctionHouse
-        {
-            get;
-            private set;
-        }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="character"></param>
         /// <param name="npc"></param>
-        public AuctionHouseBuyExchange(CharacterEntity character, AuctionHouseInstance auctionHouse)
-            : base(ExchangeTypeEnum.EXCHANGE_BIGSTORE_BUY)
+        public AuctionHouseBuyExchange(CharacterEntity character, NonPlayerCharacterEntity npc)
+            : base(ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_BUY, character, npc)
         {
-            Character = character;
-            AuctionHouse = auctionHouse;
         }
 
         /// <summary>
@@ -49,10 +29,9 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="templateId"></param>
         /// <param name="quantity"></param>
-        /// <param name="price"></param>
-        public void BuyItem(EntityBase actor, int itemId, int quantity, long price)
+        public override void BuyItem(EntityBase actor, int templateId, int quantity)
         {
-
+            base.BuyItem(actor, templateId, quantity);
         }
     }
 }

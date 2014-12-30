@@ -158,6 +158,48 @@ namespace Codebreak.Framework.Database
           }
           return name;
       }
+
+      /// <summary>
+      /// Inserts an entity into table "Ts" and returns identity id.
+      /// </summary>
+      /// <param name="connection">Open SqlConnection</param>
+      /// <param name="entityToInsert">Entity to insert</param>
+      /// <returns>Identity of inserted entity</returns>
+      public static long InsertWithKey<T>(this IDbConnection connection, T entityToInsert, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+      {
+          var type = typeof(T);
+
+          var name = GetTableName(type);
+
+          var sbColumnList = new StringBuilder(null);
+          ﻿  ﻿  ﻿
+			var allProperties = TypePropertiesCache(type);
+            for (var i = 0; i < allProperties.Count(); i++)
+            {
+                var property = allProperties.ElementAt(i);
+﻿  ﻿  ﻿  ﻿
+				sbColumnList.AppendFormat("{0}", property.Name);
+                if (i < allProperties.Count() - 1)﻿  ﻿  ﻿  ﻿  ﻿
+					sbColumnList.Append(", ");
+            }
+﻿  ﻿  ﻿
+			var sbParameterList = new StringBuilder(null);
+﻿  ﻿  ﻿
+			for (var i = 0; i < allProperties.Count(); i++)
+            {
+                var property = allProperties.ElementAt(i);
+                sbParameterList.AppendFormat("@{0}", property.Name);
+                if (i < allProperties.Count() - 1)
+                    sbParameterList.Append(", ");
+            }
+﻿  ﻿  ﻿
+			ISqlAdapter adapter = GetFormatter(connection);
+﻿  ﻿  ﻿
+			int id = adapter.Insert(connection, transaction, commandTimeout, name, sbColumnList.ToString(), sbParameterList.ToString(), new List<PropertyInfo>(), entityToInsert);
+﻿  ﻿  ﻿
+			return id;
+      }
+
       /// <summary>
       /// Inserts an entity into table "Ts" and returns identity id.
       /// </summary>
@@ -594,10 +636,10 @@ namespace Codebreak.Framework.Database
       public bool Write { get; private set; }
     }
 
-   public interface ISqlAdapter
-   {
-﻿  int Insert(IDbConnection connection, IDbTransaction transaction, int? commandTimeout, String tableName, string columnList, string parameterList, IEnumerable<PropertyInfo> keyProperties, object entityToInsert);
-   }
+public interface ISqlAdapter
+{
+    int Insert(IDbConnection connection, IDbTransaction transaction, int? commandTimeout, String tableName, string columnList, string parameterList, IEnumerable<PropertyInfo> keyProperties, object entityToInsert);
+}
 
    public class SqlServerAdapter : ISqlAdapter
    {
@@ -610,7 +652,7 @@ namespace Codebreak.Framework.Database
 ﻿  ﻿        if (keyProperties.Any())
 ﻿  ﻿  ﻿         keyProperties.First().SetValue(entityToInsert, id, null);
 ﻿  ﻿        return (int)id;
-﻿  }
+﻿       }
    }
 
    public class PostgresAdapter : ISqlAdapter

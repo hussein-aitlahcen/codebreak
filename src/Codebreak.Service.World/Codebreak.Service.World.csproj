@@ -64,7 +64,7 @@
     <Compile Include="Command\WorldCommandContext.cs" />
     <Compile Include="Database\Repository\AreaRepository.cs" />
     <Compile Include="Database\Repository\AuctionHouseEntryRepository.cs" />
-    <Compile Include="Database\Repository\AuctionHouseItemTemplateRepository.cs" />
+    <Compile Include="Database\Repository\AuctionHouseAllowedTypeRepository.cs" />
     <Compile Include="Database\Repository\AuctionHouseRepository.cs" />
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="Database\Structure\AreaDAO.cs" />
     <Compile Include="Database\Structure\AuctionHouseDAO.cs" />
     <Compile Include="Database\Structure\AuctionHouseEntryDAO.cs" />
-    <Compile Include="Database\Structure\AuctionHouseItemTemplateDAO.cs" />
+    <Compile Include="Database\Structure\AuctionHouseAllowedTypeDAO.cs" />
     <Compile Include="Database\Structure\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
@@ -137,18 +137,17 @@
     <Compile Include="Game\Auction\AuctionCategory.cs" />
     <Compile Include="Game\Auction\AuctionEntry.cs" />
     <Compile Include="Game\Auction\AuctionHouseInstance.cs" />
-    <Compile Include="Game\Auction\AuctionHouseTemplate.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\EntityInventory.cs" />
     <Compile Include="Game\Entity\EntityBase.cs" />
     <Compile Include="Game\Entity\InventoryBag.cs" />
-    <Compile Include="Game\Entity\InventoryBagFactory.cs" />
     <Compile Include="Game\Entity\MonsterEntity.cs" />
     <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
+    <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseSellExchange.cs" />
     <Compile Include="Game\Exchange\EntityExchange.cs" />
     <Compile Include="Game\Exchange\ExchangeBase.cs" />

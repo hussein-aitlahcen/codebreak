@@ -54,15 +54,33 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public AuctionEntry FirstOrDefault()
+        {
+            AuctionEntry entry = null;
+            foreach (var entries in m_entriesByFloor.Values)
+                if (entry == null)
+                    entry = entries.Values.FirstOrDefault();
+            return entry;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public AuctionEntry FirstOrDefault(AuctionCategoryFloorEnum floor)
+        {
+            return m_entriesByFloor[floor].Values.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
         public bool IsValidForThisCategory(InventoryItemDAO item)
         {
-            AuctionEntry entry = null;
-            foreach(var entries in m_entriesByFloor.Values)            
-                if(entry == null)                
-                    entry = entries.Values.FirstOrDefault();
-
+            AuctionEntry entry = FirstOrDefault();
             if (entry == null)
                 throw new InvalidOperationException("AuctionCategory::IsValidForThisCategory empty category, should not happend.");
 
@@ -90,6 +108,32 @@ namespace Codebreak.Service.World.Game.Auction
                     m_entriesByFloor[AuctionCategoryFloorEnum.FLOOR_HUNDRED].Add(entry.Price, entry);
                     break;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="floor"></param>
+        /// <returns></returns>
+        public string GetLowerPrice(AuctionCategoryFloorEnum floor)
+        {
+            AuctionEntry entry = FirstOrDefault(floor);
+            if (entry == null)
+                return "";
+            return entry.Price.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string SerializeAs_BuyExchange()
+        {
+            return "|" + TemplateId + ";"
+                + FirstOrDefault().Item.StringEffects + ";"
+                + GetLowerPrice(AuctionCategoryFloorEnum.FLOOR_ONE) + ";"
+                + GetLowerPrice(AuctionCategoryFloorEnum.FLOOR_TEN) + ";"
+                + GetLowerPrice(AuctionCategoryFloorEnum.FLOOR_HUNDRED) + ";";
         }
     }
 }

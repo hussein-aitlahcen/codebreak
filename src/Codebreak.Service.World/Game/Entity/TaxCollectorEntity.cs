@@ -202,7 +202,6 @@ namespace Codebreak.Service.World.Game.Entity
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
 
-            Inventory = InventoryBagFactory.Instance.Create(this);
             Spells = SpellBookFactory.Instance.Create(this);
         }
 

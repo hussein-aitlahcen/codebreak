@@ -14,13 +14,14 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            long currentId = 1;
+            long npcCount = 0;
             foreach(var npcInstance in NpcInstanceRepository.Instance.GetAll())
             {
-                EntityManager.Instance.CreateNpc(npcInstance, currentId++);
+                EntityManager.Instance.CreateNpc(npcInstance);
+                npcCount++;
             }
 
-            Logger.Info("NpcManager : " + currentId + " NpcInstance loaded.");
+            Logger.Info("NpcManager : " + npcCount + " NpcInstance loaded.");
         }
     }
 }
