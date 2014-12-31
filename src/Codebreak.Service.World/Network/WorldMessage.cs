@@ -1976,5 +1976,16 @@ namespace Codebreak.Service.World.Network
             category.SerializeAs_CategoryMovement(op, message);
             return message.ToString();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="middlePrice"></param>
+        /// <returns></returns>
+        public static string AUCTION_HOUSE_MIDDLE_PRICE(int templateId, long middlePrice)
+        {
+            return "EHP" + templateId + "|" + middlePrice;
+        }
     }
 }

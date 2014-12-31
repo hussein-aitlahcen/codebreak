@@ -76,6 +76,25 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        public long MiddlePrice
+        {
+            get
+            {
+                long total = 0;
+                long count = 0;
+                var auctions = All();
+                foreach (var auction in auctions)
+                {
+                    total += auction.Price;
+                    count += auction.Item.Quantity;
+                }
+                return total / Math.Max(1, count);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<AuctionCategoryFloorEnum, List<AuctionEntry>> m_auctionsByFloor;
         
         /// <summary>
@@ -93,6 +112,17 @@ namespace Codebreak.Service.World.Game.Auction
                 { AuctionCategoryFloorEnum.FLOOR_TEN, new List<AuctionEntry>() },
                 { AuctionCategoryFloorEnum.FLOOR_HUNDRED, new List<AuctionEntry>() },
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<AuctionEntry> All()
+        {
+            foreach (var entries in m_auctionsByFloor.Values)
+                foreach (var entry in entries)
+                    yield return entry;
         }
 
         /// <summary>

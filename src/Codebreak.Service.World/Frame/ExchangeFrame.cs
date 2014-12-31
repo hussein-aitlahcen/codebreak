@@ -35,15 +35,13 @@ namespace Codebreak.Service.World.Frame
                                 case 'B':
                                     return AuctionHouseBuyItem;
 
-                                // Buy (type|unicId)
+                                // Search
                                 case 'S':
+                                    return null;
 
-                                    break;
-
-                                // Middle price (itemId)
+                                // Middle price (templateId)
                                 case 'P':
-
-                                    break;
+                                    return AuctionHouseMiddlePrice;
                             }
                             break;
 
@@ -86,6 +84,42 @@ namespace Codebreak.Service.World.Frame
 
             return null;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
+        private void AuctionHouseMiddlePrice(CharacterEntity entity, string message)
+        {
+            int templateId = -1;
+            if (!int.TryParse(message.Substring(3), out templateId))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            entity.AddMessage(() =>
+            {
+                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                {
+                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                if (exchangeAction == null)
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var middlePrice = ((GameAuctionHouseActionBase)exchangeAction).AuctionExchange.Npc.AuctionHouse.GetMiddlePrice(templateId);
+
+                entity.Dispatch(WorldMessage.AUCTION_HOUSE_MIDDLE_PRICE(templateId, middlePrice));
+            });
+        }
 
         /// <summary>
         /// 
@@ -95,7 +129,6 @@ namespace Codebreak.Service.World.Frame
         private void AuctionHouseBuyItem(CharacterEntity entity, string message)
         {
             var data = message.Substring(3).Split('|');
-
             int categoryId = -1;
             if (!int.TryParse(data[0], out categoryId))
             {
@@ -126,14 +159,14 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var exchangeAction = entity.CurrentAction;
-                if (!(exchangeAction is GameAuctionHouseBuyAction))
+                var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                if (exchangeAction == null)
                 {
                     entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                ((AuctionHouseBuyExchange)((GameAuctionHouseBuyAction)exchangeAction).Exchange).Npc.AuctionHouse.TryBuy(entity, categoryId, quantity, price);
+                exchangeAction.AuctionExchange.Npc.AuctionHouse.TryBuy(entity, categoryId, quantity, price);
             });
         }
 
@@ -160,14 +193,14 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var exchangeAction = entity.CurrentAction;
-                if (!(exchangeAction is GameAuctionHouseBuyAction))
+                var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                if (exchangeAction == null)
                 {
                     entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                ((AuctionHouseBuyExchange)((GameAuctionHouseBuyAction)exchangeAction).Exchange).Npc.AuctionHouse.SendCategoriesByTemplate(entity, templateId);
+                exchangeAction.AuctionExchange.Npc.AuctionHouse.SendCategoriesByTemplate(entity, templateId);
             });
         }
 
@@ -194,14 +227,14 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
                     
-                    var exchangeAction = entity.CurrentAction;
-                    if (!(exchangeAction is GameAuctionHouseBuyAction))
+                    var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                    if (exchangeAction == null)
                     {
                         entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    ((AuctionHouseBuyExchange)((GameAuctionHouseBuyAction)exchangeAction).Exchange).Npc.AuctionHouse.SendTemplatesByTypeList(entity, type);
+                    exchangeAction.AuctionExchange.Npc.AuctionHouse.SendTemplatesByTypeList(entity, type);
                 });
         }
 

@@ -134,6 +134,11 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        private Dictionary<int, long> m_templateMiddlePrice;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private List<int> m_allowedTypes;
         
         /// <summary>
@@ -158,6 +163,7 @@ namespace Codebreak.Service.World.Game.Auction
             m_templatesByType = new Dictionary<int, List<int>>();
             m_auctionsByAccount = new Dictionary<long, List<AuctionEntry>>();
             m_allowedTypes = new List<int>();
+            m_templateMiddlePrice = new Dictionary<int, long>();
         }
         
         /// <summary>
@@ -226,6 +232,8 @@ namespace Codebreak.Service.World.Game.Auction
                         SendCategoriesByTemplate(character, category.TemplateId);
                     }
 
+                    UpdateMiddlePrice(category.TemplateId);
+
                     WorldService.Instance.AddMessage(() =>
                     {
                         var seller = EntityManager.Instance.GetCharacterByAccount(auction.Owner.AccountId);
@@ -291,6 +299,34 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="templateId"></param>
+        public void UpdateMiddlePrice(int templateId)
+        {
+            if (!m_templateMiddlePrice.ContainsKey(templateId))
+                m_templateMiddlePrice.Add(templateId, 0);
+            if (!m_categoriesByTemplate.ContainsKey(templateId))
+                return;
+            long total = 0;
+            foreach (var category in m_categoriesByTemplate[templateId])
+                total += category.MiddlePrice;
+            m_templateMiddlePrice[templateId] = total / Math.Max(1, m_categoriesByTemplate[templateId].Count);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public long GetMiddlePrice(int templateId)
+        {
+            if (!m_templateMiddlePrice.ContainsKey(templateId))
+                m_templateMiddlePrice.Add(templateId, 0);
+            return m_templateMiddlePrice[templateId];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <param name="itemId"></param>
         public void TryRemove(CharacterEntity character, long itemId)
@@ -322,6 +358,7 @@ namespace Codebreak.Service.World.Game.Auction
             }
 
             CheckEmptyCategory(category);
+            UpdateMiddlePrice(category.TemplateId);
 
             auction.Remove();
             character.Inventory.AddItem(auction.Item);
@@ -428,6 +465,8 @@ namespace Codebreak.Service.World.Game.Auction
             if (!m_auctionsByAccount.ContainsKey(entry.Owner.AccountId))
                 m_auctionsByAccount.Add(entry.Owner.AccountId, new List<AuctionEntry>());
             m_auctionsByAccount[entry.Owner.AccountId].Add(entry);
+            
+            UpdateMiddlePrice(category.TemplateId);
         }
 
         /// <summary>

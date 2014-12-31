@@ -115,6 +115,7 @@
     <Compile Include="Game\ActionEffect\NpcDialogReplyEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
+    <Compile Include="Game\Action\GameAuctionHouseActionBase.cs" />
     <Compile Include="Game\Action\GameAuctionHouseBuyAction.cs" />
     <Compile Include="Game\Action\GameAuctionHouseSellAction.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />

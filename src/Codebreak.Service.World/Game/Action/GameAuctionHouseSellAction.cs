@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameAuctionHouseSellAction : GameExchangeActionBase
+    public sealed class GameAuctionHouseSellAction : GameAuctionHouseActionBase
     {
         /// <summary>
         /// 
@@ -22,27 +22,6 @@ namespace Codebreak.Service.World.Game.Action
         public GameAuctionHouseSellAction(CharacterEntity character, NonPlayerCharacterEntity npc)
             : base(new AuctionHouseSellExchange(character, npc), character, npc)
         {
-            Accept();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="args"></param>
-        public override void Stop(params object[] args)
-        {
-            IsFinished = true;
-            base.Leave(true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="args"></param>
-        public override void Abort(params object[] args)
-        {
-            IsFinished = true;
-            base.Leave(false);
         }
     }
 }
