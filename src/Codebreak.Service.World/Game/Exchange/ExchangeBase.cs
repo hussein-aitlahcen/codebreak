@@ -67,7 +67,7 @@ namespace Codebreak.Service.World.Game.Exchange
         {
         }
 
-        public virtual void BuyItem(EntityBase actor, int templateId, int quantity)
+        public virtual void BuyItem(EntityBase actor, int templateId, long quantity)
         {
         }
 

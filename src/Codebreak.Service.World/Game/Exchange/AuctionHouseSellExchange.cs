@@ -49,11 +49,14 @@ namespace Codebreak.Service.World.Game.Exchange
                     Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_INVALID_PRICE));
                     break;
 
+                case AuctionAddResultEnum.INVALID_TYPE:
+                    Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_ADD_INVALID_TYPE));
+                    break;
+
                 case AuctionAddResultEnum.ERROR:
                 case AuctionAddResultEnum.INVALID_FLOOR:
                 case AuctionAddResultEnum.INVALID_ITEM:
-                case AuctionAddResultEnum.INVALID_QUANTITY:
-                case AuctionAddResultEnum.INVALID_TYPE:
+                case AuctionAddResultEnum.INVALID_QUANTITY:  
                 case AuctionAddResultEnum.TOO_HIGH_LEVEL:
                     Character.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
                     break;

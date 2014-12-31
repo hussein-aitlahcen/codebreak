@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Manager
             {
                 var auctionHouse = new AuctionHouseInstance(auctionHouseDao);
                 m_auctionHouses.Add(auctionHouseDao.Id, auctionHouse);
-                EntityManager.Instance.GetNpc(auctionHouseDao.NpcId).SetAuctionHouse(auctionHouse);
+                EntityManager.Instance.GetNpcById(auctionHouseDao.NpcId).SetAuctionHouse(auctionHouse);
             }
 
             foreach (var auctionHouseAllowedTypeDao in AuctionHouseAllowedTypeRepository.Instance.GetAll())

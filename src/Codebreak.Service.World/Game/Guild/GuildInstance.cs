@@ -778,11 +778,28 @@ namespace Codebreak.Service.World.Game.Guild
                         member.SendHasNotEnoughRights();
                         return;
                     }
+                                       
+                    if ((GuildRankEnum)rank == GuildRankEnum.BOSS)
+                    {
+                        if (memberProfil.Rank == GuildRankEnum.BOSS)
+                        {
+                            member.SendHasNotEnoughRights();
+                            return;
+                        } 
+
+                        if (member.Rank == GuildRankEnum.BOSS && memberProfil.Rank != GuildRankEnum.BOSS)
+                        {
+                            MemberProfilUpdate(memberProfil, member.Id, (int)GuildRankEnum.APPRENTICE, 0, 0);
+                        }
+                    }
 
                     memberProfil.XPSharePercent = percent;
                     memberProfil.Rank = (GuildRankEnum)rank;
                     memberProfil.Power = power;
 
+                    if (memberProfil.Rank == GuildRankEnum.BOSS)
+                        memberProfil.SetBoss();
+                    
                     // update profil
                     member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(memberProfil));
                     memberProfil.Dispatch(WorldMessage.GUILD_STATS(this, power));

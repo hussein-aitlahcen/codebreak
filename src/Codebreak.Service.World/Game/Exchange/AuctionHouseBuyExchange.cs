@@ -22,16 +22,22 @@ namespace Codebreak.Service.World.Game.Exchange
             : base(ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_BUY, character, npc)
         {
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="templateId"></param>
-        /// <param name="quantity"></param>
-        public override void BuyItem(EntityBase actor, int templateId, int quantity)
+        public override void Create()
         {
-            base.BuyItem(actor, templateId, quantity);
+            Npc.AuctionHouse.AddHandler(Character.Dispatch);
+
+            base.Create();
+        }
+
+        public override void Leave(bool success = false)
+        {
+            Npc.AuctionHouse.RemoveHandler(Character.Dispatch);
+
+            base.Leave(success);
         }
     }
 }

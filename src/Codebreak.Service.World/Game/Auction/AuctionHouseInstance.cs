@@ -29,17 +29,6 @@ namespace Codebreak.Service.World.Game.Auction
     /// <summary>
     /// 
     /// </summary>
-    public enum AuctionBuyResultEnum
-    {
-        INVALID_ID,
-        NOT_ENOUGH_KAMAS,
-        ERROR,
-        SUCCESS,
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public sealed class AuctionHouseInstance : MessageDispatcher
     {
         /// <summary>
@@ -127,27 +116,32 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        private Dictionary<int, AuctionCategory> m_categoryById;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<int, List<int>> m_templatesByType;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, int> m_characterItemCount;
+        private Dictionary<long, List<AuctionEntry>> m_entriesByAccount;
 
         /// <summary>
         /// 
         /// </summary>
         private List<int> m_allowedTypes;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private List<AuctionEntry> m_entries;
-
+        
         /// <summary>
         /// 
         /// </summary>
         private AuctionHouseDAO m_databaseRecord;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private int m_nextCategoryId;
 
         /// <summary>
         /// 
@@ -157,10 +151,10 @@ namespace Codebreak.Service.World.Game.Auction
         {
             m_databaseRecord = record;
             m_categoriesByTemplate = new Dictionary<int, List<AuctionCategory>>();
+            m_categoryById = new Dictionary<int, AuctionCategory>();
             m_templatesByType = new Dictionary<int, List<int>>();
-            m_characterItemCount = new Dictionary<long, int>();
+            m_entriesByAccount = new Dictionary<long, List<AuctionEntry>>();
             m_allowedTypes = new List<int>();
-            m_entries = new List<AuctionEntry>();
         }
         
         /// <summary>
@@ -180,10 +174,72 @@ namespace Codebreak.Service.World.Game.Auction
         /// <param name="quantity"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public AuctionBuyResultEnum TryBuy(CharacterEntity character, long itemId, int quantity, long price)
+        public void TryBuy(CharacterEntity character, int categoryId, int quantity, long price)
         {
-            Logger.Debug("AuctionHouse::TryBuy itemId=" + itemId + " quantity=" + quantity + " price=" + price);
-            return AuctionBuyResultEnum.SUCCESS;
+            Logger.Debug("AuctionHouse::TryBuy categoryId=" + categoryId + " quantity=" + quantity + " price=" + price);
+
+            if(price < 1)
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if(character.Inventory.Kamas < price)
+            {
+                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS));
+                return;
+            }
+
+            if(!m_categoryById.ContainsKey(categoryId))
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var category = m_categoryById[categoryId];
+            var floor = category.GetFloorByQuantity(quantity);
+            if(floor == AuctionCategoryFloorEnum.INVALID)
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+            var entry = category.FirstOrDefault(floor);
+
+            switch (category.Buy(character, quantity, price))
+            {
+                case AuctionBuyResultEnum.ALREADY_SOLD:
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_ALREADY_SOLD));
+                    SendCategoriesByTemplate(character, category.TemplateId);
+                    break;
+
+                case AuctionBuyResultEnum.NOT_ENOUGH_KAMAS:
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS));
+                    break;
+
+                case AuctionBuyResultEnum.SUCCES:
+                    m_entriesByAccount[entry.Owner.AccountId].Remove(entry);
+                    if (category.IsEmpty)
+                    {
+                        m_categoryById.Remove(category.Id);
+                        m_categoriesByTemplate[category.TemplateId].Remove(category);
+                        if (m_categoriesByTemplate[category.TemplateId].Count == 0)
+                        {
+                            m_templatesByType[category.ItemType].Remove(category.TemplateId);
+                            m_categoriesByTemplate.Remove(category.TemplateId);
+                            base.Dispatch(WorldMessage.AUCTION_HOUSE_TEMPLATE_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category.TemplateId));
+                        }
+                        base.Dispatch(WorldMessage.AUCTION_HOUSE_CATEGORY_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category));
+                    }
+                    else
+                    {
+                        SendCategoriesByTemplate(character, category.TemplateId);
+                    }
+                    break;
+
+                default:
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    break;
+            }
         }
 
         /// <summary>
@@ -204,10 +260,9 @@ namespace Codebreak.Service.World.Game.Auction
 
             switch(quantity)
             {
-                case 1:
-                case 10:
-                case 100:
-                    break;
+                case 1: break;
+                case 2: quantity = 10; break;
+                case 3: quantity = 100; break;
                 default: return AuctionAddResultEnum.INVALID_FLOOR;
             }
 
@@ -221,23 +276,24 @@ namespace Codebreak.Service.World.Game.Auction
             if (character.Inventory.Kamas < taxe)
                 return AuctionAddResultEnum.NOT_ENOUGH_KAMAS_FOR_TAXE;
 
-            if (m_characterItemCount.ContainsKey(character.Id) && m_characterItemCount[character.Id] >= PlayerMaxItem)
+            if (m_entriesByAccount.ContainsKey(character.AccountId) && m_entriesByAccount[character.AccountId].Count >= PlayerMaxItem)
                 return AuctionAddResultEnum.TOO_MANY_ENTRIES;
 
             if (item.GetTemplate().Level > ItemMaxLevel)
                 return AuctionAddResultEnum.TOO_HIGH_LEVEL;
-
-            var record = AuctionHouseEntryDAO.Create(item.Id, Id, character.Id, price, Timeout);
-            if (record == null)
-                return AuctionAddResultEnum.ERROR;
-
-            var entry = new AuctionEntry(record, item);
-
+                                    
             var newItem = character.Inventory.RemoveItem(item.Id, quantity);
             newItem.OwnerType = (int)EntityTypeEnum.TYPE_AUCTION_HOUSE;
             newItem.OwnerId = Id;
-                       
-            Add(entry);
+
+            var record = AuctionHouseEntryDAO.Create(newItem.Id, Id, character.Id, price, Timeout);
+            if (record == null)
+            {
+                character.Inventory.AddItem(newItem);
+                return AuctionAddResultEnum.ERROR;
+            }
+
+            Add(new AuctionEntry(record, newItem));
 
             character.Inventory.SubKamas(taxe);
             SendAuctionOwnerList(character);
@@ -252,6 +308,7 @@ namespace Codebreak.Service.World.Game.Auction
         public void Add(AuctionEntry entry)
         {            
             var templateId = entry.Item.TemplateId;
+            var itemType = entry.Item.GetTemplate().Type;
 
             AuctionCategory category = null;
 
@@ -262,22 +319,21 @@ namespace Codebreak.Service.World.Game.Auction
 
             if (category == null)
             {
-                category = new AuctionCategory(templateId);
+                category = new AuctionCategory(itemType, templateId, m_nextCategoryId++);
 
                 var type = entry.Item.GetTemplate().Type;
                 if (!m_templatesByType.ContainsKey(type))
                     m_templatesByType.Add(type, new List<int>());
 
                 m_categoriesByTemplate[templateId].Add(category);
+                m_categoryById.Add(category.Id, category);
                 m_templatesByType[type].Add(templateId);
             }
 
-            m_entries.Add(entry);
+            if (!m_entriesByAccount.ContainsKey(entry.Owner.AccountId))
+                m_entriesByAccount.Add(entry.Owner.AccountId, new List<AuctionEntry>());
+            m_entriesByAccount[entry.Owner.AccountId].Add(entry);
             category.Add(entry);
-
-            if (!m_characterItemCount.ContainsKey(entry.OwnerId))
-                m_characterItemCount.Add(entry.OwnerId, 0);
-            m_characterItemCount[entry.OwnerId]++;
         }
 
         /// <summary>
@@ -286,7 +342,10 @@ namespace Codebreak.Service.World.Game.Auction
         /// <param name="character"></param>
         public void SendAuctionOwnerList(CharacterEntity character)
         {
-            character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(m_entries.Where(entry => entry.Owner.AccountId == character.AccountId)));
+            if (m_entriesByAccount.ContainsKey(character.AccountId))
+                character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(m_entriesByAccount[character.AccountId]));
+            else
+                character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(new List<AuctionEntry>()));
         }
 
         /// <summary>

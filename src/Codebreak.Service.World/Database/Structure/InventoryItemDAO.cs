@@ -119,11 +119,20 @@ namespace Codebreak.Service.World.Database.Structure
             return (ItemSlotEnum)SlotId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool IsEquiped()
         {
             return IsEquipedSlot(GetSlot());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
         public static bool IsEquipedSlot(ItemSlotEnum slot)
         {
             return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_SHIELD;
@@ -147,6 +156,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
+        public override string ToString()
+        {
+            return  (Id.ToString("x")) + ('~') +
+                   (TemplateId.ToString("x")) + ('~') +
+                   (Quantity.ToString("x")) +('~') +
+                   ((SlotId != (int)ItemSlotEnum.SLOT_INVENTORY ? SlotId.ToString("x") : "")) + ('~') +
+                   (StringEffects) + (';'); 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public InventoryItemDAO Clone(int quantity)
         {
             var instance = new InventoryItemDAO();
@@ -164,12 +186,19 @@ namespace Codebreak.Service.World.Database.Structure
             return null;
         }
 
-        public static InventoryItemDAO Create(int templateId, int quantity, GenericStats statistics)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="quantity"></param>
+        /// <param name="statistics"></param>
+        /// <returns></returns>
+        public static InventoryItemDAO Create(int templateId, long quantity, GenericStats statistics)
         {
             var instance = new InventoryItemDAO();
             instance.OwnerId = -1;
             instance.TemplateId = templateId;
-            instance.Quantity = quantity;
+            instance.Quantity = (int)quantity;
             instance._statistics = statistics;
             instance.Effects = statistics.Serialize();
             instance.StringEffects = statistics.ToItemStats();

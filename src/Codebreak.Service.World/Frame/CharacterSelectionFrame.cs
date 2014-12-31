@@ -84,7 +84,7 @@ namespace Codebreak.Service.World.Frame
             
             foreach(var character in client.Characters)
             {
-                var alreadyConnectedEntity = EntityManager.Instance.GetCharacter(character.Id);
+                var alreadyConnectedEntity = EntityManager.Instance.GetCharacterById(character.Id);
                 if(alreadyConnectedEntity != null)
                 {
                     HandleCharacterReconnect(client, alreadyConnectedEntity);

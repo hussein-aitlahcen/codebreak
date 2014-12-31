@@ -94,6 +94,47 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void AuctionHouseBuyItem(CharacterEntity entity, string message)
         {
+            var data = message.Substring(3).Split('|');
+
+            int categoryId = -1;
+            if (!int.TryParse(data[0], out categoryId))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            int quantity = -1;
+            if (!int.TryParse(data[1], out quantity))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            long price = -1;
+            if (!long.TryParse(data[2], out price))
+            {
+                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            entity.AddMessage(() =>
+            {
+                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                {
+                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var exchangeAction = entity.CurrentAction;
+                if (!(exchangeAction is GameAuctionHouseBuyAction))
+                {
+                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                ((AuctionHouseBuyExchange)((GameAuctionHouseBuyAction)exchangeAction).Exchange).Npc.AuctionHouse.TryBuy(entity, categoryId, quantity, price);
+            });
         }
 
         /// <summary>

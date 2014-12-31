@@ -176,7 +176,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public long Kamas
+        public override long Kamas
         {
             get
             {
@@ -245,8 +245,8 @@ namespace Codebreak.Service.World.Game.Entity
             }
             else
             {
-                SendCollectorDied();
                 Guild.AddMessage(() => Guild.RemoveTaxCollector(this));
+                SendCollectorDied();
             }
 
             Defenders.Clear();

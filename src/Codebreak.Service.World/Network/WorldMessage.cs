@@ -64,6 +64,14 @@ namespace Codebreak.Service.World.Network
         INFO_FIGHT_DISCONNECT_TURN_REMAIN = 162,
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
+        
+        INFO_AUCTION_TOO_MANY_ITEMS = 59,
+        INFO_AUCTION_RARE = 60,
+        INFO_AUCTION_ADD_INVALID_TYPE = 61,
+        INFO_AUCTION_ALREADY_SOLD = 64,
+        INFO_AUCTION_BANK_CREDITED = 65,
+        INFO_AUCTION_EXPIRED = 67,
+        INFO_AUCTION_LOT_BOUGHT = 68,
 
         ERROR_AUCTION_HOUSE_TOO_MANY_ITEMS = 66,
         ERROR_INVALID_PRICE = 99,
@@ -1942,6 +1950,30 @@ namespace Codebreak.Service.World.Network
             {
                 message.Append(entry.SerializeAs_BuyExchange());
             }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="op"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string AUCTION_HOUSE_TEMPLATE_MOVEMENT(OperatorEnum op, int templateId)
+        {
+            return "EHM" + (char)op + templateId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="op"></param>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public static string AUCTION_HOUSE_CATEGORY_MOVEMENT(OperatorEnum op, AuctionCategory category)
+        {
+            var message = new StringBuilder("EHm").Append((char)op);
+            category.SerializeAs_CategoryMovement(op, message);
             return message.ToString();
         }
     }

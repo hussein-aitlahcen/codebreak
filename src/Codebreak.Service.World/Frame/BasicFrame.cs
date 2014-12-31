@@ -498,9 +498,9 @@ namespace Codebreak.Service.World.Frame
 
             // get the remote character
             if (entity.GuildInvitedPlayerId != -1)
-                distantCharacter = EntityManager.Instance.GetCharacter(entity.GuildInvitedPlayerId);
+                distantCharacter = EntityManager.Instance.GetCharacterById(entity.GuildInvitedPlayerId);
             else
-                distantCharacter = EntityManager.Instance.GetCharacter(entity.GuildInviterPlayerId);
+                distantCharacter = EntityManager.Instance.GetCharacterById(entity.GuildInviterPlayerId);
             
             // be safe even if this should never happend
             if (distantCharacter != null)
@@ -537,7 +537,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            var distantCharacter = EntityManager.Instance.GetCharacter(entity.GuildInviterPlayerId);
+            var distantCharacter = EntityManager.Instance.GetCharacterById(entity.GuildInviterPlayerId);
 
             entity.GuildInvitedPlayerId = -1;
             entity.GuildInviterPlayerId = -1;
@@ -576,7 +576,7 @@ namespace Codebreak.Service.World.Frame
             var distantCharacterName = message.Substring(3);
 
             // if disconnected or fake
-            var distantCharacter = EntityManager.Instance.GetCharacter(distantCharacterName);
+            var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
             if (distantCharacter == null)
             {
                 entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
@@ -655,7 +655,7 @@ namespace Codebreak.Service.World.Frame
             var distantCharacterName = message.Substring(2);
 
             // if disconnected or fake
-            var distantCharacter = EntityManager.Instance.GetCharacter(distantCharacterName);
+            var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
             if(distantCharacter == null)
             {
                 entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_PLAYER_OFFLINE(distantCharacterName));
@@ -714,9 +714,9 @@ namespace Codebreak.Service.World.Frame
 
             // get the remote character
             if (entity.PartyInvitedPlayerId != -1)
-                distantCharacter = EntityManager.Instance.GetCharacter(entity.PartyInvitedPlayerId);
+                distantCharacter = EntityManager.Instance.GetCharacterById(entity.PartyInvitedPlayerId);
             else
-                distantCharacter = EntityManager.Instance.GetCharacter(entity.PartyInviterPlayerId);
+                distantCharacter = EntityManager.Instance.GetCharacterById(entity.PartyInviterPlayerId);
 
             // be safe even if this should never happend
             if (distantCharacter != null)
@@ -745,7 +745,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            var distantCharacter = EntityManager.Instance.GetCharacter(entity.PartyInviterPlayerId);
+            var distantCharacter = EntityManager.Instance.GetCharacterById(entity.PartyInviterPlayerId);
 
             entity.PartyInvitedPlayerId = -1;
             entity.PartyInviterPlayerId = -1;
@@ -943,7 +943,7 @@ namespace Codebreak.Service.World.Frame
             }
             else
             {
-                var remoteEntity = EntityManager.Instance.GetCharacter(channel);
+                var remoteEntity = EntityManager.Instance.GetCharacterByName(channel);
 
                 if (remoteEntity == null)
                 {

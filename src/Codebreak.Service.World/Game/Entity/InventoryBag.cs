@@ -113,14 +113,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public bool AddItem(InventoryItemDAO item, bool merge = true)
         {
+            if (Items.Contains(item))
+                return false;
+
             Logger.Debug("InventoryBad::AddItem adding item to inventory : " + Entity.Name);
             if (merge)
                 if (TryMerge(item))
                     return true;
 
+            item.OwnerType = (int)Entity.Type;
             item.OwnerId = Entity.Id;
-
-            InventoryItemRepository.Instance.Update(item);
 
             Items.Add(item);
 

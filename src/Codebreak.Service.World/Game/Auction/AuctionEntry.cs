@@ -12,26 +12,6 @@ namespace Codebreak.Service.World.Game.Auction
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    public class PriceComparer : Singleton<PriceComparer>, IComparer<long>
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public int Compare(long x, long y)
-        {
-            if (x < y)
-                return 1;
-            return -1;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public sealed class AuctionEntry : IComparable<AuctionEntry>
     {
         /// <summary>
@@ -154,13 +134,23 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        public void Remove()
+        {
+            AuctionHouseEntryRepository.Instance.Remove(m_databaseRecord);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
         public int CompareTo(AuctionEntry other)
         {
             if (Price < other.Price)
+                return -1;
+            if (Price > other.Price)
                 return 1;
-            return -1;
+            return 0;
         }
     }
 }

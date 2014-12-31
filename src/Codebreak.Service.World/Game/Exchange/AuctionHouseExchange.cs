@@ -39,7 +39,7 @@ namespace Codebreak.Service.World.Game.Exchange
             Character = character;
             Npc = npc;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
