@@ -289,10 +289,8 @@ namespace Codebreak.Service.World.Game.Auction
                     base.Dispatch(WorldMessage.AUCTION_HOUSE_TEMPLATE_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category.TemplateId));
                 }
                 base.Dispatch(WorldMessage.AUCTION_HOUSE_CATEGORY_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category));
-
                 return true;
             }
-
             return false;
         }
 

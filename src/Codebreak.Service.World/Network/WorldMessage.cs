@@ -49,6 +49,11 @@ namespace Codebreak.Service.World.Network
     public enum InformationEnum
     {
         INFO_SERVER_MESSAGE = 0,
+
+        INFO_LIFE_RECOVERED = 1,
+
+        INFO_GAVE_KAMAS_TO_OPEN = 20,
+
         INFO_BASIC_LAST_CONNECTION = 152, // precedente connexion ...
         INFO_BASIC_CURRENT_IP = 153, // votre ip actuelle est ...   
 
@@ -64,6 +69,8 @@ namespace Codebreak.Service.World.Network
         INFO_FIGHT_DISCONNECT_TURN_REMAIN = 162,
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
+
+        INFO_CONTRACT_FAILED = 179,
         
         INFO_AUCTION_TOO_MANY_ITEMS = 59,
         INFO_AUCTION_RARE = 60,
