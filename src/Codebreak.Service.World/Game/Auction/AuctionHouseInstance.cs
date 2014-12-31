@@ -234,6 +234,9 @@ namespace Codebreak.Service.World.Game.Auction
 
                     UpdateMiddlePrice(category.TemplateId);
 
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_LOT_BOUGHT));
+
+                    // TODO : On ajoute l'argent au joueur connécté ou celui qui l'a mis en vente, a remplacer par la banque
                     WorldService.Instance.AddMessage(() =>
                     {
                         var seller = EntityManager.Instance.GetCharacterByAccount(auction.Owner.AccountId);
@@ -249,10 +252,9 @@ namespace Codebreak.Service.World.Game.Auction
                                     var action = seller.CurrentAction as GameAuctionHouseSellAction;
                                     if (action != null)
                                     {
-                                        var auctionExchange = (AuctionHouseSellExchange)action.Exchange;
-                                        if (auctionExchange.Npc.AuctionHouse.Id == Id)
+                                        if (action.AuctionExchange.Npc.AuctionHouse.Id == Id)
                                         {
-                                            auctionExchange.Npc.AuctionHouse.SendAuctionOwnerList(seller);
+                                            action.AuctionExchange.Npc.AuctionHouse.SendAuctionOwnerList(seller);
                                         }
                                     }
                                 }
