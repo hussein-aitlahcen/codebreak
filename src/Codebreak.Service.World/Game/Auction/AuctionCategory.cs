@@ -1,12 +1,10 @@
 ﻿using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
-using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Auction
 {
@@ -63,6 +61,7 @@ namespace Codebreak.Service.World.Game.Auction
             private set;
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -77,7 +76,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<AuctionCategoryFloorEnum, List<AuctionEntry>> m_entriesByFloor;
+        private Dictionary<AuctionCategoryFloorEnum, List<AuctionEntry>> m_auctionsByFloor;
         
         /// <summary>
         /// 
@@ -88,7 +87,7 @@ namespace Codebreak.Service.World.Game.Auction
             Id = id;
             ItemType = itemType;
             TemplateId = templateId;
-            m_entriesByFloor = new Dictionary<AuctionCategoryFloorEnum, List<AuctionEntry>>()
+            m_auctionsByFloor = new Dictionary<AuctionCategoryFloorEnum, List<AuctionEntry>>()
             {
                 { AuctionCategoryFloorEnum.FLOOR_ONE, new List<AuctionEntry>() },
                 { AuctionCategoryFloorEnum.FLOOR_TEN, new List<AuctionEntry>() },
@@ -102,11 +101,11 @@ namespace Codebreak.Service.World.Game.Auction
         /// <returns></returns>
         public AuctionEntry FirstOrDefault()
         {
-            AuctionEntry entry = null;
-            foreach (var entries in m_entriesByFloor.Values)
-                if (entry == null)
-                    entry = entries.FirstOrDefault();
-            return entry;
+            AuctionEntry auction = null;
+            foreach (var entries in m_auctionsByFloor.Values)
+                if (auction == null)
+                    auction = entries.FirstOrDefault();
+            return auction;
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <returns></returns>
         public AuctionEntry FirstOrDefault(AuctionCategoryFloorEnum floor)
         {
-            return m_entriesByFloor[floor].FirstOrDefault();
+            return m_auctionsByFloor[floor].FirstOrDefault();
         }
         
         /// <summary>
@@ -125,11 +124,11 @@ namespace Codebreak.Service.World.Game.Auction
         /// <returns></returns>
         public bool IsValidForThisCategory(InventoryItemDAO item)
         {
-            AuctionEntry entry = FirstOrDefault();
-            if (entry == null)
+            AuctionEntry auction = FirstOrDefault();
+            if (auction == null)
                 throw new InvalidOperationException("AuctionCategory::IsValidForThisCategory empty category, should not happend.");
 
-            return entry.Item.StringEffects == item.StringEffects;
+            return auction.Item.StringEffects == item.StringEffects;
         }
 
         /// <summary>
@@ -140,33 +139,15 @@ namespace Codebreak.Service.World.Game.Auction
         public AuctionBuyResultEnum Buy(CharacterEntity character, int quantity, long price)
         {
             AuctionCategoryFloorEnum floor = GetFloorByQuantity(quantity);
-            var auctionEntry = FirstOrDefault(floor);
-            if (auctionEntry == null || auctionEntry.Price != price)
+            var auction = FirstOrDefault(floor);
+            if (auction == null || auction.Price != price)
                 return AuctionBuyResultEnum.ALREADY_SOLD;
 
-            // TODO : BANQUE, pas sur le personnage
-            WorldService.Instance.AddMessage(() =>
-                {
-                    var seller = EntityManager.Instance.GetCharacterByAccount(auctionEntry.Owner.AccountId);
-                    if(seller != null)
-                    {
-                        seller.AddMessage(() =>
-                            {
-                                seller.Inventory.AddKamas(price);
-                                seller.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_BANK_CREDITED, price, auctionEntry.Item.TemplateId));
-                            });
-                    }
-                    else
-                    {
-                        auctionEntry.Owner.Kamas += price;
-                    }
-                });
-
             character.Inventory.SubKamas(price);
-            character.Inventory.AddItem(auctionEntry.Item);
+            character.Inventory.AddItem(auction.Item);
 
-            auctionEntry.Remove();
-            m_entriesByFloor[floor].Remove(auctionEntry);
+            auction.Remove();
+            m_auctionsByFloor[floor].Remove(auction);
 
             return AuctionBuyResultEnum.SUCCES;
         }
@@ -174,15 +155,24 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="floor"></param>
-        /// <param name="entry"></param>
-        public void Add(AuctionEntry entry)
+        /// <param name="auction"></param>
+        public bool Remove(AuctionEntry auction)
         {
-            var floor = GetFloorByQuantity(entry.Item.Quantity);
+            return m_auctionsByFloor[GetFloorByQuantity(auction.Item.Quantity)].Remove(auction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="floor"></param>
+        /// <param name="auction"></param>
+        public void Add(AuctionEntry auction)
+        {
+            var floor = GetFloorByQuantity(auction.Item.Quantity);
             if (floor == AuctionCategoryFloorEnum.INVALID)
-                throw new InvalidOperationException("AuctionCategory::Add invalid floor for quantity=" + entry.Item.Quantity);
-            m_entriesByFloor[floor].Add(entry);
-            m_entriesByFloor[floor].Sort();
+                throw new InvalidOperationException("AuctionCategory::Add invalid floor for quantity=" + auction.Item.Quantity);
+            m_auctionsByFloor[floor].Add(auction);
+            m_auctionsByFloor[floor].Sort();
         }
 
         /// <summary>

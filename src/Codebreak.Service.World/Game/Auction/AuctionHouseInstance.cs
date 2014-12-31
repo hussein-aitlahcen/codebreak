@@ -1,5 +1,8 @@
 ﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Exchange;
+using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -126,7 +129,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, List<AuctionEntry>> m_entriesByAccount;
+        private Dictionary<long, List<AuctionEntry>> m_auctionsByAccount;
 
         /// <summary>
         /// 
@@ -153,7 +156,7 @@ namespace Codebreak.Service.World.Game.Auction
             m_categoriesByTemplate = new Dictionary<int, List<AuctionCategory>>();
             m_categoryById = new Dictionary<int, AuctionCategory>();
             m_templatesByType = new Dictionary<int, List<int>>();
-            m_entriesByAccount = new Dictionary<long, List<AuctionEntry>>();
+            m_auctionsByAccount = new Dictionary<long, List<AuctionEntry>>();
             m_allowedTypes = new List<int>();
         }
         
@@ -203,7 +206,7 @@ namespace Codebreak.Service.World.Game.Auction
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-            var entry = category.FirstOrDefault(floor);
+            var auction = category.FirstOrDefault(floor);
 
             switch (category.Buy(character, quantity, price))
             {
@@ -217,29 +220,113 @@ namespace Codebreak.Service.World.Game.Auction
                     break;
 
                 case AuctionBuyResultEnum.SUCCES:
-                    m_entriesByAccount[entry.Owner.AccountId].Remove(entry);
-                    if (category.IsEmpty)
-                    {
-                        m_categoryById.Remove(category.Id);
-                        m_categoriesByTemplate[category.TemplateId].Remove(category);
-                        if (m_categoriesByTemplate[category.TemplateId].Count == 0)
-                        {
-                            m_templatesByType[category.ItemType].Remove(category.TemplateId);
-                            m_categoriesByTemplate.Remove(category.TemplateId);
-                            base.Dispatch(WorldMessage.AUCTION_HOUSE_TEMPLATE_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category.TemplateId));
-                        }
-                        base.Dispatch(WorldMessage.AUCTION_HOUSE_CATEGORY_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category));
-                    }
-                    else
+                    m_auctionsByAccount[auction.Owner.AccountId].Remove(auction);
+                    if (!CheckEmptyCategory(category))
                     {
                         SendCategoriesByTemplate(character, category.TemplateId);
                     }
+
+                    WorldService.Instance.AddMessage(() =>
+                    {
+                        var seller = EntityManager.Instance.GetCharacterByAccount(auction.Owner.AccountId);
+                        if (seller != null)
+                        {
+                            seller.AddMessage(() =>
+                            {
+                                seller.Inventory.AddKamas(price);
+                                seller.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_BANK_CREDITED, price, auction.Item.TemplateId));
+
+                                if (seller.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                                {
+                                    var action = seller.CurrentAction as GameAuctionHouseSellAction;
+                                    if (action != null)
+                                    {
+                                        var auctionExchange = (AuctionHouseSellExchange)action.Exchange;
+                                        if (auctionExchange.Npc.AuctionHouse.Id == Id)
+                                        {
+                                            auctionExchange.Npc.AuctionHouse.SendAuctionOwnerList(seller);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            auction.Owner.Kamas += price;
+                        }
+                    });
                     break;
 
                 default:
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     break;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public bool CheckEmptyCategory(AuctionCategory category)
+        {
+            if (category.IsEmpty)
+            {
+                m_categoryById.Remove(category.Id);
+                m_categoriesByTemplate[category.TemplateId].Remove(category);
+                if (m_categoriesByTemplate[category.TemplateId].Count == 0)
+                {
+                    m_templatesByType[category.ItemType].Remove(category.TemplateId);
+                    m_categoriesByTemplate.Remove(category.TemplateId);
+                    base.Dispatch(WorldMessage.AUCTION_HOUSE_TEMPLATE_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category.TemplateId));
+                }
+                base.Dispatch(WorldMessage.AUCTION_HOUSE_CATEGORY_MOVEMENT(OperatorEnum.OPERATOR_REMOVE, category));
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="itemId"></param>
+        public void TryRemove(CharacterEntity character, long itemId)
+        {
+            Logger.Debug("AuctionHouse::TryRemove itemId=" + itemId);
+
+            if(!m_auctionsByAccount.ContainsKey(character.AccountId))
+            {
+                character.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                return;
+            }
+
+            var auction = m_auctionsByAccount[character.AccountId].Find(entry => entry.ItemId == itemId);
+            if(auction == null)
+            {
+                character.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                return;
+            }
+
+            m_auctionsByAccount[character.AccountId].Remove(auction);
+            AuctionCategory category = null;
+            int i = 0;
+            var categories = m_categoriesByTemplate[auction.Item.TemplateId];
+            while(i < categories.Count && category == null)
+            {
+                var current = categories[i];
+                if(current.Remove(auction))
+                    category = current;
+            }
+
+            CheckEmptyCategory(category);
+
+            auction.Remove();
+            character.Inventory.AddItem(auction.Item);
+
+            SendAuctionOwnerList(character);
         }
 
         /// <summary>
@@ -276,7 +363,7 @@ namespace Codebreak.Service.World.Game.Auction
             if (character.Inventory.Kamas < taxe)
                 return AuctionAddResultEnum.NOT_ENOUGH_KAMAS_FOR_TAXE;
 
-            if (m_entriesByAccount.ContainsKey(character.AccountId) && m_entriesByAccount[character.AccountId].Count >= PlayerMaxItem)
+            if (m_auctionsByAccount.ContainsKey(character.AccountId) && m_auctionsByAccount[character.AccountId].Count >= PlayerMaxItem)
                 return AuctionAddResultEnum.TOO_MANY_ENTRIES;
 
             if (item.GetTemplate().Level > ItemMaxLevel)
@@ -328,12 +415,19 @@ namespace Codebreak.Service.World.Game.Auction
                 m_categoriesByTemplate[templateId].Add(category);
                 m_categoryById.Add(category.Id, category);
                 m_templatesByType[type].Add(templateId);
+
+                category.Add(entry);
+
+                base.Dispatch(WorldMessage.AUCTION_HOUSE_CATEGORY_MOVEMENT(OperatorEnum.OPERATOR_ADD, category));
+            }
+            else
+            {
+                category.Add(entry);
             }
 
-            if (!m_entriesByAccount.ContainsKey(entry.Owner.AccountId))
-                m_entriesByAccount.Add(entry.Owner.AccountId, new List<AuctionEntry>());
-            m_entriesByAccount[entry.Owner.AccountId].Add(entry);
-            category.Add(entry);
+            if (!m_auctionsByAccount.ContainsKey(entry.Owner.AccountId))
+                m_auctionsByAccount.Add(entry.Owner.AccountId, new List<AuctionEntry>());
+            m_auctionsByAccount[entry.Owner.AccountId].Add(entry);
         }
 
         /// <summary>
@@ -342,8 +436,8 @@ namespace Codebreak.Service.World.Game.Auction
         /// <param name="character"></param>
         public void SendAuctionOwnerList(CharacterEntity character)
         {
-            if (m_entriesByAccount.ContainsKey(character.AccountId))
-                character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(m_entriesByAccount[character.AccountId]));
+            if (m_auctionsByAccount.ContainsKey(character.AccountId))
+                character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(m_auctionsByAccount[character.AccountId]));
             else
                 character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(new List<AuctionEntry>()));
         }

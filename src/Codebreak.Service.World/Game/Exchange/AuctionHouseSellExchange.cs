@@ -70,5 +70,16 @@ namespace Codebreak.Service.World.Game.Exchange
                     break;                    
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="guid"></param>
+        /// <param name="quantity"></param>
+        public override void RemoveItem(EntityBase actor, long guid, int quantity)
+        {
+            Npc.AuctionHouse.TryRemove(Character, guid);
+        }
     }
 }
