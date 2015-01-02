@@ -32,6 +32,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (monsterGrade == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
+            var cell = castInfos.Fight.GetCell(castInfos.CellId);
+            if (!cell.CanWalk)
+                return FightActionResultEnum.RESULT_NOTHING;
+
             return castInfos.Fight.SummonFighter(new MonsterEntity(castInfos.Fight.NextFighterId, monsterGrade, castInfos.Caster), castInfos.Caster.Team, castInfos.CellId);
         }
     }

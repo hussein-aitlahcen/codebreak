@@ -40,7 +40,7 @@ namespace Codebreak.WorldService
             TAXCOLLECTOR_SKIN_SIZE_BASE = 100;
 
         public const int FIGHT_DISCONNECTION_TURN = 20;
-        public const int FIGHT_PUSH_CELL_TIME = 200;
+        public const int FIGHT_PUSH_CELL_TIME = 400;
         public const int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);
         public const int GAME_ID = 1; // Jiva ? guess so;

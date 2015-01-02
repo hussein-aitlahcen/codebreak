@@ -166,9 +166,8 @@ namespace Codebreak.Service.World.Game.Auction
         /// </summary>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public AuctionBuyResultEnum Buy(CharacterEntity character, int quantity, long price)
+        public AuctionBuyResultEnum Buy(CharacterEntity character, AuctionCategoryFloorEnum floor, long price)
         {
-            AuctionCategoryFloorEnum floor = GetFloorByQuantity(quantity);
             var auction = FirstOrDefault(floor);
             if (auction == null || auction.Price != price)
                 return AuctionBuyResultEnum.ALREADY_SOLD;
@@ -215,8 +214,8 @@ namespace Codebreak.Service.World.Game.Auction
             switch(quantity)
             {
                 case 1: return AuctionCategoryFloorEnum.FLOOR_ONE;
-                case 2: return AuctionCategoryFloorEnum.FLOOR_TEN;
-                case 3: return AuctionCategoryFloorEnum.FLOOR_HUNDRED;
+                case 10: return AuctionCategoryFloorEnum.FLOOR_TEN;
+                case 100: return AuctionCategoryFloorEnum.FLOOR_HUNDRED;
                 default: return AuctionCategoryFloorEnum.INVALID;
             }
         }

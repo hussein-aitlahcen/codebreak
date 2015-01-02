@@ -178,14 +178,30 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public AuctionCategoryFloorEnum GetFloorById(int id)
+        {
+            switch(id)
+            {
+                case 1: return AuctionCategoryFloorEnum.FLOOR_ONE;
+                case 2: return AuctionCategoryFloorEnum.FLOOR_TEN;
+                case 3: return AuctionCategoryFloorEnum.FLOOR_HUNDRED;
+                default: return AuctionCategoryFloorEnum.INVALID;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <param name="itemId"></param>
-        /// <param name="quantity"></param>
+        /// <param name="floorId"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public void TryBuy(CharacterEntity character, int categoryId, int quantity, long price)
+        public void TryBuy(CharacterEntity character, int categoryId, int floorId, long price)
         {
-            Logger.Debug("AuctionHouse::TryBuy categoryId=" + categoryId + " quantity=" + quantity + " price=" + price);
+            Logger.Debug("AuctionHouse::TryBuy categoryId=" + categoryId + " floorId=" + floorId + " price=" + price);
 
             if(price < 1)
             {
@@ -206,7 +222,7 @@ namespace Codebreak.Service.World.Game.Auction
             }
 
             var category = m_categoryById[categoryId];
-            var floor = category.GetFloorByQuantity(quantity);
+            var floor = GetFloorById(floorId);
             if(floor == AuctionCategoryFloorEnum.INVALID)
             {
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -214,7 +230,7 @@ namespace Codebreak.Service.World.Game.Auction
             }
             var auction = category.FirstOrDefault(floor);
 
-            switch (category.Buy(character, quantity, price))
+            switch (category.Buy(character, floor, price))
             {
                 case AuctionBuyResultEnum.ALREADY_SOLD:
                     character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_ALREADY_SOLD));
