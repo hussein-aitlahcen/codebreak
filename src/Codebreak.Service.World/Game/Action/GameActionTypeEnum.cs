@@ -38,6 +38,8 @@ namespace Codebreak.Service.World.Game.Action
         FIGHT_DODGE_SUBPA = 308,
         FIGHT_DODGE_SUBPM = 309,
 
+        SKILL_USE = 500,
+
         // custom
         MAP,
         EXCHANGE,
@@ -49,6 +51,7 @@ namespace Codebreak.Service.World.Game.Action
         PARTY_REQUEST,
         FIGHT,
         GUILD_CREATE,
+        WAYPOINT,
         NOTHING,
     }
 }

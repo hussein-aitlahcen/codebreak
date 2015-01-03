@@ -7,6 +7,8 @@ using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Guild;
+using Codebreak.Service.World.Game.Interactive.Type;
+using Codebreak.Service.World.Game.Job;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Manager;
@@ -41,6 +43,21 @@ namespace Codebreak.Service.World.Game.Entity
             get
             {
                 return DatabaseRecord.Name;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int SavedMapId
+        {
+            get
+            {
+                return DatabaseRecord.SavedMapId;
+            }
+            set
+            {
+                DatabaseRecord.SavedMapId = value;
             }
         }
 
@@ -369,6 +386,15 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             private set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public JobBook CharacterJobs
+        {
+            get;
+            private set;
+        }
         
         /// <summary>
         /// 
@@ -460,6 +486,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public List<CharacterWaypointDAO> Waypoints
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string m_guildDisplayInfos;
 
         /// <summary>
@@ -480,11 +515,35 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInviterPlayerId = -1;
             DatabaseRecord = characterDAO;
 
+            Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);
+
+            CharacterJobs = new JobBook();
             Statistics = new GenericStats(characterDAO);
             Spells = SpellBookFactory.Instance.Create(this);
+
             FrameManager = new FrameManager<CharacterEntity, string>(this);
 
             Inventory.Initialize();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool HasSkill(SkillIdEnum id)
+        {
+            return HasSkill((int)id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool HasSkill(int id)
+        {
+            return CharacterJobs.HasSkill(id);
         }
 
         /// <summary>
@@ -539,6 +598,16 @@ namespace Codebreak.Service.World.Game.Entity
         {
             CurrentAction = new GameGuildCreationAction(this);
             StartAction(GameActionTypeEnum.GUILD_CREATE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="waypoint"></param>
+        public void WaypointStart(Waypoint waypoint)
+        {
+            CurrentAction = new GameWaypointAction(this, waypoint);
+            StartAction(GameActionTypeEnum.WAYPOINT);
         }
 
         /// <summary>
@@ -705,18 +774,24 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.MAP:
                     if (!HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
                     {
-                        FrameManager.AddFrame(GameMapFrame.Instance);
+                        FrameManager.AddFrame(MapFrame.Instance);
                         FrameManager.AddFrame(InventoryFrame.Instance);
                         FrameManager.AddFrame(ExchangeFrame.Instance);
                         FrameManager.AddFrame(GameActionFrame.Instance);
                     }
                     break;
 
+                case GameActionTypeEnum.WAYPOINT:
+                    FrameManager.RemoveFrame(GameActionFrame.Instance);
+                    FrameManager.RemoveFrame(InventoryFrame.Instance);
+                    FrameManager.RemoveFrame(MapFrame.Instance);
+                    FrameManager.AddFrame(WaypointFrame.Instance);
+                    break;
                     
                 case GameActionTypeEnum.NPC_DIALOG:                          
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(InventoryFrame.Instance);
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(MapFrame.Instance);
                     FrameManager.AddFrame(NpcDialogFrame.Instance);
                     break;
 
@@ -725,7 +800,7 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.EXCHANGE:                    
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(InventoryFrame.Instance);
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(MapFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.FIGHT:
@@ -735,7 +810,7 @@ namespace Codebreak.Service.World.Game.Entity
                         Dispatch(WorldMessage.GAME_DATA_MAP(Fight.Map.Id, Fight.Map.CreateTime, Fight.Map.DataKey));
                         FrameManager.AddFrame(GameInformationFrame.Instance);
                     }
-                    FrameManager.AddFrame(GameFightPlacementFrame.Instance);
+                    FrameManager.AddFrame(FightPlacementFrame.Instance);
                     break;
             }
         }
@@ -752,15 +827,22 @@ namespace Codebreak.Service.World.Game.Entity
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP:
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(MapFrame.Instance);
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
                     break;
 
+                case GameActionTypeEnum.WAYPOINT:
+                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(MapFrame.Instance);
+                    FrameManager.RemoveFrame(WaypointFrame.Instance);
+                    break;
+                    
                 case GameActionTypeEnum.NPC_DIALOG:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
-                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.AddFrame(MapFrame.Instance);
                     FrameManager.RemoveFrame(NpcDialogFrame.Instance);
                     break;
 
@@ -769,7 +851,7 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
-                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.AddFrame(MapFrame.Instance);
                     break;
             }
         }
@@ -789,11 +871,18 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.AddFrame(GameInformationFrame.Instance);
                     Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
+
+                case GameActionTypeEnum.WAYPOINT:
+                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(MapFrame.Instance);
+                    FrameManager.RemoveFrame(WaypointFrame.Instance);
+                    break;
                     
                 case GameActionTypeEnum.NPC_DIALOG:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
-                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.AddFrame(MapFrame.Instance);
                     FrameManager.RemoveFrame(NpcDialogFrame.Instance);
                     break;
 
@@ -802,11 +891,11 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.EXCHANGE:
                     FrameManager.AddFrame(GameActionFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
-                    FrameManager.AddFrame(GameMapFrame.Instance);
+                    FrameManager.AddFrame(MapFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.MAP:
-                    FrameManager.RemoveFrame(GameMapFrame.Instance);
+                    FrameManager.RemoveFrame(MapFrame.Instance);
                     FrameManager.RemoveFrame(GameActionFrame.Instance);
                     FrameManager.RemoveFrame(ExchangeFrame.Instance);
                     break;
@@ -816,8 +905,8 @@ namespace Codebreak.Service.World.Game.Entity
                     {
                         WorldService.Instance.AddUpdatable(this);
                         FrameManager.AddFrame(GameCreationFrame.Instance);
-                        FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
-                        FrameManager.RemoveFrame(GameFightFrame.Instance);
+                        FrameManager.RemoveFrame(FightPlacementFrame.Instance);
+                        FrameManager.RemoveFrame(FightFrame.Instance);
                     }
                     break;
             }

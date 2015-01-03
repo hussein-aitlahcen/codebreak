@@ -1252,10 +1252,10 @@ namespace Codebreak.Service.World.Game.Fight
 
                 foreach (var fighter in Fighters.OfType<CharacterEntity>())
                 {
-                    fighter.FrameManager.RemoveFrame(GameFightPlacementFrame.Instance);
+                    fighter.FrameManager.RemoveFrame(FightPlacementFrame.Instance);
                     fighter.FrameManager.RemoveFrame(InventoryFrame.Instance);
                     fighter.FrameManager.AddFrame(GameActionFrame.Instance);
-                    fighter.FrameManager.AddFrame(GameFightFrame.Instance);
+                    fighter.FrameManager.AddFrame(FightFrame.Instance);
                 }
 
                 foreach(var fighter in Fighters.OfType<AIFighter>())                

@@ -18,6 +18,7 @@ using Codebreak.RPC.Protocol;
 using System.Threading.Tasks;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Job;
 
 namespace Codebreak.Service.World
 {
@@ -90,6 +91,8 @@ namespace Codebreak.Service.World
             AddTimer(WorldSaveInternal, UpdateWorld);
 
             WorldDbMgr.Instance.Initialize();
+            InteractiveObjectManager.Instance.Initialize();
+            JobManager.Instance.Initialize();
             AccountManager.Instance.Initialize();
             SpellManager.Instance.Initialize();
             AreaManager.Instance.Initialize();
@@ -98,7 +101,7 @@ namespace Codebreak.Service.World
             AuctionHouseManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
-            
+
             base.Start(WorldServiceIP, WorldServicePort);
         }
 

@@ -105,68 +105,95 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameActionStart(CharacterEntity entity, string message)
+        private void GameActionStart(CharacterEntity character, string message)
         {
             var actionId = -1;
             if (!int.TryParse(message.Substring(2, 3), out actionId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             if(!Enum.IsDefined(typeof(GameActionTypeEnum), actionId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
                 var actionType = (GameActionTypeEnum)actionId;
-                if (!entity.CanGameAction(actionType))
+                if (!character.CanGameAction(actionType))
                 {
-                    Logger.Debug("GameActionFrame::Start entity cant game action : " + entity.Name);
-                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                    Logger.Debug("GameActionFrame::Start entity cant game action : " + character.Name);
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                     return;
                 }
 
                 switch (actionType)
                 {
                     case GameActionTypeEnum.MAP_MOVEMENT:
-                        GameMapMovement(entity, message);
+                        GameMapMovement(character, message);
                         break;
 
                     case GameActionTypeEnum.CHALLENGE_REQUEST: 
-                        GameChallengeRequest(entity, message);
+                        GameChallengeRequest(character, message);
                         break;
 
                     case GameActionTypeEnum.CHALLENGE_ACCEPT:
-                        GameChallengeAccept(entity, message);
+                        GameChallengeAccept(character, message);
                         break;
 
                     case GameActionTypeEnum.CHALLENGE_DECLINE:
-                        GameChallengeDeny(entity, message);
+                        GameChallengeDeny(character, message);
                         break;
 
                     case GameActionTypeEnum.FIGHT_JOIN:
-                        GameFightJoin(entity, message);                        
+                        GameFightJoin(character, message);                        
                         break;
 
                     case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
-                        GameFightSpellLaunch(entity, message);
+                        GameFightSpellLaunch(character, message);
                         break;
 
                     case GameActionTypeEnum.FIGHT_WEAPON_USE:
-                        GameWeaponUse(entity, message);
+                        GameWeaponUse(character, message);
                         break;
 
                     case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
-                        GameTaxcollectorAggression(entity, message);
+                        GameTaxcollectorAggression(character, message);
+                        break;
+
+                    case GameActionTypeEnum.SKILL_USE:
+                        GameSkillUse(character, message);
                         break;
                 }
             }); 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GameSkillUse(CharacterEntity character, string message)
+        {
+            var skillData = message.Substring(5).Split(';');
+            var cellId = int.Parse(skillData[0]);
+            var skillId = int.Parse(skillData[1]);
+
+            character.Map.AddMessage(() => 
+                {
+                    var action = character.CurrentAction as GameMapMovementAction;
+                    if(action != null)
+                    {
+                        action.SkillCellId = cellId;
+                        action.SkillId = skillId;
+                        action.SkillMapId = character.MapId;
+                    }
+                });
         }
 
         /// <summary>

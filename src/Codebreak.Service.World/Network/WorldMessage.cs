@@ -13,6 +13,7 @@ using Codebreak.WorldService;
 using System.Drawing;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Auction;
+using Codebreak.Service.World.Manager;
 
 namespace Codebreak.Service.World.Network
 {
@@ -53,6 +54,12 @@ namespace Codebreak.Service.World.Network
         INFO_LIFE_RECOVERED = 1,
 
         INFO_GAVE_KAMAS_TO_OPEN = 20,
+
+        INFO_WAYPOINT_SAVED = 6,
+        INFO_WAYPOINT_REGISTERED = 24,
+
+        INFO_KAMAS_WON = 45,
+        INFO_KAMAS_LOST = 46,
 
         INFO_BASIC_LAST_CONNECTION = 152, // precedente connexion ...
         INFO_BASIC_CURRENT_IP = 153, // votre ip actuelle est ...   
@@ -1993,6 +2000,64 @@ namespace Codebreak.Service.World.Network
         public static string AUCTION_HOUSE_MIDDLE_PRICE(int templateId, long middlePrice)
         {
             return "EHP" + templateId + "|" + middlePrice;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="frameId"></param>
+        /// <param name="activated"></param>
+        /// <returns></returns>
+        public static string INTERACTIVE_DATA_FRAME(int cellId, int frameId, bool activated)
+        {
+            return "GDF|" + cellId + ";" + frameId + ";" + (activated ? "1" : "0");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public static string INTERACTIVE_FARMED_QUANTITY(long characterId, long quantity)
+        {
+            return "IQ" + characterId + "|" + quantity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string WAYPOINT_CREATE(CharacterEntity character)
+        {
+            var message = new StringBuilder("WC").Append(character.SavedMapId);
+            foreach (var waypoint in character.Waypoints)
+            {
+                var price = 0;
+                if(waypoint.MapId != character.MapId)
+                    price = 10 * (Math.Abs(waypoint.GetMap().X - character.Map.X) + Math.Abs(waypoint.GetMap().Y - character.Map.Y) - 1);
+                message.Append('|').Append(waypoint.MapId).Append(';').Append(price);
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string WAYPOINT_LEAVE()
+        {
+            return "WV";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string WAYPOINT_USE_ERROR()
+        {
+            return "WUE";
         }
     }
 }

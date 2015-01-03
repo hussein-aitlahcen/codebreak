@@ -8,6 +8,7 @@ using Codebreak.Framework.Utils;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Spell;
+using Codebreak.Service.World.Game.Interactive.Type;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -295,7 +296,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             get
             {
-                return TransitCells[TransitCells.Count == 1 ? 0 : TransitCells.Count - 2];
+                return TransitCells[TransitCells.Count < 2 ? 0 : TransitCells.Count - 2];
             }
         }
 
@@ -654,22 +655,22 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static MovementPath DecodePath(MapInstance map, int currentCell, string path)
         {
-            MovementPath MovementPath = new MovementPath();
+            MovementPath movementPath = new MovementPath();
 
             if (path == "")
-                return MovementPath;
+                return movementPath;
 
-            MovementPath.AddCell(currentCell, GetDirection(map, currentCell, Util.CharToCell(path.Substring(1, 2))));
+            movementPath.AddCell(currentCell, GetDirection(map, currentCell, Util.CharToCell(path.Substring(1, 2))));
 
             for (int i = 0; i < path.Length; i += 3)
             {
                 int curCell = Util.CharToCell(path.Substring(i + 1, 2));
                 int curDir = Util.HASH.IndexOf(path[i]);
 
-                MovementPath.AddCell(curCell, curDir);
+                movementPath.AddCell(curCell, curDir);
             }
 
-            return MovementPath;
+            return movementPath;
         }
 
         /// <summary>
@@ -723,30 +724,29 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static MovementPath IsValidPath(MapInstance map, int currentCell, string encodedPath)
         {
-            var DecodedPath = Pathfinding.DecodePath(map, currentCell, encodedPath);
-
-            if(DecodedPath.TransitCells.Count == 0)
+            var decodedPath = DecodePath(map, currentCell, encodedPath);
+            if(decodedPath.TransitCells.Count == 0)
                 return null;
-
-            var Index = 0;
-            int TransitCell = 0;
-
+            var finalPath = new MovementPath();
+            var index = 0;
+            int transitCell = 0;
+            int nextTransitCell = 0;
+            int direction = 0;
             do
             {
-                TransitCell = DecodedPath.TransitCells[Index];
-
-                var Length = Pathfinding.IsValidLine(map, TransitCell, DecodedPath.GetDirection(TransitCell), DecodedPath.TransitCells[Index + 1]);
-                if (Length == -1)
+                transitCell = decodedPath.TransitCells[index];
+                nextTransitCell = decodedPath.TransitCells[index + 1];
+                direction = decodedPath.GetDirection(transitCell);
+                var length = Pathfinding.IsValidLine(map, finalPath, transitCell, direction, nextTransitCell);
+                if (length == -1)
                     return null;
-
-                DecodedPath.MovementLength += Length;
-
-                Index++;
-
+                else if (length == -2)
+                    break;
+                index++;
             }
-            while (TransitCell != DecodedPath.LastStep);
-
-            return DecodedPath;
+            while (transitCell != decodedPath.LastStep);
+            
+            return finalPath;
         }
 
          //<summary>
@@ -763,7 +763,6 @@ namespace Codebreak.Service.World.Game.Map
                 return null;
 
             var decodedPath = DecodePath(fight.Map, currentCell, encodedPath);
-
             var finalPath = new MovementPath();
 
             var index = 0;
@@ -777,7 +776,6 @@ namespace Codebreak.Service.World.Game.Map
                 else if (length == -2)
                     break;
                 index++;
-
             }
             while (transitCell != decodedPath.LastStep);
 
@@ -792,24 +790,42 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="direction"></param>
         /// <param name="endCell"></param>
         /// <returns></returns>
-        public static int IsValidLine(MapInstance map, int beginCell, int direction, int endCell)
+        public static int IsValidLine(MapInstance map, MovementPath finalPath, int beginCell, int direction, int endCell)
         {
             var length = -1;
             var actualCell = beginCell;
+            var lastCell = beginCell;
+            
+            finalPath.AddCell(actualCell, direction);
 
-            if (Pathfinding.InLine(map, beginCell, endCell))
-                length = (int)GoalDistance(map, beginCell, endCell);
-            else
-                length = (int)(GoalDistance(map, beginCell, endCell) / 1.4);
-
-            for (int i = 0; i < length; i++)
+            do
             {
                 actualCell = Pathfinding.NextCell(map, actualCell, direction);
                 if (!map.IsWalkable(actualCell))
                 {
                     //return -1;
                 }
-            }
+
+                var mapCell = map.GetCell(actualCell);
+                if (mapCell != null)
+                {
+                    if (mapCell.InteractiveObject != null)
+                    {
+                        if (mapCell.InteractiveObject is Waypoint)
+                        {
+                            length = -2;
+                            break;
+                        }
+                    }
+                }
+
+                length++;
+                lastCell = actualCell;
+                finalPath.MovementLength++;
+
+            } while (actualCell != endCell);
+
+            finalPath.AddCell(lastCell, direction);
 
             return length;
         }
@@ -844,7 +860,6 @@ namespace Codebreak.Service.World.Game.Map
                     return -2;
 
                 path.AddCell(actualCell, direction);
-
                 path.MovementLength++;
 
                 if (Pathfinding.IsStopCell(fighter.Fight, fighter.Team, actualCell))

@@ -67,7 +67,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         /// <param name="character"></param>
         /// <param name="monsterGroup"></param>
-        public void StartMonsteFight(CharacterEntity character, MonsterGroupEntity monsterGroup)
+        public void StartMonsterFight(CharacterEntity character, MonsterGroupEntity monsterGroup)
         {
             Add(new MonsterFight(_map, _fightId++, character, monsterGroup));
         }

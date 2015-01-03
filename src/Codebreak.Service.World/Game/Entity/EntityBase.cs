@@ -413,6 +413,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             switch(actionType)
             {
+                case GameActionTypeEnum.SKILL_USE:
+                    return (CurrentAction == null || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT);
+
                 case GameActionTypeEnum.FIGHT_JOIN:
                     return CurrentAction == null
                         && HasGameAction(GameActionTypeEnum.MAP)
@@ -453,7 +456,7 @@ namespace Codebreak.Service.World.Game.Entity
                         && HasGameAction(GameActionTypeEnum.MAP);
             }
 
-            return CurrentAction == null;
+            return CurrentAction == null || CurrentAction.IsFinished;
         }
 
         /// <summary>

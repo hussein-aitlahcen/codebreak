@@ -69,6 +69,7 @@
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
+    <Compile Include="Database\Repository\CharacterWaypointRepository.cs" />
     <Compile Include="Database\Repository\ExperienceTemplateRepository.cs" />
     <Compile Include="Database\Repository\GuildRepository.cs" />
     <Compile Include="Database\Repository\InventoryItemRepository.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Database\Structure\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
+    <Compile Include="Database\Structure\CharacterWaypointDAO.cs" />
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
     <Compile Include="Database\Structure\InventoryItemDAO.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Database\Structure\TaxCollectorDAO.cs" />
     <Compile Include="Database\WorldDbMgr.cs" />
     <Compile Include="Frame\NpcDialogFrame.cs" />
+    <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="Game\Action\GamePlayerExchangeAction.cs" />
     <Compile Include="Game\Action\GameShopExchangeAction.cs" />
     <Compile Include="Game\Action\GameTaxCollectorDefenderAction.cs" />
+    <Compile Include="Game\Action\GameWaypointAction.cs" />
     <Compile Include="Game\Area\AreaInstance.cs" />
     <Compile Include="Game\Area\SubAreaInstance.cs" />
     <Compile Include="Game\Area\SuperAreaInstance.cs" />
@@ -246,6 +250,10 @@
     <Compile Include="Game\Guild\GuildMember.cs" />
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
     <Compile Include="Game\Guild\GuildStatistics.cs" />
+    <Compile Include="Game\Interactive\InteractiveObject.cs" />
+    <Compile Include="Game\Interactive\Type\Waypoint.cs" />
+    <Compile Include="Game\Job\JobBook.cs" />
+    <Compile Include="Game\Job\JobTemplate.cs" />
     <Compile Include="Game\Map\CellZone.cs" />
     <Compile Include="Game\Map\IMovementHandler.cs" />
     <Compile Include="Game\Map\MapCell.cs" />
@@ -264,10 +272,10 @@
     <Compile Include="Frame\ExchangeFrame.cs" />
     <Compile Include="Frame\GameActionFrame.cs" />
     <Compile Include="Frame\GameCreationFrame.cs" />
-    <Compile Include="Frame\GameFightFrame.cs" />
-    <Compile Include="Frame\GameFightPlacementFrame.cs" />
+    <Compile Include="Frame\FightFrame.cs" />
+    <Compile Include="Frame\FightPlacementFrame.cs" />
     <Compile Include="Frame\GameInformationFrame.cs" />
-    <Compile Include="Frame\GameMapFrame.cs" />
+    <Compile Include="Frame\MapFrame.cs" />
     <Compile Include="Frame\InventoryFrame.cs" />
     <Compile Include="Frame\SpellFrame.cs" />
     <Compile Include="Manager\AccountManager.cs" />
@@ -278,11 +286,14 @@
     <Compile Include="Manager\ExperienceManager.cs" />
     <Compile Include="Game\Map\FightManager.cs" />
     <Compile Include="Manager\GuildManager.cs" />
+    <Compile Include="Manager\InteractiveObjectManager.cs" />
+    <Compile Include="Manager\JobManager.cs" />
     <Compile Include="Manager\MapManager.cs" />
     <Compile Include="Manager\NpcManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
+    <Compile Include="Manager\ZaapManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Network\WorldClient.cs" />

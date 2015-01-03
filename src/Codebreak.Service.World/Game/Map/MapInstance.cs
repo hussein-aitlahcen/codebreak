@@ -10,6 +10,7 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Job;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -234,12 +235,7 @@ namespace Codebreak.Service.World.Game.Map
                 return freeCell.Id;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private bool _initialized;
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -254,7 +250,6 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="createTime"></param>
         public MapInstance(int subAreaId, int id, int x, int y, int width, int height, string data, string dataKey, string createTime, List<int> f0teamCells, List<int> f1teamCells)
         {
-            _initialized = false;
             Id = id;
             SubAreaId = subAreaId;
             X = x;
@@ -267,6 +262,8 @@ namespace Codebreak.Service.World.Game.Map
             FightTeam0Cells = f0teamCells;
             FightTeam1Cells = f1teamCells;
             FightManager = new FightManager(this);
+
+            Initialize();
         }
         
         /// <summary>
@@ -299,15 +296,18 @@ namespace Codebreak.Service.World.Game.Map
                     }
                 }
 
-                var cell = new MapCell(id, cellData, nextMap, nextCell);
+                var cell = new MapCell(this, id, cellData, nextMap, nextCell);
+                if(cell.InteractiveObject != null)
+                {
+                    base.AddUpdatable(cell.InteractiveObject);
+                    cell.InteractiveObject.AddHandler(base.Dispatch);
+                }
                 _cellById.Add(id, cell);
                 _cells.Add(cell);
 
             }
 
             Pathmaker = new Pathmaker(this);
-
-            _initialized = true;
         }
 
         /// <summary>
@@ -322,6 +322,25 @@ namespace Codebreak.Service.World.Game.Map
             return cell;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <returns></returns>
+        public int GetNearestCell(int cellId)
+        {
+            foreach(var currentCellId in CellZone.GetAdjacentCells(this, cellId))
+            {
+                var cell = GetCell(currentCellId);
+                if(cell != null)
+                {
+                    if (cell.Walkable)
+                        return currentCellId;
+                }
+            }
+            return -1;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -383,9 +402,6 @@ namespace Codebreak.Service.World.Game.Map
         {
             AddMessage(() =>
             {
-                if (!_initialized)
-                    Initialize();
-
                 if (!_entityById.ContainsKey(entity.Id))
                 {
                     _entityById.Add(entity.Id, entity);
@@ -430,6 +446,27 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <param name="skillId"></param>
+        public void InteractiveExecute(CharacterEntity character, int cellId, int skillId)
+        {
+            var cell = GetCell(cellId);
+            if(cell != null)
+            {
+                if(cell.InteractiveObject != null)
+                {
+                    cell.InteractiveObject.UseWithSkill(character, (SkillIdEnum)skillId);
+                }
+                else
+                {
+                    character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("Cet objet interactif est en cours de developpement."));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="cellId"></param>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -462,6 +499,9 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="cellId"></param>
         public void MovementFinish(EntityBase entity, MovementPath path, int cellId)
         {
+            if (entity.CellId == cellId)
+                return;
+
             entity.Orientation = path.GetDirection(path.LastStep);
 
             if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
@@ -486,13 +526,12 @@ namespace Codebreak.Service.World.Game.Map
                         else
                         {
                             monsterGroup.StopAction(GameActionTypeEnum.MAP);
-                            FightManager.StartMonsteFight(entity as CharacterEntity, monsterGroup);
+                            FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
                             return;
                         }
                     }
                 }
             }
-
 
             entity.CellId = cellId;
         }

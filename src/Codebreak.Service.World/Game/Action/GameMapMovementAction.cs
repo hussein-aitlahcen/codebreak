@@ -32,6 +32,34 @@ namespace Codebreak.Service.World.Game.Action
                 return true;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int SkillMapId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int SkillCellId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int SkillId
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -41,6 +69,7 @@ namespace Codebreak.Service.World.Game.Action
             : base(GameActionTypeEnum.MAP_MOVEMENT, entity, (long)path.MovementTime)
         {
             Path = path;
+            SkillId = -1;
         }
 
         /// <summary>
@@ -75,6 +104,12 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)
         {
             Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
+
+            if (SkillId != -1 && Entity.MapId == SkillMapId)
+            {
+                Entity.Map.InteractiveExecute((CharacterEntity)Entity, SkillCellId, SkillId);
+            }
+
             base.Stop(args);
         }
 
