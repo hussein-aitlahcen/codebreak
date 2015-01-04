@@ -7,6 +7,7 @@ using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Job;
 
 namespace Codebreak.Service.World.Frame
 {
@@ -186,13 +187,23 @@ namespace Codebreak.Service.World.Frame
 
             character.Map.AddMessage(() => 
                 {
-                    var action = character.CurrentAction as GameMapMovementAction;
-                    if(action != null)
+                    if(!character.CharacterJobs.HasSkill(skillId))
                     {
-                        action.SkillCellId = cellId;
-                        action.SkillId = skillId;
-                        action.SkillMapId = character.MapId;
+                        Logger.Debug("GameActionFrame::SkillUse character dont have the skill : " + (SkillIdEnum)skillId);
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
                     }
+
+                    var action = character.CurrentAction as GameMapMovementAction;
+                    if(action == null)
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+                    
+                    action.SkillCellId = cellId;
+                    action.SkillId = skillId;
+                    action.SkillMapId = character.MapId;
                 });
         }
 
