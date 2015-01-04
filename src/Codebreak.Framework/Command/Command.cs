@@ -70,7 +70,7 @@ namespace Codebreak.Framework.Command
                             }
                         }
                     }
-                    context.TextCommandArgument.Position -= word.Length;
+                    context.TextCommandArgument.Position -= word.Length + 1;
                 }
 
                 Process(context);

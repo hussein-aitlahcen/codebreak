@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// </summary>
         /// <param name="cellId"></param>
         public Waypoint(MapInstance map, int cellId)
-            : base(map, cellId)
+            : base(map, cellId, false)
         {
             WaypointManager.Instance.AddWaypoint(Map.Id, this);
         }

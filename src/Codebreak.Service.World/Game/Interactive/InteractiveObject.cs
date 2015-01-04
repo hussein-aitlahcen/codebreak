@@ -134,6 +134,15 @@ namespace Codebreak.Service.World.Game.Interactive
         /// <summary>
         /// 
         /// </summary>
+        public bool CanWalkThrough
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public MapInstance Map
         {
             get;
@@ -164,8 +173,9 @@ namespace Codebreak.Service.World.Game.Interactive
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cellId"></param>
-        public InteractiveObject(MapInstance map, int cellId)
+        public InteractiveObject(MapInstance map, int cellId, bool canWalkThrough = true)
         {
+            CanWalkThrough = canWalkThrough;
             Map = map;
             CellId = cellId;
 

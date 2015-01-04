@@ -239,21 +239,28 @@ namespace Codebreak.Service.World.Command
                     var map = MapManager.Instance.GetById(mapId);
                     if (map != null)
                     {
-                        var cellId = map.RandomTeleportCell;
-                        if (cellId != -1)
+                        int cellId;
+                        if (Int32.TryParse(context.TextCommandArgument.NextWord(), out cellId))
                         {
-                            if (context.Character.CanGameAction(Game.Action.GameActionTypeEnum.MAP_TELEPORT))
+                            if (cellId != -1)
                             {
-                                context.Character.Teleport(mapId, cellId);
+                                if (context.Character.CanGameAction(Game.Action.GameActionTypeEnum.MAP_TELEPORT))
+                                {
+                                    context.Character.Teleport(mapId, cellId);
+                                }
+                                else
+                                {
+                                    context.Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                                }
                             }
                             else
                             {
-                                context.Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                                context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("No cell available to be teleported on"));
                             }
                         }
                         else
                         {
-                            context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("No cell available to be teleported on"));
+                            context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow cellId"));
                         }
                     }
                     else

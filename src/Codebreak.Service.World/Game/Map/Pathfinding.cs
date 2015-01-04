@@ -749,14 +749,14 @@ namespace Codebreak.Service.World.Game.Map
             return finalPath;
         }
 
-         //<summary>
-         
-         //</summary>
-         //<param name="fight"></param>
-         //<param name="fighter"></param>
-         //<param name="currentCell"></param>
-         //<param name="encodedPath"></param>
-         //<returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fight"></param>
+        /// <param name="fighter"></param>
+        /// <param name="currentCell"></param>
+        /// <param name="encodedPath"></param>
+        /// <returns></returns>
         public static MovementPath IsValidPath(FightBase fight, FighterBase fighter, int currentCell, string encodedPath)
         {
             if (encodedPath == "")
@@ -809,13 +809,10 @@ namespace Codebreak.Service.World.Game.Map
                 var mapCell = map.GetCell(actualCell);
                 if (mapCell != null)
                 {
-                    if (mapCell.InteractiveObject != null)
+                    if (mapCell.InteractiveObjectId != 0)
                     {
-                        if (mapCell.InteractiveObject is Waypoint)
-                        {
-                            length = -2;
-                            break;
-                        }
+                        length = -2;
+                        break;
                     }
                 }
 
@@ -830,16 +827,16 @@ namespace Codebreak.Service.World.Game.Map
             return length;
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="fight"></param>
-        ///// <param name="fighter"></param>
-        ///// <param name="path"></param>
-        ///// <param name="beginCell"></param>
-        ///// <param name="direction"></param>
-        ///// <param name="endCell"></param>
-        ///// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fight"></param>
+        /// <param name="fighter"></param>
+        /// <param name="path"></param>
+        /// <param name="beginCell"></param>
+        /// <param name="direction"></param>
+        /// <param name="endCell"></param>
+        /// <returns></returns>
         public static int IsValidLine(FightBase fight, FighterBase fighter, MovementPath path, int beginCell, int direction, int endCell)
         {
             var length = -1;
@@ -1140,17 +1137,26 @@ namespace Codebreak.Service.World.Game.Map
 
             directions = new int[]
             {
-			    map.Width,
-			    map.Width - 1,
-			    -map.Width,
-			    -map.Width + 1,
-			    1,
-			    (map.Width * 2) - 1,
-			    -1,
-		        -((map.Width * 2) + 1)
-		    };
+                map.Width,
+                map.Width - 1,
+                -map.Width,
+                -map.Width + 1,
+                1,
+                (map.Width * 2) - 1,
+                -1,
+                -((map.Width * 2) + 1)
+            };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="startCell"></param>
+        /// <param name="endCell"></param>
+        /// <param name="diagonal"></param>
+        /// <param name="movementPoints"></param>
+        /// <param name="obstacles"></param>
+        /// <returns></returns>
         public string FindPathAsString(int startCell, int endCell, bool diagonal, int movementPoints = -1, IEnumerable<int> obstacles = null)
         {
             var movementPath = FindPath(startCell, endCell, diagonal, movementPoints, obstacles == null ? new List<int>() : obstacles);
@@ -1166,6 +1172,15 @@ namespace Codebreak.Service.World.Game.Map
             return PathAsString.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="StartCell"></param>
+        /// <param name="EndCell"></param>
+        /// <param name="Diagonal"></param>
+        /// <param name="MovementPoints"></param>
+        /// <param name="Obstacles"></param>
+        /// <returns></returns>
         private IEnumerable<int> FindPath(int StartCell, int EndCell, bool Diagonal, int MovementPoints = -1, IEnumerable<int> Obstacles = null)
         {
             bool Success = false;
@@ -1307,14 +1322,31 @@ namespace Codebreak.Service.World.Game.Map
             return Result.Select(entry => entry.Cell);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         internal class ComparePFNodeMatrix : IComparer<int>
         {
+            /// <summary>
+            /// 
+            /// </summary>
             private PathNode[] mMatrix;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="matrix"></param>
             public ComparePFNodeMatrix(PathNode[] matrix)
             {
                 mMatrix = matrix;
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="a"></param>
+            /// <param name="b"></param>
+            /// <returns></returns>
             public int Compare(int a, int b)
             {
                 if (mMatrix[a].F > mMatrix[b].F)
