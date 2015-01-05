@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character size %size%"));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character size %size%"));
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character morph %skinId%"));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character morph %skinId%"));
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to process this command in your actual state."));
                 }
             }
         }
@@ -242,6 +242,13 @@ namespace Codebreak.Service.World.Command
                         int cellId;
                         if (Int32.TryParse(context.TextCommandArgument.NextWord(), out cellId))
                         {
+                            var cell = context.Character.Map.GetCell(cellId);
+                            if (cell == null || !cell.Walkable)
+                            {                                
+                                context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Null cell or not walkable"));
+                                return;
+                            }
+
                             if (cellId != -1)
                             {
                                 if (context.Character.CanGameAction(Game.Action.GameActionTypeEnum.MAP_TELEPORT))
@@ -250,27 +257,27 @@ namespace Codebreak.Service.World.Command
                                 }
                                 else
                                 {
-                                    context.Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to process this command in your actual state."));
                                 }
                             }
                             else
                             {
-                                context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("No cell available to be teleported on"));
+                                context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("No cell available to be teleported on"));
                             }
                         }
                         else
                         {
-                            context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow cellId"));
+                            context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character teleport %mapId% %cellId%"));
                         }
                     }
                     else
                     {
-                        context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow mapId"));
+                        context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow mapId"));
                     }
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character teleport %mapId%"));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character teleport %mapId% %cellId%"));
                 }
             }
         }
@@ -313,12 +320,12 @@ namespace Codebreak.Service.World.Command
                     }
                     else
                     {
-                        context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("New level should be higher than yours"));
+                        context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("New level should be higher than yours"));
                     }
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character levelup %level%"));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character levelup %level%"));
                 }
             }
         }
@@ -355,19 +362,19 @@ namespace Codebreak.Service.World.Command
                         if (instance != null)
                         {
                             context.Character.Inventory.AddItem(instance);
-                            context.Character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE(
+                            context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE(
                                 String.Format("Item {0} - `{1}` added in your inventory", itemTemplate.Id, itemTemplate.Name)
                                 ));
                         }
                     }
                     else
                     {
-                        context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow templateId"));
+                        context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow templateId"));
                     }
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Command format : .character item templateId"));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character item templateId"));
                 }
             }
         }

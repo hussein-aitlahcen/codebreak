@@ -577,15 +577,6 @@ namespace Codebreak.Service.World.Game.Entity
                     if(CharacterGuild != null)                    
                         CharacterGuild.Guild.SafeDispatchChatMessage(Id, Name, message);                    
                     return;
-
-                case ChatChannelEnum.CHANNEL_GENERAL:
-                    if (message.StartsWith("."))
-                    {
-                        if(!WorldService.Instance.CommandManager.Execute(new WorldCommandContext(this, message.Remove(0, 1))))                        
-                            base.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow command"));
-                        return;
-                    }
-                    break;
             }
 
             base.DispatchChatMessage(channel, message, remoteEntity);

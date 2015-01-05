@@ -2059,5 +2059,15 @@ namespace Codebreak.Service.World.Network
         {
             return "WUE";
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string BASIC_CONSOLE_MESSAGE(string message)
+        {
+            return "BAT2" + message;
+        }
     }
 }

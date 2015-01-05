@@ -10,6 +10,7 @@ using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Command;
 
 namespace Codebreak.Service.World.Frame
 {
@@ -136,6 +137,9 @@ namespace Codebreak.Service.World.Frame
                 case 'B':
                     switch (message[1])
                     {
+                        case 'A':
+                            return BasicCommand;
+
                         case 'D':
                             return BasicDate;
 
@@ -159,6 +163,28 @@ namespace Codebreak.Service.World.Frame
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void BasicCommand(CharacterEntity character, string message)
+        {
+            if(character.Power < 1)
+            {
+                character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Not enought rights, attempt registered."));
+                return;
+            }
+
+            var command = message.Substring(2);
+
+            character.AddMessage(() =>
+                {
+                    if (!WorldService.Instance.CommandManager.Execute(new WorldCommandContext(character, command)))
+                        character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow command"));
+                });
         }
 
         /// <summary>

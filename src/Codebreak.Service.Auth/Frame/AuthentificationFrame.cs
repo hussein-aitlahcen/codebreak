@@ -84,7 +84,7 @@ namespace Codebreak.Service.Auth.Frames
 
                     AuthService.Instance.SendWorldList(client);
 
-                    client.Send(AuthMessage.ACCOUNT_RIGHT(0));
+                    client.Send(AuthMessage.ACCOUNT_RIGHT(client.Account.Power));
                     client.Send(AuthMessage.ACCOUNT_SECRET_ANSWER());
 
                     client.FrameManager.AddFrame(WorldSelectionFrame.Instance);
