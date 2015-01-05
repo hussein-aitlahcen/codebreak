@@ -55,7 +55,7 @@ namespace Codebreak.Framework.Command
             if ((x = m_data.IndexOf(separator, Position, StringComparison.Ordinal)) == Position)
             {
                 Position += separator.Length;
-                return "";
+                return m_data.Substring(Position, m_data.Length - Position);
             }
 
             if (x < 0)
