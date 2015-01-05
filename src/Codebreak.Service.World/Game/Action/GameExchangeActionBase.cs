@@ -54,7 +54,8 @@ namespace Codebreak.Service.World.Game.Action
             DistantEntity = distantEntity;
             Exchange = exchange;
             Exchange.AddHandler(Entity.Dispatch);
-            Exchange.AddHandler(DistantEntity.Dispatch);
+            if(DistantEntity != null)
+                Exchange.AddHandler(DistantEntity.Dispatch);
             Entity.AddUpdatable(Exchange);
         }
         
@@ -74,7 +75,8 @@ namespace Codebreak.Service.World.Game.Action
         {
             Exchange.Leave(success);
             Exchange.RemoveHandler(Entity.Dispatch);
-            Exchange.RemoveHandler(DistantEntity.Dispatch);
+            if(DistantEntity != null)
+                Exchange.RemoveHandler(DistantEntity.Dispatch);
             Entity.RemoveUpdatable(Exchange);
         }
     }

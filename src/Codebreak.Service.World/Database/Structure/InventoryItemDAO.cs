@@ -3,6 +3,7 @@ using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Stats;
 using PropertyChanged;
+using Codebreak.Service.World.Game.Spell;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -86,28 +87,53 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
-        private ItemTemplateDAO _template;
+        /// <summary>
+        /// 
+        /// </summary>
+        public long MerchantPrice
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private ItemTemplateDAO m_template;
+
         /// <summary>
         /// 
         /// </summary>
         public ItemTemplateDAO GetTemplate()
         {
-            if (_template == null)
-            {
-                _template = ItemTemplateRepository.Instance.GetById(TemplateId);
-            }
-            return _template;
+            if (m_template == null)            
+                m_template = ItemTemplateRepository.Instance.GetById(TemplateId);            
+            return m_template;
         }
         
-        private GenericStats _statistics;
+        /// <summary>
+        /// 
+        /// </summary>
+        private GenericStats m_statistics;
+
         /// <summary>
         /// 
         /// </summary>
         public GenericStats GetStatistics()
         {
-            if (_statistics == null)            
-                _statistics = GenericStats.Deserialize(Effects);            
-            return _statistics;
+            if (m_statistics == null)            
+                m_statistics = GenericStats.Deserialize(Effects);            
+            return m_statistics;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <param name="value"></param>
+        public void SaveStats()
+        {
+            Effects = GetStatistics().Serialize();
         }
 
         /// <summary>
@@ -199,7 +225,7 @@ namespace Codebreak.Service.World.Database.Structure
             instance.OwnerId = -1;
             instance.TemplateId = templateId;
             instance.Quantity = (int)quantity;
-            instance._statistics = statistics;
+            instance.m_statistics = statistics;
             instance.Effects = statistics.Serialize();
             instance.StringEffects = statistics.ToItemStats();
             instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;

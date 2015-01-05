@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public sealed class CharacterEntity : FighterBase, IDisposable
+    public class CharacterEntity : FighterBase, IDisposable
     {
         /// <summary>
         /// 
@@ -495,18 +495,18 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private string m_guildDisplayInfos;
+        protected string m_guildDisplayInfos;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
-        public CharacterEntity(int power, CharacterDAO characterDAO)
-            : base(EntityTypeEnum.TYPE_CHARACTER, characterDAO.Id)
+        public CharacterEntity(int power, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
+            : base(type, characterDAO.Id)
         {            
             CharacterAlignment = characterDAO.GetCharacterAlignment();
-
+                     
             Power = power;
             PartyId = -1;
             PartyInvitedPlayerId = -1;
@@ -514,16 +514,17 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
             DatabaseRecord = characterDAO;
-
-            Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);
-
+            
             CharacterJobs = new JobBook();
             Statistics = new GenericStats(characterDAO);
             Spells = SpellBookFactory.Instance.Create(this);
-
+            Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);
             FrameManager = new FrameManager<CharacterEntity, string>(this);
+            Inventory = new CharacterInventory(this);
 
-            Inventory.Initialize();
+            var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, Id);
+            if (guildMember != null)
+                guildMember.CharacterConnected(this);
         }
 
         /// <summary>
@@ -618,6 +619,15 @@ namespace Codebreak.Service.World.Game.Entity
         public void ExchangeNpc(NonPlayerCharacterEntity npc)
         {
             CurrentAction = new GameNpcExchangeAction(this, npc);
+            StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ExchangePersonalShop()
+        {
+            CurrentAction = new GamePersonalShopExchangeAction(this);
             StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
@@ -744,7 +754,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public override bool CanBeExchanged(ExchangeTypeEnum exchangeType)
         {
-            return base.CanBeExchanged(exchangeType) && exchangeType == ExchangeTypeEnum.EXCHANGE_PLAYER;
+            return base.CanBeExchanged(exchangeType) && (exchangeType == ExchangeTypeEnum.EXCHANGE_PLAYER || exchangeType == ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT);
         }
 
         /// <summary>

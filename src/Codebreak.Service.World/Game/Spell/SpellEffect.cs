@@ -227,7 +227,7 @@ namespace Codebreak.Service.World.Game.Spell
 
         CanBeExchange = 983,
         
-        /* ACTION BDD NPC RESPONSES */
+        /* ACTION SPECIALES */
         NpcDialogReply = 2000,
         NpcDialogLeave = 2001,
     }

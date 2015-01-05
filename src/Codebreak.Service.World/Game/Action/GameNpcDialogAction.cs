@@ -62,7 +62,6 @@ namespace Codebreak.Service.World.Game.Action
         {
             Entity.Dispatch(WorldMessage.DIALOG_CREATE(Npc.Id));
             Dialog.SendQuestion(Npc.InitialQuestion);
-
             base.Start();
         }
 
@@ -73,7 +72,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Abort(params object[] args)
         {
             Entity.Dispatch(WorldMessage.DIALOG_LEAVE());
-
             base.Abort(args);
         }
 
@@ -84,7 +82,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)
         {
             Entity.Dispatch(WorldMessage.DIALOG_LEAVE());
-
             base.Stop(args);
         }
     }

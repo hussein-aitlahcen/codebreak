@@ -245,9 +245,11 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void ExchangeRequest(CharacterEntity character, string message)
         {
-            var exchangeData = message.Substring(2).Split('|');
+            var exchangeData = message.Substring(2).Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var exchangeTypeId = int.Parse(exchangeData[0]);
-            var exchangeActorId = int.Parse(exchangeData[1]);
+            var exchangeActorId = -1;
+            if(exchangeData.Length > 1)
+                exchangeActorId = int.Parse(exchangeData[1]);
 
             if (!Enum.IsDefined(typeof(ExchangeTypeEnum), exchangeTypeId))
             {
@@ -259,22 +261,23 @@ namespace Codebreak.Service.World.Frame
             character.AddMessage(() =>
             {
                 var exchangeType = (ExchangeTypeEnum)exchangeTypeId;
-
                 if (!character.CanGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Request entity cant start an exchange : " + character.Name);
+                    Logger.Debug("ExchangeFrame::Request character cant start an exchange : " + character.Name);
                     character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                     return;
                 }
 
                 var distantEntity = character.Map.GetEntity(exchangeActorId);
+                if (exchangeType == ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT)
+                    distantEntity = character;
                 if (distantEntity == null)
                 {
                     Logger.Debug("ExchangeFrame::Request unknow distant entity id : " + character.Name);
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
-
+                
                 if(!distantEntity.CanGameAction(GameActionTypeEnum.EXCHANGE))
                 {
                     character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
@@ -290,7 +293,14 @@ namespace Codebreak.Service.World.Frame
                 switch (distantEntity.Type)
                 {
                     case EntityTypeEnum.TYPE_CHARACTER:
-                        character.ExchangePlayer((CharacterEntity)distantEntity);
+                        if (exchangeType == ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT && character.Id == distantEntity.Id)
+                        {
+                            character.ExchangePersonalShop();
+                        }
+                        else
+                        {
+                            character.ExchangePlayer((CharacterEntity)distantEntity);
+                        }
                         break;
 
                     case EntityTypeEnum.TYPE_NPC:

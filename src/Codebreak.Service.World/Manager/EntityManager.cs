@@ -76,15 +76,28 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public CharacterEntity CreateCharacter(int power, CharacterDAO characterDAO)
         {
-            var character = new CharacterEntity(power, characterDAO);
-            var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, character.Id);
-            if (guildMember != null)
-                guildMember.CharacterConnected(character);
+            var character = new CharacterEntity(power, characterDAO);         
             m_characterById.Add(character.Id, character);
             m_characterByName.Add(character.Name.ToLower(), character);
             m_characterByAccount.Add(character.AccountId, character);
             m_onlinePlayers++;
             Logger.Info("EntityManager online players : " + m_onlinePlayers);            
+            return character;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterDAO"></param>
+        /// <returns></returns>
+        public MerchantEntity CreateMerchant(CharacterDAO characterDAO)
+        {
+            var character = new MerchantEntity(characterDAO);
+            m_characterById.Add(character.Id, character);
+            m_characterByName.Add(character.Name.ToLower(), character);
+            m_characterByAccount.Add(character.AccountId, character);
+            m_onlinePlayers++;
+            Logger.Info("EntityManager online players : " + m_onlinePlayers);
             return character;
         }
         

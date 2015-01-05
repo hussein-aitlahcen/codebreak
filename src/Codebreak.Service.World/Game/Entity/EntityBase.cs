@@ -280,10 +280,10 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public InventoryBag Inventory
+        public EntityInventory Inventory
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -318,7 +318,6 @@ namespace Codebreak.Service.World.Game.Entity
             Id = id;
             Type = type;
             Orientation = 1;
-            Inventory = new EntityInventory(this);
 
             m_chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);

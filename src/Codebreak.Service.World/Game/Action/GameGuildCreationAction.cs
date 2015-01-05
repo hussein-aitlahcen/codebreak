@@ -39,7 +39,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Start()
         {
             Entity.Dispatch(WorldMessage.GUILD_CREATION_OPEN());
-            base.Start();
         }
 
         /// <summary>

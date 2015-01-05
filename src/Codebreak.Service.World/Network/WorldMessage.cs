@@ -810,9 +810,9 @@ namespace Codebreak.Service.World.Network
         /// <param name="guid"></param>
         /// <param name="slot"></param>
         /// <returns></returns>
-        public static string OBJECT_MOVE_SUCCESS(long guid, ItemSlotEnum slot)
+        public static string OBJECT_MOVE_SUCCESS(long guid, int slot)
         {
-            return "OM" + guid + "|" + (slot == ItemSlotEnum.SLOT_INVENTORY ? "" : ((int)slot).ToString());
+            return "OM" + guid + "|" + (slot == (int)ItemSlotEnum.SLOT_INVENTORY ? "" : slot.ToString());
         }
 
         /// <summary>
@@ -967,7 +967,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="actorNpc"></param>
         /// <returns></returns>
-        public static string EXCHANCE_ITEMS_LIST(EntityBase entity)
+        public static string EXCHANGE_ITEMS_LIST(EntityBase entity)
         {
             var message = new StringBuilder("EL");
             entity.SerializeAs_ShopItemsListInformations(message);
@@ -2068,6 +2068,25 @@ namespace Codebreak.Service.World.Network
         public static string BASIC_CONSOLE_MESSAGE(string message)
         {
             return "BAT2" + message;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static string EXCHANGE_PERSONAL_SHOP_ITEMS_LIST(IEnumerable<InventoryItemDAO> items)
+        {
+            var message = new StringBuilder("EL");
+            foreach(var item in items)
+            {
+                message.Append(item.Id).Append(';');
+                message.Append(item.Quantity).Append(';');
+                message.Append(item.TemplateId).Append(';');
+                message.Append(item.StringEffects).Append(';');
+                message.Append(item.MerchantPrice).Append('|');
+            }
+            return message.ToString();
         }
     }
 }

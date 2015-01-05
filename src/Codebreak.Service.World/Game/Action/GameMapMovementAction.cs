@@ -16,15 +16,6 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        public MovementPath Path
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override bool CanAbort
         {
             get
@@ -33,6 +24,15 @@ namespace Codebreak.Service.World.Game.Action
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public MovementPath Path
+        {
+            get;
+            private set;
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -105,10 +105,8 @@ namespace Codebreak.Service.World.Game.Action
         {
             Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
 
-            if (SkillId != -1 && Entity.MapId == SkillMapId)
-            {
-                Entity.Map.InteractiveExecute((CharacterEntity)Entity, SkillCellId, SkillId);
-            }
+            if (SkillId != -1 && Entity.MapId == SkillMapId)            
+                Entity.Map.InteractiveExecute((CharacterEntity)Entity, SkillCellId, SkillId);            
 
             base.Stop(args);
         }

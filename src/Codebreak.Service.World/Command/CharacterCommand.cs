@@ -190,13 +190,7 @@ namespace Codebreak.Service.World.Command
 
             protected override void Process(WorldCommandContext context)
             {                
-                string characterName = context.TextCommandArgument.NextWord();
-                if(characterName == null)
-                {
-                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
-                    return;
-                }
-                
+                string characterName = context.TextCommandArgument.NextWord();                
                 WorldService.Instance.AddMessage(() => 
                     {
                         var character = EntityManager.Instance.GetCharacterByName(characterName);

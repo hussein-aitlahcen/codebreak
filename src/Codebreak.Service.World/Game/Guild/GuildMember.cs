@@ -209,7 +209,6 @@ namespace Codebreak.Service.World.Game.Guild
         {
             base.AddHandler(character.SafeDispatch);
             Character = character;
-            Character.SetCharacterGuild(this);
         }
 
         /// <summary>

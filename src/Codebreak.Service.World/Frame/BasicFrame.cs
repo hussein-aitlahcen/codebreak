@@ -175,6 +175,7 @@ namespace Codebreak.Service.World.Frame
             if(character.Power < 1)
             {
                 character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Not enought rights, attempt registered."));
+                Logger.Error("BasicFrame::BasicCommand player trying to use an admin command : " + character.Name + " -> " + message);
                 return;
             }
 

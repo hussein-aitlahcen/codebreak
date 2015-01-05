@@ -49,7 +49,7 @@ namespace Codebreak.Framework.Command
         {
             int length = m_data.Length;
             if (Position >= length)
-                return null;
+                return "";
 
             int x;
             if ((x = m_data.IndexOf(separator, Position, StringComparison.Ordinal)) == Position)

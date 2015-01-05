@@ -37,7 +37,7 @@ namespace Codebreak.Service.World.Game.Exchange
         public override void Create()
         {
             base.Create();
-            base.Dispatch(WorldMessage.EXCHANCE_ITEMS_LIST(m_shop));
+            base.Dispatch(WorldMessage.EXCHANGE_ITEMS_LIST(m_shop));
         }
         
         /// <summary>
@@ -111,10 +111,10 @@ namespace Codebreak.Service.World.Game.Exchange
             if (quantity > item.Quantity)
                 quantity = item.Quantity;
 
-            var realPrice = (item.GetTemplate().Price / 10) * quantity;
+            var sellPrice = (item.GetTemplate().Price / 10) * quantity;
 
             entity.Inventory.RemoveItem(guid, quantity);
-            entity.Inventory.AddKamas(realPrice);
+            entity.Inventory.AddKamas(sellPrice);
         }
         
         /// <summary>

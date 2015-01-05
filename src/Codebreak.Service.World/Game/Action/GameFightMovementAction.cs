@@ -32,16 +32,7 @@ namespace Codebreak.Service.World.Game.Action
         {
             Path = path;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="args"></param>
-        public override void Abort(params object[] args)
-        {
-            base.Abort(args);
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

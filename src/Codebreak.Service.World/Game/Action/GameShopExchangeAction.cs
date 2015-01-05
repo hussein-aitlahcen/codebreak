@@ -21,6 +21,13 @@ namespace Codebreak.Service.World.Game.Action
         public GameShopExchangeAction(EntityBase buyer, NonPlayerCharacterEntity shop)
             : base(new ShopExchange(buyer, shop), buyer, shop)
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Start()
+        {
             Accept();
         }
 

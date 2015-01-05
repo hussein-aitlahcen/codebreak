@@ -15,6 +15,35 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
+        public override bool CanAbort
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int MapId
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CellId
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         /// <param name="mapId"></param>
         /// <param name="cellId"></param>
@@ -24,48 +53,17 @@ namespace Codebreak.Service.World.Game.Action
             MapId = mapId;
             CellId = cellId;
         }
-
-        public int MapId
-        {
-            get;
-            private set;
-        }
-
-        public int CellId
-        {
-            get;
-            private set;
-        }
-
-        public override bool CanAbort
-        {
-            get
-            { 
-                return false; 
-            }
-        }
-
-        public override void Start()
-        {
-            base.Start();
-        }
-
-        public override void Abort(params object[] args)
-        {
-            base.Abort(args);
-        }
-
+                
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public override void Stop(params object[] args)
         {
             Entity.MapId = MapId;
             Entity.CellId = CellId;
 
             base.Stop(args);
-        }
-
-        public override string SerializeAs_GameAction()
-        {
-            throw new NotImplementedException();
         }
     }
 }

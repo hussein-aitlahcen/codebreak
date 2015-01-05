@@ -89,6 +89,7 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)
         {
             Callback();
+
             base.Stop(args);
         }
 

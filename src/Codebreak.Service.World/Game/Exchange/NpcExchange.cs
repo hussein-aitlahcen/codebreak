@@ -37,7 +37,6 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         private Dictionary<int, long> m_templateQuantity;
         private RewardEntry m_reward;
-        private long m_nextItemId;
 
         /// <summary>
         /// 

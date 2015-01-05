@@ -32,7 +32,13 @@ namespace Codebreak.Service.World.Game.Action
             : base(exchange, character, npc)
         {
             AuctionExchange = exchange;
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Start()
+        {
             Accept();
         }
 

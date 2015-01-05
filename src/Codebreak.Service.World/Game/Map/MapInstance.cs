@@ -459,7 +459,7 @@ namespace Codebreak.Service.World.Game.Map
                 }
                 else
                 {
-                    character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("Cet objet interactif est en cours de developpement."));
+                    character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("Not implemented yet."));
                 }
             }
         }
