@@ -64,7 +64,8 @@ namespace Codebreak.Service.World.Manager
                     SkillIdEnum.SKILL_VENDRE,
                     SkillIdEnum.SKILL_VENDRE_1,
                     SkillIdEnum.SKILL_VERROUILLER,
-                    SkillIdEnum.SKILL_VERROUILLER_1));
+                    SkillIdEnum.SKILL_VERROUILLER_1,
+                    SkillIdEnum.SKILL_SE_RENDRE_A_INCARNAM));
         }
 
         /// <summary>

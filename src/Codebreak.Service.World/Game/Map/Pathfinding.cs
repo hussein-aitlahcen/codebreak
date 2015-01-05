@@ -809,7 +809,7 @@ namespace Codebreak.Service.World.Game.Map
                 var mapCell = map.GetCell(actualCell);
                 if (mapCell != null)
                 {
-                    if (mapCell.InteractiveObjectId != 0)
+                    if (mapCell.InteractiveObject != null && !mapCell.InteractiveObject.CanWalkThrough)
                     {
                         length = -2;
                         break;
