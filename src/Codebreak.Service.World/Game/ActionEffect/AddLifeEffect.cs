@@ -29,9 +29,6 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell)
         {            
-            if(entity.Type == EntityTypeEnum.TYPE_CHARACTER)
-                entity.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)entity));
-
             switch((ItemTypeEnum)item.GetTemplate().Type)
             {
                 case ItemTypeEnum.TYPE_PAIN:
@@ -56,6 +53,12 @@ namespace Codebreak.Service.World.Game.ActionEffect
             if (entity.Life + heal > entity.MaxLife)
                 heal = entity.MaxLife - entity.Life;
             entity.Life += heal;
+
+            if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+            {
+                entity.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)entity));
+                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_LIFE_RECOVERED, heal));
+            }
 
             return true;
         }

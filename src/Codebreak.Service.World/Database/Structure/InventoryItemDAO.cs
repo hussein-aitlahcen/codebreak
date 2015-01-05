@@ -94,7 +94,7 @@ namespace Codebreak.Service.World.Database.Structure
         {
             if (_template == null)
             {
-                _template = ItemTemplateRepository.Instance.GetTemplate(TemplateId);
+                _template = ItemTemplateRepository.Instance.GetById(TemplateId);
             }
             return _template;
         }

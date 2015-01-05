@@ -172,6 +172,24 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public List<ItemTemplateDAO> ShopItems
+        {
+            get;
+            private set;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<RewardEntry> Rewards
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private AuctionHouseInstance m_auctionInstance;
         private NpcInstanceDAO m_npcRecord;
         private NpcQuestionDAO m_initialQuestion;
@@ -188,6 +206,11 @@ namespace Codebreak.Service.World.Game.Entity
             m_npcRecord = npcDAO;
 
             Orientation = m_npcRecord.Orientation;
+
+            Rewards = new List<RewardEntry>();
+            Rewards.AddRange(npcDAO.GetTemplate().GetRewards());
+
+            ShopItems = new List<ItemTemplateDAO>();
             ShopItems.AddRange(npcDAO.GetTemplate().GetShopList());
         }
         
@@ -207,19 +230,19 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public override bool CanBeExchanged(ExchangeTypeEnum exchangeType)
         {
-            bool Can = false;
             switch(exchangeType)
             {
+                case ExchangeTypeEnum.EXCHANGE_NPC:
+                    return Rewards.Count > 0;
+
                 case ExchangeTypeEnum.EXCHANGE_SHOP:
-                    Can = ShopItems.Count > 0;
-                    break;
+                    return ShopItems.Count > 0;
 
                 case ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_BUY:
                 case ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_SELL:
-                    Can = AuctionHouse != null;
-                    break;                    
+                    return AuctionHouse != null;
             }
-            return base.CanBeExchanged(exchangeType) && Can;
+            return false;
         }
 
         /// <summary>

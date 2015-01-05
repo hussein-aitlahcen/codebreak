@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Network;
 using System;
@@ -17,22 +18,22 @@ namespace Codebreak.Service.World.Game.Exchange
          /// <summary>
         /// 
         /// </summary>
-        private EntityBase m_local, m_distant;
+        protected EntityBase m_local, m_distant;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, Dictionary<long, int>> m_exchangedItems;
+        protected Dictionary<long, Dictionary<long, int>> m_exchangedItems;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, long> m_exchangedKamas;
+        protected Dictionary<long, long> m_exchangedKamas;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, bool> m_validated;
+        protected Dictionary<long, bool> m_validated;
 
         /// <summary>
         /// 
@@ -41,12 +42,13 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="distant"></param>
         public EntityExchange(ExchangeTypeEnum type, EntityBase local, EntityBase distant)
             : base(type)
-        {
-            if (local.Inventory == null || distant.Inventory == null)
-                throw new InvalidOperationException("EntityExchange : unable to start an exchange with an entity that hasnt an inventory.");
-            
+        {            
             m_local = local;
             m_distant = distant;
+            if (m_local.Inventory == null || m_distant.Inventory == null)
+            {
+                Logger.Debug("EntityExchange : exchange with an entity that hasnt an inventory.");
+            }
             m_exchangedItems = new Dictionary<long, Dictionary<long, int>>()
             {
                 { m_local.Id, new Dictionary<long, int>() },
@@ -70,14 +72,17 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override void AddItem(EntityBase entity, long guid, int quantity, long price = -1)
+        public override int AddItem(EntityBase entity, long guid, int quantity, long price = -1)
         {
             if (quantity < 1)
-                return;
+                return 0;
 
             UnValidateAll();
 
-            var item = entity.Inventory.Items.Find(entry => entry.Id == guid);
+            var item = entity.Inventory.GetItem(guid);
+            if (item == null)
+                return 0;
+
             if (quantity > item.Quantity)
                 quantity = item.Quantity;
 
@@ -95,15 +100,23 @@ namespace Codebreak.Service.World.Game.Exchange
 
                 if (entity.Id == m_local.Id)
                 {
-                    m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid]));
-                    m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid] + '|' + item.TemplateId + '|' + item.StringEffects));
+                    if(m_local.Type == EntityTypeEnum.TYPE_CHARACTER)
+                        m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid]));
+                    if(m_distant.Type == EntityTypeEnum.TYPE_CHARACTER)
+                        m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid] + '|' + item.TemplateId + '|' + item.StringEffects));
                 }
                 else
                 {
-                    m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid] + '|' + item.TemplateId + '|' + item.StringEffects));
-                    m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid]));
+                    if (m_local.Type == EntityTypeEnum.TYPE_CHARACTER)
+                        m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid] + '|' + item.TemplateId + '|' + item.StringEffects));
+                    if (m_distant.Type == EntityTypeEnum.TYPE_CHARACTER)
+                        m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid]));
                  }
+
+                return quantity;
             }
+
+            return 0;
         }
 
         /// <summary>
@@ -127,10 +140,10 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override void RemoveItem(EntityBase entity, long guid, int quantity)
+        public override int RemoveItem(EntityBase entity, long guid, int quantity)
         {
             if (quantity < 1)
-                return;
+                return 0;
 
             UnValidateAll();
 
@@ -139,6 +152,7 @@ namespace Codebreak.Service.World.Game.Exchange
                 var item = entity.Inventory.Items.Find(entry => entry.Id == guid);
                 if (quantity >= m_exchangedItems[entity.Id][guid])
                 {
+                    quantity = m_exchangedItems[entity.Id][guid];
                     m_exchangedItems[entity.Id].Remove(guid);
                 }
                 else
@@ -146,17 +160,40 @@ namespace Codebreak.Service.World.Game.Exchange
                     m_exchangedItems[entity.Id][guid] -= quantity;
                 }
 
+                var exists = m_exchangedItems[entity.Id].ContainsKey(guid);
                 if (entity.Id == m_local.Id)
                 {
-                    m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
-                    m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
+                    if (m_local.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    {
+                        m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
+                        if(exists)
+                            m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid]));
+                    }
+                    if (m_distant.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    {
+                        m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
+                        if (exists)
+                            m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid] + '|' + item.TemplateId + '|' + item.StringEffects));           
+                    }
                 }
                 else
                 {
-                    m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
-                    m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
+                    if (m_local.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    {
+                        m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
+                        if (exists)
+                            m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid] + '|' + item.TemplateId + '|' + item.StringEffects));
+                    }
+                    if (m_distant.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    {
+                        m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.Id.ToString()));
+                        if (exists)
+                            m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.Id.ToString() + '|' + m_exchangedItems[entity.Id][guid]));
+                    }
                 }
+                return quantity;
             }
+            return 0;
         }
 
         /// <summary>
@@ -164,10 +201,10 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="quantity"></param>
-        public override void MoveKamas(EntityBase entity, long quantity)
+        public override long MoveKamas(EntityBase entity, long quantity)
         {
-            if (quantity < 1)
-                return;
+            if (quantity < 0)
+                return 0;
 
             UnValidateAll();
 
@@ -177,20 +214,25 @@ namespace Codebreak.Service.World.Game.Exchange
             m_exchangedKamas[entity.Id] = quantity;
             if (entity.Id == m_local.Id)
             {
-                m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
-                m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
+                if (m_local.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    m_local.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
+                if (m_distant.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    m_distant.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
             }
             else
             {
-                m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
-                m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
+                if (m_local.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    m_local.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
+                if (m_distant.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    m_distant.Dispatch(WorldMessage.EXCHANGE_LOCAL_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, quantity.ToString()));
             }
+            return quantity;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void UnValidateAll()
+        public void UnValidateAll()
         {
             m_validated[m_local.Id] = false;
             m_validated[m_distant.Id] = false;
@@ -204,7 +246,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public bool Validate(EntityBase entity)
+        public virtual bool Validate(EntityBase entity)
         {
             m_validated[entity.Id] = m_validated[entity.Id] == false; // inverse de la valeur actuelle
 

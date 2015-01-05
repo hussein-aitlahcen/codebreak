@@ -16,14 +16,15 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <summary>
         /// 
         /// </summary>
-        private EntityBase m_buyer, m_shop;
+        private EntityBase m_buyer;
+        private NonPlayerCharacterEntity m_shop;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="buyer"></param>
         /// <param name="shop"></param>
-        public ShopExchange(EntityBase buyer, EntityBase shop)
+        public ShopExchange(EntityBase buyer, NonPlayerCharacterEntity shop)
             : base(ExchangeTypeEnum.EXCHANGE_SHOP)
         {
             m_buyer = buyer;
@@ -71,7 +72,7 @@ namespace Codebreak.Service.World.Game.Exchange
                 return;
             }
 
-            var instance = template.CreateItem(quantity);
+            var instance = template.Create(quantity);
             if (instance == null)
             {
                 Logger.Debug("ShopExchange error while creating object : " + entity.Name);

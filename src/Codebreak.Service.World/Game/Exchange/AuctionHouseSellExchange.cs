@@ -41,7 +41,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public override void AddItem(EntityBase actor, long guid, int quantity, long price = -1)
+        public override int AddItem(EntityBase actor, long guid, int quantity, long price = -1)
         {
             switch(Npc.AuctionHouse.TryAdd(Character, guid, quantity, price))
             {
@@ -69,6 +69,8 @@ namespace Codebreak.Service.World.Game.Exchange
                     Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS_FOR_TAXE));
                     break;                    
             }
+
+            return 0;
         }
 
         /// <summary>
@@ -77,9 +79,11 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override void RemoveItem(EntityBase actor, long guid, int quantity)
+        public override int RemoveItem(EntityBase actor, long guid, int quantity)
         {
             Npc.AuctionHouse.TryRemove(Character, guid);
+
+            return 0;
         }
     }
 }

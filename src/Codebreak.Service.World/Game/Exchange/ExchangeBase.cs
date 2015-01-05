@@ -15,6 +15,7 @@ namespace Codebreak.Service.World.Game.Exchange
     {
         EXCHANGE_SHOP = 0, // Merchant/npc
         EXCHANGE_PLAYER = 1,
+        EXCHANGE_NPC = 2,
         EXCHANGE_STORAGE = 5,
         EXCHANGE_TAXCOLLECTOR = 8,
         EXCHANGE_PERSONAL_SHOP_EDIT = 6,
@@ -29,48 +30,100 @@ namespace Codebreak.Service.World.Game.Exchange
     /// </summary>
     public abstract class ExchangeBase : MessageDispatcher
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ExchangeTypeEnum Type
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
         public ExchangeBase(ExchangeTypeEnum type)
         {
             Type = type;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void Create()
         {
             base.Dispatch(WorldMessage.EXCHANGE_CREATE(Type, SerializeAs_ExchangeCreate()));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
         public virtual void Leave(bool success = false)
         {
             base.Dispatch(WorldMessage.EXCHANGE_LEAVE(success));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected virtual string SerializeAs_ExchangeCreate()
         {
             return "";
         }
 
-        public virtual void AddItem(EntityBase actor, long guid, int quantity, long price = -1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="guid"></param>
+        /// <param name="quantity"></param>
+        /// <param name="price"></param>
+        public virtual int AddItem(EntityBase actor, long guid, int quantity, long price = -1)
         {
+            return 0;
         }
 
-        public virtual void RemoveItem(EntityBase actor, long guid, int quantity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="guid"></param>
+        /// <param name="quantity"></param>
+        public virtual int RemoveItem(EntityBase actor, long guid, int quantity)
         {
+            return 0;
         }
 
-        public virtual void MoveKamas(EntityBase actor, long quantity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="quantity"></param>
+        public virtual long MoveKamas(EntityBase actor, long quantity)
         {
+            return 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="templateId"></param>
+        /// <param name="quantity"></param>
         public virtual void BuyItem(EntityBase actor, int templateId, long quantity)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="guid"></param>
+        /// <param name="quantity"></param>
+        /// <param name="price"></param>
         public virtual void SellItem(EntityBase actor, long guid, int quantity, long price = -1)
         {
         }

@@ -88,162 +88,162 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void AuctionHouseMiddlePrice(CharacterEntity entity, string message)
+        private void AuctionHouseMiddlePrice(CharacterEntity character, string message)
         {
             int templateId = -1;
             if (!int.TryParse(message.Substring(3), out templateId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
                 if (exchangeAction == null)
                 {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
                 var middlePrice = ((GameAuctionHouseActionBase)exchangeAction).AuctionExchange.Npc.AuctionHouse.GetMiddlePrice(templateId);
 
-                entity.Dispatch(WorldMessage.AUCTION_HOUSE_MIDDLE_PRICE(templateId, middlePrice));
+                character.Dispatch(WorldMessage.AUCTION_HOUSE_MIDDLE_PRICE(templateId, middlePrice));
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void AuctionHouseBuyItem(CharacterEntity entity, string message)
+        private void AuctionHouseBuyItem(CharacterEntity character, string message)
         {
             var data = message.Substring(3).Split('|');
             int categoryId = -1;
             if (!int.TryParse(data[0], out categoryId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if (!int.TryParse(data[1], out quantity))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             long price = -1;
             if (!long.TryParse(data[2], out price))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
                 if (exchangeAction == null)
                 {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                exchangeAction.AuctionExchange.Npc.AuctionHouse.TryBuy(entity, categoryId, quantity, price);
+                exchangeAction.AuctionExchange.Npc.AuctionHouse.TryBuy(character, categoryId, quantity, price);
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void AuctionHouseGetItemsList(CharacterEntity entity, string message)
+        private void AuctionHouseGetItemsList(CharacterEntity character, string message)
         {
             int templateId = -1;
             if (!int.TryParse(message.Substring(3), out templateId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
                 if (exchangeAction == null)
                 {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                exchangeAction.AuctionExchange.Npc.AuctionHouse.SendCategoriesByTemplate(entity, templateId);
+                exchangeAction.AuctionExchange.Npc.AuctionHouse.SendCategoriesByTemplate(character, templateId);
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void AuctionHouseGetTemplatesList(CharacterEntity entity, string message)
+        private void AuctionHouseGetTemplatesList(CharacterEntity character, string message)
         {
             int type = -1;
             if(!int.TryParse(message.Substring(3), out type))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                    if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                     {
-                        Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + character.Name);
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
                     
-                    var exchangeAction = entity.CurrentAction as GameAuctionHouseActionBase;
+                    var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
                     if (exchangeAction == null)
                     {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    exchangeAction.AuctionExchange.Npc.AuctionHouse.SendTemplatesByTypeList(entity, type);
+                    exchangeAction.AuctionExchange.Npc.AuctionHouse.SendTemplatesByTypeList(character, type);
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeRequest(CharacterEntity entity, string message)
+        private void ExchangeRequest(CharacterEntity character, string message)
         {
             var exchangeData = message.Substring(2).Split('|');
             var exchangeTypeId = int.Parse(exchangeData[0]);
@@ -251,61 +251,66 @@ namespace Codebreak.Service.World.Frame
 
             if (!Enum.IsDefined(typeof(ExchangeTypeEnum), exchangeTypeId))
             {
-                Logger.Debug("ExchangeFrame::Request unknow exchangeType : " + exchangeTypeId + " " + entity.Name);
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("ExchangeFrame::Request unknow exchangeType : " + exchangeTypeId + " " + character.Name);
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
                 var exchangeType = (ExchangeTypeEnum)exchangeTypeId;
 
-                if (!entity.CanGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.CanGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Request entity cant start an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                    Logger.Debug("ExchangeFrame::Request entity cant start an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                     return;
                 }
 
-                var distantEntity = entity.Map.GetEntity(exchangeActorId);
+                var distantEntity = character.Map.GetEntity(exchangeActorId);
                 if (distantEntity == null)
                 {
-                    Logger.Debug("ExchangeFrame::Request unknow distant entity id : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Request unknow distant entity id : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
                 if(!distantEntity.CanGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
                     return;
                 }
 
                 if (!distantEntity.CanBeExchanged(exchangeType))
                 {
-                    entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
                     return;
                 }
 
                 switch (distantEntity.Type)
                 {
                     case EntityTypeEnum.TYPE_CHARACTER:
-                        entity.ExchangePlayer((CharacterEntity)distantEntity);
+                        character.ExchangePlayer((CharacterEntity)distantEntity);
                         break;
 
                     case EntityTypeEnum.TYPE_NPC:
+                        var npc = (NonPlayerCharacterEntity)distantEntity;
                         switch(exchangeType)
                         {
+                            case ExchangeTypeEnum.EXCHANGE_NPC:
+                                character.ExchangeNpc(npc);                                
+                                break;
+
                             case ExchangeTypeEnum.EXCHANGE_SHOP:
-                                entity.ExchangeShop(distantEntity);
+                                character.ExchangeShop(npc);
                                 break;
 
                             case ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_BUY:
-                                entity.ExchangeAuctionHouseBuy((NonPlayerCharacterEntity)distantEntity);
+                                character.ExchangeAuctionHouseBuy(npc);
                                 break;
 
                             case ExchangeTypeEnum.EXCHANGE_AUCTION_HOUSE_SELL:
-                                entity.ExchangeAuctionHouseSell((NonPlayerCharacterEntity)distantEntity);
+                                character.ExchangeAuctionHouseSell(npc);
                                 break;
                         }
                         break;
@@ -316,32 +321,32 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeAccept(CharacterEntity entity, string message)
+        private void ExchangeAccept(CharacterEntity character, string message)
         {            
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame:Accept entity not in an exchange request : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame:Accept entity not in an exchange request : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var action = entity.CurrentAction;
+                var action = character.CurrentAction;
                 if (!(action is GamePlayerExchangeAction))
                 {
-                    Logger.Debug("ExchangeFrame::Accept entity is not in a player exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Accept entity is not in a player exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
                 var playerExchangeAction = (GamePlayerExchangeAction)action;
-                if (entity.Id != playerExchangeAction.DistantEntity.Id)
+                if (character.Id != playerExchangeAction.DistantEntity.Id)
                 {
-                    Logger.Debug("ExchangeFrame::Accept player cannot accept an exchange is he is the one who requested it : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Accept player cannot accept an exchange is he is the one who requested it : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
@@ -367,48 +372,46 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeValidate(CharacterEntity entity, string message)
+        private void ExchangeValidate(CharacterEntity character, string message)
         {      
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                    if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                     {
-                        Logger.Debug("ExchangeFrame::Validate entity is not in a exchange : " + entity.Name);
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        Logger.Debug("ExchangeFrame::Validate entity is not in a exchange : " + character.Name);
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    var action = entity.CurrentAction as GameExchangeActionBase;
-
-                    if (action.Exchange.Type != ExchangeTypeEnum.EXCHANGE_PLAYER)
+                    var action = character.CurrentAction as GameExchangeActionBase;
+                    var exchange = action.Exchange as EntityExchange;
+                    if(exchange == null)
                     {
-                        Logger.Debug("ExchangeFrame::Validate entity is not in a player exchange : " + entity.Name);
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    var exchange = (PlayerExchange)action.Exchange;
-                    if (!exchange.Validate(entity))
+                    if (!exchange.Validate(character))
                     {
                         return;
                     }
 
-                    entity.StopAction(GameActionTypeEnum.EXCHANGE, entity.Id);
+                    character.StopAction(GameActionTypeEnum.EXCHANGE, character.Id);
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeSell(CharacterEntity entity, string message)
+        private void ExchangeSell(CharacterEntity character, string message)
         {
             if (!message.Contains('|'))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -416,47 +419,47 @@ namespace Codebreak.Service.World.Frame
 
             if(data.Length != 2)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Sell entity is not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Sell entity is not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                ((GameExchangeActionBase)entity.CurrentAction).Exchange.SellItem(entity, itemId, quantity);
+                ((GameExchangeActionBase)character.CurrentAction).Exchange.SellItem(character, itemId, quantity);
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeBuy(CharacterEntity entity, string message)
+        private void ExchangeBuy(CharacterEntity character, string message)
         {
             if(!message.Contains('|'))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -464,74 +467,74 @@ namespace Codebreak.Service.World.Frame
 
             if(data.Length != 2)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int templateId = -1;
             if (!int.TryParse(data[0], out templateId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             int quantity = -1;
             if(!int.TryParse(data[1], out quantity))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Buy entity not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Buy entity not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                ((GameExchangeActionBase)entity.CurrentAction).Exchange.BuyItem(entity, templateId, quantity);
+                ((GameExchangeActionBase)character.CurrentAction).Exchange.BuyItem(character, templateId, quantity);
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeMoveGold(CharacterEntity entity, string message)
+        private void ExchangeMoveGold(CharacterEntity character, string message)
         {
             long kamas = -1;
             if(!long.TryParse(message.Substring(3), out kamas))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::MoveGold entity not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::MoveGold entity not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                ((GameExchangeActionBase)entity.CurrentAction).Exchange.MoveKamas(entity, kamas);
+                ((GameExchangeActionBase)character.CurrentAction).Exchange.MoveKamas(character, kamas);
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeMoveObject(CharacterEntity entity, string message)
+        private void ExchangeMoveObject(CharacterEntity character, string message)
         {
             if (!message.Contains('|'))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -539,7 +542,7 @@ namespace Codebreak.Service.World.Frame
 
             if (data.Length < 2)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -550,19 +553,19 @@ namespace Codebreak.Service.World.Frame
             if (data.Length > 2)
                 price = long.Parse(data[2]);
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::MoveObject entity not in an exchange : " + entity.Name);     
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::MoveObject entity not in an exchange : " + character.Name);     
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
                 
                 if (add)                
-                    ((GameExchangeActionBase)entity.CurrentAction).Exchange.AddItem(entity, itemId, quantity, price);                
+                    ((GameExchangeActionBase)character.CurrentAction).Exchange.AddItem(character, itemId, quantity, price);                
                 else                
-                    ((GameExchangeActionBase)entity.CurrentAction).Exchange.RemoveItem(entity, itemId, quantity);                
+                    ((GameExchangeActionBase)character.CurrentAction).Exchange.RemoveItem(character, itemId, quantity);                
             });
         }
     }

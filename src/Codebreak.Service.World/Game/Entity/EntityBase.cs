@@ -280,15 +280,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public List<ItemTemplateDAO> ShopItems
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public InventoryBag Inventory
         {
             get;
@@ -327,9 +318,8 @@ namespace Codebreak.Service.World.Game.Entity
             Id = id;
             Type = type;
             Orientation = 1;
-
             Inventory = new EntityInventory(this);
-            ShopItems = new List<ItemTemplateDAO>();
+
             m_chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
@@ -655,10 +645,7 @@ namespace Codebreak.Service.World.Game.Entity
         public override void Dispose()
         {
             CurrentAction = null;
-
-            ShopItems.Clear();
-            ShopItems = null;
-
+            
             Statistics.Dispose();
             Statistics = null;
 

@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="buyer"></param>
         /// <param name="shop"></param>
-        public GameShopExchangeAction(EntityBase buyer, EntityBase shop)
+        public GameShopExchangeAction(EntityBase buyer, NonPlayerCharacterEntity shop)
             : base(new ShopExchange(buyer, shop), buyer, shop)
         {
             Accept();

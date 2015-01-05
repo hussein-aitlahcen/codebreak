@@ -623,6 +623,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="npc"></param>
+        public void ExchangeNpc(NonPlayerCharacterEntity npc)
+        {
+            CurrentAction = new GameNpcExchangeAction(this, npc);
+            StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         public void ExchangePlayer(CharacterEntity player)
         {
@@ -650,7 +660,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="entity"></param>
-        public void ExchangeShop(EntityBase entity)
+        public void ExchangeShop(NonPlayerCharacterEntity entity)
         {
             CurrentAction = new GameShopExchangeAction(this, entity);
             StartAction(GameActionTypeEnum.EXCHANGE);

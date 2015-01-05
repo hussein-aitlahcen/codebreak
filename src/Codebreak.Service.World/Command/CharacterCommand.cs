@@ -348,10 +348,10 @@ namespace Codebreak.Service.World.Command
                 int idTemplate;
                 if (Int32.TryParse(context.TextCommandArgument.NextWord(), out idTemplate))
                 {
-                    var itemTemplate = ItemTemplateRepository.Instance.GetTemplate(idTemplate);
+                    var itemTemplate = ItemTemplateRepository.Instance.GetById(idTemplate);
                     if (itemTemplate != null)
                     {
-                        var instance = itemTemplate.CreateItem(1, ItemSlotEnum.SLOT_INVENTORY, true);
+                        var instance = itemTemplate.Create(1, ItemSlotEnum.SLOT_INVENTORY, true);
                         if (instance != null)
                         {
                             context.Character.Inventory.AddItem(instance);
