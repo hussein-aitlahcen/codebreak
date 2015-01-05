@@ -19,6 +19,17 @@ namespace Codebreak.Framework.Command
         /// <summary>
         /// 
         /// </summary>
+        public IList<Command<C>> Commands
+        {
+            get
+            {
+                return m_commands;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public CommandManager() { }
 
         /// <summary>
@@ -28,7 +39,8 @@ namespace Codebreak.Framework.Command
         /// <returns></returns>
         public bool Execute(C context)
         {
-            foreach (var command in m_commands.Where(command => command.Aliases.Contains(context.TextCommandArgument.NextWord())))
+            var word = context.TextCommandArgument.NextWord();
+            foreach (var command in m_commands.Where(command => command.Aliases.Contains(word)))
             {
                 if (command.Execute(context))
                     return true;

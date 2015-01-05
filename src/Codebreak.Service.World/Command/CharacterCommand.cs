@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Command
 
         public override string Description
         {
-            get { return "Command that manages everything about the connected character";  }
+            get { return "Character management command.";  }
         }
 
         protected override bool CanExecute(WorldCommandContext context)
@@ -154,11 +154,11 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
-        public sealed class SpawnMonsterCommand : SubCommand<WorldCommandContext>
+        public sealed class TeleportToCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
             {
-                "monster"
+                "teleportto"
             };
 
             public override string[] Aliases
@@ -173,7 +173,7 @@ namespace Codebreak.Service.World.Command
             {
                 get
                 {
-                    return "Spawn monster command that can only be used by admins.";
+                    return "Teleport yourself to a player location.";
                 }
             }
 
@@ -189,11 +189,41 @@ namespace Codebreak.Service.World.Command
             }
 
             protected override void Process(WorldCommandContext context)
-            {
-                context.Character.Map.SpawnMonsters(context.Character.CellId);
+            {                
+                string characterName = context.TextCommandArgument.NextWord();
+                if(characterName == null)
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
+                    return;
+                }
+                
+                WorldService.Instance.AddMessage(() => 
+                    {
+                        var character = EntityManager.Instance.GetCharacterByName(characterName);
+                        if(character == null)
+                        {
+                            context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
+                            return;
+                        }
+
+                        var mapId = character.MapId;
+                        var cellId = character.CellId;
+
+                        character.AddMessage(() =>
+                            {
+                                if (!context.Character.CanGameAction(Game.Action.GameActionTypeEnum.MAP_TELEPORT))
+                                {
+                                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to process this command in your actual state."));
+                                    return;
+                                }
+
+                                context.Character.Teleport(mapId, cellId);
+                            });
+                    });
+                
             }
         }
-
+ 
         /// <summary>
         /// 
         /// </summary>

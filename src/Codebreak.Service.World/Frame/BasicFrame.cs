@@ -183,7 +183,7 @@ namespace Codebreak.Service.World.Frame
             character.AddMessage(() =>
                 {
                     if (!WorldService.Instance.CommandManager.Execute(new WorldCommandContext(character, command)))
-                        character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unknow command"));
+                        character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow command"));
                 });
         }
 

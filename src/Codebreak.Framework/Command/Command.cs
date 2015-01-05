@@ -51,6 +51,17 @@ namespace Codebreak.Framework.Command
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="message"></param>
+        public void Serialize(StringBuilder message, string parent = "")
+        {
+            message.Append(parent + Aliases.First()).Append(" : ").Append(Description).Append('\n');
+            foreach(var subCommand in m_subCommands)            
+                subCommand.Serialize(message, Aliases.First() + " ");            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         public bool Execute(C context)
