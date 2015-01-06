@@ -137,14 +137,7 @@ namespace Codebreak.Service.World.Frame
 
             entity.AddMessage(() => 
                 {
-                    var item = entity.Inventory.RemoveItem(itemId);
-                    if(item == null)
-                    {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
-
-                    ActionEffectManager.Instance.ApplyEffects(entity, item, targetId, targetCell);
+                    ActionEffectManager.Instance.ApplyEffects(entity, itemId, targetId, targetCell);
                 });
         }
 

@@ -20,6 +20,7 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         private Dictionary<EffectEnum, IActionEffect> m_effectById;
+        private Dictionary<ItemTypeEnum, List<IActionEffect>> m_effectByType;
 
         /// <summary>
         /// 
@@ -30,6 +31,12 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
             m_effectById.Add(EffectEnum.NpcDialogLeave, NpcDialogLeaveEffect.Instance);
             m_effectById.Add(EffectEnum.NpcDialogReply, NpcDialogReplyEffect.Instance);
+
+            m_effectByType = new Dictionary<ItemTypeEnum, List<IActionEffect>>();
+            m_effectByType.Add(ItemTypeEnum.TYPE_FEE_ARTIFICE, new List<IActionEffect>()
+            {
+
+            });
         }
 
         /// <summary>
@@ -37,20 +44,30 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         /// <param name="?"></param>
         /// <param name="item"></param>
-        public void ApplyEffects(EntityBase entity, InventoryItemDAO item, long targetId = -1, int targetCell = -1, Dictionary<string, string> parameters = null)
+        public void ApplyEffects(EntityBase entity, long itemId, long targetId = -1, int targetCell = -1, Dictionary<string, string> parameters = null)
         {
-            if(targetId != -1)
-            {
-                entity = entity.Map.GetEntity(targetId);
-                if (entity == null)
-                    return;
-            }
+            var item = entity.Inventory.RemoveItem(itemId);
+            if(item == null)            
+                return;
 
-            foreach(var effect in item.GetStatistics().GetEffects())
+            if (item.StringEffects != string.Empty)
             {
-                if (m_effectById.ContainsKey(effect.Key))
+                foreach (var effect in item.GetStatistics().GetEffects())
                 {
-                    m_effectById[effect.Key].ProcessItem(entity, item, effect.Value, targetId, targetCell);
+                    if (m_effectById.ContainsKey(effect.Key))
+                    {
+                        m_effectById[effect.Key].ProcessItem(entity, item, effect.Value, targetId, targetCell);
+                    }
+                }
+            }
+            else
+            {
+                if (m_effectByType.ContainsKey((ItemTypeEnum)item.GetTemplate().Type))
+                {
+                    foreach(var effect in m_effectByType[(ItemTypeEnum)item.GetTemplate().Type])
+                    {
+                        effect.ProcessItem(entity, item, null, targetId, targetCell);
+                    }
                 }
             }
         }

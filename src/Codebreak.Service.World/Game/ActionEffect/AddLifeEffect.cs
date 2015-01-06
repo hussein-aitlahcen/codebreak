@@ -29,6 +29,13 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell)
         {            
+            if(targetId != -1)
+            {
+                entity = entity.Map.GetEntity(targetId);
+                if (entity == null)
+                    return false;
+            }
+
             switch((ItemTypeEnum)item.GetTemplate().Type)
             {
                 case ItemTypeEnum.TYPE_PAIN:
