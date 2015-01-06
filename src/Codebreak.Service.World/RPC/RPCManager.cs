@@ -3,7 +3,6 @@ using Codebreak.Framework.Generic;
 using Codebreak.RPC.Protocol;
 using Codebreak.RPC.Service;
 using Codebreak.Service.World.Manager;
-using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.RPC
 {

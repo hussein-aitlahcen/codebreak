@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Game.Entity;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -25,19 +26,9 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <summary>
         /// 
         /// </summary>
-        public PersistentInventory PersonalShop
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public PersonalShopExchange(CharacterEntity character)
             : base(ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT)
         {
-            PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, character.Id);
             Character = character;
         }
 
@@ -63,16 +54,25 @@ namespace Codebreak.Service.World.Game.Exchange
             if (price < 1)
                 return 0;
 
-            var item = Character.Inventory.RemoveItem(guid, quantity);
+            InventoryItemDAO item = null;
+            if (quantity > 0)
+                item = Character.Inventory.RemoveItem(guid, quantity);
+            else
+                item = Character.PersonalShop.GetItem(guid);
+
             if(item == null)
             {
                 base.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return 0;
             }
-
+            
             item.MerchantPrice = price;
 
-            PersonalShop.AddItem(item, false);
+            if (quantity > 0)
+            {
+                Character.PersonalShop.AddItem(item, false);
+                Character.RefreshPersonalShopTaxe();
+            }
 
             SendItemsList();
 
@@ -91,9 +91,22 @@ namespace Codebreak.Service.World.Game.Exchange
             if (quantity < 1)
                 return 0;
 
+            var item = Character.PersonalShop.RemoveItem(guid, quantity);
 
+            if (item == null)
+            {
+                base.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return 0;
+            }
 
-            return 0;
+            item.MerchantPrice = -1;
+
+            Character.Inventory.AddItem(item);
+            Character.RefreshPersonalShopTaxe();
+
+            SendItemsList();
+
+            return item.Quantity;
         }
         
         /// <summary>
@@ -101,7 +114,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         public void SendItemsList()
         {
-            base.Dispatch(WorldMessage.EXCHANGE_PERSONAL_SHOP_ITEMS_LIST(PersonalShop.Items));
+            base.Dispatch(WorldMessage.EXCHANGE_PERSONAL_SHOP_ITEMS_LIST(Character.PersonalShop.Items));
         }
     }
 }

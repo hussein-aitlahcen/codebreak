@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
-using Codebreak.WorldService;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Fight.Challenges;

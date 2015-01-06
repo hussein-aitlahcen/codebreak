@@ -16,6 +16,7 @@ namespace Codebreak.Service.World.Game.Exchange
         EXCHANGE_SHOP = 0, // Merchant/npc
         EXCHANGE_PLAYER = 1,
         EXCHANGE_NPC = 2,
+        EXCHANGE_MERCHANT = 4,
         EXCHANGE_STORAGE = 5,
         EXCHANGE_TAXCOLLECTOR = 8,
         EXCHANGE_PERSONAL_SHOP_EDIT = 6,
@@ -111,9 +112,9 @@ namespace Codebreak.Service.World.Game.Exchange
         /// 
         /// </summary>
         /// <param name="actor"></param>
-        /// <param name="templateId"></param>
+        /// <param name="id"></param>
         /// <param name="quantity"></param>
-        public virtual void BuyItem(EntityBase actor, int templateId, long quantity)
+        public virtual void BuyItem(EntityBase actor, long id, long quantity)
         {
         }
 
@@ -121,10 +122,10 @@ namespace Codebreak.Service.World.Game.Exchange
         /// 
         /// </summary>
         /// <param name="actor"></param>
-        /// <param name="guid"></param>
+        /// <param name="id"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public virtual void SellItem(EntityBase actor, long guid, int quantity, long price = -1)
+        public virtual void SellItem(EntityBase actor, long id, int quantity, long price = -1)
         {
         }
     }

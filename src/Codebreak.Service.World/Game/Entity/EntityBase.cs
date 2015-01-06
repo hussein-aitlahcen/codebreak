@@ -644,15 +644,24 @@ namespace Codebreak.Service.World.Game.Entity
         public override void Dispose()
         {
             CurrentAction = null;
-            
-            Statistics.Dispose();
-            Statistics = null;
 
-            Spells.Dispose();
-            Spells = null;
+            if (Statistics != null)
+            {
+                Statistics.Dispose();
+                Statistics = null;
+            }
 
-            Inventory.Dispose();
-            Inventory = null;
+            if (Spells != null)
+            {
+                Spells.Dispose();
+                Spells = null;
+            }
+
+            if (Inventory != null)
+            {
+                Inventory.Dispose();
+                Inventory = null;
+            }
 
             m_chatByChannel.Clear();
             m_chatByChannel = null;

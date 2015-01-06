@@ -29,6 +29,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public delegate void OnKick();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event OnKick KickEvent;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public FrameManager<CharacterEntity, string> FrameManager
         {
             get;
@@ -495,6 +505,33 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public PersistentInventory PersonalShop
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long PersonalShopTaxe
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool MerchantModeOnDisconnect
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected string m_guildDisplayInfos;
 
         /// <summary>
@@ -513,6 +550,7 @@ namespace Codebreak.Service.World.Game.Entity
             PartyInviterPlayerId = -1;
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
+            MerchantModeOnDisconnect = false;
             DatabaseRecord = characterDAO;
             
             CharacterJobs = new JobBook();
@@ -521,10 +559,38 @@ namespace Codebreak.Service.World.Game.Entity
             Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);
             FrameManager = new FrameManager<CharacterEntity, string>(this);
             Inventory = new CharacterInventory(this);
+            PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, Id);
+
+            RefreshPersonalShopTaxe();
 
             var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, Id);
             if (guildMember != null)
+            {
                 guildMember.CharacterConnected(this);
+                SetCharacterGuild(guildMember);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RefreshPersonalShopTaxe()
+        {
+            foreach(var item in PersonalShop.Items)            
+                PersonalShopTaxe += item.MerchantPrice * item.Quantity;            
+            PersonalShopTaxe /= 1000;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SafeKick()
+        {
+            base.AddMessage(() =>
+                {
+                    if (KickEvent != null)
+                        KickEvent();
+                });
         }
 
         /// <summary>
@@ -619,6 +685,16 @@ namespace Codebreak.Service.World.Game.Entity
         public void ExchangeNpc(NonPlayerCharacterEntity npc)
         {
             CurrentAction = new GameNpcExchangeAction(this, npc);
+            StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="merchant"></param>
+        public void ExchangeMerchant(MerchantEntity merchant)
+        {
+            CurrentAction = new GameMerchantExchangeAction(this, merchant);
             StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
@@ -1057,7 +1133,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override void Dispose()
         {
-            DatabaseRecord = null;
             CharacterGuild = null;
             CharacterAlignment = null;
 

@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="templateId"></param>
         /// <param name="quantity"></param>
-        public override void BuyItem(EntityBase entity, int templateId, long quantity)
+        public override void BuyItem(EntityBase entity, long templateId, long quantity)
         {
             if (quantity < 1)
             {

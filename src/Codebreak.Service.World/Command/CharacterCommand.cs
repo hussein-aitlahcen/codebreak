@@ -113,6 +113,57 @@ namespace Codebreak.Service.World.Command
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class KickCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "kick"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Kick a player"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                string characterName = context.TextCommandArgument.NextWord();
+                string reason = context.TextCommandArgument.NextWord();
+
+                WorldService.Instance.AddMessage(() =>
+                {
+                    var character = EntityManager.Instance.GetCharacterByName(characterName);
+                    if (character == null)
+                    {
+                        context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
+                        return;
+                    }
+
+                    character.SafeKick();
+                    context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player kicked successfully."));
+                });
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class GuildCreateCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
@@ -213,8 +264,7 @@ namespace Codebreak.Service.World.Command
 
                                 context.Character.Teleport(mapId, cellId);
                             });
-                    });
-                
+                    });                
             }
         }
  

@@ -2,7 +2,6 @@
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
-using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.Database
 {

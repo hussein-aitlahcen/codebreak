@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Codebreak.WorldService;
 using System.Drawing;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Auction;
@@ -101,6 +100,10 @@ namespace Codebreak.Service.World.Network
 
         ERROR_SERVER_BETA = 225,
         ERROR_SERVER_WELCOME = 89,
+
+        ERROR_NOT_ENOUGH_KAMAS_TO_PAY_MERCHANT_MODE_TAXE = 76,
+        ERROR_NOT_ENOUGH_ITEMS_TO_BE_MERCHANT = 23,
+        ERROR_TOO_MANY_MERCHANT_ON_MAP = 25,
 
         ERROR_FIGHT_SPECTATOR_LOCKED = 57,
         ERROR_FIGHTER_DISCONNECTED = 182,
@@ -2087,6 +2090,16 @@ namespace Codebreak.Service.World.Network
                 message.Append(item.MerchantPrice).Append('|');
             }
             return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string MERCHANT_MODE_TAXE(long value)
+        {
+            return "Eq1|1|" + value;
         }
     }
 }

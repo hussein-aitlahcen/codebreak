@@ -16,15 +16,25 @@ namespace Codebreak.Service.World.Game.Entity
     /// 
     /// </summary>
     public sealed class MerchantEntity : CharacterEntity
-    {       
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<CharacterEntity> Buyers
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
         public MerchantEntity(CharacterDAO characterDAO)
-            : base(0, characterDAO)
-        {                      
+            : base(0, characterDAO, EntityTypeEnum.TYPE_MERCHANT)
+        {
+            Buyers = new List<CharacterEntity>();    
         }
         
         /// <summary>
@@ -34,7 +44,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public override bool CanBeExchanged(ExchangeTypeEnum exchangeType)
         {
-            return base.CanBeExchanged(exchangeType) && exchangeType == ExchangeTypeEnum.EXCHANGE_PLAYER;
+            return exchangeType == ExchangeTypeEnum.EXCHANGE_MERCHANT;
         }
         
         /// <summary>
@@ -56,7 +66,7 @@ namespace Codebreak.Service.World.Game.Entity
                     {
                         message.Append(CellId).Append(';');
                         message.Append(Orientation).Append(';');
-                        message.Append(0); // ???
+                        message.Append(0).Append(';'); // ???
                         message.Append(Id).Append(';');
                         message.Append(Name).Append(';');
                         message.Append((int)Type).Append(';');
@@ -97,6 +107,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override void Dispose()
         {
+            Buyers.Clear();
+            Buyers = null;
+
             base.Dispose();
         }
     }

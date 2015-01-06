@@ -124,6 +124,7 @@
     <Compile Include="Game\Action\GameAuctionHouseBuyAction.cs" />
     <Compile Include="Game\Action\GameAuctionHouseSellAction.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
+    <Compile Include="Game\Action\GameMerchantExchangeAction.cs" />
     <Compile Include="Game\Action\GameNpcDialogAction.cs" />
     <Compile Include="Game\Action\GameExchangeActionBase.cs" />
     <Compile Include="Game\Action\GameFightActionBase.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseSellExchange.cs" />
+    <Compile Include="Game\Exchange\MerchantExchange.cs" />
     <Compile Include="Game\Exchange\PersonalShopExchange.cs" />
     <Compile Include="Game\Exchange\EntityExchange.cs" />
     <Compile Include="Game\Exchange\ExchangeBase.cs" />

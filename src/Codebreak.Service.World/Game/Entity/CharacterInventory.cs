@@ -27,10 +27,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="character"></param>
         public CharacterInventory(CharacterEntity character)
-            : base(character)
+            : base(character, (int)EntityTypeEnum.TYPE_CHARACTER, character.Id)
         {
             Character = character;
-
             Initialize();
         }
 

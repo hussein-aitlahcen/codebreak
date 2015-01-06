@@ -6,6 +6,7 @@ using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Manager;
 
 namespace Codebreak.Service.World.Frame
 {
@@ -21,9 +22,16 @@ namespace Codebreak.Service.World.Frame
                 case 'E':
                     switch (message[1])
                     {
+                        case 'Q':
+                            return MerchantModeProcess;
+
+                        case 'q': // merchant mode : taxes
+                            return MerchantModeTaxe;
+
                         case 'H':
                             if (message.Length < 3)
                                 return null;
+
                             switch (message[2])
                             {
                                 case 'T':
@@ -35,11 +43,10 @@ namespace Codebreak.Service.World.Frame
                                 case 'B':
                                     return AuctionHouseBuyItem;
 
-                                // Search
+                                    // SEARCH
                                 case 'S':
                                     return null;
 
-                                // Middle price (templateId)
                                 case 'P':
                                     return AuctionHouseMiddlePrice;
                             }
@@ -63,16 +70,16 @@ namespace Codebreak.Service.World.Frame
                         case 'S':
                             return ExchangeSell;
 
-                        case 'M': // move
+                        case 'M': 
                             if (message.Length < 3)
                                 return null;
 
                             switch (message[2])
                             {
-                                case 'G': // gold
+                                case 'G':
                                     return ExchangeMoveGold;
 
-                                case 'O': // object
+                                case 'O':
                                     return ExchangeMoveObject;
 
                                 default:
@@ -83,6 +90,64 @@ namespace Codebreak.Service.World.Frame
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void MerchantModeProcess(CharacterEntity character, string message)
+        {
+            character.AddMessage(() =>
+                {
+                    if(character.Inventory.Kamas < character.PersonalShopTaxe)
+                    {
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS_TO_PAY_MERCHANT_MODE_TAXE));
+                        return;
+                    }
+
+                    if (character.Map.Entities.OfType<MerchantEntity>().Count() >= WorldConfig.MAX_MERCHANT_PER_MAP)
+                    {
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_TOO_MANY_MERCHANT_ON_MAP, WorldConfig.MAX_MERCHANT_PER_MAP));
+                        return;
+                    }
+
+                    if (character.PersonalShop.Items.Count == 0)
+                    {
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_ITEMS_TO_BE_MERCHANT));
+                        return;
+                    }
+
+                    character.Inventory.SubKamas(character.PersonalShopTaxe);
+                    character.MerchantModeOnDisconnect = true;
+                    character.SafeKick();
+                });            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void MerchantModeTaxe(CharacterEntity character, string message)
+        {
+            character.AddMessage(() =>
+                {
+                    if(character.Map.Entities.OfType<MerchantEntity>().Count() >= WorldConfig.MAX_MERCHANT_PER_MAP)
+                    {
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_TOO_MANY_MERCHANT_ON_MAP, WorldConfig.MAX_MERCHANT_PER_MAP));
+                        return;
+                    }
+
+                    if(character.PersonalShop.Items.Count == 0)
+                    {
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_ITEMS_TO_BE_MERCHANT));
+                        return;
+                    }
+
+                    character.Dispatch(WorldMessage.MERCHANT_MODE_TAXE(character.PersonalShopTaxe));
+                });
         }
         
         /// <summary>
@@ -292,6 +357,10 @@ namespace Codebreak.Service.World.Frame
 
                 switch (distantEntity.Type)
                 {
+                    case EntityTypeEnum.TYPE_MERCHANT:
+                        character.ExchangeMerchant((MerchantEntity)distantEntity);
+                        break;
+
                     case EntityTypeEnum.TYPE_CHARACTER:
                         if (exchangeType == ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT && character.Id == distantEntity.Id)
                         {

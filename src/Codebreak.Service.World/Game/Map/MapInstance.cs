@@ -408,7 +408,6 @@ namespace Codebreak.Service.World.Game.Map
                     _entityByName.Add(entity.Name.ToLower(), entity);
 
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
-
                     base.AddUpdatable(entity);
 
                     if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)

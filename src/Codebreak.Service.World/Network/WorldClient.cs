@@ -10,21 +10,37 @@ using Codebreak.Service.World.Manager;
 
 namespace Codebreak.Service.World.Network
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class WorldClient : DofusClient<WorldClient>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public AccountTicket Account
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public List<CharacterDAO> Characters
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private CharacterEntity _currentCharacter;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public CharacterEntity CurrentCharacter
         {
             get
@@ -34,10 +50,16 @@ namespace Codebreak.Service.World.Network
             set
             {
                 if (_currentCharacter != null)
+                {
                     _currentCharacter.RemoveHandler(Send);
+                    _currentCharacter.KickEvent -= base.Disconnect;
+                }
                 _currentCharacter = value;
-                if(_currentCharacter != null)
+                if (_currentCharacter != null)
+                {
                     _currentCharacter.AddHandler(Send);
+                    _currentCharacter.KickEvent += base.Disconnect;
+                }
             }
         }
     }

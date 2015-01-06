@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
-using Codebreak.WorldService;
 
 namespace Codebreak.Service.World.Game.Fight.Effect.Type
 {

@@ -52,8 +52,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public EntityInventory(EntityBase entity)
-            : base((int)entity.Type, entity.Id)
+        public EntityInventory(EntityBase entity, int type, long id)
+            : base(type, id)
         {
             Entity = entity;
             AddHandler(Entity.Dispatch);

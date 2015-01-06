@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.WorldService
+namespace Codebreak.Service.World
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class WorldConfig
     {
         public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000; 
@@ -32,6 +35,9 @@ namespace Codebreak.WorldService
             CHARACTER_CREATION_ENERGY = 10000;
 
         public const int
+            MAX_MERCHANT_PER_MAP = 5;
+
+        public const int
             TAXCOLLECTOR_MIN_NAME = 1,
             TAXCOLLECTOR_MAX_NAME = 228,
             TAXCOLLECTOR_MIN_FIRSTNAME = 1,
@@ -39,9 +45,11 @@ namespace Codebreak.WorldService
             TAXCOLLECTOR_SKIN_BASE = 6000,
             TAXCOLLECTOR_SKIN_SIZE_BASE = 100;
 
-        public const int FIGHT_DISCONNECTION_TURN = 20;
-        public const int FIGHT_PUSH_CELL_TIME = 400;
-        public const int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
+        public const int 
+            FIGHT_DISCONNECTION_TURN = 20, 
+            FIGHT_PUSH_CELL_TIME = 400,
+            FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
+
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);
         public const int GAME_ID = 1; // Jiva ? guess so;
     }
