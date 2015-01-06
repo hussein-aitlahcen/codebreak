@@ -89,18 +89,11 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public CharacterEntity CreateCharacter(int power, CharacterDAO characterDAO)
         {
-            var merchant = GetMerchantById(characterDAO.Id);
-            if(merchant != null)
-            {
+            // Uniquement 1 marchant par compte par serveur
+            var merchant = GetMerchantByAccount(characterDAO.AccountId);
+            if(merchant != null)            
                 RemoveMerchant(merchant);
-                merchant.AddMessage(() =>
-                    {
-                        foreach(var buyer in merchant.Buyers)
-                            buyer.AddMessage(() => buyer.AbortAction(GameActionTypeEnum.EXCHANGE));                        
-                        merchant.StopAction(GameActionTypeEnum.MAP);
-                        merchant.Dispose();
-                    });
-            }
+            
             var character = new CharacterEntity(power, characterDAO);         
             m_characterById.Add(character.Id, character);
             m_characterByName.Add(character.Name.ToLower(), character);
@@ -109,7 +102,7 @@ namespace Codebreak.Service.World.Manager
             Logger.Info("EntityManager online players : " + m_onlinePlayers);            
             return character;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -175,12 +168,20 @@ namespace Codebreak.Service.World.Manager
         /// <param name="merchant"></param>
         public void RemoveMerchant(MerchantEntity merchant)
         {
-            WorldService.Instance.AddMessage(() =>
+            merchant.AddMessage(() =>
+            {
+                foreach (var buyer in merchant.Buyers)
+                    buyer.AddMessage(() => buyer.AbortAction(GameActionTypeEnum.EXCHANGE));
+                merchant.StopAction(GameActionTypeEnum.MAP);
+                merchant.Dispose();
+
+                WorldService.Instance.AddMessage(() =>
                 {
                     m_merchantById.Remove(merchant.Id);
                     m_merchantByName.Remove(merchant.Name.ToLower());
                     m_merchantByAccount.Remove(merchant.AccountId);
                 });
+            });
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -109,6 +110,11 @@ namespace Codebreak.Service.World.Game.Exchange
             Character.Inventory.AddItem(Merchant.PersonalShop.RemoveItem(itemId, (int)quantity));
             SendItemsList();
             Character.CachedBuffer = false;
+
+            if(Merchant.PersonalShop.Items.Count == 0)
+            {
+                EntityManager.Instance.RemoveMerchant(Merchant);
+            }
         }
     }
 }
