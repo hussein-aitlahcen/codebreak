@@ -5,6 +5,7 @@ using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game.Guild;
+using Codebreak.Service.World.Database.Repository;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -43,6 +44,20 @@ namespace Codebreak.Service.World.Manager
             m_npcById = new Dictionary<long, NonPlayerCharacterEntity>();
 
             m_taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Initialize()
+        {
+            foreach(var character in CharacterRepository.Instance.GetAll())
+            {
+                if(character.Merchant)
+                {
+                    EntityManager.Instance.CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
+                }
+            }
         }
 
         /// <summary>
@@ -151,7 +166,7 @@ namespace Codebreak.Service.World.Manager
 
                 character.Dispose();
 
-                if (character.MerchantModeOnDisconnect)
+                if (character.Merchant)
                 {
                     WorldService.Instance.AddMessage(() =>
                     {
@@ -174,6 +189,7 @@ namespace Codebreak.Service.World.Manager
                     buyer.AddMessage(() => buyer.AbortAction(GameActionTypeEnum.EXCHANGE));
                 merchant.StopAction(GameActionTypeEnum.MAP);
                 merchant.Dispose();
+                merchant.Merchant = false;
 
                 WorldService.Instance.AddMessage(() =>
                 {

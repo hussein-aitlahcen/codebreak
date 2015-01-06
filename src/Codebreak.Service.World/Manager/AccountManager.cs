@@ -30,16 +30,16 @@ namespace Codebreak.Service.World.Manager
     public sealed class AccountManager : Singleton<AccountManager>
     {
 
-        private Dictionary<long, WorldClient> _clientByAccount;
-        private Dictionary<string, AccountTicket> _accountByTicket;
+        private Dictionary<long, WorldClient> m_clientByAccount;
+        private Dictionary<string, AccountTicket> m_accountByTicket;
 
         /// <summary>
         /// 
         /// </summary>
         public AccountManager()
         {
-            _accountByTicket = new Dictionary<string, AccountTicket>();
-            _clientByAccount = new Dictionary<long, WorldClient>();
+            m_accountByTicket = new Dictionary<string, AccountTicket>();
+            m_clientByAccount = new Dictionary<long, WorldClient>();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            WorldService.Instance.AddTimer(1000, UpdateTickets);
+            WorldService.Instance.AddTimer(1000, Update);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Codebreak.Service.World.Manager
         public void AddTicket(long accountId, string name, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
         {
             Logger.Info("GameTicket : account=" + name + " ticket=" + ticket);
-            WorldService.Instance.AddMessage(() => _accountByTicket.Add(ticket, new AccountTicket()
+            WorldService.Instance.AddMessage(() => m_accountByTicket.Add(ticket, new AccountTicket()
             { 
                 Id = accountId,
                 Name = name,
@@ -84,10 +84,10 @@ namespace Codebreak.Service.World.Manager
         public AccountTicket GetAccountTicket(string ticket)
         {
             AccountTicket account = null;
-            if(_accountByTicket.ContainsKey(ticket))
+            if(m_accountByTicket.ContainsKey(ticket))
             {
-                account = _accountByTicket[ticket];
-                _accountByTicket.Remove(ticket);
+                account = m_accountByTicket[ticket];
+                m_accountByTicket.Remove(ticket);
             }
             return account;
         }
@@ -98,7 +98,7 @@ namespace Codebreak.Service.World.Manager
         /// <param name="client"></param>
         public void ClientAuthentified(WorldClient client)
         {
-            _clientByAccount.Add(client.Account.Id, client);
+            m_clientByAccount.Add(client.Account.Id, client);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Codebreak.Service.World.Manager
         {
             if(client.Account != null)
             {
-                _clientByAccount.Remove(client.Account.Id);
+                m_clientByAccount.Remove(client.Account.Id);
 
                 RPCManager.Instance.AccountDisconnected(client.Account.Id);
             }
@@ -118,21 +118,19 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private void UpdateTickets()
+        private void Update()
         {
-            if (_accountByTicket.Count > 0)
+            if (m_accountByTicket.Count > 0)
             {
-                for (int i = _accountByTicket.Count - 1; i > -1; i--)
+                for (int i = m_accountByTicket.Count - 1; i > -1; i--)
                 {
-                    var value = _accountByTicket.ElementAt(i).Value;
+                    var value = m_accountByTicket.ElementAt(i).Value;
                     var elapsedTime = WorldService.Instance.LastUpdate - value.Time;
 
                     if (elapsedTime >= WorldConfig.RPC_ACCOUNT_TICKET_TIMEOUT)
                     {
                         Logger.Debug("Ticket timed out : " + value.Ticket);
-                        _accountByTicket.Remove(value.Ticket);
-                        Logger.Debug("Ticket count : " + _accountByTicket.Count);
-
+                        m_accountByTicket.Remove(value.Ticket);
                         RPCManager.Instance.AccountDisconnected(value.Id);
                     }
                 }

@@ -324,6 +324,15 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Merchant
+        {
+            get;
+            set;
+        }
+
         #region Unmapped
         public string GetHexColor1()
         {

@@ -63,6 +63,7 @@
     <Compile Include="Command\CharacterCommand.cs" />
     <Compile Include="Command\HelpCommand.cs" />
     <Compile Include="Command\MonsterCommand.cs" />
+    <Compile Include="Command\WorldCommand.cs" />
     <Compile Include="Command\WorldCommandContext.cs" />
     <Compile Include="Database\Repository\AreaRepository.cs" />
     <Compile Include="Database\Repository\AuctionHouseEntryRepository.cs" />

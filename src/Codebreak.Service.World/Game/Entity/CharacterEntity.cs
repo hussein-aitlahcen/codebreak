@@ -514,7 +514,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public long PersonalShopTaxe
+        public long MerchantTaxe
         {
             get;
             private set;
@@ -523,12 +523,18 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public bool MerchantModeOnDisconnect
+        public bool Merchant
         {
-            get;
-            set;
+            get
+            {
+                return DatabaseRecord.Merchant;
+            }
+            set
+            {
+                DatabaseRecord.Merchant = value;
+            }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -550,7 +556,6 @@ namespace Codebreak.Service.World.Game.Entity
             PartyInviterPlayerId = -1;
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
-            MerchantModeOnDisconnect = false;
             DatabaseRecord = characterDAO;
             
             CharacterJobs = new JobBook();
@@ -567,7 +572,6 @@ namespace Codebreak.Service.World.Game.Entity
             if (guildMember != null)
             {
                 guildMember.CharacterConnected(this);
-                SetCharacterGuild(guildMember);
             }
         }
 
@@ -577,8 +581,8 @@ namespace Codebreak.Service.World.Game.Entity
         public void RefreshPersonalShopTaxe()
         {
             foreach(var item in PersonalShop.Items)            
-                PersonalShopTaxe += item.MerchantPrice * item.Quantity;            
-            PersonalShopTaxe /= 1000;
+                MerchantTaxe += item.MerchantPrice * item.Quantity;            
+            MerchantTaxe /= 1000;
         }
 
         /// <summary>

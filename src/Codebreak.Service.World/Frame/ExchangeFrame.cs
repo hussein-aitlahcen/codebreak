@@ -101,7 +101,7 @@ namespace Codebreak.Service.World.Frame
         {
             character.AddMessage(() =>
                 {
-                    if(character.Inventory.Kamas < character.PersonalShopTaxe)
+                    if(character.Inventory.Kamas < character.MerchantTaxe)
                     {
                         character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS_TO_PAY_MERCHANT_MODE_TAXE));
                         return;
@@ -119,8 +119,8 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    character.Inventory.SubKamas(character.PersonalShopTaxe);
-                    character.MerchantModeOnDisconnect = true;
+                    character.Inventory.SubKamas(character.MerchantTaxe);
+                    character.Merchant = true;
                     character.SafeKick();
                 });            
         }
@@ -146,7 +146,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    character.Dispatch(WorldMessage.MERCHANT_MODE_TAXE(character.PersonalShopTaxe));
+                    character.Dispatch(WorldMessage.MERCHANT_MODE_TAXE(character.MerchantTaxe));
                 });
         }
         

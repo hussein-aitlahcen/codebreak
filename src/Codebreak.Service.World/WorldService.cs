@@ -88,7 +88,7 @@ namespace Codebreak.Service.World
 
             AddUpdatable(Dispatcher = new MessageDispatcher());
             AddUpdatable(RPCManager.Instance);
-            AddTimer(WorldSaveInternal, UpdateWorld);
+            AddTimer(WorldSaveInternal, SaveWorld);
 
             WorldDbMgr.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();
@@ -100,6 +100,7 @@ namespace Codebreak.Service.World
             NpcManager.Instance.Initialize();
             AuctionHouseManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
+            EntityManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
 
             base.Start(WorldServiceIP, WorldServicePort);
@@ -183,7 +184,7 @@ namespace Codebreak.Service.World
         /// <summary>
         /// 
         /// </summary>
-        public void UpdateWorld()
+        public void SaveWorld()
         {
             Stopwatch updateTimer = new Stopwatch();
             WorldService.Instance.AddLinkedMessages( 
