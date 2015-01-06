@@ -71,6 +71,8 @@ namespace Codebreak.Service.World.Game.Action
         {
             IsFinished = true;
             base.Leave(false);
+            if (Merchant.Buyers != null)
+                Merchant.Buyers.Remove(Character);
         }
     }
 }
