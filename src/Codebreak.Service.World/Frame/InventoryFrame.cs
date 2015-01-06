@@ -69,6 +69,16 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
+            int quantity = 1;
+            if(data.Length > 2)
+            {
+                if (!int.TryParse(data[2], out quantity))
+                {
+                    entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                    return;
+                }
+            }
+
             if(!Enum.IsDefined(typeof(ItemSlotEnum), slotId))
             {
                 entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
@@ -84,7 +94,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    entity.Inventory.MoveItem(item, (ItemSlotEnum)slotId);
+                    entity.Inventory.MoveItem(item, (ItemSlotEnum)slotId, quantity);
                 });
         }
 

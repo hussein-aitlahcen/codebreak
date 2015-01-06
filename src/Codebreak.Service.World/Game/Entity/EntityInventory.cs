@@ -81,10 +81,8 @@ namespace Codebreak.Service.World.Game.Entity
             if (item == null)
                 return null;
 
-            if (item.GetSlot() != ItemSlotEnum.SLOT_INVENTORY)
-            {
-                MoveItem(item, ItemSlotEnum.SLOT_INVENTORY);
-            }
+            if (item.IsEquiped())
+                MoveItem(item, ItemSlotEnum.SLOT_INVENTORY);            
 
             return base.RemoveItem(itemId, quantity);
         }
@@ -94,12 +92,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="item"></param>
         /// <param name="slot"></param>
-        public void MoveItem(InventoryItemDAO item, ItemSlotEnum slot)
+        public void MoveItem(InventoryItemDAO item, ItemSlotEnum slot, int quantity = 1)
         {
             if (slot == item.GetSlot())
                 return;
 
-            if (item.IsEquiped() && slot == ItemSlotEnum.SLOT_INVENTORY)
+            if (quantity > item.Quantity || quantity < 1)
+                quantity = item.Quantity;
+
+            if (item.IsEquiped() && !InventoryItemDAO.IsEquipedSlot(slot))
             {
                 item.SlotId = (int)slot;
                 m_entityLookRefresh = true;
@@ -164,8 +165,10 @@ namespace Codebreak.Service.World.Game.Entity
             }
             else
             {
-                if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
-                    base.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                var newItem = MoveQuantity(item, quantity);
+                newItem.SlotId = (int)slot;
+                if(!AddItem(newItem, false))
+                   base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, item.SlotId));
             }
         }
 

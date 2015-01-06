@@ -126,6 +126,7 @@ namespace Codebreak.Service.World.Game.Entity
                 entry => entry.TemplateId == item.TemplateId && 
                     entry.StringEffects == item.StringEffects && 
                     entry.Id != item.Id &&
+                    entry.SlotId == item.SlotId &&
                     !InventoryItemDAO.IsEquipedSlot(entry.GetSlot()));
             
             if(sameItem != null)
