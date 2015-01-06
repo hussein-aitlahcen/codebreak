@@ -208,9 +208,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<EffectEnum, GenericEffect> _genericEffects = new Dictionary<EffectEnum, GenericEffect>();
-        private List<WeaponEffect> _weaponEffects = new List<WeaponEffect>();
-        private Dictionary<EffectEnum, string> _specialEffects = new Dictionary<EffectEnum, string>();
+        private Dictionary<EffectEnum, GenericEffect> m_genericEffects = new Dictionary<EffectEnum, GenericEffect>();
+        private List<WeaponEffect> m_weaponEffects = new List<WeaponEffect>();
+        private Dictionary<EffectEnum, string> m_specialEffects = new Dictionary<EffectEnum, string>();
 
         /// <summary>
         /// 
@@ -271,24 +271,24 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="monster"></param>
         public GenericStats(MonsterGradeDAO monster)
         {
-            _genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, monster.AP));
-            _genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, monster.MP));
-            _genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, monster.MaxInvocation));
-            _genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, monster.Initiative));
-            _genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, monster.Wisdom));
-            _genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, monster.Strenght));
-            _genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, monster.Intelligence));
-            _genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, monster.Agility));
-            _genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, monster.Chance));
+            m_genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, monster.AP));
+            m_genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, monster.MP));
+            m_genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, monster.MaxInvocation));
+            m_genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, monster.Initiative));
+            m_genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, monster.Wisdom));
+            m_genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, monster.Strenght));
+            m_genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, monster.Intelligence));
+            m_genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, monster.Agility));
+            m_genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, monster.Chance));
 
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, monster.NeutralResistance));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, monster.EarthResistance));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, monster.FireResistance));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, monster.WaterResistance));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, monster.AirResistance));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, monster.NeutralResistance));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, monster.EarthResistance));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, monster.FireResistance));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, monster.WaterResistance));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, monster.AirResistance));
 
-            _genericEffects.Add(EffectEnum.AddAPDodge, new GenericEffect(EffectEnum.AddAPDodge, monster.APDodgePercent));
-            _genericEffects.Add(EffectEnum.AddMPDodge, new GenericEffect(EffectEnum.AddMPDodge, monster.MPDodgePercent));
+            m_genericEffects.Add(EffectEnum.AddAPDodge, new GenericEffect(EffectEnum.AddAPDodge, monster.APDodgePercent));
+            m_genericEffects.Add(EffectEnum.AddMPDodge, new GenericEffect(EffectEnum.AddMPDodge, monster.MPDodgePercent));
         }
 
         /// <summary>
@@ -297,23 +297,23 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="guild"></param>
         public GenericStats(GuildDAO guild) 
         {
-            _genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, 6));
-            _genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, 5));   
-            _genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, 100));
-            _genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
-            _genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
-            _genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, 100 * guild.Level));
-            _genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, guild.Level * 4));
-            _genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, guild.Level));
-            _genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, guild.Level));
-            _genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, guild.Level));
-            _genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, guild.Level));
-            _genericEffects.Add(EffectEnum.AddDamage, new GenericEffect(EffectEnum.AddDamage, guild.Level));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, guild.Level / 2));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, guild.Level / 2));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, guild.Level / 2));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, guild.Level / 2));
-            _genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, guild.Level / 2));  
+            m_genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, 6));
+            m_genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, 5));   
+            m_genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, 100));
+            m_genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
+            m_genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
+            m_genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, 100 * guild.Level));
+            m_genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, guild.Level * 4));
+            m_genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, guild.Level));
+            m_genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, guild.Level));
+            m_genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, guild.Level));
+            m_genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, guild.Level));
+            m_genericEffects.Add(EffectEnum.AddDamage, new GenericEffect(EffectEnum.AddDamage, guild.Level));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, guild.Level / 2));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, guild.Level / 2));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, guild.Level / 2));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, guild.Level / 2));
+            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, guild.Level / 2));  
         }
 
         /// <summary>
@@ -322,18 +322,18 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="character"></param>
         public GenericStats(CharacterDAO character)
         {
-            _genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, character.Ap));
-            _genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, character.Mp));
-            _genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, ((CharacterBreedEnum)character.Breed == CharacterBreedEnum.BREED_ENUTROF ? 120 : 100)));
-            _genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
-            _genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, 1));
-            _genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
-            _genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, character.Vitality));
-            _genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, character.Wisdom));
-            _genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, character.Strength));
-            _genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, character.Intelligence));
-            _genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, character.Agility));
-            _genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, character.Chance));
+            m_genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, character.Ap));
+            m_genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, character.Mp));
+            m_genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, ((CharacterBreedEnum)character.Breed == CharacterBreedEnum.BREED_ENUTROF ? 120 : 100)));
+            m_genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
+            m_genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, 1));
+            m_genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
+            m_genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, character.Vitality));
+            m_genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, character.Wisdom));
+            m_genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, character.Strength));
+            m_genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, character.Intelligence));
+            m_genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, character.Agility));
+            m_genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, character.Chance));
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <returns></returns>
         public Dictionary<EffectEnum, GenericEffect> GetEffects()
         {
-            return _genericEffects;
+            return m_genericEffects;
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <returns></returns>
         public List<WeaponEffect> GetWeaponEffects()
         {
-            return _weaponEffects;
+            return m_weaponEffects;
         }
 
         /// <summary>
@@ -393,12 +393,12 @@ namespace Codebreak.Service.World.Game.Stats
             {
                 foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
                 {
-                    if (_genericEffects.ContainsKey(OppositeEffect))
+                    if (m_genericEffects.ContainsKey(OppositeEffect))
                     {
-                        totalBase -= _genericEffects[OppositeEffect].Base;
-                        totalBoosts -= _genericEffects[OppositeEffect].Boosts;
-                        totalDons -= _genericEffects[OppositeEffect].Dons;
-                        totalItems -= _genericEffects[OppositeEffect].Items;
+                        totalBase -= m_genericEffects[OppositeEffect].Base;
+                        totalBoosts -= m_genericEffects[OppositeEffect].Boosts;
+                        totalDons -= m_genericEffects[OppositeEffect].Dons;
+                        totalItems -= m_genericEffects[OppositeEffect].Items;
                     }
                 }
             }
@@ -415,9 +415,9 @@ namespace Codebreak.Service.World.Game.Stats
         {
             int total = 0;
 
-            if (_genericEffects.ContainsKey(effectType))
+            if (m_genericEffects.ContainsKey(effectType))
             {
-                total += _genericEffects[effectType].Total;
+                total += m_genericEffects[effectType].Total;
             }
 
             switch (effectType)
@@ -441,9 +441,9 @@ namespace Codebreak.Service.World.Game.Stats
             {
                 foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
                 {
-                    if (_genericEffects.ContainsKey(OppositeEffect))
+                    if (m_genericEffects.ContainsKey(OppositeEffect))
                     {
-                        total -= _genericEffects[OppositeEffect].Total;
+                        total -= m_genericEffects[OppositeEffect].Total;
                     }
                 }
             }
@@ -458,9 +458,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <returns></returns>
         public GenericEffect GetEffect(EffectEnum EffectType)
         {
-            if (!_genericEffects.ContainsKey(EffectType))
-                _genericEffects.Add(EffectType, new GenericEffect(EffectType));
-            return _genericEffects[EffectType];
+            if (!m_genericEffects.ContainsKey(EffectType))
+                m_genericEffects.Add(EffectType, new GenericEffect(EffectType));
+            return m_genericEffects[EffectType];
         }
 
         /// <summary>
@@ -470,7 +470,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <returns></returns>
         public IEnumerable<WeaponEffect> GetWeaponEffect(EffectEnum EffectType)
         {
-            return _weaponEffects.Where(effect => effect.EffectId == (int)EffectType);
+            return m_weaponEffects.Where(effect => effect.EffectId == (int)EffectType);
         }
 
         /// <summary>
@@ -480,9 +480,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <returns></returns>
         public string GetSpecialEffect(EffectEnum EffectType)
         {
-            if (!_specialEffects.ContainsKey(EffectType))
+            if (!m_specialEffects.ContainsKey(EffectType))
                 return null;
-            return _specialEffects[EffectType];
+            return m_specialEffects[EffectType];
         }
 
         /// <summary>
@@ -490,7 +490,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         public void ClearBoosts()
         {
-            foreach (var effect in _genericEffects)            
+            foreach (var effect in m_genericEffects)            
                 effect.Value.Boosts = 0;            
         }
 
@@ -501,9 +501,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="Value"></param>
         public void AddBase(EffectEnum effectType, int Value)
         {
-            if (!_genericEffects.ContainsKey(effectType))
-                _genericEffects.Add(effectType, new GenericEffect(effectType));
-            _genericEffects[effectType].Base += Value;
+            if (!m_genericEffects.ContainsKey(effectType))
+                m_genericEffects.Add(effectType, new GenericEffect(effectType));
+            m_genericEffects[effectType].Base += Value;
         }
 
         /// <summary>
@@ -513,9 +513,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="Value"></param>
         public void AddBoost(EffectEnum effectType, int value)
         {
-            if (!_genericEffects.ContainsKey(effectType))
-                _genericEffects.Add(effectType, new GenericEffect(effectType));
-            _genericEffects[effectType].Boosts += value;
+            if (!m_genericEffects.ContainsKey(effectType))
+                m_genericEffects.Add(effectType, new GenericEffect(effectType));
+            m_genericEffects[effectType].Boosts += value;
         }
 
         /// <summary>
@@ -525,9 +525,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="value"></param>
         public void AddItem(EffectEnum effectType, int value)
         {
-            if (!_genericEffects.ContainsKey(effectType))
-                _genericEffects.Add(effectType, new GenericEffect(effectType));
-            _genericEffects[effectType].Items += value;
+            if (!m_genericEffects.ContainsKey(effectType))
+                m_genericEffects.Add(effectType, new GenericEffect(effectType));
+            m_genericEffects[effectType].Items += value;
         }
 
         /// <summary>
@@ -537,9 +537,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="Value"></param>
         public void AddDon(EffectEnum effectType, int Value)
         {
-            if (!_genericEffects.ContainsKey(effectType))
-                _genericEffects.Add(effectType, new GenericEffect(effectType));
-            _genericEffects[effectType].Dons += Value;
+            if (!m_genericEffects.ContainsKey(effectType))
+                m_genericEffects.Add(effectType, new GenericEffect(effectType));
+            m_genericEffects[effectType].Dons += Value;
         }
 
         /// <summary>
@@ -550,7 +550,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="maxJet"></param>
         public void AddWeaponEffect(EffectEnum effectType, int minJet, int maxJet, string args)
         {
-            _weaponEffects.Add(new WeaponEffect((int)effectType, minJet, maxJet, args));
+            m_weaponEffects.Add(new WeaponEffect((int)effectType, minJet, maxJet, args));
         }
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="Args"></param>
         public void AddSpecialEffect(EffectEnum EffectType, string Args)
         {
-            _specialEffects.Add(EffectType, Args);
+            m_specialEffects.Add(EffectType, Args);
         }
 
         /// <summary>
@@ -568,7 +568,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         public string ToItemStats()
         {
-            return string.Join(",", _weaponEffects.Select(x => x.ToString())) + (_genericEffects.Count > 0 ? "," : "") +  string.Join(",", _genericEffects.Select(x => x.Value.ToItemString()));
+            return string.Join(",", m_weaponEffects.Select(x => x.ToString())) + (m_genericEffects.Count > 0 ? "," : "") +  string.Join(",", m_genericEffects.Select(x => x.Value.ToItemString()));
         }
 
         /// <summary>
@@ -579,9 +579,9 @@ namespace Codebreak.Service.World.Game.Stats
         {
             foreach (var Effect in Stats.GetEffects())
             {
-                if (!_genericEffects.ContainsKey(Effect.Key))
-                    _genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
-                _genericEffects[Effect.Key].Merge(Effect.Value);
+                if (!m_genericEffects.ContainsKey(Effect.Key))
+                    m_genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
+                m_genericEffects[Effect.Key].Merge(Effect.Value);
             }
         }
 
@@ -593,9 +593,9 @@ namespace Codebreak.Service.World.Game.Stats
         {
             foreach (var Effect in Stats.GetEffects())
             {
-                if (!_genericEffects.ContainsKey(Effect.Key))
-                    _genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
-                _genericEffects[Effect.Key].UnMerge(Effect.Value);
+                if (!m_genericEffects.ContainsKey(Effect.Key))
+                    m_genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
+                m_genericEffects[Effect.Key].UnMerge(Effect.Value);
             }
         }
         
@@ -604,14 +604,14 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         public void Dispose()
         {
-            _genericEffects.Clear();
-            _genericEffects = null;
+            m_genericEffects.Clear();
+            m_genericEffects = null;
 
-            _specialEffects.Clear();
-            _specialEffects = null;
+            m_specialEffects.Clear();
+            m_specialEffects = null;
 
-            _weaponEffects.Clear();
-            _weaponEffects = null;
+            m_weaponEffects.Clear();
+            m_weaponEffects = null;
         }
 
         /// <summary>
