@@ -695,6 +695,18 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="taxCollector"></param>
+        public void ExchangeTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            CurrentAction = new GameTaxCollectorExchangeAction(this, taxCollector);
+            taxCollector.CurrentAction = CurrentAction;
+
+            StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="merchant"></param>
         public void ExchangeMerchant(MerchantEntity merchant)
         {

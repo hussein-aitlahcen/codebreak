@@ -1758,6 +1758,29 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="taxCollector"></param>
+        /// <returns></returns>
+        public static string GUILD_TAXCOLLECTOR_FARMED(TaxCollectorEntity taxCollector, string farmer)
+        {
+            var message = new StringBuilder("gTG");
+            message.Append(taxCollector.Name).Append('|');
+            message.Append(taxCollector.Id).Append('|');
+            message.Append(taxCollector.Map.X).Append('|');
+            message.Append(taxCollector.Map.Y).Append('|');
+            message.Append(farmer).Append('|');
+            message.Append(taxCollector.ExperienceGathered);
+            foreach(var farmedItem in taxCollector.FarmedItems)
+            {
+                message.Append(';');
+                message.Append(farmedItem.Key).Append(','); // templateId
+                message.Append(farmedItem.Value); // quantity
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="taxCollectors"></param>
         /// <returns></returns>
         public static string GUILD_TAXCOLLECTOR_LIST(IEnumerable<TaxCollectorEntity> taxCollectors)
@@ -2095,11 +2118,38 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static string EXCHANGE_TAXCOLLECTOR_ITEMS_LIST(IEnumerable<InventoryItemDAO> items, long kamas)
+        {
+            var message = new StringBuilder("EL");
+            foreach (var item in items)
+            {
+                message.Append('O');
+                item.SerializeAs_BagContent(message);
+            }
+            message.Append(";G").Append(kamas);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static string MERCHANT_MODE_TAXE(long value)
         {
             return "Eq1|1|" + value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string EXCHANGE_STORAGE_KAMAS_VALUE(long value)
+        {
+            return "EsKG" + value;
         }
     }
 }

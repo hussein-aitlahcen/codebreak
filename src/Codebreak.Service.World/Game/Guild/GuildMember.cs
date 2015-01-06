@@ -237,6 +237,9 @@ namespace Codebreak.Service.World.Game.Guild
         public void GuildLeave()
         {
             GuildId = -1;
+            XPGiven = 0;
+            XPSharePercent = 0;
+            Power = 0;
 
             if (Character != null)
             {
@@ -338,6 +341,15 @@ namespace Codebreak.Service.World.Game.Guild
         public void RemoveTaxCollector(TaxCollectorEntity taxCollector)
         {
             Guild.RemoveTaxCollector(this, taxCollector);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taxCollector"></param>
+        public void FarmTaxCollector(TaxCollectorEntity taxCollector)
+        {
+            Guild.FarmTaxCollector(this, taxCollector);
         }
 
         /// <summary>

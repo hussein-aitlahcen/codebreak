@@ -140,6 +140,7 @@
     <Compile Include="Game\Action\GamePlayerExchangeAction.cs" />
     <Compile Include="Game\Action\GameShopExchangeAction.cs" />
     <Compile Include="Game\Action\GameTaxCollectorDefenderAction.cs" />
+    <Compile Include="Game\Action\GameTaxCollectorExchangeAction.cs" />
     <Compile Include="Game\Action\GameWaypointAction.cs" />
     <Compile Include="Game\Area\AreaInstance.cs" />
     <Compile Include="Game\Area\SubAreaInstance.cs" />
@@ -169,6 +170,8 @@
     <Compile Include="Game\Exchange\NpcExchange.cs" />
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
     <Compile Include="Game\Exchange\ShopExchange.cs" />
+    <Compile Include="Game\Exchange\StorageExchange.cs" />
+    <Compile Include="Game\Exchange\TaxCollectorExchange.cs" />
     <Compile Include="Game\Fight\AI\Action\AIAction.cs" />
     <Compile Include="Game\Fight\AI\Action\Type\AttackAction.cs" />
     <Compile Include="Game\Fight\AI\Action\Type\EndTurnAction.cs" />

@@ -357,6 +357,16 @@ namespace Codebreak.Service.World.Frame
 
                 switch (distantEntity.Type)
                 {
+                    case EntityTypeEnum.TYPE_TAX_COLLECTOR:
+                        var taxCollector = (TaxCollectorEntity)distantEntity;
+                        if (character.CharacterGuild == null || taxCollector.Guild.Id != character.CharacterGuild.GuildId)
+                        {
+                            character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                            return;
+                        }
+                        character.ExchangeTaxCollector((TaxCollectorEntity)distantEntity);
+                        break;
+
                     case EntityTypeEnum.TYPE_MERCHANT:
                         character.ExchangeMerchant((MerchantEntity)distantEntity);
                         break;

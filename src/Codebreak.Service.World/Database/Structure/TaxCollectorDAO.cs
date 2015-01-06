@@ -97,5 +97,13 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long Experience
+        {
+            get;
+            set;
+        }
     }
 }

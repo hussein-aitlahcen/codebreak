@@ -403,45 +403,45 @@ namespace Codebreak.Service.World.Game.Entity
             switch(actionType)
             {
                 case GameActionTypeEnum.SKILL_USE:
-                    return (CurrentAction == null || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT);
+                    return ((CurrentAction == null || CurrentAction.IsFinished) || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT);
 
                 case GameActionTypeEnum.FIGHT_JOIN:
-                    return CurrentAction == null
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && HasGameAction(GameActionTypeEnum.MAP)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE);
 
                 case GameActionTypeEnum.CHALLENGE_REQUEST:
-                    return CurrentAction == null
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && HasGameAction(GameActionTypeEnum.MAP)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE);
 
                 case GameActionTypeEnum.CHALLENGE_ACCEPT:
-                    return CurrentAction != null 
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && CurrentAction.Type == GameActionTypeEnum.CHALLENGE_REQUEST 
                         && ((GameChallengeRequestAction)CurrentAction).Entity.Id != Id;
 
                 case GameActionTypeEnum.CHALLENGE_DECLINE:
-                    return CurrentAction != null
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && CurrentAction.Type == GameActionTypeEnum.CHALLENGE_REQUEST;
 
                 case GameActionTypeEnum.EXCHANGE:
-                    return CurrentAction == null 
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE);
 
                 case GameActionTypeEnum.MAP_MOVEMENT:
-                    return CurrentAction == null
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
 
                 case GameActionTypeEnum.FIGHT_WEAPON_USE:
                 case GameActionTypeEnum.FIGHT_SPELL_LAUNCH:
-                    return CurrentAction == null 
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && HasGameAction(GameActionTypeEnum.FIGHT);
 
                 case GameActionTypeEnum.MAP_TELEPORT:
-                    return CurrentAction == null
+                    return (CurrentAction == null || CurrentAction.IsFinished)
                         && HasGameAction(GameActionTypeEnum.MAP);
             }
 
@@ -455,7 +455,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public virtual bool CanBeExchanged(ExchangeTypeEnum exchangeType)
         {
-            return !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE) && CurrentAction == null;
+            return !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE) && (CurrentAction == null || CurrentAction.IsFinished);
         }
 
         /// <summary>

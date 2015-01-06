@@ -316,11 +316,39 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="taxCollector"></param>
-        public void FarmTaxCollector(TaxCollectorEntity taxCollector)
+        public void FarmTaxCollector(GuildMember member, TaxCollectorEntity taxCollector)
         {
             AddMessage(() =>
                 {
-                    
+                    if (taxCollector.Guild != this)
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
+
+                    if (!member.HasRight(GuildRightEnum.COLLECT_TAXCOLLECTOR))
+                    {
+                        member.SendHasNotEnoughRights();
+                        return;
+                    }
+
+                    taxCollector.AddMessage(() =>
+                    {
+                        if (!taxCollector.HasGameAction(GameActionTypeEnum.MAP))
+                        {
+                            member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                            return;
+                        }
+
+                        taxCollector.StopAction(GameActionTypeEnum.MAP);
+
+                        AddMessage(() =>
+                        {
+                            RemoveTaxCollector(taxCollector);
+
+                            SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_FARMED(taxCollector, member.Name));
+                        });
+                    });         
                 });
         }
 

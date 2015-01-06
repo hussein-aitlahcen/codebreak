@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Fight.AI;
 using Codebreak.Service.World.Game.Guild;
@@ -131,7 +132,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             }
         }
-
+               
         /// <summary>
         /// 
         /// </summary>
@@ -187,6 +188,30 @@ namespace Codebreak.Service.World.Game.Entity
                 DatabaseRecord.Kamas = value;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long ExperienceGathered
+        {
+            get
+            {
+                return DatabaseRecord.Experience;
+            }
+            set
+            {
+                DatabaseRecord.Experience = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Dictionary<int, int> FarmedItems
+        {
+            get;
+            private set;
+        }
         
         /// <summary>
         /// 
@@ -198,11 +223,12 @@ namespace Codebreak.Service.World.Game.Entity
             Guild = guild;
 
             Defenders = new List<GuildMember>();
+            FarmedItems = new Dictionary<int, int>();
 
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
-
             Spells = SpellBookFactory.Instance.Create(this);
+            Inventory = new EntityInventory(this, (int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
         }
 
         /// <summary>
@@ -292,6 +318,16 @@ namespace Codebreak.Service.World.Game.Entity
         public void SendCollectorSurvived()
         {
             Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exchangeType"></param>
+        /// <returns></returns>
+        public override bool CanBeExchanged(Exchange.ExchangeTypeEnum exchangeType)
+        {
+            return base.CanBeExchanged(exchangeType) && exchangeType == ExchangeTypeEnum.EXCHANGE_TAXCOLLECTOR;
         }
 
         /// <summary>
