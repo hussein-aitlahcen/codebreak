@@ -122,6 +122,7 @@
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\NpcDialogLeaveEffect.cs" />
     <Compile Include="Game\ActionEffect\NpcDialogReplyEffect.cs" />
+    <Compile Include="Game\ActionEffect\OpenBankEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
     <Compile Include="Game\Action\GameAuctionHouseActionBase.cs" />

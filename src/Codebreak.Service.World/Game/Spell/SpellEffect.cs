@@ -575,6 +575,7 @@ namespace Codebreak.Service.World.Game.Spell
         /* ACTION SPECIALES BDD SCRIPT */
         NpcDialogReply = 2000,
         NpcDialogLeave = 2001,
+        NpcOpenBank = 2002,
     }
 
     /// <summary>

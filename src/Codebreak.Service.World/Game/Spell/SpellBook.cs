@@ -27,16 +27,16 @@ namespace Codebreak.Service.World.Game.Spell
         {
             get
             {
-                return _spellEntries.Count == 0;
+                return m_spellById.Count == 0;
             }
         }
        
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, SpellBookEntryDAO> _spellEntries = new Dictionary<int, SpellBookEntryDAO>();
-        private long _entityId;
-        private int _entityType;
+        private Dictionary<int, SpellBookEntryDAO> m_spellById = new Dictionary<int, SpellBookEntryDAO>();
+        private long m_entityId;
+        private int m_entityType;
 
         /// <summary>
         /// 
@@ -44,13 +44,13 @@ namespace Codebreak.Service.World.Game.Spell
         /// <param name="spellEntries"></param>
         public SpellBook(int type, long id)
         {
-            _entityType = type;
-            _entityId = id;
+            m_entityType = type;
+            m_entityId = id;
             foreach (var spellEntry in SpellBookEntryRepository.Instance.GetSpellEntries(type, id))
-                if (!_spellEntries.ContainsKey(spellEntry.SpellId))
-                    _spellEntries.Add(spellEntry.SpellId, spellEntry);
+                if (!m_spellById.ContainsKey(spellEntry.SpellId))
+                    m_spellById.Add(spellEntry.SpellId, spellEntry);
                 else
-                    _spellEntries[spellEntry.SpellId] = spellEntry;
+                    m_spellById[spellEntry.SpellId] = spellEntry;
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace Codebreak.Service.World.Game.Spell
         /// </summary>
         public void Dispose()
         {
-            _spellEntries.Clear();
-            _spellEntries = null;
+            m_spellById.Clear();
+            m_spellById = null;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Codebreak.Service.World.Game.Spell
         /// <returns></returns>
         public bool HasSpell(int spellId)
         {
-            return _spellEntries.ContainsKey(spellId);
+            return m_spellById.ContainsKey(spellId);
         }
 
         /// <summary>
@@ -80,13 +80,13 @@ namespace Codebreak.Service.World.Game.Spell
         {
             if (!HasSpell(spellId))
             {
-                var spellBookEntry = new SpellBookEntryDAO() { OwnerId = _entityId, SpellId = spellId, Level = level, Position = position };
+                var spellBookEntry = new SpellBookEntryDAO() { OwnerId = m_entityId, SpellId = spellId, Level = level, Position = position };
                 if(SpellBookEntryRepository.Instance.Insert(spellBookEntry))
-                    _spellEntries.Add(spellId, spellBookEntry);
+                    m_spellById.Add(spellId, spellBookEntry);
             }
             else
             {
-                _spellEntries[spellId].Level = level;
+                m_spellById[spellId].Level = level;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Codebreak.Service.World.Game.Spell
         {
             if (HasSpell(spellId))
             {
-                _spellEntries[spellId].Level++;
+                m_spellById[spellId].Level++;
 
                 return true;
             }
@@ -117,7 +117,7 @@ namespace Codebreak.Service.World.Game.Spell
         /// <returns></returns>
         public IEnumerable<SpellLevel> GetSpells()
         {
-            return _spellEntries.Values.Select(entry => entry.GetSpellLevel());
+            return m_spellById.Values.Select(entry => entry.GetSpellLevel());
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Codebreak.Service.World.Game.Spell
 
             if (HasSpell(spellId))
             {
-                return _spellEntries[spellId].GetSpellLevel();
+                return m_spellById[spellId].GetSpellLevel();
             }
 
             return null;
@@ -145,7 +145,10 @@ namespace Codebreak.Service.World.Game.Spell
         {
             if (HasSpell(spellId))
             {
-                _spellEntries[spellId].Position = position;
+                foreach (var spell in m_spellById.Values)
+                    if (spell.Position == position)
+                        spell.Position = 25;
+                m_spellById[spellId].Position = position;
 
                 return true;
             }
@@ -159,7 +162,7 @@ namespace Codebreak.Service.World.Game.Spell
         /// <returns></returns>
         public void SerializeAs_SpellsListMessage(StringBuilder message)
         {
-            foreach (var spellEntry in _spellEntries.Values)
+            foreach (var spellEntry in m_spellById.Values)
             {
                 message.Append(spellEntry.SpellId);
                 message.Append('~');

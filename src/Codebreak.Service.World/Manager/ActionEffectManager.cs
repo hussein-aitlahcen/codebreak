@@ -31,6 +31,7 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
             m_effectById.Add(EffectEnum.NpcDialogLeave, NpcDialogLeaveEffect.Instance);
             m_effectById.Add(EffectEnum.NpcDialogReply, NpcDialogReplyEffect.Instance);
+            m_effectById.Add(EffectEnum.NpcOpenBank, OpenBankEffect.Instance);
 
             m_effectByType = new Dictionary<ItemTypeEnum, List<IActionEffect>>();
             m_effectByType.Add(ItemTypeEnum.TYPE_FEE_ARTIFICE, new List<IActionEffect>()

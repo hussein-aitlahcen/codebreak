@@ -39,6 +39,7 @@ namespace Codebreak.Service.World.Game.Entity
         public BankInventory(BankDAO databaseRecord)
             : base((int)EntityTypeEnum.TYPE_BANK, databaseRecord.Id)
         {
+            m_record = databaseRecord;
         }
     }
 }

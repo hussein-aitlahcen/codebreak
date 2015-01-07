@@ -6,6 +6,7 @@ using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Spell;
 
 namespace Codebreak.Service.World.Command
 {
@@ -70,6 +71,47 @@ namespace Codebreak.Service.World.Command
                 {
                     context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character size %size%"));
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class EffectCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "effect"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Apply a specified effect to your character."; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                int effectId = 0;
+                if (!Int32.TryParse(context.TextCommandArgument.NextWord(), out effectId))
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character effect %effectId%"));
+                    return;
+                }
+
+                ActionEffectManager.Instance.ApplyEffect(context.Character, (EffectEnum)effectId, null);
             }
         }
 
