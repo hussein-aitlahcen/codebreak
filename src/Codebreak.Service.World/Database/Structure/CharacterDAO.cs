@@ -333,6 +333,24 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int TitleId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TitleParams
+        {
+            get;
+            set;
+        }
+
         #region Unmapped
         public string GetHexColor1()
         {

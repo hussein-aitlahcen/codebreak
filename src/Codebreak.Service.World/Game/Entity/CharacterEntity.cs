@@ -543,7 +543,37 @@ namespace Codebreak.Service.World.Game.Entity
                 DatabaseRecord.Merchant = value;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int TitleId
+        {
+            get
+            {
+                return DatabaseRecord.TitleId;
+            }
+            set
+            {
+                DatabaseRecord.TitleId = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TitleParams
+        {
+            get
+            {
+                return DatabaseRecord.TitleParams;
+            }
+            set
+            {
+                DatabaseRecord.TitleParams = value;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -575,9 +605,8 @@ namespace Codebreak.Service.World.Game.Entity
             Inventory = new CharacterInventory(this);
             Bank = BankManager.Instance.GetBankByAccountId(AccountId);
             PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, Id);
-
             RefreshPersonalShopTaxe();
-
+            
             var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, Id);
             if (guildMember != null)
             {
@@ -1057,7 +1086,14 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append((int)Type).Append(';');
                         message.Append(Id).Append(';');
                         message.Append(Name).Append(';');
-                        message.Append((int)Breed).Append(';');
+                        message.Append((int)Breed);
+                        if (TitleId != 0)
+                        {
+                            message.Append(",");
+                            message.Append(TitleId).Append('*');
+                            message.Append(TitleParams);//  Goule de %1 = Goule de Tamere ?
+                        }
+                        message.Append(';');
                         message.Append(SkinBase).Append('^');
                         message.Append(SkinSizeBase).Append(';');
                         message.Append(Sex).Append(';');

@@ -252,7 +252,6 @@ namespace Codebreak.Service.World.Game.Auction
 
                     character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_LOT_BOUGHT));
 
-                    // TODO : On ajoute l'argent au joueur connécté ou celui qui l'a mis en vente, a remplacer par la banque
                     WorldService.Instance.AddMessage(() =>
                     {
                         var seller = EntityManager.Instance.GetCharacterByAccount(auction.Owner.AccountId);
