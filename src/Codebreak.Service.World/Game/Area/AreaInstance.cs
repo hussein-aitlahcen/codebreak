@@ -41,49 +41,10 @@ namespace Codebreak.Service.World.Game.Area
         /// <summary>
         /// 
         /// </summary>
-        public BasicTaskProcessor IOQueue
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="record"></param>
         public AreaInstance(AreaDAO record)
         {
             m_areaRecord = record;
-
-            IOQueue = new BasicTaskProcessor("Area[" + record.Name + "]");
-            IOQueue.AddUpdatable(this);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="method"></param>
-        public override void AddHandler(Action<string> method)
-        {
-            IOQueue.AddMessage(() => base.AddHandler(method));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="method"></param>
-        public override void RemoveHandler(Action<string> method)
-        {
-            IOQueue.AddMessage(() => base.RemoveHandler(method));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        public override void Dispatch(string message)
-        {
-            IOQueue.AddMessage(() => base.Dispatch(message));
         }
     }
 }

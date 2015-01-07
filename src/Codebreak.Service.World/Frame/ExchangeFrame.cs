@@ -287,7 +287,7 @@ namespace Codebreak.Service.World.Frame
                 {
                     if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                     {
-                        Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + character.Name);
+                        Logger.Debug("ExchangeFrame::Leave entity is not in an exchange, cheat ? : " + character.Name);
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
@@ -328,7 +328,7 @@ namespace Codebreak.Service.World.Frame
                 var exchangeType = (ExchangeTypeEnum)exchangeTypeId;
                 if (!character.CanGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Request character cant start an exchange : " + character.Name);
+                    Logger.Debug("ExchangeFrame::Request character cant start an exchange, cheat ? : " + character.Name);
                     character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                     return;
                 }
@@ -338,20 +338,17 @@ namespace Codebreak.Service.World.Frame
                     distantEntity = character;
                 if (distantEntity == null)
                 {
-                    Logger.Debug("ExchangeFrame::Request unknow distant entity id : " + character.Name);
+                    Logger.Debug("ExchangeFrame::Request unknow distant entity id, cheat ? : " + character.Name);
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
-                
-                if(!distantEntity.CanGameAction(GameActionTypeEnum.EXCHANGE))
-                {
-                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
-                    return;
-                }
 
-                if (!distantEntity.CanBeExchanged(exchangeType))
+                if (!distantEntity.CanGameAction(GameActionTypeEnum.EXCHANGE) || !distantEntity.CanBeExchanged(exchangeType))
                 {
-                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
+                    if(distantEntity.Type == EntityTypeEnum.TYPE_CHARACTER)
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
+                    else
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
@@ -372,14 +369,10 @@ namespace Codebreak.Service.World.Frame
                         break;
 
                     case EntityTypeEnum.TYPE_CHARACTER:
-                        if (exchangeType == ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT && character.Id == distantEntity.Id)
-                        {
-                            character.ExchangePersonalShop();
-                        }
-                        else
-                        {
-                            character.ExchangePlayer((CharacterEntity)distantEntity);
-                        }
+                        if (exchangeType == ExchangeTypeEnum.EXCHANGE_PERSONAL_SHOP_EDIT && character.Id == distantEntity.Id)                        
+                            character.ExchangePersonalShop();                        
+                        else                        
+                            character.ExchangePlayer((CharacterEntity)distantEntity);                        
                         break;
 
                     case EntityTypeEnum.TYPE_NPC:
@@ -443,6 +436,11 @@ namespace Codebreak.Service.World.Frame
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="message"></param>
         private void ExchangeLeave(CharacterEntity entity, string message)
         {
             entity.AddMessage(() =>

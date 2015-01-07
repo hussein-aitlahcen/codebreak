@@ -1107,7 +1107,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void FightDisconnect(FighterBase fighter)
+        public void FighterDisconnect(FighterBase fighter)
         {
             AddMessage(() =>
             {

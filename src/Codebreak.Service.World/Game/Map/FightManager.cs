@@ -16,9 +16,9 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, FightBase> _fightList;
-        private MapInstance _map;
-        private long _fightId = 1;
+        private Dictionary<long, FightBase> m_fightList;
+        private MapInstance m_map;
+        private long m_fightId = 1;
 
         /// <summary>
         /// 
@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             get
             {
-                return _fightList.Values;
+                return m_fightList.Values;
             }
         }
         
@@ -45,10 +45,10 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public FightManager(MapInstance map)
         {
-            _map = map;
-            _map.AddUpdatable(this);
-            _map.SubArea.Area.AddHandler(base.Dispatch);
-            _fightList = new Dictionary<long, FightBase>();   
+            m_map = map;
+            m_map.AddUpdatable(this);
+            m_map.SubArea.AddHandler(base.Dispatch);
+            m_fightList = new Dictionary<long, FightBase>();   
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="defender"></param>
         public void StartChallenge(CharacterEntity attacker, CharacterEntity defender)
         {
-            Add(new ChallengerFight(_map, _fightId++, attacker, defender));            
+            Add(new ChallengerFight(m_map, m_fightId++, attacker, defender));            
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="monsterGroup"></param>
         public void StartMonsterFight(CharacterEntity character, MonsterGroupEntity monsterGroup)
         {
-            Add(new MonsterFight(_map, _fightId++, character, monsterGroup));
+            Add(new MonsterFight(m_map, m_fightId++, character, monsterGroup));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="taxCollector"></param>
         public void StartTaxCollectorAggression(CharacterEntity attacker, TaxCollectorEntity taxCollector)
         {
-            Add(new TaxCollectorFight(_map, _fightId++, attacker, taxCollector));
+            Add(new TaxCollectorFight(m_map, m_fightId++, attacker, taxCollector));
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public FightBase GetFight(long fightId)
         {
-            if (_fightList.ContainsKey(fightId))
-                return _fightList[fightId];
+            if (m_fightList.ContainsKey(fightId))
+                return m_fightList[fightId];
             return null;
         }
 
@@ -101,8 +101,8 @@ namespace Codebreak.Service.World.Game.Map
         private void Add(FightBase fight)
         {
             FightCount++;
-            _fightList.Add(fight.Id, fight);
-            _map.Dispatch(WorldMessage.FIGHT_COUNT(FightCount));
+            m_fightList.Add(fight.Id, fight);
+            m_map.Dispatch(WorldMessage.FIGHT_COUNT(FightCount));
             base.AddHandler(fight.Dispatch);
             base.AddUpdatable(fight);
         }
@@ -114,8 +114,8 @@ namespace Codebreak.Service.World.Game.Map
         public void Remove(FightBase fight)
         {
             FightCount--;
-            _fightList.Remove(fight.Id);
-            _map.Dispatch(WorldMessage.FIGHT_COUNT(FightCount));
+            m_fightList.Remove(fight.Id);
+            m_map.Dispatch(WorldMessage.FIGHT_COUNT(FightCount));
             base.RemoveHandler(fight.Dispatch);
             base.RemoveUpdatable(fight);
         }

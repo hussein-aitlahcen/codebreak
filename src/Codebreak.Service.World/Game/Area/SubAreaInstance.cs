@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Framework.Generic;
 
 namespace Codebreak.Service.World.Game.Area
 {
@@ -40,10 +41,49 @@ namespace Codebreak.Service.World.Game.Area
         /// <summary>
         /// 
         /// </summary>
+        public BasicTaskProcessor IOQueue
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="record"></param>
         public SubAreaInstance(SubAreaDAO record)
         {
             m_subAreaRecord = record;
+            
+            IOQueue = new BasicTaskProcessor("SubArea[" + record.Name + "]");
+            IOQueue.AddUpdatable(this);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        public override void AddHandler(Action<string> method)
+        {
+            IOQueue.AddMessage(() => base.AddHandler(method));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        public override void RemoveHandler(Action<string> method)
+        {
+            IOQueue.AddMessage(() => base.RemoveHandler(method));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public override void Dispatch(string message)
+        {
+            IOQueue.AddMessage(() => base.Dispatch(message));
         }
     }
 }

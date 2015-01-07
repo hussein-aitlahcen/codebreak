@@ -11,18 +11,18 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class AreaManager : Singleton<AreaManager>
     {
-        private Dictionary<int, SuperAreaInstance> _superAreaById;
-        private Dictionary<int, AreaInstance> _areaById;
-        private Dictionary<int, SubAreaInstance> _subAreaById;
+        private Dictionary<int, SuperAreaInstance> m_superAreaById;
+        private Dictionary<int, AreaInstance> m_areaById;
+        private Dictionary<int, SubAreaInstance> m_subAreaById;
 
         /// <summary>
         /// 
         /// </summary>
         public AreaManager()
         {
-            _superAreaById = new Dictionary<int, SuperAreaInstance>();
-            _areaById = new Dictionary<int, AreaInstance>();
-            _subAreaById = new Dictionary<int, SubAreaInstance>();
+            m_superAreaById = new Dictionary<int, SuperAreaInstance>();
+            m_areaById = new Dictionary<int, AreaInstance>();
+            m_subAreaById = new Dictionary<int, SubAreaInstance>();
         }
 
         /// <summary>
@@ -36,24 +36,23 @@ namespace Codebreak.Service.World.Manager
                 WorldService.Instance.AddUpdatable(instance);
                 WorldService.Instance.Dispatcher.SafeAddHandler(instance.Dispatch);
 
-                _superAreaById.Add(superAreaDAO.Id, instance);
+                m_superAreaById.Add(superAreaDAO.Id, instance);
             }
 
             foreach(var areaDAO in AreaRepository.Instance.GetAll())
             {
                 var instance =  new AreaInstance(areaDAO);
-                instance.SuperArea.SafeAddHandler(instance.SafeDispatch);
+                instance.SuperArea.AddUpdatable(instance);
+                instance.SuperArea.AddHandler(instance.SafeDispatch);
 
-                _areaById.Add(areaDAO.Id, instance);
+                m_areaById.Add(areaDAO.Id, instance);
             }
 
             foreach(var subAreaDAO in SubAreaRepository.Instance.GetAll())
             {
                 var instance = new SubAreaInstance(subAreaDAO);
-                instance.Area.AddUpdatable(instance);
-                instance.Area.SafeAddHandler(instance.Dispatch);
-
-                _subAreaById.Add(subAreaDAO.Id, instance);
+                instance.Area.AddHandler(instance.SafeDispatch);
+                m_subAreaById.Add(subAreaDAO.Id, instance);
             }
         }
 
@@ -64,7 +63,7 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public SuperAreaInstance GetSuperArea(int id)
         {
-            return _superAreaById[id];
+            return m_superAreaById[id];
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public AreaInstance GetArea(int id)
         {
-            return _areaById[id];
+            return m_areaById[id];
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public SubAreaInstance GetSubArea(int id)
         {
-            return _subAreaById[id];
+            return m_subAreaById[id];
         }
     }
 }
