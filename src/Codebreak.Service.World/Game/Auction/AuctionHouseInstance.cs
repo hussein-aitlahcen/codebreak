@@ -260,9 +260,8 @@ namespace Codebreak.Service.World.Game.Auction
                         {
                             seller.AddMessage(() =>
                             {
-                                seller.Inventory.AddKamas(price);
+                                seller.Bank.AddKamas(price);
                                 seller.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_BANK_CREDITED, price, auction.Item.TemplateId));
-
                                 if (seller.HasGameAction(GameActionTypeEnum.EXCHANGE))
                                 {
                                     var action = seller.CurrentAction as GameAuctionHouseSellAction;
@@ -278,7 +277,7 @@ namespace Codebreak.Service.World.Game.Auction
                         }
                         else
                         {
-                            auction.Owner.Kamas += price;
+                            BankManager.Instance.GetBankByAccountId(auction.Owner.AccountId).AddKamas(price);
                         }
                     });
                     break;
