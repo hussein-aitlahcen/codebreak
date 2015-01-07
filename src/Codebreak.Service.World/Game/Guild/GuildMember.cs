@@ -14,6 +14,8 @@ namespace Codebreak.Service.World.Game.Guild
     /// </summary>
     public sealed class GuildMember : MessageDispatcher
     {
+        static GuildRightEnum[] RIGHTS = (GuildRightEnum[])Enum.GetValues(typeof(GuildRightEnum));
+
         /// <summary>
         /// 
         /// </summary>
@@ -245,8 +247,8 @@ namespace Codebreak.Service.World.Game.Guild
         {
             Rank = GuildRankEnum.BOSS;
 
-            foreach(var value in (GuildRightEnum[])Enum.GetValues(typeof(GuildRightEnum)))           
-                SetRight(value, true);            
+            foreach(var right in RIGHTS)           
+                SetRight(right, true);            
         }
 
         /// <summary>
