@@ -527,18 +527,12 @@ namespace Codebreak.Service.World.Game.Guild
 
             member.Character.AddMessage(() =>
                 {
-                    if (member.Character.Map.HasTaxCollector())
-                    {
-                        member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("There is already a Taxcollector in this map."));
-                        return;
-                    }
-
                     if (member.Character.Inventory.Kamas < TaxCollectorPrice)
                     {
                         member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS, TaxCollectorPrice));
                         return;
                     }
-
+                    
                     AddMessage(() =>
                         {
                             var taxCollectorDAO = new TaxCollectorDAO()
@@ -570,6 +564,7 @@ namespace Codebreak.Service.World.Game.Guild
                             member.Character.AddMessage(() =>
                                 {
                                     member.Character.Inventory.SubKamas(TaxCollectorPrice);
+                                    member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_KAMAS_LOST, TaxCollectorPrice));
                                 });
 
                             base.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_HIRED(taxCollector, member.Character.Name));
@@ -695,7 +690,6 @@ namespace Codebreak.Service.World.Game.Guild
             var member = new GuildMember(this, character.DatabaseRecord);
             member.GuildId = Id;
             member.Rank = GuildRankEnum.ON_TRIAL; // a l'essai
-            member.Power = 0;
             member.CharacterConnected(character);
             member.SendGuildStats();
             character.RefreshOnMap();
