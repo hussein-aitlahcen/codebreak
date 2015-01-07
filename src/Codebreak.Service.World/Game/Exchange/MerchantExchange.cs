@@ -96,13 +96,13 @@ namespace Codebreak.Service.World.Game.Exchange
                 quantity = item.Quantity;
 
             var price = item.MerchantPrice * quantity;
-
             if(Character.Inventory.Kamas < price)
             {
                 Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS, price));
                 return;
             }
 
+            item.MerchantPrice = -1;
             Merchant.Inventory.AddKamas(price);
 
             Character.CachedBuffer = true;
