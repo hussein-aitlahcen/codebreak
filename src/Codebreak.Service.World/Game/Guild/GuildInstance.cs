@@ -443,10 +443,7 @@ namespace Codebreak.Service.World.Game.Guild
                     {
                         if (!collector.CanDefend)
                         {
-                            character.AddMessage(() =>
-                                {
-                                    character.StopAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION);
-                                });
+                            character.AddMessage(() => character.StopAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION));
                             return;
                         }
 
@@ -485,10 +482,7 @@ namespace Codebreak.Service.World.Game.Guild
 
             member.TaxCollectorJoinedId = -1;
 
-            collector.AddMessage(() =>
-                {
-                    collector.DefenderLeft(member);
-                });
+            collector.AddMessage(() => collector.DefenderLeft(member));
 
             m_taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_LEAVE(collector.Id, member.Id));
         }
@@ -599,7 +593,6 @@ namespace Codebreak.Service.World.Game.Guild
 
             BoostPoint -= 5;
             Statistics.Spells.LevelUpSpell(spellId);
-
             SendBoostInformations(member);
         }
 
