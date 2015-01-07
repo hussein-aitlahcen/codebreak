@@ -1113,13 +1113,11 @@ namespace Codebreak.Service.World.Game.Entity
                         }
                         else
                         {
-                            message.Append("").Append(';'); // GuildInfos
-                            message.Append("").Append(';');
+                            message.Append("").Append(';'); // GuildName
+                            message.Append("").Append(';'); // GuildEmblem
                         }
-                        message.Append(Util.EncodeBase36(EntityRestriction))
-                            .Append(';');
-                        message.Append("")
-                            .Append(';'); // MountLightInfos
+                        message.Append(Util.EncodeBase36(EntityRestriction)).Append(';');
+                        message.Append("").Append(';'); // MountLightInfos
                     }
                     else if (HasGameAction(GameActionTypeEnum.FIGHT))
                     {
@@ -1164,7 +1162,7 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(Statistics.GetTotal(EffectEnum.AddAPDodge)).Append(';');
                         message.Append(Statistics.GetTotal(EffectEnum.AddMPDodge)).Append(';');
                         message.Append(Team.Id).Append(';');
-                        message.Append("").Append(';'); // TODO Display Paddock
+                        message.Append("").Append(';'); // MountLightInfos
                     }
                     break;
             }
