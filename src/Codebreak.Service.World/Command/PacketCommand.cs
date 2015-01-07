@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Command
 
         public override string Description
         {
-            get { return "Packets management command."; }
+            get { return "Packet management commands."; }
         }
 
         protected override void Process(WorldCommandContext context)
@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Command
             {
                 get
                 {
-                    return "Send a packet.";
+                    return "Send a packet. Arguments : %rawString%";
                 }
             }
 

@@ -184,7 +184,9 @@ namespace Codebreak.Service.World.Frame
             character.AddMessage(() =>
                 {
                     if (!WorldService.Instance.CommandManager.Execute(new WorldCommandContext(character, command)))
-                        character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow command"));
+                        character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow command, type help to lists them all."));
+                    else
+                        Logger.Info("[CONSOLE COMMAND] name=" + character.Name + " ip=" + character.Ip + " command=" + command);
                 });
         }
 

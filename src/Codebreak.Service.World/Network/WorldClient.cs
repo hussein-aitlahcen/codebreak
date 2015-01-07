@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
-        private CharacterEntity _currentCharacter;
+        private CharacterEntity m_currentCharacter;
 
         /// <summary>
         /// 
@@ -45,20 +45,21 @@ namespace Codebreak.Service.World.Network
         {
             get
             {
-                return _currentCharacter;
+                return m_currentCharacter;
             }
             set
             {
-                if (_currentCharacter != null)
+                if (m_currentCharacter != null)
                 {
-                    _currentCharacter.RemoveHandler(Send);
-                    _currentCharacter.KickEvent -= base.Disconnect;
+                    m_currentCharacter.RemoveHandler(Send);
+                    m_currentCharacter.KickEvent -= base.Disconnect;
                 }
-                _currentCharacter = value;
-                if (_currentCharacter != null)
+                m_currentCharacter = value;
+                if (m_currentCharacter != null)
                 {
-                    _currentCharacter.AddHandler(Send);
-                    _currentCharacter.KickEvent += base.Disconnect;
+                    m_currentCharacter.Ip = Ip;
+                    m_currentCharacter.AddHandler(Send);
+                    m_currentCharacter.KickEvent += base.Disconnect;
                 }
             }
         }

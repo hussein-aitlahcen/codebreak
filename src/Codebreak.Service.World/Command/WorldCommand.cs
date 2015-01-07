@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Command
 
         public override string Description
         {
-            get { return "Lists the available commands."; }
+            get { return "World management commands."; }
         }
 
         protected override void Process(WorldCommandContext context)

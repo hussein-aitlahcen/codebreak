@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Codebreak.Framework.Command;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game;
@@ -21,7 +22,7 @@ namespace Codebreak.Service.World.Command
 
         public override string Description
         {
-            get { return "Character management command.";  }
+            get { return "Character management commands.";  }
         }
 
         protected override bool CanExecute(WorldCommandContext context)
@@ -31,7 +32,7 @@ namespace Codebreak.Service.World.Command
 
         protected override void Process(WorldCommandContext context)
         {
-            context.Character.Dispatch(WorldMessage.BASIC_NO_OPERATION()); // nothing to do
+            context.Character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
         }
 
         public sealed class SizeCommand : SubCommand<WorldCommandContext>
@@ -51,7 +52,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Modify the player size."; }
+                get { return "Change your character skin. Arguments : %skinId%"; }
             }
 
             protected override bool CanExecute(WorldCommandContext context)
@@ -94,7 +95,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Apply a specified effect to your character."; }
+                get { return "Apply a specified effect to your character. Arguments : %effectId"; }
             }
 
             protected override bool CanExecute(WorldCommandContext context)
@@ -158,6 +159,54 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
+        public sealed class WarnCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "warn"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Warn a player. Arguments : %playerName%"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                var characterName = context.TextCommandArgument.NextWord();
+                var reason = context.TextCommandArgument.NextToEnd();
+
+                WorldService.Instance.AddMessage(() =>
+                {
+                    var character = EntityManager.Instance.GetCharacterByName(characterName);
+                    if (character == null)
+                    {
+                        context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
+                        return;
+                    }
+
+                    character.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_BASIC_WARNING_BEFORE_SANCTION, reason));
+                    context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player warned."));
+                });
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class KickCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
@@ -175,7 +224,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Kick a player"; }
+                get { return "Kick a player. Arguments : %playerName% %reason%"; }
             }
 
             protected override bool CanExecute(WorldCommandContext context)
@@ -185,8 +234,8 @@ namespace Codebreak.Service.World.Command
 
             protected override void Process(WorldCommandContext context)
             {
-                string characterName = context.TextCommandArgument.NextWord();
-                string reason = context.TextCommandArgument.NextWord();
+                var characterName = context.TextCommandArgument.NextWord();
+                var reason = context.TextCommandArgument.NextToEnd();
 
                 WorldService.Instance.AddMessage(() =>
                 {
@@ -197,6 +246,14 @@ namespace Codebreak.Service.World.Command
                         return;
                     }
 
+                    if(character.Power >= context.Character.Power)
+                    {
+                        context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("This player is a god, god cannot be kicked. In addition, he will be noticed."));
+                        character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Player " + context.Character.Name + " tried to kick you."));
+                        return;
+                    }
+
+                    character.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_ON_DISCONNECT, GameMessageEnum.MESSAGE_KICKED, context.Character.Name, reason));
                     character.SafeKick();
                     context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player kicked successfully."));
                 });
@@ -223,7 +280,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Command destined to create a new guild"; }
+                get { return "Open a guild creation panel"; }
             }
 
             protected override bool CanExecute(WorldCommandContext context)
@@ -239,8 +296,75 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to process this command in your actual state."));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to start a guild creation in your actual state."));
                 }
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class TeleportMeCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "teleportme"
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get
+                {
+                    return "Teleport a player to your location. Arguments : %playerName%";
+                }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                //if (context.Character.Power < 1)
+                //{
+                //    context.Character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You're not admin, your attempt was registered"));
+                //    return false;
+                //}
+
+                return true;
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                string characterName = context.TextCommandArgument.NextWord();
+                WorldService.Instance.AddMessage(() =>
+                {
+                    var character = EntityManager.Instance.GetCharacterByName(characterName);
+                    if (character == null)
+                    {
+                        context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
+                        return;
+                    }
+
+                    var mapId = context.Character.MapId;
+                    var cellId = context.Character.CellId;
+
+                    character.AddMessage(() =>
+                    {
+                        if (!character.CanGameAction(Game.Action.GameActionTypeEnum.MAP_TELEPORT))
+                        {
+                            context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to teleport remote player due to his actual state."));
+                            return;
+                        }
+
+                        character.Teleport(mapId, cellId);
+                        context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player teleported successfully."));
+                    });
+                });         
             }
         }
 
@@ -266,7 +390,7 @@ namespace Codebreak.Service.World.Command
             {
                 get
                 {
-                    return "Teleport yourself to a player location.";
+                    return "Teleport yourself to a player location. Arguments : %playerName%";
                 }
             }
 
@@ -296,11 +420,11 @@ namespace Codebreak.Service.World.Command
                         var mapId = character.MapId;
                         var cellId = character.CellId;
 
-                        character.AddMessage(() =>
+                        context.Character.AddMessage(() =>
                             {
                                 if (!context.Character.CanGameAction(Game.Action.GameActionTypeEnum.MAP_TELEPORT))
                                 {
-                                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to process this command in your actual state."));
+                                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to teleport yourself in your actual state."));
                                     return;
                                 }
 
@@ -332,7 +456,7 @@ namespace Codebreak.Service.World.Command
             {
                 get
                 {
-                    return "Teleport command that can only be used by admins.";
+                    return "Teleport yourself at the desired location. Arguments : %mapId% %cellId%";
                 }
             }
 
@@ -373,7 +497,7 @@ namespace Codebreak.Service.World.Command
                                 }
                                 else
                                 {
-                                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to process this command in your actual state."));
+                                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to teleport yourself in your actual state."));
                                 }
                             }
                             else
@@ -415,7 +539,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Command to level up"; }
+                get { return "Levelup your character. Arguments : %level%"; }
             }
 
             protected override void Process(WorldCommandContext context)
@@ -432,7 +556,7 @@ namespace Codebreak.Service.World.Command
                         context.Character.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(context.Character.Level));
                         context.Character.Dispatch(WorldMessage.SPELLS_LIST(context.Character.Spells));
                         context.Character.Dispatch(WorldMessage.ACCOUNT_STATS(context.Character));
-                        context.Character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("You are now level " + level));
+                        context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("You are now level " + level));
                     }
                     else
                     {
@@ -463,7 +587,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Command to add an item"; }
+                get { return "Add an item in your invotentory, with max jet. Arguments : %templateId%"; }
             }
 
             protected override void Process(WorldCommandContext context)
@@ -479,7 +603,7 @@ namespace Codebreak.Service.World.Command
                         {
                             context.Character.Inventory.AddItem(instance);
                             context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE(
-                                String.Format("Item {0} - `{1}` added in your inventory", itemTemplate.Id, itemTemplate.Name)
+                                String.Format("Item {0} added in your inventory", itemTemplate.Id, itemTemplate.Name)
                                 ));
                         }
                     }
@@ -490,7 +614,7 @@ namespace Codebreak.Service.World.Command
                 }
                 else
                 {
-                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character item templateId"));
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character item %templateId%"));
                 }
             }
         }

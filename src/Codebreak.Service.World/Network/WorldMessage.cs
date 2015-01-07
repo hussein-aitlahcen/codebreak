@@ -60,6 +60,7 @@ namespace Codebreak.Service.World.Network
         INFO_KAMAS_WON = 45,
         INFO_KAMAS_LOST = 46,
 
+        INFO_BASIC_WARNING_BEFORE_SANCTION = 116,
         INFO_BASIC_LAST_CONNECTION = 152, // precedente connexion ...
         INFO_BASIC_CURRENT_IP = 153, // votre ip actuelle est ...   
 
@@ -117,9 +118,19 @@ namespace Codebreak.Service.World.Network
     /// <summary>
     /// 
     /// </summary>
+    public enum GamePopupTypeEnum
+    {
+        TYPE_INSTANT = 1,
+        TYPE_ON_DISCONNECT = 0,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public enum GameMessageEnum
     {
         MESSAGE_FREE_SOUL = 12,
+        MESSAGE_KICKED = 18,
     }
     
     /// <summary>
@@ -676,9 +687,9 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static string GAME_MESSAGE(InformationTypeEnum type, GameMessageEnum message)
+        public static string GAME_MESSAGE(GamePopupTypeEnum type, GameMessageEnum message, params object[] args)
         {
-            return "M" + (int)type + "" + (int)message;
+            return "M" + (int)type + "" + (int)message + (args.Length > 0 ? "|" : "") + string.Join(";", args.Select(arg => arg.ToString()));
         }
 
         /// <summary>

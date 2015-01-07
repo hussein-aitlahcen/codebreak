@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Command
 
         public override string Description
         {
-            get { return "Monsters management command"; }
+            get { return "Monsters management commands"; }
         }
 
         protected override void Process(WorldCommandContext context)

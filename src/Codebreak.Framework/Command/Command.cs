@@ -54,7 +54,10 @@ namespace Codebreak.Framework.Command
         /// <param name="message"></param>
         public void Serialize(StringBuilder message, string parent = "")
         {
-            message.Append(parent + Aliases.First()).Append(" : ").Append(Description).Append('\n');
+            if (m_subCommands.Count != 0)
+                message.Append("[").Append(Aliases.First()).Append("]").Append('\n');
+            else
+                message.Append(parent).Append(Aliases.First()).Append(" : ").Append(Description).Append('\n');
             foreach(var subCommand in m_subCommands)            
                 subCommand.Serialize(message, Aliases.First() + " ");            
         }

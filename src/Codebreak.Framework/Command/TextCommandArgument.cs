@@ -43,6 +43,19 @@ namespace Codebreak.Framework.Command
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public string NextToEnd()
+        {
+            int length = m_data.Length;
+            if (Position >= length)
+                return "";
+
+            return m_data.Substring(Position, length - Position);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="separator"></param>
         /// <returns></returns>
         public string NextWord(string separator)
