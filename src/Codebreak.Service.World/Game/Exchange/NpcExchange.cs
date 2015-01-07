@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Network;
 using System;
@@ -69,8 +70,11 @@ namespace Codebreak.Service.World.Game.Exchange
                 foreach(var item in m_reward.RewardedItems)
                     Character.Inventory.AddItem(item.Template.Create(item.Quantity));
                 Character.CachedBuffer = false;
+                return true;
             }
-            return true;
+
+            Character.AddMessage(() => Character.AbortAction(GameActionTypeEnum.EXCHANGE));
+            return false;
         }
 
         /// <summary>

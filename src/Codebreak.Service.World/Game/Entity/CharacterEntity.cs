@@ -762,6 +762,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="storage"></param>
+        public void ExchangeStorage(PersistentInventory storage)
+        {
+            CurrentAction = new GameStorageExchangeAction(this, storage);
+            StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         public void ExchangeAuctionHouseBuy(NonPlayerCharacterEntity entity)
         {

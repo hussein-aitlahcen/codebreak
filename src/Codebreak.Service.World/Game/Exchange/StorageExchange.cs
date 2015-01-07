@@ -48,10 +48,32 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         public override void Create()
         {
+            if(Storage.ActualUser != -1)
+            {
+                Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_STORAGE_ALREADY_IN_USE));
+                Character.AddMessage(() => Character.StopAction(Action.GameActionTypeEnum.EXCHANGE));
+                return;
+            }
+
+            Storage.ActualUser = Character.Id;
+
             Character.CachedBuffer = true;
             base.Create();
             SendItemsList();
             Character.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
+        public override void Leave(bool success = false)
+        {
+            if (Storage.ActualUser == Character.Id)
+            {
+                base.Leave(success);
+                Storage.ActualUser = -1;
+            }
         }
 
         /// <summary>
@@ -94,6 +116,28 @@ namespace Codebreak.Service.World.Game.Exchange
             Character.CachedBuffer = false;
 
             return quantity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="guid"></param>
+        /// <param name="quantity"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public override int AddItem(EntityBase actor, long guid, int quantity, long price = -1)
+        {
+            var item = Character.Inventory.RemoveItem(guid, quantity);
+            if (item == null)
+                return 0;
+            
+            Character.CachedBuffer = true;
+            Storage.AddItem(item);
+            SendItemsList();
+            Character.CachedBuffer = false;
+
+            return item.Quantity;
         }
 
         /// <summary>

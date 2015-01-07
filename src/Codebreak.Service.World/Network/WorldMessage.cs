@@ -86,6 +86,8 @@ namespace Codebreak.Service.World.Network
         INFO_AUCTION_EXPIRED = 67,
         INFO_AUCTION_LOT_BOUGHT = 68,
 
+        ERROR_STORAGE_ALREADY_IN_USE = 20,
+
         ERROR_AUCTION_HOUSE_TOO_MANY_ITEMS = 66,
         ERROR_INVALID_PRICE = 99,
         ERROR_NOT_ENOUGH_KAMAS_FOR_TAXE = 65,

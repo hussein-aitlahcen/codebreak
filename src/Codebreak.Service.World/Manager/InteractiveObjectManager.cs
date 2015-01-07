@@ -42,6 +42,7 @@ namespace Codebreak.Service.World.Manager
         public void Initialize()
         {
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ZAAP, (map, cellId) => new Waypoint(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POUBELLE, (map, cellId) => new TrashCan(map, cellId));
 
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
             AddInteractiveGfx(7003, InteractiveObjectIdEnum.INTERACTIVE_SCIE);

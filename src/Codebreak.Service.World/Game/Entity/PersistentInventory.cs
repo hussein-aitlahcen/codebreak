@@ -16,6 +16,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public long ActualUser
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int OwnerType
         {
             get;
@@ -68,6 +77,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             OwnerType = ownerType;
             OwnerId = ownerId;
+            ActualUser = -1;
         }
 
         /// <summary>

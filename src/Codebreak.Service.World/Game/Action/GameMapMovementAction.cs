@@ -105,10 +105,10 @@ namespace Codebreak.Service.World.Game.Action
         {
             Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
 
-            if (SkillId != -1 && Entity.MapId == SkillMapId)            
-                Entity.Map.InteractiveExecute((CharacterEntity)Entity, SkillCellId, SkillId);            
-
             base.Stop(args);
+
+            if (SkillId != -1 && Entity.MapId == SkillMapId)            
+                Entity.Map.InteractiveExecute((CharacterEntity)Entity, SkillCellId, SkillId);
         }
 
         /// <summary>

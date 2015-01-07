@@ -63,6 +63,7 @@
     <Compile Include="Command\CharacterCommand.cs" />
     <Compile Include="Command\HelpCommand.cs" />
     <Compile Include="Command\MonsterCommand.cs" />
+    <Compile Include="Command\PacketCommand.cs" />
     <Compile Include="Command\WorldCommand.cs" />
     <Compile Include="Command\WorldCommandContext.cs" />
     <Compile Include="Database\Repository\AreaRepository.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Game\Action\GamePersonalShopExchangeAction.cs" />
     <Compile Include="Game\Action\GamePlayerExchangeAction.cs" />
     <Compile Include="Game\Action\GameShopExchangeAction.cs" />
+    <Compile Include="Game\Action\GameStorageExchangeAction.cs" />
     <Compile Include="Game\Action\GameTaxCollectorDefenderAction.cs" />
     <Compile Include="Game\Action\GameTaxCollectorExchangeAction.cs" />
     <Compile Include="Game\Action\GameWaypointAction.cs" />
@@ -264,6 +266,7 @@
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
     <Compile Include="Game\Guild\GuildStatistics.cs" />
     <Compile Include="Game\Interactive\InteractiveObject.cs" />
+    <Compile Include="Game\Interactive\Type\TrashCan.cs" />
     <Compile Include="Game\Interactive\Type\Waypoint.cs" />
     <Compile Include="Game\Job\JobBook.cs" />
     <Compile Include="Game\Job\JobTemplate.cs" />

@@ -77,7 +77,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <returns></returns>
         public override int AddItem(EntityBase actor, long guid, int quantity, long price = -1)
         {
-            return 0; // anti cheat
+            return 0; // should not be able to add an item
         }
 
         /// <summary>
