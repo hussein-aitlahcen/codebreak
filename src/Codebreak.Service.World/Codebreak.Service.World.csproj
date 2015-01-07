@@ -70,6 +70,7 @@
     <Compile Include="Database\Repository\AuctionHouseEntryRepository.cs" />
     <Compile Include="Database\Repository\AuctionHouseAllowedTypeRepository.cs" />
     <Compile Include="Database\Repository\AuctionHouseRepository.cs" />
+    <Compile Include="Database\Repository\BankRepository.cs" />
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Database\Structure\AuctionHouseDAO.cs" />
     <Compile Include="Database\Structure\AuctionHouseEntryDAO.cs" />
     <Compile Include="Database\Structure\AuctionHouseAllowedTypeDAO.cs" />
+    <Compile Include="Database\Structure\BankDAO.cs" />
     <Compile Include="Database\Structure\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Game\Auction\AuctionEntry.cs" />
     <Compile Include="Game\Auction\AuctionHouseInstance.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
+    <Compile Include="Game\Entity\BankInventory.cs" />
     <Compile Include="Game\Entity\CharacterInventory.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\EntityInventory.cs" />
@@ -298,6 +301,7 @@
     <Compile Include="Manager\ActionEffectManager.cs" />
     <Compile Include="Manager\AreaManager.cs" />
     <Compile Include="Manager\AuctionHouseManager.cs" />
+    <Compile Include="Manager\BankManager.cs" />
     <Compile Include="Manager\EntityManager.cs" />
     <Compile Include="Manager\ExperienceManager.cs" />
     <Compile Include="Game\Map\FightManager.cs" />

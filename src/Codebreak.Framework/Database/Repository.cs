@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Generic;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -30,6 +31,7 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         void UpdateAll();
+        void UpdateAll(MySqlConnection connection, MySqlTransaction transaction);
     }
 
     /// <summary>
@@ -134,10 +136,20 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         /// <param name="objects"></param>
-        public virtual void Update(List<TDataObject> objects)
+        public virtual void Update(IEnumerable<TDataObject> objects)
         {
             if(objects.Count() > 0)
                 SqlManager.Instance.Update<TDataObject>(objects);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objects"></param>
+        public virtual void Update(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
+        {
+            if (objects.Count() > 0)
+                SqlManager.Instance.Update<TDataObject>(connection, transaction, objects);
         }
 
         /// <summary>
@@ -272,6 +284,14 @@ namespace Codebreak.Framework.Database
         public virtual void UpdateAll()
         {          
             Update(GetDirtyObjects().ToList());            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void UpdateAll(MySqlConnection connection, MySqlTransaction transaction)
+        {
+            Update(connection, transaction,GetDirtyObjects().ToList());
         }
 
         /// <summary>

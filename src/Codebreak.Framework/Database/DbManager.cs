@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Generic;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,9 +64,22 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public void UpdateAll()
         {
-            foreach(var repository in m_repositories)
+            using (var connection = SqlManager.Instance.CreateConnection())
             {
-                repository.UpdateAll();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var repo in m_repositories)
+                            repo.UpdateAll(connection, transaction);
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("DbManager::UpdateAll unable to update repositories : " + ex.Message);
+                        transaction.Rollback();
+                    }
+                }
             }
         }
     }

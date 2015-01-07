@@ -197,6 +197,17 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="dataObjects"></param>
+        /// <returns></returns>
+        public void Update<T>(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
+        {
+            connection.Update<T>(dataObjects, transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="dataObject"></param>
         public bool Update<T>(T dataObject) where T : DataAccessObject<T>, new()
         {

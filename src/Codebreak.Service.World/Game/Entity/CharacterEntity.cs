@@ -514,6 +514,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public BankInventory Bank
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public long MerchantTaxe
         {
             get;
@@ -564,6 +573,7 @@ namespace Codebreak.Service.World.Game.Entity
             Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);
             FrameManager = new FrameManager<CharacterEntity, string>(this);
             Inventory = new CharacterInventory(this);
+            Bank = BankManager.Instance.GetBankByAccountId(AccountId);
             PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, Id);
 
             RefreshPersonalShopTaxe();

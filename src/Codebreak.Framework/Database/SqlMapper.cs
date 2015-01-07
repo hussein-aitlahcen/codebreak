@@ -689,7 +689,58 @@ this IDbConnection cnn, string sql, dynamic param = null, IDbTransaction transac
                 int total = 0;
                 using (var cmd = SetupCommand(cnn, transaction, sql, null, null, commandTimeout, commandType))
                 {
+                    string masterSql = null;
+                    foreach (var obj in multiExec)
+                    {
+                        if (isFirst)
+                        {
+                            masterSql = cmd.CommandText;
+                            isFirst = false;
+                            identity = new Identity(sql, cmd.CommandType, cnn, null, obj.GetType(), null);
+                            info = GetCacheInfo(identity);
+                        }
+                        else
+                        {
+                            cmd.CommandText = masterSql; // because we do magic replaces on "in" etc
+                            cmd.Parameters.Clear(); // current code is Add-tastic
+                        }
+                        info.ParamReader(cmd, obj);
+                        total += cmd.ExecuteNonQuery();
+                    }
+                }
+                return total;
+            }
 
+            // nice and simple
+            if ((object)param != null)
+            {
+                identity = new Identity(sql, commandType, cnn, null, (object)param == null ? null : ((object)param).GetType(), null);
+                info = GetCacheInfo(identity);
+            }
+            return ExecuteCommandQuery(cnn, transaction, sql, (object)param == null ? null : info.ParamReader, (object)param, commandTimeout, commandType);
+        }
+
+        /// <summary>
+        /// Execute parameterized SQL  
+        /// </summary>
+        /// <returns>Number of rows affected</returns>
+        public static int ExecuteQueryMultiple(
+#if CSHARP30
+            this IDbConnection cnn, string sql, object param, IDbTransaction transaction, int? commandTimeout, CommandType? commandType
+#else
+this IDbConnection cnn, IDbCommand cmd, string sql, dynamic param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null
+#endif
+)
+        {
+            IEnumerable multiExec = (object)param as IEnumerable;
+            Identity identity;
+            CacheInfo info = null;
+            if (multiExec != null && !(multiExec is string))
+            {
+                bool isFirst = true;
+                int total = 0;
+                cmd = SetupCommand(cnn, cmd, transaction, sql, null, null, commandTimeout, commandType);
+                {
                     string masterSql = null;
                     foreach (var obj in multiExec)
                     {
@@ -2074,6 +2125,23 @@ this IDbConnection cnn, string sql, Func<TFirst, TSecond, TThird, TFourth, TRetu
             return cmd;
         }
 
+        private static IDbCommand SetupCommand(IDbConnection cnn, IDbCommand cmd, IDbTransaction transaction, string sql, Action<IDbCommand, object> paramReader, object obj, int? commandTimeout, CommandType? commandType)
+        {
+            var bindByName = GetBindByName(cmd.GetType());
+            if (bindByName != null) bindByName(cmd, true);
+            if (transaction != null)
+                cmd.Transaction = transaction;
+            cmd.CommandText = sql;
+            if (commandTimeout.HasValue)
+                cmd.CommandTimeout = commandTimeout.Value;
+            if (commandType.HasValue)
+                cmd.CommandType = commandType.Value;
+            if (paramReader != null)
+            {
+                paramReader(cmd, obj);
+            }
+            return cmd;
+        }
 
         private static object ExecuteCommand(IDbConnection cnn, IDbTransaction transaction, string sql, Action<IDbCommand, object> paramReader, object obj, int? commandTimeout, CommandType? commandType)
         {
@@ -2109,6 +2177,7 @@ this IDbConnection cnn, string sql, Func<TFirst, TSecond, TThird, TFourth, TRetu
                 if (cmd != null) cmd.Dispose();
             }
         }
+               
 
         private static Func<IDataReader, object> GetStructDeserializer(Type type, Type effectiveType, int index)
         {
