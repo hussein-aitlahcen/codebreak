@@ -115,7 +115,7 @@ namespace Codebreak.Service.World.Frame
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
                 client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST());
-                client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.CharacterAlignment.AlignmentId));
+                client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
                 client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
                 client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
                 client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
@@ -374,7 +374,7 @@ namespace Codebreak.Service.World.Frame
             client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
             client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
             client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST());
-            client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.CharacterAlignment.AlignmentId));
+            client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
             client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
             client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
             client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));

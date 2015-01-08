@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void AlignmentDisableCost(CharacterEntity character, string message)
         {
-            character.SafeDispatch(WorldMessage.ALIGNMENT_DISABLE_COST((character.CharacterAlignment.Honour / 100) * 5));
+            character.SafeDispatch(WorldMessage.ALIGNMENT_DISABLE_COST((character.Honour / 100) * 5));
         }
 
         /// <summary>

@@ -96,5 +96,35 @@ namespace Codebreak.Service.World
             }
             return (code1 + code2);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="winnersLevel"></param>
+        /// <param name="losersLevel"></param>
+        /// <returns></returns>
+        public static int CalculWinHonor(int level, int winnersLevel, int losersLevel)
+        {
+            var basic = Math.Sqrt(level) * 10;
+            var coef = losersLevel / winnersLevel;
+
+            return (int)Math.Floor(basic * coef);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="winnersLevel"></param>
+        /// <param name="losersLevel"></param>
+        /// <returns></returns>
+        public static int CalculLoseHonor(int level, int winnersLevel, int losersLevel)
+        {
+            var basic = Math.Sqrt(level) * 10;
+            var coef = losersLevel / winnersLevel;
+
+            return (int)Math.Floor(basic * coef);
+        }
     }
 }

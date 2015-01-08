@@ -233,6 +233,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public int Alignment
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<FightOptionTypeEnum, bool> m_blockedOption;
         private List<FighterBase> m_fighters;
         private List<FightCell> m_places;
@@ -243,11 +252,12 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fight"></param>
-        public FightTeam(int id, long leaderId, int flagCell, FightBase fight, List<FightCell> places)
+        public FightTeam(int id, long leaderId, int alignment, int flagCell, FightBase fight, List<FightCell> places)
         {
             Id = id;
             Fight = fight;
             LeaderId = leaderId;
+            Alignment = alignment;
             FlagCellId = flagCell;
 
             m_challenges = new List<ChallengeBase>();

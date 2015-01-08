@@ -125,26 +125,28 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _message.ToString();
+                return m_message.ToString();
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private StringBuilder _message;
+        private StringBuilder m_message;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fightId"></param>
         /// <param name="CanWinHonor"></param>
-        public FightEndResult(long fightId, bool CanWinHonor)
+        public FightEndResult(long fightId, bool canWinHonor)
         {
-            _message = new StringBuilder("GE");
-            _message.Append(0).Append('|');
-            _message.Append(fightId).Append('|');
-            _message.Append(CanWinHonor ? '1' : '0');
+            CanWinHonor = canWinHonor;
+
+            m_message = new StringBuilder("GE");
+            m_message.Append(0).Append('|');
+            m_message.Append(fightId).Append('|');
+            m_message.Append(CanWinHonor ? '1' : '0');
         }
 
         /// <summary>
@@ -155,77 +157,80 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="leave"></param>
         /// <param name="kamas"></param>
         /// <param name="exp"></param>
-        /// <param name="honor"></param>
-        /// <param name="disHonor"></param>
-        /// <param name="guildXp"></param>
-        /// <param name="mountXp"></param>
+        /// <param name="honour"></param>
+        /// <param name="dishonour"></param>
+        /// <param name="guildxp"></param>
+        /// <param name="mountxp"></param>
         /// <param name="items"></param>
         public void AddResult(FighterBase fighter,
             bool win,
             bool leave = false,
             long kamas = 0,
             long exp = 0,
-            long honor = 0,
-            long disHonor = 0,
-            long guildXp = 0,
-            long mountXp = 0,
+            long honour = 0,
+            long dishonour = 0,
+            long guildxp = 0,
+            long mountxp = 0,
             Dictionary<int, uint> items = null)
         {
-            _message.Append('|').Append(win ? '2' : '0').Append(';');
-            _message.Append(fighter.Id).Append(';');
-            _message.Append(fighter.Name).Append(';');
-            _message.Append(fighter.Level).Append(';');
-            _message.Append((fighter.IsFighterDead || leave) ? '1' : '0').Append(';');
+            m_message.Append('|').Append(win ? '2' : '0').Append(';');
+            m_message.Append(fighter.Id).Append(';');
+            m_message.Append(fighter.Name).Append(';');
+            m_message.Append(fighter.Level).Append(';');
+            m_message.Append((fighter.IsFighterDead || leave) ? '1' : '0').Append(';');
 
             if (CanWinHonor)
             {
                 if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
-                    var actorCharacter = (CharacterEntity)fighter;
-
-                    //message.Append(DatabaseEntities.GetExperienceFloor(character.Character.AlignmentCache.AlignmentLevel).Pvp).Append(';');
-                    //message.Append(character.Character.AlignmentCache.AlignmentHonor).Append(';');
-                    //message.Append(DatabaseEntities.GetExperienceFloor(character.Character.AlignmentCache.AlignmentLevel + 1).Pvp).Append(';');
-                    //message.Append(result.WinHonor).Append(';');
-                    //message.Append(character.Character.AlignmentCache.AlignmentLevel).Append(';');
-                    //message.Append(character.Character.AlignmentCache.AlignmentDishonor).Append(';');
-                    //message.Append(result.WinDisHonor).Append(';');
-                    //if (result.WinItems != null)
-                    //    message.Append(string.Join(",", result.WinItems.Select(x => x.Key + "~" + x.Value))).Append(';');
-                    //else
-                    //    message.Append("").Append(';');
-
-                    //message.Append(result.WinKamas.ToString()).Append(';');
-                    //message.Append(DatabaseEntities.GetExperienceFloor(result.Fighter.Level).Character).Append(';');    // LastExperience
-                    //message.Append((result.Fighter as CharacterFighter).Character.Experience).Append(';');
-                    //message.Append(DatabaseEntities.GetExperienceFloor(result.Fighter.Level + 1).Character).Append(';');// NextExperience
-                    //message.Append(result.WinExp);
+                    var character = (CharacterEntity)fighter;
+                    if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                    {
+                        m_message.Append(character.AlignmentExperienceFloorCurrent).Append(';');
+                        m_message.Append(character.CharacterAlignment.Honour).Append(';');
+                        m_message.Append(character.AlignmentExperienceFloorNext).Append(';');
+                        m_message.Append(honour).Append(';');
+                        m_message.Append(character.AlignmentLevel).Append(';');
+                        m_message.Append(character.Dishonour).Append(';');
+                        m_message.Append(dishonour).Append(';');
+                    }
+                    else
+                    {
+                        m_message.Append("0;0;0;0;0;0;0;");
+                    }
+                    if (items != null && items.Count > 0)
+                        m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
+                    else
+                        m_message.Append("").Append(';');
+                    m_message.Append(kamas).Append(';');
+                    m_message.Append(character.ExperienceFloorCurrent).Append(';');
+                    m_message.Append(character.Experience).Append(';');
+                    m_message.Append(character.ExperienceFloorNext).Append(';');
+                    m_message.Append(exp);
                 }
             }
             else
             {
                 if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
-                    var actorCharacter = (CharacterEntity)fighter;
-
-                    _message.Append(actorCharacter.ExperienceFloorCurrent).Append(';');    // LastExperience
-                    _message.Append(actorCharacter.Experience).Append(';');
-                    _message.Append(actorCharacter.ExperienceFloorNext).Append(';');// NextExperience
-                    _message.Append(exp).Append(';');
-                    _message.Append(guildXp).Append(';');
-                    _message.Append(mountXp).Append(';');
+                    var character = (CharacterEntity)fighter;
+                    m_message.Append(character.ExperienceFloorCurrent).Append(';');
+                    m_message.Append(character.Experience).Append(';');
+                    m_message.Append(character.ExperienceFloorNext).Append(';');
+                    m_message.Append(exp).Append(';');
+                    m_message.Append(guildxp).Append(';');
+                    m_message.Append(mountxp).Append(';');
                 }
                 else
                 {
-                    _message.Append(";;;;;;");
+                    m_message.Append(";;;;;;");
                 }
 
                 if (items != null && items.Count > 0)
-                    _message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
+                    m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
                 else
-                    _message.Append("").Append(';');
-
-                _message.Append(kamas > 0 ? kamas.ToString() : "");
+                    m_message.Append("").Append(';');
+                m_message.Append(kamas);
             }
         }
 
@@ -234,8 +239,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void Dispose()
         {
-            _message.Clear();
-            _message = null;
+            m_message.Clear();
+            m_message = null;
         }
     }
 
@@ -614,11 +619,11 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _loopTimeout;
+                return m_loopTimeout;
             }
             set
             {
-                _loopTimeout = UpdateTime + value;
+                m_loopTimeout = UpdateTime + value;
             }
         }
 
@@ -640,11 +645,11 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _turnTimeout;
+                return m_turnTimeout;
             }
             set
             {
-                _turnTimeout = UpdateTime + value;
+                m_turnTimeout = UpdateTime + value;
             }
         }
 
@@ -679,11 +684,11 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _subActionTimeout;
+                return m_subActionTimeout;
             }
             set
             {
-                _subActionTimeout = UpdateTime + value;
+                m_subActionTimeout = UpdateTime + value;
             }
         }
 
@@ -718,11 +723,11 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _synchronizationTimeout;
+                return m_synchronizationTimeout;
             }
             set
             {
-                _synchronizationTimeout = UpdateTime + value;
+                m_synchronizationTimeout = UpdateTime + value;
             }
         }
         
@@ -853,21 +858,21 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        protected FightTeam _winnerTeam, _loserTeam;
-        private long _loopTimeout, _turnTimeout, _subActionTimeout, _synchronizationTimeout;
-        private Dictionary<FighterBase, List<FightActivableObject>> _activableObjects;
-        private LinkedList<CastInfos> _processingTargets;
-        private int _currentApCost;
+        protected FightTeam m_winnerTeam, m_loserTeam;
+        private long m_loopTimeout, m_turnTimeout, m_subActionTimeout, m_synchronizationTimeout;
+        private Dictionary<FighterBase, List<FightActivableObject>> m_activableObjects;
+        private LinkedList<CastInfos> m_processingTargets;
+        private int m_currentApCost;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="mapInstance"></param>
-        public FightBase(FightTypeEnum type, MapInstance  mapInstance, long id, long team0LeaderId, int team0FlagCell, long team1LeaderId, int team1FlagCell, long startTimeout, long turnTime, bool cancelButton = false)
+        public FightBase(FightTypeEnum type, MapInstance  mapInstance, long id, long team0LeaderId, int team0Alignment, int team0FlagCell, long team1LeaderId, int team1Alignment, int team1FlagCell, long startTimeout, long turnTime, bool cancelButton = false, bool canWinHonor = false)
         {
-            _activableObjects = new Dictionary<FighterBase, List<FightActivableObject>>();
-            _processingTargets = new LinkedList<CastInfos>();
-            _currentApCost = -1;
+            m_activableObjects = new Dictionary<FighterBase, List<FightActivableObject>>();
+            m_processingTargets = new LinkedList<CastInfos>();
+            m_currentApCost = -1;
 
             Type = type;
             Id = id;
@@ -878,7 +883,7 @@ namespace Codebreak.Service.World.Game.Fight
             TurnTime = turnTime;
             StartTime = startTimeout;
             NextLoopTimeout = startTimeout;
-            Result = new FightEndResult(Id, false);
+            Result = new FightEndResult(Id, canWinHonor);
             Cells = new Dictionary<int, FightCell>();
             TurnProcessor = new FightTurnProcessor();
 
@@ -886,8 +891,8 @@ namespace Codebreak.Service.World.Game.Fight
                 Cells.Add(cell.Id, new FightCell(cell.Id, cell.Walkable , cell.LineOfSight));
             
             SpectatorTeam = new SpectatorTeam(this);
-            Team0 = new FightTeam(0, team0LeaderId, team0FlagCell, this, new List<FightCell>(Cells.Values.Where(cell => mapInstance.FightTeam0Cells.Contains(cell.Id))));
-            Team1 = new FightTeam(1, team1LeaderId, team1FlagCell, this, new List<FightCell>(Cells.Values.Where(cell => mapInstance.FightTeam1Cells.Contains(cell.Id))));
+            Team0 = new FightTeam(0, team0LeaderId, team0Alignment, team0FlagCell, this, new List<FightCell>(Cells.Values.Where(cell => mapInstance.FightTeam0Cells.Contains(cell.Id))));
+            Team1 = new FightTeam(1, team1LeaderId, team1Alignment, team1FlagCell, this, new List<FightCell>(Cells.Values.Where(cell => mapInstance.FightTeam1Cells.Contains(cell.Id))));
             Team0.OpponentTeam = Team1;
             Team1.OpponentTeam = Team0;
             
@@ -935,22 +940,22 @@ namespace Codebreak.Service.World.Game.Fight
             if(infos.Target == null)
             {
                 Logger.Debug("AddProcessingTarget first (Null target)");
-                _processingTargets.AddFirst(infos);
+                m_processingTargets.AddFirst(infos);
             }
             else if (CurrentProcessingFighter == infos.Target)
             {
                 Logger.Debug("AddProcessingTarget first (CurrentProcessingFighter) : " + infos.Target.Name);
-                _processingTargets.AddFirst(infos);
+                m_processingTargets.AddFirst(infos);
             }
             else if (CurrentProcessingFighter == null && CurrentFighter == infos.Target)
             {
                 Logger.Debug("AddProcessingTarget first (CurrentFighter) : " + infos.Target.Name);
-                _processingTargets.AddFirst(infos);
+                m_processingTargets.AddFirst(infos);
             }
             else
             {
                 Logger.Debug("AddProcessingTarget last : " + infos.Target.Name);
-                _processingTargets.AddLast(infos);
+                m_processingTargets.AddLast(infos);
             }
         }
 
@@ -1372,21 +1377,21 @@ namespace Codebreak.Service.World.Game.Fight
                         }
                     }
 
-                    if (_activableObjects.ContainsKey(CurrentFighter))
+                    if (m_activableObjects.ContainsKey(CurrentFighter))
                     {
-                        foreach (var glyph in _activableObjects[CurrentFighter].OfType<FightGlyph>())
+                        foreach (var glyph in m_activableObjects[CurrentFighter].OfType<FightGlyph>())
                         {
                             glyph.DecrementDuration();
                         }
 
-                        _activableObjects[CurrentFighter].RemoveAll(fightObject => fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_GLYPH && fightObject.Duration <= 0);
+                        m_activableObjects[CurrentFighter].RemoveAll(fightObject => fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_GLYPH && fightObject.Duration <= 0);
                     }
                 }
                 else
                 {
-                    if (_activableObjects.ContainsKey(CurrentFighter))
+                    if (m_activableObjects.ContainsKey(CurrentFighter))
                     {
-                        _activableObjects[CurrentFighter].RemoveAll(fightObject => fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_GLYPH);
+                        m_activableObjects[CurrentFighter].RemoveAll(fightObject => fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_GLYPH);
                     }
                 }
 
@@ -1415,8 +1420,8 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (GetWinners() != null)
             {
-                _winnerTeam = GetWinners();
-                _loserTeam = _winnerTeam.OpponentTeam;
+                m_winnerTeam = GetWinners();
+                m_loserTeam = m_winnerTeam.OpponentTeam;
 
                 LoopState = FightLoopStateEnum.STATE_WAIT_END;
 
@@ -1500,10 +1505,10 @@ namespace Codebreak.Service.World.Game.Fight
                     break;
 
                 case FightLoopStateEnum.STATE_PROCESS_EFFECT:
-                    if(_processingTargets.Count > 0)
+                    if(m_processingTargets.Count > 0)
                     {
-                        var castInfos = _processingTargets.First();
-                        _processingTargets.RemoveFirst();
+                        var castInfos = m_processingTargets.First();
+                        m_processingTargets.RemoveFirst();
 
                         CurrentProcessingFighter = castInfos.Target;
                                                 
@@ -1548,7 +1553,7 @@ namespace Codebreak.Service.World.Game.Fight
                             }
                         }
 
-                        if (_processingTargets.Count > 0 && LoopState != FightLoopStateEnum.STATE_WAIT_END)
+                        if (m_processingTargets.Count > 0 && LoopState != FightLoopStateEnum.STATE_WAIT_END)
                         {
                             LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
                             NextLoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
@@ -1556,10 +1561,10 @@ namespace Codebreak.Service.World.Game.Fight
                         }
 
                         // THAT WAS THE FUCKING FIX, NICE CLIENT WAITING FOR THAT TO REFHRESH PLAYER STATE !!!!!!!!!!!! ANKAMAAAAAAAAARGHHHHHHHH
-                        if(_currentApCost != -1)
+                        if(m_currentApCost != -1)
                         {
-                            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + _currentApCost));
-                            _currentApCost = -1;
+                            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + m_currentApCost));
+                            m_currentApCost = -1;
                         }
 
                         base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
@@ -1774,7 +1779,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return;
                     }
 
-                    if (_currentApCost != -1)
+                    if (m_currentApCost != -1)
                     {
                         Logger.Debug("Fight::TryUseWeapon fight already processing spell launch and not finished : " + fighter.Name);
                         fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -1928,7 +1933,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                         }
 
-                        _currentApCost = weaponTemplate.APCost;
+                        m_currentApCost = weaponTemplate.APCost;
                     });
                 });
         }
@@ -1956,7 +1961,7 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
-                if (_currentApCost != -1)
+                if (m_currentApCost != -1)
                 {
                     Logger.Debug("Fight::TryLaunchSpell fight already processing spell launch and not finished : " + fighter.Name);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -2175,7 +2180,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                     }
 
-                    _currentApCost = spellLevel.APCost;
+                    m_currentApCost = spellLevel.APCost;
 
                 });
             });
@@ -2197,10 +2202,10 @@ namespace Codebreak.Service.World.Game.Fight
             
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
 
-            foreach (var fighter in _winnerTeam.Fighters.ToArray())            
+            foreach (var fighter in m_winnerTeam.Fighters.ToArray())            
                 fighter.EndFight(true);            
 
-            foreach (var fighter in _loserTeam.Fighters.ToArray())
+            foreach (var fighter in m_loserTeam.Fighters.ToArray())
                 fighter.EndFight();            
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
@@ -2276,9 +2281,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="obj"></param>
         public void AddActivableObject(FighterBase caster, FightActivableObject obj)
         {
-            if (!_activableObjects.ContainsKey(caster))
-                _activableObjects.Add(caster, new List<FightActivableObject>());
-            _activableObjects[caster].Add(obj);
+            if (!m_activableObjects.ContainsKey(caster))
+                m_activableObjects.Add(caster, new List<FightActivableObject>());
+            m_activableObjects[caster].Add(obj);
         }
 
         /// <summary>

@@ -315,7 +315,7 @@ namespace Codebreak.Service.World.Command
                     return;
                 }
 
-                context.Character.AddHonor(honorValue);                
+                context.Character.AddHonour(honorValue);                
             }
         }
 

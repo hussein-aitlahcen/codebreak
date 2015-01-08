@@ -504,13 +504,13 @@ namespace Codebreak.Service.World.Network
             message.Append(character.SpellPoint).Append('|');
 
             message
-                .Append(character.CharacterAlignment.AlignmentId).Append('~')
-                .Append(character.CharacterAlignment.AlignmentId).Append(',') // FAKE ALIGNMENT ???
+                .Append(character.AlignmentId).Append('~')
+                .Append(character.AlignmentId).Append(',') // FAKE ALIGNMENT ???
                 .Append('0').Append(',') //  ???
-                .Append(character.CharacterAlignment.Level).Append(',')
-                .Append(character.CharacterAlignment.Honour).Append(',')
-                .Append(character.CharacterAlignment.Dishonour).Append(',')
-                .Append(character.CharacterAlignment.Enabled ? '1' : '0').Append('|');
+                .Append(character.AlignmentLevel).Append(',')
+                .Append(character.Honour).Append(',')
+                .Append(character.Dishonour).Append(',')
+                .Append(character.AlignmentEnabled ? '1' : '0').Append('|');
 
             message
                 .Append(character.Life).Append(',')

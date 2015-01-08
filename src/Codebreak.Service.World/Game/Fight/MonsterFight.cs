@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public MonsterFight(MapInstance map, long id, CharacterEntity character, MonsterGroupEntity monsterGroup)
-            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, character.Id, character.CellId, monsterGroup.Id, monsterGroup.CellId, MONSTERFIGHT_START_TIMEOUT, MONSTERFIGHT_TURN_TIME)
+            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, 0, character.CellId, monsterGroup.Id, monsterGroup.Monsters.First().Grade.GetTemplate().Alignment, monsterGroup.CellId, MONSTERFIGHT_START_TIMEOUT, MONSTERFIGHT_TURN_TIME)
         {
             Character = character;
             MonsterGroup = monsterGroup;
@@ -125,11 +125,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in _winnerTeam.Fighters)
+            foreach (var fighter in m_winnerTeam.Fighters)
             {
                 Result.AddResult(fighter, true);
             }
-            foreach (var fighter in _loserTeam.Fighters)
+            foreach (var fighter in m_loserTeam.Fighters)
             {
                 Result.AddResult(fighter, false);
             }

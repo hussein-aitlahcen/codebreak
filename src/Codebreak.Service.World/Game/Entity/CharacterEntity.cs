@@ -219,18 +219,100 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return ExperienceManager.Instance.GetFloor(Level + 1, ExperienceTypeEnum.CHARACTER); 
+                var next = ExperienceManager.Instance.GetFloor(Level + 1, ExperienceTypeEnum.CHARACTER);
+                if (next == -1)
+                    return Experience;
+                return next;
+            }
+        }
+              
+        /// <summary>
+        /// 
+        /// </summary>
+        public int AlignmentId
+        {
+            get
+            {
+                return CharacterAlignment.AlignmentId;
+            }
+            set
+            {
+                CharacterAlignment.AlignmentId = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public long AlignmentExperienceFloorCurrent
+        public int Honour
         {
             get
             {
-                return ExperienceManager.Instance.GetFloor(CharacterAlignment.Level, ExperienceTypeEnum.AGGRESSION);
+                return CharacterAlignment.Honour;
+            }
+            set
+            {
+                CharacterAlignment.Honour = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Dishonour
+        {
+            get
+            {
+                return CharacterAlignment.Dishonour;
+            }
+            set
+            {
+                CharacterAlignment.Dishonour = value;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int AlignmentLevel
+        {
+            get
+            {
+                return CharacterAlignment.Level;
+            }
+            set
+            {
+                CharacterAlignment.Level = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int AlignmentPromotion
+        {
+            get
+            {
+                return CharacterAlignment.Promotion;
+            }
+            set
+            {
+                CharacterAlignment.Promotion = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AlignmentEnabled
+        {
+            get
+            {
+                return CharacterAlignment.Enabled;
+            }
+            set
+            {
+                CharacterAlignment.Enabled = value;
             }
         }
 
@@ -241,7 +323,21 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return ExperienceManager.Instance.GetFloor(CharacterAlignment.Level + 1, ExperienceTypeEnum.AGGRESSION);
+                var next = ExperienceManager.Instance.GetFloor(AlignmentLevel + 1, ExperienceTypeEnum.AGGRESSION);
+                if (next == -1)
+                    return Honour;
+                return next;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long AlignmentExperienceFloorCurrent
+        {
+            get
+            {
+                return ExperienceManager.Instance.GetFloor(AlignmentLevel, ExperienceTypeEnum.AGGRESSION);
             }
         }
 
@@ -652,7 +748,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void SubstractDishonor(int value)
+        public void SubstractDishonour(int value)
         {
             if (value < 1)
             {
@@ -660,9 +756,9 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             }
 
-            CharacterAlignment.Dishonour -= value;
-            if (CharacterAlignment.Dishonour < 0)
-                CharacterAlignment.Dishonour = 0;
+            Dishonour -= value;
+            if (Dishonour < 0)
+                Dishonour = 0;
 
             base.CachedBuffer = true;
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_DOWN, value));
@@ -674,7 +770,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void AddDishonor(int value)
+        public void AddDishonour(int value)
         {
             if (value < 1)
             {
@@ -682,9 +778,9 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             }
 
-            CharacterAlignment.Dishonour += value;
-            if (CharacterAlignment.Dishonour > 499)
-                CharacterAlignment.Dishonour = 500;
+            Dishonour += value;
+            if (Dishonour > 499)
+                Dishonour = 500;
 
             base.CachedBuffer = true;
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_UP, value));
@@ -696,7 +792,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void SubstractHonor(int value)
+        public void SubstractHonour(int value)
         {
             if (value < 1)
             {
@@ -704,19 +800,19 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             }
 
-            var currentLevel = CharacterAlignment.Level;
-            CharacterAlignment.Honour -= value;
+            var currentLevel = AlignmentLevel;
+            Honour -= value;
 
-            if (CharacterAlignment.Honour < 0)
-                CharacterAlignment.Honour = 0;
+            if (Honour < 0)
+                Honour = 0;
 
-            while (AlignmentExperienceFloorCurrent != -1 && CharacterAlignment.Honour < AlignmentExperienceFloorCurrent)
-                CharacterAlignment.Level--;
+            while (AlignmentExperienceFloorCurrent != -1 && Honour < AlignmentExperienceFloorCurrent)
+                AlignmentLevel--;
 
             base.CachedBuffer = true;
-            if (currentLevel != CharacterAlignment.Level)
+            if (currentLevel != AlignmentLevel)
             {
-                base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_DOWN, CharacterAlignment.Level));
+                base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_DOWN, AlignmentLevel));
                 RefreshOnMap();
             }
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_DOWN, value));
@@ -728,7 +824,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void AddHonor(int value)
+        public void AddHonour(int value)
         {
             if(value < 1)
             {
@@ -737,15 +833,15 @@ namespace Codebreak.Service.World.Game.Entity
             }
 
             var currentLevel = CharacterAlignment.Level;
-            CharacterAlignment.Honour += value;
+            Honour += value;
 
-            while (AlignmentExperienceFloorNext != -1 && CharacterAlignment.Honour >= AlignmentExperienceFloorNext)            
-                CharacterAlignment.Level++;
+            while (AlignmentExperienceFloorNext != -1 && Honour >= AlignmentExperienceFloorNext)
+                AlignmentLevel++;
 
             base.CachedBuffer = true;
-            if (currentLevel != CharacterAlignment.Level)
+            if (currentLevel != AlignmentLevel)
             {
-                Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_UP, CharacterAlignment.Level));
+                Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_UP, AlignmentLevel));
                 RefreshOnMap();
             }
             Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_UP, value));
@@ -758,19 +854,19 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void EnableAlignment()
         {
-            if(CharacterAlignment.Enabled)
+            if(AlignmentEnabled)
             {
                 Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            if (CharacterAlignment.AlignmentId == 0)
+            if (AlignmentId == 0)
             {
                 Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            CharacterAlignment.Enabled = true;
+            AlignmentEnabled = true;
             base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
         }
@@ -780,20 +876,20 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void DisableAlignment()
         {
-            if(!CharacterAlignment.Enabled)
+            if (!AlignmentEnabled)
             {
                 Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
-            if(CharacterAlignment.Dishonour > 0)
+            if(Dishonour > 0)
             {
                 Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unabled to disable your alignment because you are dishonored."));
                 return;
             }
 
-            CharacterAlignment.Enabled = false;
-            SubstractHonor((CharacterAlignment.Honour / 100) * 5);
+            AlignmentEnabled = false;
+            SubstractHonour((Honour / 100) * 5);
             base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
         }
@@ -812,12 +908,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void ResetAlignment(int alignmentId = 0)
         {
-            CharacterAlignment.AlignmentId = alignmentId;
-            CharacterAlignment.Level = 1;
-            CharacterAlignment.Promotion = 0;
-            CharacterAlignment.Honour = 0;
-            CharacterAlignment.Dishonour = 0;
-            CharacterAlignment.Enabled = false;
+            AlignmentId = alignmentId;
+            AlignmentLevel = 1;
+            AlignmentPromotion = 0;
+            Honour = 0;
+            Dishonour = 0;
+            AlignmentEnabled = false;
 
             base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
@@ -1317,10 +1413,10 @@ namespace Codebreak.Service.World.Game.Entity
 
                         message.Append(Sex).Append(';');
 
-                        message.Append(CharacterAlignment.AlignmentId).Append(',');
-                        message.Append(CharacterAlignment.AlignmentId).Append(',');
-                        if (CharacterAlignment.Enabled)                        
-                            message.Append(CharacterAlignment.Level).Append(',');                        
+                        message.Append(AlignmentId).Append(',');
+                        message.Append(AlignmentId).Append(',');
+                        if (AlignmentEnabled)                        
+                            message.Append(AlignmentLevel).Append(',');                        
                         else                        
                             message.Append('0').Append(',');                        
                         message.Append(Id + Level).Append(';');
@@ -1359,10 +1455,10 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(Sex).Append(';');
                         message.Append(Level).Append(';');
 
-                        message.Append(CharacterAlignment.AlignmentId).Append(',');
-                        message.Append(CharacterAlignment.AlignmentId).Append(',');
-                        if (CharacterAlignment.Enabled)
-                            message.Append(CharacterAlignment.Level).Append(',');
+                        message.Append(AlignmentId).Append(',');
+                        message.Append(AlignmentId).Append(',');
+                        if (AlignmentEnabled)
+                            message.Append(AlignmentLevel).Append(',');
                         else
                             message.Append('0').Append(',');
                         message.Append(Id + Level).Append(';');

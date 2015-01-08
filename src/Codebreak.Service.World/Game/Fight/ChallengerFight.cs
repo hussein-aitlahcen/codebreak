@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public ChallengerFight(MapInstance map, long id, CharacterEntity attacker, CharacterEntity defender)
-            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, attacker.Id, attacker.CellId, defender.Id, defender.CellId, CHALLENGE_START_TIMEOUT, CHALLENGE_TURN_TIME, true)
+            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, attacker.Id, 0, attacker.CellId, defender.Id, 0, defender.CellId, CHALLENGE_START_TIMEOUT, CHALLENGE_TURN_TIME, true)
         {
             Attacker = attacker;
             Defender = defender;
@@ -130,11 +130,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in _winnerTeam.Fighters)
+            foreach (var fighter in m_winnerTeam.Fighters)
             {
                 Result.AddResult(fighter, true);
             }
-            foreach (var fighter in _loserTeam.Fighters)
+            foreach (var fighter in m_loserTeam.Fighters)
             {
                 Result.AddResult(fighter, false);
             }

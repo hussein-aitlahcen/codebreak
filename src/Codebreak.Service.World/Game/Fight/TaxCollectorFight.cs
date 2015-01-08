@@ -55,7 +55,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public TaxCollectorFight(MapInstance map, long id, CharacterEntity attacker, TaxCollectorEntity taxCollector)
-            : base(FightTypeEnum.TYPE_PVT, map, id, attacker.Id, attacker.CellId, taxCollector.Id, taxCollector.CellId, PVT_START_TIMEOUT, PVT_TURN_TIME)
+            : base(FightTypeEnum.TYPE_PVT, map, id, attacker.Id, 0, attacker.CellId, taxCollector.Id, 0, taxCollector.CellId, PVT_START_TIMEOUT, PVT_TURN_TIME)
         {
             CanDefend = true;
             Attacker = attacker;
@@ -172,11 +172,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in _winnerTeam.Fighters)
+            foreach (var fighter in m_winnerTeam.Fighters)
             {
                 Result.AddResult(fighter, true);
             }
-            foreach (var fighter in _loserTeam.Fighters)
+            foreach (var fighter in m_loserTeam.Fighters)
             {
                 Result.AddResult(fighter, false);
             }
