@@ -416,7 +416,8 @@ namespace Codebreak.Service.World.Game.Entity
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
                     
                 case GameActionTypeEnum.CHALLENGE_REQUEST:
-                    return HasGameAction(GameActionTypeEnum.MAP)
+                    return (CurrentAction == null || CurrentAction.IsFinished)
+                        && HasGameAction(GameActionTypeEnum.MAP)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);

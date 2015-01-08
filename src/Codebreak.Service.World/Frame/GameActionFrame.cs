@@ -405,7 +405,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GameChallengeDeny(CharacterEntity character, string message)
         {
-            character.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST, character.Id);
+            character.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST);
         }
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GameChallengeAccept(CharacterEntity character, string message)
         {
-            character.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST, character.Id);
+            character.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST);
         }
 
         /// <summary>

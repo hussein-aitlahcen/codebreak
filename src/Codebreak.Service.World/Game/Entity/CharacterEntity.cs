@@ -756,6 +756,12 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             }
 
+            if(Dishonour < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
             Dishonour -= value;
             if (Dishonour < 0)
                 Dishonour = 0;
@@ -800,6 +806,12 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             }
 
+            if (Honour < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
             var currentLevel = AlignmentLevel;
             Honour -= value;
 
@@ -827,6 +839,12 @@ namespace Codebreak.Service.World.Game.Entity
         public void AddHonour(int value)
         {
             if(value < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if(Dishonour > 0)
             {
                 Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
@@ -1084,9 +1102,6 @@ namespace Codebreak.Service.World.Game.Entity
         {
             CurrentAction = new GamePlayerExchangeAction(this, player);
             player.CurrentAction = CurrentAction;
-
-            StartAction(GameActionTypeEnum.EXCHANGE);
-            player.StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
         /// <summary>

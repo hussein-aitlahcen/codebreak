@@ -485,7 +485,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    character.StopAction(GameActionTypeEnum.EXCHANGE, character.Id);
+                    character.StopAction(GameActionTypeEnum.EXCHANGE);
                 });
         }
 

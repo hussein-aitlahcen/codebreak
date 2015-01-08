@@ -214,7 +214,10 @@ namespace Codebreak.Service.World.Game.Fight
                 if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                 {
                     if (!IsNeutralAgression || character.Team.Alignment == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                    {
                         honour = Util.CalculWinHonor(character.Level, m_winnersLevel, m_losersLevel);
+                        character.SubstractDishonour(1);
+                    }
                     else
                         dishonour = 1;
                     character.AddHonour(honour);

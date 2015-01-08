@@ -22,13 +22,6 @@ namespace Codebreak.Service.World.Game.Action
         public GamePlayerExchangeAction(CharacterEntity localEntity, CharacterEntity distantEntity)
             : base(new PlayerExchange(localEntity, distantEntity), localEntity, distantEntity)
         {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void Start()
-        {
             Exchange.Dispatch(WorldMessage.EXCHANGE_REQUEST(Entity.Id, DistantEntity.Id));
         }
 
@@ -39,12 +32,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Stop(params object[] args)
         {
             IsFinished = true;
-
-            if (int.Parse(args[0].ToString()) == Entity.Id)
-                DistantEntity.StopAction(GameActionTypeEnum.EXCHANGE);
-            else
-                Entity.StopAction(GameActionTypeEnum.EXCHANGE);
-
             base.Leave(true);
         }
 
@@ -55,12 +42,6 @@ namespace Codebreak.Service.World.Game.Action
         public override void Abort(params object[] args)
         {
             IsFinished = true;
-
-            if (int.Parse(args[0].ToString()) == Entity.Id)
-                DistantEntity.AbortAction(GameActionTypeEnum.EXCHANGE);
-            else
-                Entity.AbortAction(GameActionTypeEnum.EXCHANGE);
-
             base.Leave();
         }
     }
