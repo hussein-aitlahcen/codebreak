@@ -39,9 +39,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\MySql.Data.6.9.5\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyChanged, Version=1.48.8.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PropertyChanged.Fody.1.48.8\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged">
+      <HintPath>..\..\packages\PropertyChanged.Fody.1.49.0\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -315,7 +314,7 @@
     <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
-    <Compile Include="Manager\ZaapManager.cs" />
+    <Compile Include="Manager\WaypointManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Network\WorldClient.cs" />
