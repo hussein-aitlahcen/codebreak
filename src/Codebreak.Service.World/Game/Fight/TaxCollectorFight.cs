@@ -96,9 +96,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void OnFighterJoin(FighterBase fighter)
+        public override void OnCharacterJoin(CharacterEntity character, FightTeam team)
         {
-            TaxCollector.Guild.TaxCollectorAttackerJoin(TaxCollector.Id, fighter);
+            TaxCollector.Guild.TaxCollectorAttackerJoin(TaxCollector.Id, character);
         }
 
         /// <summary>

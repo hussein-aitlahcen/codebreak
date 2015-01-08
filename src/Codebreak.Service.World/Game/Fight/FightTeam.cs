@@ -152,6 +152,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public FighterBase Leader
+        {
+            get
+            {
+                return m_fighters.FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public long LeaderId
         {
             get;

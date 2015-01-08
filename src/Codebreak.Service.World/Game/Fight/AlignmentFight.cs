@@ -109,6 +109,19 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="fighter"></param>
+        public override void OnCharacterJoin(CharacterEntity character, FightTeam team)
+        {
+            if (!IsNeutralAgression)
+                character.EnableAlignment();
+            else            
+                if (((CharacterEntity)team.Leader).CharacterAlignment.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                    character.EnableAlignment();            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
         public override bool CanJoin(CharacterEntity character)

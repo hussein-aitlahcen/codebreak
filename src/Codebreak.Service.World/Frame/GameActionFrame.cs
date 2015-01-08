@@ -311,186 +311,186 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameWeaponUse(CharacterEntity entity, string message)
+        private void GameWeaponUse(CharacterEntity character, string message)
         {
             var cellId = -1;
             if(!int.TryParse(message.Substring(5), out cellId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.Fight.TryUseWeapon(entity, cellId);
+            character.Fight.TryUseWeapon(character, cellId);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameFightJoin(CharacterEntity entity, string message)
+        private void GameFightJoin(CharacterEntity character, string message)
         {
             var fightData = message.Substring(5).Split(';');
             var fightId = int.Parse(fightData[0]);
-            var fight = entity.Map.FightManager.GetFight(fightId);
+            var fight = character.Map.FightManager.GetFight(fightId);
 
             if(fight == null)
             {
-                Logger.Debug("GameActionFrame::ChallengeJoin unknow fight : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::ChallengeJoin unknow fight : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             if(fightData.Length == 1)
             {
-                fight.TrySpectate((FighterBase)entity);
+                fight.TrySpectate((FighterBase)character);
                 return;
             }
             
             long leaderId = -1;
             if(!long.TryParse(fightData[1], out leaderId))
             {                
-                Logger.Debug("GameActionFrame::ChallengeJoin unknow leaderId : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::ChallengeJoin unknow leaderId : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            fight.TryJoin(entity, leaderId);
+            fight.TryJoin(character, leaderId);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameFightSpellLaunch(CharacterEntity entity, string message)
+        private void GameFightSpellLaunch(CharacterEntity character, string message)
         {
             if(!message.Contains(';'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var spellData = message.Substring(5).Split(';');
             if(spellData.Length < 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var spellId = -1;
             if(!int.TryParse(spellData[0], out spellId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var cellId = -1;
             if(!int.TryParse(spellData[1], out cellId))
             {
-                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::SpellLaunch wrong packet content : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.Fight.TryLaunchSpell(entity, spellId, cellId);
+            character.Fight.TryLaunchSpell(character, spellId, cellId);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameChallengeDeny(CharacterEntity entity, string message)
+        private void GameChallengeDeny(CharacterEntity character, string message)
         {
-            entity.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST, entity.Id);
+            character.AbortAction(GameActionTypeEnum.CHALLENGE_REQUEST, character.Id);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameChallengeAccept(CharacterEntity entity, string message)
+        private void GameChallengeAccept(CharacterEntity character, string message)
         {
-            entity.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST, entity.Id);
+            character.StopAction(GameActionTypeEnum.CHALLENGE_REQUEST, character.Id);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameChallengeRequest(CharacterEntity entity, string message)
+        private void GameChallengeRequest(CharacterEntity character, string message)
         {
-            if (entity.Map.FightTeam0Cells.Count == 0 || entity.Map.FightTeam1Cells.Count == 0)
+            if (character.Map.FightTeam0Cells.Count == 0 || character.Map.FightTeam1Cells.Count == 0)
             {
-                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Cell pattern not found, unable to fight here"));
+                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_SERVER_MESSAGE, "Cell pattern not found, unable to fight here"));
                 return;
             }
             
             long distantEntityId = -1;
             if(!long.TryParse(message.Substring(5), out distantEntityId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            var distantEntity = entity.Map.GetEntity(distantEntityId);
+            var distantEntity = character.Map.GetEntity(distantEntityId);
             if(distantEntity == null)
             {
-                Logger.Debug("GameActionFrame::ChallengeRequest unknow distantEntityId " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::ChallengeRequest unknow distantEntityId " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             if(distantEntity.Type != EntityTypeEnum.TYPE_CHARACTER)
             {
-                Logger.Debug("GameActionFrame::ChallengeRequest trying to challenge non player entity : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::ChallengeRequest trying to challenge non player entity : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
             if(!distantEntity.CanGameAction(GameActionTypeEnum.CHALLENGE_REQUEST))
             {
-                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
+                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_PLAYER_AWAY_NOT_INVITABLE));
                 return;
             }
 
-            entity.ChallengePlayer((CharacterEntity)distantEntity);
+            character.ChallengePlayer((CharacterEntity)distantEntity);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameMapMovement(CharacterEntity entity, string message)
+        private void GameMapMovement(CharacterEntity character, string message)
         {
-            if(entity.MovementHandler == null)
+            if(character.MovementHandler == null)
             {
-                Logger.Debug("GameActionFrame::MapMovement entity is not on a map : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::MapMovement entity is not on a map : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            if (entity.HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
+            if (character.HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
             {
-                Logger.Debug("GameActionFrame::MapMovement Tombestone entity trying to move : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::MapMovement Tombestone entity trying to move : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
-            switch(entity.MovementHandler.FieldType)
+            switch(character.MovementHandler.FieldType)
             {
                 case FieldTypeEnum.TYPE_MAP:
-                    entity.MovementHandler.Move(entity, entity.CellId, message.Substring(5));
+                    character.MovementHandler.Move(character, character.CellId, message.Substring(5));
                     break;
                 case FieldTypeEnum.TYPE_FIGHT:
-                    var fighter = (FighterBase)entity;
-                    fighter.Fight.Move(entity, fighter.Cell.Id, message.Substring(5));
+                    var fighter = (FighterBase)character;
+                    fighter.Fight.Move(character, fighter.Cell.Id, message.Substring(5));
                     break;
             }
         }
@@ -498,65 +498,65 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameActionAbort(CharacterEntity entity, string message)
+        private void GameActionAbort(CharacterEntity character, string message)
         {
             if(!message.Contains('|'))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var abortData = message.Split('|');
             if (abortData.Length < 2)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var actionId = -1;
             if (!int.TryParse(abortData[0].Substring(3), out actionId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var actionArgs = abortData[1];
 
-            var action = entity.CurrentAction;
+            var action = character.CurrentAction;
             if (action == null)
             {
-                Logger.Debug("GameActionFrame::GameActionFinish entity has empty action : " + entity.Name);
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                Logger.Debug("GameActionFrame::GameActionFinish entity has empty action : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AbortAction(entity.CurrentAction.Type, actionArgs);
+            character.AbortAction(character.CurrentAction.Type, actionArgs);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameActionFinish(CharacterEntity entity, string message)
+        private void GameActionFinish(CharacterEntity character, string message)
         {
             var actionId = -1;
             if (!int.TryParse(message.Substring(3), out actionId))
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            var action = entity.CurrentAction;
+            var action = character.CurrentAction;
             if (action == null)
             {
-                entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.StopAction(action.Type);
+            character.StopAction(action.Type);
         }
     }
 }

@@ -1053,7 +1053,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return;
                     }
 
-                    OnFighterJoin(character);
+                    OnCharacterJoin(character, team);
 
                     JoinFight(character, team);
                 });
@@ -2477,8 +2477,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
-        public virtual void OnFighterJoin(FighterBase fighter)
+        /// <param name="character"></param>
+        public virtual void OnCharacterJoin(CharacterEntity character, FightTeam team)
         {
         }
         

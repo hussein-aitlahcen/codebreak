@@ -26,29 +26,31 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameCreation(CharacterEntity entity, string message)
+        private void GameCreation(CharacterEntity character, string message)
         {
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                entity.FrameManager.RemoveFrame(GameCreationFrame.Instance);
-                entity.FrameManager.AddFrame(GameInformationFrame.Instance);
-                var map = entity.Map;
+                character.FrameManager.RemoveFrame(GameCreationFrame.Instance);
+                character.FrameManager.AddFrame(GameInformationFrame.Instance);
+                var map = character.Map;
                 if(map == null)
                 {
-                    entity.ServerKick("Map inconnue.");
+                    character.MapId = WorldConfig.WORLD_MAP_START;
+                    character.CellId = WorldConfig.WORLD_CELL_START;
+                    map = character.Map;
                     return;
                 }
-                entity.CachedBuffer = true;
-                entity.Dispatch(WorldMessage.GAME_CREATION_SUCCESS());
-                if (entity.HasGameAction(Game.Action.GameActionTypeEnum.FIGHT))
-                    entity.Dispatch(WorldMessage.GAME_DATA_MAP(entity.Fight.Map.Id, entity.Fight.Map.CreateTime, entity.Fight.Map.DataKey));
+                character.CachedBuffer = true;
+                character.Dispatch(WorldMessage.GAME_CREATION_SUCCESS());
+                if (character.HasGameAction(Game.Action.GameActionTypeEnum.FIGHT))
+                    character.Dispatch(WorldMessage.GAME_DATA_MAP(character.Fight.Map.Id, character.Fight.Map.CreateTime, character.Fight.Map.DataKey));
                 else                
-                    entity.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));
+                    character.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));
                 
-                entity.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)entity));
-                entity.CachedBuffer = false;
+                character.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)character));
+                character.CachedBuffer = false;
             });
         }
     }
