@@ -67,9 +67,20 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         /// <param name="args"></param>
+        public override void Abort(params object[] args)
+        {
+            Character.Dispatch(WorldMessage.WAYPOINT_LEAVE());
+            base.Abort(args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public override void Stop(params object[] args)
         {
             Character.Dispatch(WorldMessage.WAYPOINT_LEAVE());
+            base.Stop(args);
         }
     }
 }

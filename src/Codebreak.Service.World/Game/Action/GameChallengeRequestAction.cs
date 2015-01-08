@@ -53,7 +53,6 @@ namespace Codebreak.Service.World.Game.Action
         {
             Attacker = attacker;
             Defender = defender;
-
             Attacker.Map.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.CHALLENGE_REQUEST, Attacker.Id, SerializeAs_GameAction()));
         }
 
@@ -62,11 +61,9 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         public override void Stop(params object[] args)        
         {
-            IsFinished = true;
-            var message = WorldMessage.GAME_ACTION(GameActionTypeEnum.CHALLENGE_ACCEPT, Entity.Id, Defender.Id.ToString());
-            Entity.Dispatch(message);
-            Defender.Dispatch(message);
-            Entity.Map.FightManager.StartChallenge((CharacterEntity)Entity, Defender);
+            Finish(GameActionTypeEnum.CHALLENGE_ACCEPT);
+            Attacker.Map.FightManager.StartChallenge(Attacker, Defender);
+            base.Stop(args);
         }
 
         /// <summary>
@@ -75,9 +72,18 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="args"></param>
         public override void Abort(params object[] args)
         {
-            IsFinished = true;            
-            var message = WorldMessage.GAME_ACTION(GameActionTypeEnum.CHALLENGE_DECLINE, Entity.Id, Defender.Id.ToString());
-            Entity.Dispatch(message);
+            Finish(GameActionTypeEnum.CHALLENGE_DECLINE);
+            base.Abort(args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        private void Finish(GameActionTypeEnum result)
+        {
+            var message = WorldMessage.GAME_ACTION(result, Attacker.Id, Defender.Id.ToString());
+            Attacker.Dispatch(message);
             Defender.Dispatch(message);
         }
 

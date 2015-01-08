@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="args"></param>
         public override void Abort(params object[] args)
         {
-            Stop(args);
+            base.Abort(args);
         }
 
         /// <summary>
@@ -54,14 +54,13 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="args"></param>
         public override void Stop(params object[] args)
-        {
-            base.Stop(args);
-            
+        {           
             if (Character.CharacterGuild != null)
             {
                 Character.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_LEAVE(Character.CharacterGuild.TaxCollectorJoinedId, Character.Id));
                 Character.CharacterGuild.TaxCollectorLeave();
             }
+            base.Stop(args);   
         }
     }
 }

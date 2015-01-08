@@ -37,8 +37,8 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="args"></param>
         public override void Stop(params object[] args)
         {
-            IsFinished = true;
             base.Leave(true);
+            base.Stop(args);
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="args"></param>
         public override void Abort(params object[] args)
         {
-            IsFinished = true;
-            base.Leave(false);
+            base.Leave();
+            base.Abort(args);
         }
     }
 }
