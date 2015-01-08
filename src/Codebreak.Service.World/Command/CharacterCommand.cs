@@ -368,8 +368,7 @@ namespace Codebreak.Service.World.Command
                         return;
                     }
 
-                    character.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_ON_DISCONNECT, GameMessageEnum.MESSAGE_KICKED, context.Character.Name, reason));
-                    character.SafeKick();
+                    character.SafeKick(context.Character.Name, reason);
                     context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player kicked successfully."));
                 });
             }

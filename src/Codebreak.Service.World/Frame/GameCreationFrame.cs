@@ -35,6 +35,11 @@ namespace Codebreak.Service.World.Frame
                 entity.FrameManager.RemoveFrame(GameCreationFrame.Instance);
                 entity.FrameManager.AddFrame(GameInformationFrame.Instance);
                 var map = entity.Map;
+                if(map == null)
+                {
+                    entity.ServerKick("Map inconnue.");
+                    return;
+                }
                 entity.CachedBuffer = true;
                 entity.Dispatch(WorldMessage.GAME_CREATION_SUCCESS());
                 if (entity.HasGameAction(Game.Action.GameActionTypeEnum.FIGHT))

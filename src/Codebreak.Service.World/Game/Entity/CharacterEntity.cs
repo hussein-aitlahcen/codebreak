@@ -836,10 +836,22 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void SafeKick()
+        /// <param name="reason"></param>
+        public void ServerKick(string reason = "")
+        {
+            SafeKick("[Server]", reason);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SafeKick(string kicker = "", string reason = "")
         {
             base.AddMessage(() =>
                 {
+                    if (reason != "")
+                        base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_ON_DISCONNECT, GameMessageEnum.MESSAGE_KICKED, kicker, reason));
+
                     if (KickEvent != null)
                         KickEvent();
                 });
