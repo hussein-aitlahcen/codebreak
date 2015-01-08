@@ -17,16 +17,23 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class GuildManager : Singleton<GuildManager>
     {
-        private Dictionary<long, GuildInstance> _guildById;
-        private Dictionary<string, GuildInstance> _guildByName;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<long, GuildInstance> m_guildById;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<string, GuildInstance> m_guildByName;
 
         /// <summary>
         /// 
         /// </summary>
         public GuildManager()
         {
-            _guildById = new Dictionary<long, GuildInstance>();
-            _guildByName = new Dictionary<string, GuildInstance>();
+            m_guildById = new Dictionary<long, GuildInstance>();
+            m_guildByName = new Dictionary<string, GuildInstance>();
         }
 
         /// <summary>
@@ -47,8 +54,8 @@ namespace Codebreak.Service.World.Manager
         private void AddInstance(GuildInstance instance)
         {
             WorldService.Instance.AddUpdatable(instance);
-            _guildById.Add(instance.Id, instance);
-            _guildByName.Add(instance.Name.ToLower(), instance);
+            m_guildById.Add(instance.Id, instance);
+            m_guildByName.Add(instance.Name.ToLower(), instance);
         }
 
         /// <summary>
@@ -59,9 +66,9 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public GuildMember GetMember(long guildId, long memberId)
         {
-            if (!_guildById.ContainsKey(guildId))
+            if (!m_guildById.ContainsKey(guildId))
                 return null;
-            return _guildById[guildId].GetMember(memberId);
+            return m_guildById[guildId].GetMember(memberId);
         }
 
         /// <summary>
@@ -71,8 +78,8 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public GuildInstance GetGuild(long guildId)
         {
-            if (_guildById.ContainsKey(guildId))
-                return _guildById[guildId];
+            if (m_guildById.ContainsKey(guildId))
+                return m_guildById[guildId];
             return null;
         }
 
@@ -116,7 +123,7 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public bool Exists(string name)
         {
-            return _guildByName.ContainsKey(name.ToLower());
+            return m_guildByName.ContainsKey(name.ToLower());
         }
     }
 }

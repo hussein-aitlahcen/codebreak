@@ -16,8 +16,8 @@ namespace Codebreak.Service.World.Network
         /// 
         /// </summary>
         private event Action<string> OnMessage;
-        private bool _cached = false;
-        private StringBuilder _cachedBuffer = null;
+        private bool m_cached = false;
+        private StringBuilder m_buffer = null;
         
         /// <summary>
         /// 
@@ -26,23 +26,23 @@ namespace Codebreak.Service.World.Network
         {
             get
             {
-                return _cached;
+                return m_cached;
             }
             set
             {
-                if (value != _cached)
+                if (value != m_cached)
                 {
-                    _cached = value;
+                    m_cached = value;
 
-                    if (_cached)
+                    if (m_cached)
                     {
-                        if (_cachedBuffer == null)
-                            _cachedBuffer = new StringBuilder();
+                        if (m_buffer == null)
+                            m_buffer = new StringBuilder();
                     }
                     else
                     {
-                        Dispatch(_cachedBuffer.ToString());
-                        _cachedBuffer.Clear();
+                        Dispatch(m_buffer.ToString());
+                        m_buffer.Clear();
                     }
                 }
             }
@@ -53,11 +53,10 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         public override void Dispose()
         {
-            if (_cachedBuffer != null)
-                _cachedBuffer.Clear();
+            if (m_buffer != null)
+                m_buffer.Clear();
             OnMessage = null;
-            _cachedBuffer = null;
-
+            m_buffer = null;
             base.Dispose();
         }
 
@@ -111,7 +110,7 @@ namespace Codebreak.Service.World.Network
         {
             if (CachedBuffer)
             {
-                _cachedBuffer.Append(message + (char)0x00);
+                m_buffer.Append(message + (char)0x00);
             }
             else if (OnMessage != null)
             {
@@ -130,7 +129,7 @@ namespace Codebreak.Service.World.Network
             {
                 if (CachedBuffer)
                 {
-                    _cachedBuffer.Append(message + (char)0x00);
+                    m_buffer.Append(message + (char)0x00);
                 }
                 else if (OnMessage != null)
                 {

@@ -10,14 +10,17 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class MapManager : Singleton<MapManager>
     {
-        private Dictionary<int, MapInstance> _mapById;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, MapInstance> m_mapById;
         
         /// <summary>
         /// 
         /// </summary>
         public MapManager()
         {
-            _mapById = new Dictionary<int, MapInstance>();
+            m_mapById = new Dictionary<int, MapInstance>();
         }
 
         /// <summary>
@@ -32,10 +35,10 @@ namespace Codebreak.Service.World.Manager
                 instance.SubArea.AddUpdatable(instance);
                 instance.SubArea.SafeAddHandler(instance.Dispatch);
 
-                _mapById.Add(instance.Id, instance);
+                m_mapById.Add(instance.Id, instance);
             }
 
-            Logger.Info("MapManager : " + _mapById.Count + " MapInstance loaded.");
+            Logger.Info("MapManager : " + m_mapById.Count + " MapInstance loaded.");
         }
 
         /// <summary>
@@ -45,8 +48,8 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public MapInstance GetById(int id)
         {
-            if (_mapById.ContainsKey(id))
-                return _mapById[id];
+            if (m_mapById.ContainsKey(id))
+                return m_mapById[id];
             return null;
         }
     }

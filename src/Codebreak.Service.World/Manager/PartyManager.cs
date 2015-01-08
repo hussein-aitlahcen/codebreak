@@ -19,15 +19,15 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private long _nextPartyId;
-        private Dictionary<long, PartyInstance> _partyById;
+        private long m_nextPartyId;
+        private Dictionary<long, PartyInstance> m_partyById;
 
         /// <summary>
         /// 
         /// </summary>
         public PartyManager()
         {
-            _partyById = new Dictionary<long, PartyInstance>();
+            m_partyById = new Dictionary<long, PartyInstance>();
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace Codebreak.Service.World.Manager
         /// <param name="member"></param>
         public void PartyLeave(CharacterEntity character)
         {
-            if (_partyById.ContainsKey(character.PartyId))
-                _partyById[character.PartyId].RemoveMember(character);
+            if (m_partyById.ContainsKey(character.PartyId))
+                m_partyById[character.PartyId].RemoveMember(character);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void CreateParty(CharacterEntity master, CharacterEntity member)
         {
-            var party = new PartyInstance(_nextPartyId++, master, member);
+            var party = new PartyInstance(m_nextPartyId++, master, member);
 
-            _partyById.Add(party.Id, party);
+            m_partyById.Add(party.Id, party);
 
             WorldService.Instance.AddUpdatable(party);
         }
@@ -72,7 +72,7 @@ namespace Codebreak.Service.World.Manager
         /// <param name="partyId"></param>
         public void RemoveParty(PartyInstance instance)
         {
-            _partyById.Remove(instance.Id);
+            m_partyById.Remove(instance.Id);
 
             WorldService.Instance.RemoveUpdatable(instance);
         }
@@ -84,8 +84,8 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public PartyInstance GetParty(long partyId)
         {
-            if (_partyById.ContainsKey(partyId))
-                return _partyById[partyId];
+            if (m_partyById.ContainsKey(partyId))
+                return m_partyById[partyId];
             return null;
         }
     }

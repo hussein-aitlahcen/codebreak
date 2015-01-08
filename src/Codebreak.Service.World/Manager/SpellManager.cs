@@ -15,7 +15,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, SpellTemplate> _templateById = new Dictionary<int, SpellTemplate>();
+        private Dictionary<int, SpellTemplate> m_templateById = new Dictionary<int, SpellTemplate>();
 
         /// <summary>
         /// 
@@ -23,9 +23,9 @@ namespace Codebreak.Service.World.Manager
         public void Initialize()
         {
             using (var stream = File.OpenRead(ResourceManager.SPELLS_BINARY_PATH))            
-                _templateById = Serializer.Deserialize<Dictionary<int, SpellTemplate>>(stream);
+                m_templateById = Serializer.Deserialize<Dictionary<int, SpellTemplate>>(stream);
 
-            Logger.Info("SpellManager : " + _templateById.Count + " SpellTemplate loaded.");
+            Logger.Info("SpellManager : " + m_templateById.Count + " SpellTemplate loaded.");
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Codebreak.Service.World.Manager
         {
             SpellTemplate spell = null;
             SpellLevel level = null;
-            if (_templateById.TryGetValue(spellId, out spell))
+            if (m_templateById.TryGetValue(spellId, out spell))
             {
                 level = spell.GetLevel(spellLevel);
             }
@@ -53,7 +53,7 @@ namespace Codebreak.Service.World.Manager
         public SpellTemplate GetTemplate(int spellId)
         {
             SpellTemplate spell = null;
-            _templateById.TryGetValue(spellId, out spell);
+            m_templateById.TryGetValue(spellId, out spell);
             return spell;
         }
 
