@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Database.Structure;
+﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
@@ -15,6 +16,11 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class AlignmentFight : FightBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int KNGIHT_MONSTER_ID = 394;
+
         /// <summary>
         /// 
         /// </summary>
@@ -61,8 +67,43 @@ namespace Codebreak.Service.World.Game.Fight
             
             JoinFight(Aggressor, Team0);
             JoinFight(Victim, Team1);
-
+                 
             base.Start();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void OnFightStart()
+        {
+            if(IsNeutralAgression)
+            {
+                var aggressors = Aggressor.Team.AliveFighters;
+                var averageLevel = (int)aggressors.Average(aggressor => aggressor.Level);
+                var knighLevel = 0;
+
+                if (averageLevel < 50)
+                    knighLevel = 0;
+                else if (averageLevel < 80)
+                    knighLevel = 1;
+                else if (averageLevel < 110)
+                    knighLevel = 2;
+                else if (averageLevel < 140)
+                    knighLevel = 3;
+                else if (averageLevel < 170)
+                    knighLevel = 4;
+                else
+                    knighLevel = 5;
+
+                var knight = MonsterRepository.Instance.GetById(KNGIHT_MONSTER_ID);
+                if (knight != null)
+                {
+                    if (knight.GetGrades().Count() > knighLevel)
+                    {
+                        SummonFighter(new MonsterEntity(base.NextFighterId, knight.GetGrades().ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id);
+                    }
+                }
+            }
         }
 
         /// <summary>

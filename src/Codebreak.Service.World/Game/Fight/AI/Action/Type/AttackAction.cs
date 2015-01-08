@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Game.Map;
+﻿using Codebreak.Service.World.Game.Fight.Effect;
+using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Game.Spell;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,12 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
             set;
         }
 
+        private IEnumerable<FighterBase> WeakestEnnemies
+        {
+            get;
+            set;
+        }
+
         private int TargetCell
         {
             get;
@@ -70,6 +77,8 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
             {
                 case AttackStateEnum.STATE_CALCULATE_CELLS:
                     CastCellList = new Dictionary<int,List<SpellLevel>>();
+                    WeakestEnnemies = Fighter.Team.OpponentTeam.AliveFighters.OrderBy(fighter => fighter.Life);
+
                     foreach(var spellLevel in Fighter.Spells.GetSpells())
                     {
                         foreach (var castCell in CellZone.GetCircleCells(Map, Fighter.Cell.Id, spellLevel.MaxPO))
@@ -154,7 +163,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     return AIActionResult.RUNNING;
 
                 case AttackStateEnum.STATE_CALCULATE_BEST_SPELL:
-                    int bestScore = -1;
+                    int bestScore = 0;
                     foreach(var target in TargetList)
                     {
                         var castCell = target.Key;
@@ -168,34 +177,52 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                 var effect = levelInfos.Key;
                                 foreach (var fighter in levelInfos.Value)
                                 {
-                                    if (Effect.CastInfos.IsDamageEffect(effect.TypeEnum))
+                                    if (CastInfos.IsDamageEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore += 10 + effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore += 60 + effect.Value1 + effect.Value2 + effect.Value3;
                                         else
-                                            currentScore -= 10 + effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore -= 60 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }
-                                    else if (Effect.CastInfos.IsMalusEffect(effect.TypeEnum))
+                                    else if (CastInfos.IsMalusEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore += 5;
+                                            currentScore += 45;
                                         else
-                                            currentScore -= 5 + effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore -= 45 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }
-                                    else if(Effect.CastInfos.IsBonusEffect(effect.TypeEnum) || Effect.CastInfos.IsFriendlyEffect(effect.TypeEnum))
+                                    else if(CastInfos.IsBonusEffect(effect.TypeEnum) || CastInfos.IsFriendlyEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore -= effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore -= 50 + effect.Value1 + effect.Value2 + effect.Value3;
                                         else
                                             if (effect.TypeEnum == EffectEnum.Heal)
-                                                currentScore += (effect.Value1 + effect.Value2 + effect.Value3) * (1 + ((fighter.MaxLife / 100) * fighter.Life));
+                                                currentScore += 50 + (effect.Value1 + effect.Value2 + effect.Value3) * (1 + ((fighter.MaxLife / 100) * fighter.Life));
                                             else
-                                                currentScore += effect.Value1 + effect.Value2 + effect.Value3;
+                                                currentScore += 50 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }
                                 }
 
-                                if(levelInfos.Value.Count == 0 && Effect.CastInfos.IsSpecial(effect.TypeEnum))                                
-                                    currentScore += 50;                                
+                                if(levelInfos.Value.Count == 0)
+                                {
+                                    switch(effect.TypeEnum)
+                                    {
+                                        case EffectEnum.UseTrap:
+                                        case EffectEnum.UseGlyph:
+                                        case EffectEnum.Teleport:
+                                            foreach(var ennemy in WeakestEnnemies)
+                                            {
+                                                currentScore += 50;
+                                                currentScore -= Pathfinding.GoalDistance(Map, castCell, ennemy.Cell.Id);
+                                            }
+                                            break;
+
+                                        case EffectEnum.Invocation:
+                                        case EffectEnum.InvocDouble:
+                                            currentScore += 50;
+                                            break;
+                                    }
+                                }                               
                             }
                               
                             if (currentScore > bestScore)

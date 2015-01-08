@@ -248,7 +248,10 @@ namespace Codebreak.Service.World.Frame
 
             var victim = (CharacterEntity)distantEntity;
             if (!victim.CanGameAction(GameActionTypeEnum.FIGHT))            
-                victim.AbortAction(victim.CurrentAction.Type);            
+                victim.AbortAction(victim.CurrentAction.Type);
+
+            // Active l'alignement de force s'il ne l'est pas.
+            character.EnableAlignment();
 
             character.Map.FightManager.StartAggression(character, victim);
         }
