@@ -60,6 +60,15 @@ namespace Codebreak.Service.World.Network
         INFO_KAMAS_WON = 45,
         INFO_KAMAS_LOST = 46,
 
+        INFO_ALIGNMENT_DISHONOR_UP = 84,
+        INFO_ALIGNMENT_DISHONOR_DOWN = 85,
+
+        INFO_ALIGNMENT_HONOR_UP = 80,
+        INFO_ALIGNMENT_HONOR_DOWN = 76,
+
+        INFO_ALIGNMENT_RANK_UP = 82,
+        INFO_ALIGNMENT_RANK_DOWN = 83,
+
         INFO_BASIC_WARNING_BEFORE_SANCTION = 116,
         INFO_BASIC_LAST_CONNECTION = 152, // precedente connexion ...
         INFO_BASIC_CURRENT_IP = 153, // votre ip actuelle est ...   
@@ -484,11 +493,11 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ACCOUNT_STATS(CharacterEntity character)
         {
-            var message = new StringBuilder("As", 100);
+            var message = new StringBuilder("As", 200);
             message
-                .Append(character.Experience).Append(',')                                               // CurExcperience
-                .Append(character.ExperienceFloorCurrent).Append(',')     // LastExperience
-                .Append(character.ExperienceFloorNext).Append('|');// NextExperience
+                .Append(character.Experience).Append(',')
+                .Append(character.ExperienceFloorCurrent).Append(',') 
+                .Append(character.ExperienceFloorNext).Append('|');
 
             message.Append(character.Kamas).Append('|');
             message.Append(character.CaractPoint).Append('|');
@@ -496,20 +505,20 @@ namespace Codebreak.Service.World.Network
 
             message
                 .Append(character.CharacterAlignment.AlignmentId).Append('~')
-                .Append(character.CharacterAlignment.AlignmentId).Append(',')
+                .Append(character.CharacterAlignment.AlignmentId).Append(',') // FAKE ALIGNMENT ???
+                .Append('0').Append(',') //  ???
                 .Append(character.CharacterAlignment.Level).Append(',')
-                .Append(character.CharacterAlignment.Promotion).Append(',')
                 .Append(character.CharacterAlignment.Honour).Append(',')
                 .Append(character.CharacterAlignment.Dishonour).Append(',')
-                .Append(0).Append('|'); // Enabled ?
+                .Append(character.CharacterAlignment.Enabled ? '1' : '0').Append('|');
 
             message
                 .Append(character.Life).Append(',')
                 .Append(character.MaxLife).Append('|');
 
             message
-                .Append(character.Energy).Append(',') // CurEnergy
-                .Append(10000).Append('|');           // MAX_ENERGY;
+                .Append(character.Energy).Append(',')
+                .Append(10000).Append('|');
 
             message.Append(character.Initiative).Append('|');
             message.Append(character.Prospection).Append('|');
@@ -2163,6 +2172,15 @@ namespace Codebreak.Service.World.Network
         public static string EXCHANGE_STORAGE_KAMAS_VALUE(long value)
         {
             return "EsKG" + value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string ALIGNMENT_DISABLE_COST(int value)
+        {
+            return "GIP" + value;
         }
     }
 }

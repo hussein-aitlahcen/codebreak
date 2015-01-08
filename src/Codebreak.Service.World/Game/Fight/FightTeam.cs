@@ -116,7 +116,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _fighters;
+                return m_fighters;
             }
         }
 
@@ -183,7 +183,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _places.Find(cell => cell.CanWalk);
+                return m_places.Find(cell => cell.CanWalk);
             }
         }
 
@@ -198,11 +198,11 @@ namespace Codebreak.Service.World.Game.Fight
                 {
                         // fight end on taxcollector death
                     case FightTypeEnum.TYPE_PVT:
-                        if (_fighters[0].IsFighterDead)
+                        if (m_fighters[0].IsFighterDead)
                             return false;
                         break;
                 }
-                return _fighters.Any(fighter => !fighter.IsFighterDead);
+                return m_fighters.Any(fighter => !fighter.IsFighterDead);
             }
         }
 
@@ -213,20 +213,20 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                if(_placesCache == null)
-                    _placesCache = string.Concat(_places.Select(cell => Util.CellToChar(cell.Id)));
-                return _placesCache;
+                if(m_placesCache == null)
+                    m_placesCache = string.Concat(m_places.Select(cell => Util.CellToChar(cell.Id)));
+                return m_placesCache;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<FightOptionTypeEnum, bool> _blockedOption;
-        private List<FighterBase> _fighters;
-        private List<FightCell> _places;
-        private List<ChallengeBase> _challenges;
-        private string _placesCache;
+        private Dictionary<FightOptionTypeEnum, bool> m_blockedOption;
+        private List<FighterBase> m_fighters;
+        private List<FightCell> m_places;
+        private List<ChallengeBase> m_challenges;
+        private string m_placesCache;
 
         /// <summary>
         /// 
@@ -239,10 +239,10 @@ namespace Codebreak.Service.World.Game.Fight
             LeaderId = leaderId;
             FlagCellId = flagCell;
 
-            _challenges = new List<ChallengeBase>();
-            _fighters = new List<FighterBase>();
-            _places = places;
-            _blockedOption = new Dictionary<FightOptionTypeEnum, bool>()
+            m_challenges = new List<ChallengeBase>();
+            m_fighters = new List<FighterBase>();
+            m_places = places;
+            m_blockedOption = new Dictionary<FightOptionTypeEnum, bool>()
             {            
                 { FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS, false },
                 { FightOptionTypeEnum.TYPE_HELP, false },
@@ -258,7 +258,7 @@ namespace Codebreak.Service.World.Game.Fight
         public void AddChallenge(ChallengeBase challenge)
         {
             challenge.AddHandler(base.Dispatch);
-            _challenges.Add(challenge);
+            m_challenges.Add(challenge);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void AddFighter(FighterBase fighter)
         {
-            _fighters.Add(fighter);
+            m_fighters.Add(fighter);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void RemoveFighter(FighterBase fighter)
         {
-            _fighters.Remove(fighter);
+            m_fighters.Remove(fighter);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighterId"></param>
         public FighterBase GetFighter(long fighterId)
         {
-            return _fighters.Find(fighter => fighter.Id == fighterId);
+            return m_fighters.Find(fighter => fighter.Id == fighterId);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Codebreak.Service.World.Game.Fight
                 return false;
             }
             
-            if (IsOptionLocked(FightOptionTypeEnum.TYPE_PARTY) && character.PartyId != ((CharacterEntity)_fighters[0]).PartyId)
+            if (IsOptionLocked(FightOptionTypeEnum.TYPE_PARTY) && character.PartyId != ((CharacterEntity)m_fighters[0]).PartyId)
             {
                 character.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_JOIN, character.Id, "f"));
                 return false;
@@ -322,12 +322,19 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 case FightTypeEnum.TYPE_PVT:
                     var taxCollector = OpponentTeam.Fighters[0] as TaxCollectorEntity;
+                    if (taxCollector == null)
+                        return false;
+
                     if(character.CharacterGuild != null && character.CharacterGuild.GuildId == taxCollector.Guild.Id)
                     {
                         character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You can't take part in a fight against your own TaxCollector."));
                         return false;
                     }
                     break;
+
+                case FightTypeEnum.TYPE_AGGRESSION:
+                    var leader = (CharacterEntity)GetFighter(LeaderId);
+                    return leader.CharacterAlignment.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.CharacterAlignment.AlignmentId == leader.CharacterAlignment.AlignmentId;
             }
 
             return true;
@@ -339,7 +346,7 @@ namespace Codebreak.Service.World.Game.Fight
         public void SendChallengeInfos()
         {
             base.CachedBuffer = true;
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 base.Dispatch(WorldMessage.FIGHT_CHALLENGE_INFORMATIONS(challenge.Id,
                     challenge.ShowTarget,
                     challenge.TargetId,
@@ -357,7 +364,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void SendChallengeInfos(FighterBase fighter)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 fighter.Dispatch(WorldMessage.FIGHT_CHALLENGE_INFORMATIONS(challenge.Id,
                     challenge.ShowTarget,
                     challenge.TargetId,
@@ -374,7 +381,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void BeginTurn(FighterBase fighter)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.BeginTurn(fighter);
         }
 
@@ -385,7 +392,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="castInfos"></param>
         public void CheckSpell(FighterBase fighter, CastInfos castInfos)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.CheckSpell(fighter, castInfos);
         }
 
@@ -396,7 +403,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="movementLength"></param>
         public void CheckMovement(int beginCell, int endCell, int movementLength)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.CheckMovement(beginCell, endCell, movementLength);
         }
 
@@ -407,7 +414,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="weapon"></param>
         public void CheckWeapon(FighterBase fighter, ItemTemplateDAO weapon)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.CheckWeapon(fighter, weapon);
         }
 
@@ -417,7 +424,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void CheckDeath(FighterBase fighter)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.CheckDeath(fighter);
         }
 
@@ -427,7 +434,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void EndTurn(FighterBase fighter)
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.EndTurn(fighter);
         }
 
@@ -436,7 +443,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void FightEnd()
         {
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 if (!challenge.Success && !challenge.Failed)
                     challenge.OnSuccess();
         }
@@ -453,9 +460,9 @@ namespace Codebreak.Service.World.Game.Fight
                     if (type == FightOptionTypeEnum.TYPE_NEW_PLAYER)
                         type = FightOptionTypeEnum.TYPE_NEW_PLAYER_BIS;
 
-                    _blockedOption[type] = _blockedOption[type] == false;
+                    m_blockedOption[type] = m_blockedOption[type] == false;
 
-                    var value = _blockedOption[type];
+                    var value = m_blockedOption[type];
 
                     InformationEnum infoType = InformationEnum.INFO_FIGHT_TOGGLE_PARTY;
 
@@ -511,7 +518,7 @@ namespace Codebreak.Service.World.Game.Fight
         public void SendMapFightInfos(EntityBase entity)
         {
             entity.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, LeaderId, Fighters.ToArray()));
-            foreach (var option in _blockedOption)            
+            foreach (var option in m_blockedOption)            
                 entity.Dispatch(WorldMessage.FIGHT_OPTION(option.Key, option.Value, LeaderId));
         }
 
@@ -522,7 +529,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public bool IsOptionLocked(FightOptionTypeEnum toggle)
         {
-            return _blockedOption[toggle];
+            return m_blockedOption[toggle];
         }
 
         /// <summary>
@@ -533,18 +540,18 @@ namespace Codebreak.Service.World.Game.Fight
             Fight = null;
             OpponentTeam = null;
             
-            foreach (var challenge in _challenges)
+            foreach (var challenge in m_challenges)
                 challenge.RemoveHandler(base.Dispatch);
 
-            _challenges.Clear();
-            _challenges = null;
+            m_challenges.Clear();
+            m_challenges = null;
 
-            _places.Clear();
-            _places = null;
-            _fighters.Clear();
-            _fighters = null;
-            _blockedOption.Clear();
-            _blockedOption = null;
+            m_places.Clear();
+            m_places = null;
+            m_fighters.Clear();
+            m_fighters = null;
+            m_blockedOption.Clear();
+            m_blockedOption = null;
 
             base.Dispose();
         }

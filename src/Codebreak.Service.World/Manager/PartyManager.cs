@@ -34,13 +34,13 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public void PartyMessage(long partyId, long entityId, string entityName, string message)
+        public void PartyMessage(long partyId, string message)
         {
             WorldService.Instance.AddMessage(() =>
                 {
                     var party = GetParty(partyId);
                     if(party != null)                    
-                        party.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GROUP, entityId, entityName, message));                    
+                        party.Dispatch(message);                    
                 });
         }
 

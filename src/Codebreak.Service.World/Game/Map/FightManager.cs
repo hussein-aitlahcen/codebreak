@@ -65,6 +65,16 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="aggressor"></param>
+        /// <param name="victim"></param>
+        public void StartAggression(CharacterEntity aggressor, CharacterEntity victim)
+        {
+            Add(new AlignmentFight(m_map, m_fightId++, aggressor, victim));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <param name="monsterGroup"></param>
         public void StartMonsterFight(CharacterEntity character, MonsterGroupEntity monsterGroup)

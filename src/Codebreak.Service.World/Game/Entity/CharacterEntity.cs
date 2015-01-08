@@ -226,6 +226,28 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public long AlignmentExperienceFloorCurrent
+        {
+            get
+            {
+                return ExperienceManager.Instance.GetFloor(CharacterAlignment.Level, ExperienceTypeEnum.AGGRESSION);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long AlignmentExperienceFloorNext
+        {
+            get
+            {
+                return ExperienceManager.Instance.GetFloor(CharacterAlignment.Level + 1, ExperienceTypeEnum.AGGRESSION);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override int RealLife
         {
             get
@@ -621,6 +643,184 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 guildMember.CharacterConnected(this);
             }
+
+            SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
+            SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public void SubstractDishonor(int value)
+        {
+            if (value < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            CharacterAlignment.Dishonour -= value;
+            if (CharacterAlignment.Dishonour < 0)
+                CharacterAlignment.Dishonour = 0;
+
+            base.CachedBuffer = true;
+            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_DOWN, value));
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            base.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public void AddDishonor(int value)
+        {
+            if (value < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            CharacterAlignment.Dishonour += value;
+            if (CharacterAlignment.Dishonour > 499)
+                CharacterAlignment.Dishonour = 500;
+
+            base.CachedBuffer = true;
+            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_UP, value));
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            base.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public void SubstractHonor(int value)
+        {
+            if (value < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var currentLevel = CharacterAlignment.Level;
+            CharacterAlignment.Honour -= value;
+
+            if (CharacterAlignment.Honour < 0)
+                CharacterAlignment.Honour = 0;
+
+            while (AlignmentExperienceFloorCurrent != -1 && CharacterAlignment.Honour < AlignmentExperienceFloorCurrent)
+                CharacterAlignment.Level--;
+
+            base.CachedBuffer = true;
+            if (currentLevel != CharacterAlignment.Level)
+            {
+                base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_DOWN, CharacterAlignment.Level));
+                RefreshOnMap();
+            }
+            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_DOWN, value));
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            base.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public void AddHonor(int value)
+        {
+            if(value < 1)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var currentLevel = CharacterAlignment.Level;
+            CharacterAlignment.Honour += value;
+
+            while (AlignmentExperienceFloorNext != -1 && CharacterAlignment.Honour >= AlignmentExperienceFloorNext)            
+                CharacterAlignment.Level++;
+
+            base.CachedBuffer = true;
+            if (currentLevel != CharacterAlignment.Level)
+            {
+                Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_UP, CharacterAlignment.Level));
+                RefreshOnMap();
+            }
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_UP, value));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            base.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void EnableAlignment()
+        {
+            if(CharacterAlignment.Enabled)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if (CharacterAlignment.AlignmentId == 0)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            CharacterAlignment.Enabled = true;
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            RefreshOnMap();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DisableAlignment()
+        {
+            if(!CharacterAlignment.Enabled)
+            {
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+            
+            if(CharacterAlignment.Dishonour > 0)
+            {
+                Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unabled to disable your alignment because you are dishonored."));
+                return;
+            }
+
+            CharacterAlignment.Enabled = false;
+            SubstractHonor((CharacterAlignment.Honour / 100) * 5);
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            RefreshOnMap();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="alignment"></param>
+        public void SetAlignment(int alignmentId)
+        {
+            ResetAlignment(alignmentId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ResetAlignment(int alignmentId = 0)
+        {
+            CharacterAlignment.AlignmentId = alignmentId;
+            CharacterAlignment.Level = 1;
+            CharacterAlignment.Promotion = 0;
+            CharacterAlignment.Honour = 0;
+            CharacterAlignment.Dishonour = 0;
+            CharacterAlignment.Enabled = false;
+
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            RefreshOnMap();
         }
 
         /// <summary>
@@ -672,35 +872,32 @@ namespace Codebreak.Service.World.Game.Entity
         {
             CharacterGuild = characterGuild;
             if (CharacterGuild != null)
-                m_guildDisplayInfos = CharacterGuild.Guild.Name + ";" + CharacterGuild.Guild.DisplayEmblem;
+                m_guildDisplayInfos = CharacterGuild.Guild.Name + ";" + CharacterGuild.Guild.DisplayEmblem;            
             else
-                m_guildDisplayInfos = null;
+                m_guildDisplayInfos = null;            
         }
-
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="channel"></param>
         /// <param name="message"></param>
-        /// <param name="remoteEntity"></param>
-        public override void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
+        public void DispatchPartyMessage(string message)
         {
-            switch(channel)
-            {
-                case ChatChannelEnum.CHANNEL_GROUP:
-                    PartyManager.Instance.PartyMessage(PartyId, Id, Name, message);
-                    return;
-
-                case ChatChannelEnum.CHANNEL_GUILD:
-                    if(CharacterGuild != null)                    
-                        CharacterGuild.Guild.SafeDispatchChatMessage(Id, Name, message);                    
-                    return;
-            }
-
-            base.DispatchChatMessage(channel, message, remoteEntity);
+            PartyManager.Instance.PartyMessage(PartyId, message);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void DispatchGuildMessage(string message)
+        {
+            if(CharacterGuild != null)
+            {
+                CharacterGuild.Guild.SafeDispatch(message);
+            }
+        }
+                
         /// <summary>
         /// 
         /// </summary>
@@ -1105,12 +1302,21 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(';');
                         message.Append(SkinBase).Append('^');
                         message.Append(SkinSizeBase).Append(';');
+
                         message.Append(Sex).Append(';');
-                        message.Append("0,0,0,0"); // AlignmentInfos
-                        message.Append(';');
+
+                        message.Append(CharacterAlignment.AlignmentId).Append(',');
+                        message.Append(CharacterAlignment.AlignmentId).Append(',');
+                        if (CharacterAlignment.Enabled)                        
+                            message.Append(CharacterAlignment.Level).Append(',');                        
+                        else                        
+                            message.Append('0').Append(',');                        
+                        message.Append(Id + Level).Append(';');
+
                         message.Append(HexColor1).Append(';');
                         message.Append(HexColor2).Append(';');
                         message.Append(HexColor3).Append(';');
+
                         Inventory.SerializeAs_ActorLookMessage(message);
                         message.Append(';');
                         message.Append(Aura).Append(';');
@@ -1140,7 +1346,15 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(SkinSize).Append(';');
                         message.Append(Sex).Append(';');
                         message.Append(Level).Append(';');
-                        message.Append("0,0,0,0").Append(';'); // Alignmentnfos
+
+                        message.Append(CharacterAlignment.AlignmentId).Append(',');
+                        message.Append(CharacterAlignment.AlignmentId).Append(',');
+                        if (CharacterAlignment.Enabled)
+                            message.Append(CharacterAlignment.Level).Append(',');
+                        else
+                            message.Append('0').Append(',');
+                        message.Append(Id + Level).Append(';');
+
                         message.Append(HexColor1).Append(';');
                         message.Append(HexColor2).Append(';');
                         message.Append(HexColor3).Append(';');

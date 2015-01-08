@@ -185,6 +185,7 @@
     <Compile Include="Game\Fight\AI\AIFighter.cs" />
     <Compile Include="Game\Fight\AI\Brain\AIBrain.cs" />
     <Compile Include="Game\Fight\AI\Brain\DefaultAIBrain.cs" />
+    <Compile Include="Game\Fight\AlignmentFight.cs" />
     <Compile Include="Game\Fight\BuffEffectManager.cs" />
     <Compile Include="Game\Fight\ChallengerFight.cs" />
     <Compile Include="Game\Fight\Challenge\AbnegationChallenge.cs" />

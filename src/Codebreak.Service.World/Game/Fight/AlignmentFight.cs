@@ -1,5 +1,5 @@
-﻿using Codebreak.Service.World.Game.Entity;
-using Codebreak.Service.World.Game.Fight.Challenges;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
 using System;
@@ -13,15 +13,12 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ChallengerFight : FightBase, IDisposable
+    public sealed class AlignmentFight : FightBase
     {
-        public const int CHALLENGE_START_TIMEOUT = 60000;
-        public const int CHALLENGE_TURN_TIME = 30000;
-
         /// <summary>
         /// 
         /// </summary>
-        public CharacterEntity Attacker
+        public bool IsNeutralAgression
         {
             get;
             private set;
@@ -30,7 +27,16 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public CharacterEntity Defender
+        public CharacterEntity Aggressor
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CharacterEntity Victim
         {
             get;
             private set;
@@ -44,14 +50,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public ChallengerFight(MapInstance map, long id, CharacterEntity attacker, CharacterEntity defender)
-            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, attacker.Id, attacker.CellId, defender.Id, defender.CellId, CHALLENGE_START_TIMEOUT, CHALLENGE_TURN_TIME, true)
+        /// <param name="aggressor"></param>
+        /// <param name="victim"></param>
+        public AlignmentFight(MapInstance map, long id, CharacterEntity aggressor, CharacterEntity victim)
+            : base(FightTypeEnum.TYPE_AGGRESSION, map, id, aggressor.Id, aggressor.CellId, victim.Id, victim.CellId, 30000, 30000)
         {
-            Attacker = attacker;
-            Defender = defender;
-
-            JoinFight(Attacker, Team0);
-            JoinFight(Defender, Team1);
+            Aggressor = aggressor;
+            Victim = victim;
+            IsNeutralAgression = Victim.CharacterAlignment.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+            
+            JoinFight(Aggressor, Team0);
+            JoinFight(Victim, Team1);
 
             base.Start();
         }
@@ -59,7 +68,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
+        /// <param name="character"></param>
         /// <returns></returns>
         public override bool CanJoin(CharacterEntity character)
         {
@@ -96,7 +105,7 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
                         fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
-                        fighter.LeaveFight(true);
+                        fighter.LeaveFight();
                         fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;
@@ -130,14 +139,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in _winnerTeam.Fighters)
-            {
-                Result.AddResult(fighter, true);
-            }
-            foreach (var fighter in _loserTeam.Fighters)
-            {
-                Result.AddResult(fighter, false);
-            }
         }
 
         /// <summary>
@@ -154,10 +155,12 @@ namespace Codebreak.Service.World.Game.Fight
         public override void SerializeAs_FightList(StringBuilder message)
         {
             message.Append(Id.ToString()).Append(';');
-            message.Append(UpdateTime).Append(';'); // TODO : Time;
-            message.Append("0,-1,"); // TODO : Alignement etc
+            message.Append(UpdateTime).Append(';');
+            message.Append("0,");
+            message.Append(Aggressor.CharacterAlignment.AlignmentId).Append(",");
             message.Append(Team0.AliveFighters.Count()).Append(';');
-            message.Append("0,-1,"); // TODO : Valeur monster "," Alignement monstre
+            message.Append("0,");
+            message.Append(Victim.CharacterAlignment.AlignmentId).Append(",");
             message.Append(Team1.AliveFighters.Count()).Append(';');
             message.Append('|');
         }
@@ -175,14 +178,13 @@ namespace Codebreak.Service.World.Game.Fight
                 m_serializedFlag.Append((int)Type).Append('|');
                 m_serializedFlag.Append(Team0.LeaderId).Append(';');
                 m_serializedFlag.Append(Team0.FlagCellId).Append(';');
-                m_serializedFlag.Append('2').Append(';');
-                m_serializedFlag.Append("-1").Append('|');
+                m_serializedFlag.Append('0').Append(';');
+                m_serializedFlag.Append(Aggressor.CharacterAlignment.AlignmentId).Append('|');
                 m_serializedFlag.Append(Team1.LeaderId).Append(';');
                 m_serializedFlag.Append(Team1.FlagCellId).Append(';');
-                m_serializedFlag.Append('2').Append(';');
-                m_serializedFlag.Append("-1");
+                m_serializedFlag.Append('0').Append(';');
+                m_serializedFlag.Append(Victim.CharacterAlignment.AlignmentId);
             }
-
             message.Append(m_serializedFlag.ToString());
         }
 
@@ -191,9 +193,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void Dispose()
         {
-            Attacker = null;
-            Defender = null;
-            
+            Aggressor = null;
+            Victim = null;
+
             m_serializedFlag.Clear();
             m_serializedFlag = null;
 

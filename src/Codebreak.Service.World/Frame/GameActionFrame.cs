@@ -170,6 +170,10 @@ namespace Codebreak.Service.World.Frame
                     case GameActionTypeEnum.SKILL_USE:
                         GameSkillUse(character, message);
                         break;
+                        
+                    case GameActionTypeEnum.FIGHT_AGGRESSION:
+                        GameAlignmentAggression(character, message);
+                        break;
                 }
             }); 
         }
@@ -205,6 +209,48 @@ namespace Codebreak.Service.World.Frame
                     action.SkillId = skillId;
                     action.SkillMapId = character.MapId;
                 });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GameAlignmentAggression(CharacterEntity character, string message)
+        {
+            if (character.Map.FightTeam0Cells.Count == 0 || character.Map.FightTeam1Cells.Count == 0)
+            {
+                character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Cell pattern not found, unable to fight here"));
+                return;
+            }
+
+            long victimId = -1;
+            if (!long.TryParse(message.Substring(5), out victimId))
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var distantEntity = character.Map.GetEntity(victimId);
+            if (distantEntity == null)
+            {
+                Logger.Debug("GameActionFrame::AlignmentAggression unknow victimId " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if (distantEntity.Type != EntityTypeEnum.TYPE_CHARACTER)
+            {
+                Logger.Debug("GameActionFrame::AlignmentAggression trying to aggro non taxcollector entity : " + character.Name);
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var victim = (CharacterEntity)distantEntity;
+            if (!victim.CanGameAction(GameActionTypeEnum.FIGHT))            
+                victim.AbortAction(victim.CurrentAction.Type);            
+
+            character.Map.FightManager.StartAggression(character, victim);
         }
 
         /// <summary>

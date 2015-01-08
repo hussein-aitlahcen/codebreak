@@ -207,6 +207,121 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
+        public sealed class AlignmentResetCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "alignmentreset"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Reset your character alignment."; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                context.Character.ResetAlignment();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class AlignmentCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "alignment"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Set a new alignment to your character. Arguments : %alignmentId%"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                var alignmentId = -1;
+                if(!Int32.TryParse(context.TextCommandArgument.NextWord(), out alignmentId))
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character alignment %alignementId%"));
+                    return;
+                }
+                context.Character.SetAlignment(alignmentId);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class AddHonorCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "addhonor"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Will honor your character. Arguments : %honorValue%"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                var honorValue = -1;
+                if(!Int32.TryParse(context.TextCommandArgument.NextWord(), out honorValue))
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character addhonor %honorValue%"));
+                    return;
+                }
+
+                context.Character.AddHonor(honorValue);                
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class KickCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 

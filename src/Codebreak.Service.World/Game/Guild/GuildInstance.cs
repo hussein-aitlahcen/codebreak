@@ -766,7 +766,7 @@ namespace Codebreak.Service.World.Game.Guild
                 if (member.Rank == GuildRankEnum.BOSS && targetMember.Rank != GuildRankEnum.BOSS)
                 {
                     targetMember.SetBoss();
-                    MemberProfilUpdate(targetMember, member.Id, (int)GuildRankEnum.ON_TRIAL, 0, 0);
+                    MemberProfilUpdate(targetMember, member.Id, (int)GuildRankEnum.SECOND_IN_COMMAND, 0, 0);
                     member.Dispatch(WorldMessage.GUILD_MEMBERS_INFORMATIONS(member));
                 }
             }

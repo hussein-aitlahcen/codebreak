@@ -34,9 +34,61 @@ namespace Codebreak.Service.World.Frame
                             return FightDetails;
                     }
                     break;
+
+                case 'G':
+                    switch(message[1])
+                    {
+                        case 'P': // alignment
+                            if (message.Length < 3)
+                                return null;
+
+                            switch (message[2])
+                            {
+                                case '+':
+                                    return AlignmentEnable;
+                                    
+                                case '-':
+                                    return AlignmentDisable;
+
+                                case '*':
+                                    return AlignmentDisableCost;
+                            }
+                            break;
+                    }
+                    break;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void AlignmentDisableCost(CharacterEntity character, string message)
+        {
+            character.SafeDispatch(WorldMessage.ALIGNMENT_DISABLE_COST((character.CharacterAlignment.Honour / 100) * 5));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void AlignmentDisable(CharacterEntity character, string message)
+        {
+            character.AddMessage(() => character.DisableAlignment());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void AlignmentEnable(CharacterEntity character, string message)
+        {
+            character.AddMessage(() => character.EnableAlignment());
         }
 
         /// <summary>
