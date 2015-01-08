@@ -405,33 +405,37 @@ namespace Codebreak.Service.World.Game.Entity
             switch(actionType)
             {
                 case GameActionTypeEnum.SKILL_USE:
-                    return ((CurrentAction == null || CurrentAction.IsFinished) || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT);
-
+                    return ((CurrentAction == null || CurrentAction.IsFinished) 
+                        || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT)
+                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
+                    
                 case GameActionTypeEnum.FIGHT_JOIN:
-                    return (CurrentAction == null || CurrentAction.IsFinished)
-                        && HasGameAction(GameActionTypeEnum.MAP)
+                    return HasGameAction(GameActionTypeEnum.MAP)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE)
-                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE);
-
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE)
+                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
+                    
                 case GameActionTypeEnum.CHALLENGE_REQUEST:
-                    return (CurrentAction == null || CurrentAction.IsFinished)
-                        && HasGameAction(GameActionTypeEnum.MAP)
+                    return HasGameAction(GameActionTypeEnum.MAP)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE)
-                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE);
-
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE)
+                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
+                    
                 case GameActionTypeEnum.CHALLENGE_ACCEPT:
-                    return (CurrentAction == null || CurrentAction.IsFinished)
+                    return CurrentAction != null
                         && CurrentAction.Type == GameActionTypeEnum.CHALLENGE_REQUEST 
                         && ((GameChallengeRequestAction)CurrentAction).Entity.Id != Id;
 
                 case GameActionTypeEnum.CHALLENGE_DECLINE:
-                    return (CurrentAction == null || CurrentAction.IsFinished)
+                    return CurrentAction != null
                         && CurrentAction.Type == GameActionTypeEnum.CHALLENGE_REQUEST;
 
                 case GameActionTypeEnum.EXCHANGE:
                     return (CurrentAction == null || CurrentAction.IsFinished)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE)
-                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE);
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE)
+                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
+
 
                 case GameActionTypeEnum.MAP_MOVEMENT:
                     return (CurrentAction == null || CurrentAction.IsFinished)
