@@ -393,7 +393,7 @@ namespace Codebreak.Service.World.Game.Auction
             if (item == null)
                 return AuctionAddResultEnum.INVALID_ITEM;
 
-            if (!m_allowedTypes.Contains(item.GetTemplate().Type))
+            if (!m_allowedTypes.Contains(item.Template.Type))
                 return AuctionAddResultEnum.INVALID_TYPE;
 
             switch(quantity)
@@ -417,7 +417,7 @@ namespace Codebreak.Service.World.Game.Auction
             if (m_auctionsByAccount.ContainsKey(character.AccountId) && m_auctionsByAccount[character.AccountId].Count >= PlayerMaxItem)
                 return AuctionAddResultEnum.TOO_MANY_ENTRIES;
 
-            if (item.GetTemplate().Level > ItemMaxLevel)
+            if (item.Template.Level > ItemMaxLevel)
                 return AuctionAddResultEnum.TOO_HIGH_LEVEL;
                                     
             var newItem = character.Inventory.RemoveItem(item.Id, quantity);
@@ -446,7 +446,7 @@ namespace Codebreak.Service.World.Game.Auction
         public void Add(AuctionEntry entry)
         {            
             var templateId = entry.Item.TemplateId;
-            var itemType = entry.Item.GetTemplate().Type;
+            var itemType = entry.Item.Template.Type;
 
             AuctionCategory category = null;
 
@@ -459,7 +459,7 @@ namespace Codebreak.Service.World.Game.Auction
             {
                 category = new AuctionCategory(itemType, templateId, m_nextCategoryId++);
 
-                var type = entry.Item.GetTemplate().Type;
+                var type = entry.Item.Template.Type;
                 if (!m_templatesByType.ContainsKey(type))
                     m_templatesByType.Add(type, new List<int>());
 

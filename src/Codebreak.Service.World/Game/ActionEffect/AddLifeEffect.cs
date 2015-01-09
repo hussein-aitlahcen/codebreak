@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
                     return false;
             }
 
-            switch((ItemTypeEnum)item.GetTemplate().Type)
+            switch((ItemTypeEnum)item.Template.Type)
             {
                 case ItemTypeEnum.TYPE_PAIN:
                     entity.Map.Dispatch(WorldMessage.EMOTE_PLAY(entity.Id, EMOTE_EAT_BREAD));

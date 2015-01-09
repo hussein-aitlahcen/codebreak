@@ -104,11 +104,15 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        public ItemTemplateDAO GetTemplate()
+        [Write(false)]
+        public ItemTemplateDAO Template
         {
-            if (m_template == null)            
-                m_template = ItemTemplateRepository.Instance.GetById(TemplateId);            
-            return m_template;
+            get
+            {
+                if (m_template == null)
+                    m_template = ItemTemplateRepository.Instance.GetById(TemplateId);
+                return m_template;
+            }
         }
         
         /// <summary>
@@ -119,11 +123,15 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        public GenericStats GetStatistics()
+        [Write(false)]
+        public GenericStats Statistics
         {
-            if (m_statistics == null)            
-                m_statistics = GenericStats.Deserialize(Effects);            
-            return m_statistics;
+            get
+            {
+                if (m_statistics == null)
+                    m_statistics = GenericStats.Deserialize(Effects);
+                return m_statistics;
+            }
         }
 
         /// <summary>
@@ -133,25 +141,33 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="value"></param>
         public void SaveStats()
         {
-            Effects = GetStatistics().Serialize();
+            Effects = Statistics.Serialize();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public ItemSlotEnum GetSlot()
+        [Write(false)]
+        public ItemSlotEnum Slot
         {
-            return (ItemSlotEnum)SlotId;
+            get
+            {
+                return (ItemSlotEnum)SlotId;
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public bool IsEquiped()
+        /// <returns></returns>        
+        [Write(false)]
+        public bool IsEquiped
         {
-            return IsEquipedSlot(GetSlot());
+            get
+            {
+                return IsEquipedSlot(Slot);
+            }
         }
 
         /// <summary>
@@ -201,8 +217,8 @@ namespace Codebreak.Service.World.Database.Structure
             instance.OwnerId = -1;
             instance.TemplateId = TemplateId;
             instance.Quantity = quantity;
-            instance.Effects = GetStatistics().Serialize();
-            instance.StringEffects = GetStatistics().ToItemStats();
+            instance.Effects = Statistics.Serialize();
+            instance.StringEffects = Statistics.ToItemStats();
             instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
 
             if (InventoryItemRepository.Instance.Insert(instance))

@@ -107,6 +107,7 @@ namespace Codebreak.Service.World.Frame
             {
                 client.FrameManager.RemoveFrame(CharacterSelectionFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
+                client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
 
                 client.CurrentCharacter.CachedBuffer = true;
@@ -285,8 +286,8 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            foreach (var item in character.GetItems())
-                item.OwnerId = -1;
+            InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_CHARACTER, character.Id);
+            InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_MERCHANT, character.Id);
 
             client.Characters.Remove(character);
 
@@ -360,11 +361,12 @@ namespace Codebreak.Service.World.Frame
         {
             client.FrameManager.RemoveFrame(CharacterSelectionFrame.Instance);
 
-            client.CurrentCharacter = EntityManager.Instance.CreateCharacter(client.Account.Power, character);
+            client.CurrentCharacter = EntityManager.Instance.CreateCharacter(client.Account, character);
 
             WorldService.Instance.AddUpdatable(client.CurrentCharacter);
 
             client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
+            client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
             client.CurrentCharacter.FrameManager.AddFrame(SpellFrame.Instance);
             client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
 
@@ -378,8 +380,8 @@ namespace Codebreak.Service.World.Frame
             client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
             client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
             client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
-            if(client.CurrentCharacter.CharacterGuild != null)            
-                client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.CharacterGuild.Guild, client.CurrentCharacter.CharacterGuild.Power));
+            if(client.CurrentCharacter.GuildMember != null)            
+                client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.GuildMember.Guild, client.CurrentCharacter.GuildMember.Power));
             client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
             client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
             client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE

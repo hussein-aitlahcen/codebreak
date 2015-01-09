@@ -41,12 +41,17 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
-        private NpcTemplateDAO _template;
-        public NpcTemplateDAO GetTemplate()
+        private NpcTemplateDAO m_template;
+
+        [Write(false)]
+        public NpcTemplateDAO Template
         {
-            if (_template == null)
-                _template = NpcTemplateRepository.Instance.GetTemplate(TemplateId);
-            return _template;
+            get
+            {
+                if (m_template == null)
+                    m_template = NpcTemplateRepository.Instance.GetTemplate(TemplateId);
+                return m_template;
+            }
         }
     }
 }

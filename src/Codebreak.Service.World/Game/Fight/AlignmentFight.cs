@@ -96,13 +96,9 @@ namespace Codebreak.Service.World.Game.Fight
                     knighLevel = 5;
 
                 var knight = MonsterRepository.Instance.GetById(KNGIHT_MONSTER_ID);
-                if (knight != null)
-                {
-                    if (knight.GetGrades().Count() > knighLevel)
-                    {
-                        SummonFighter(new MonsterEntity(base.NextFighterId, knight.GetGrades().ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id);
-                    }
-                }
+                if (knight != null)                
+                    if (knight.Grades.Count() > knighLevel)                    
+                        SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id); 
             }
         }
 

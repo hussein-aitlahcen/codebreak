@@ -49,7 +49,7 @@ namespace Codebreak.Service.World.Game.Exchange
         public override void Leave(bool success = false)
         {
             base.Leave(success);
-            Character.CharacterGuild.FarmTaxCollector(TaxCollector);            
+            Character.GuildMember.FarmTaxCollector(TaxCollector);            
         }
 
         /// <summary>

@@ -65,8 +65,8 @@ namespace Codebreak.Service.World.Game.Entity
         public void Initialize()
         {
             foreach (var item in Items)
-                if (item.IsEquiped())
-                    Entity.Statistics.Merge(item.GetStatistics());
+                if (item.IsEquiped)
+                    Entity.Statistics.Merge(item.Statistics);
         }
                
         /// <summary>
@@ -81,7 +81,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (item == null)
                 return null;
 
-            if (item.IsEquiped())
+            if (item.IsEquiped)
                 MoveItem(item, ItemSlotEnum.SLOT_INVENTORY);            
 
             return base.RemoveItem(itemId, quantity);
@@ -94,19 +94,19 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="slot"></param>
         public void MoveItem(InventoryItemDAO item, ItemSlotEnum slot, int quantity = 1)
         {
-            if (slot == item.GetSlot())
+            if (slot == item.Slot)
                 return;
 
             if (quantity > item.Quantity || quantity < 1)
                 quantity = item.Quantity;
 
-            if (item.IsEquiped() && !InventoryItemDAO.IsEquipedSlot(slot))
+            if (item.IsEquiped && !InventoryItemDAO.IsEquipedSlot(slot))
             {
                 item.SlotId = (int)slot;
                 m_entityLookRefresh = true;
                 bool merged = AddItem(MoveQuantity(item, 1));
 
-                Entity.Statistics.UnMerge(item.GetStatistics());
+                Entity.Statistics.UnMerge(item.Statistics);
 
                 Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
 
@@ -119,16 +119,16 @@ namespace Codebreak.Service.World.Game.Entity
                 }
                 return;
             }
-            else if (!item.IsEquiped() && InventoryItemDAO.IsEquipedSlot(slot))
+            else if (!item.IsEquiped && InventoryItemDAO.IsEquipedSlot(slot))
             {
-                if (!ItemTemplateDAO.CanPlaceInSlot((ItemTypeEnum)item.GetTemplate().Type, slot))
+                if (!ItemTemplateDAO.CanPlaceInSlot((ItemTypeEnum)item.Template.Type, slot))
                 {
                     base.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
                     return;
                 }
 
                 // level required
-                if (Entity.Level < item.GetTemplate().Level)
+                if (Entity.Level < item.Template.Level)
                 {
                     base.Dispatch(WorldMessage.OBJECT_MOVE_ERROR_REQUIRED_LEVEL());
                     return;
@@ -155,7 +155,7 @@ namespace Codebreak.Service.World.Game.Entity
                 newItem.SlotId = (int)slot;
                 AddItem(newItem, false);
 
-                Entity.Statistics.Merge(newItem.GetStatistics());
+                Entity.Statistics.Merge(newItem.Statistics);
 
                 Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
 
@@ -182,11 +182,11 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 m_entityLookCache = new StringBuilder();
 
-                var weapon = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_WEAPON);
-                var hat = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_HAT);
-                var cape = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_CAPE);
-                var pet = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_PET);
-                var shield = Items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_SHIELD);
+                var weapon = Items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_WEAPON);
+                var hat = Items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_HAT);
+                var cape = Items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_CAPE);
+                var pet = Items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_PET);
+                var shield = Items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_SHIELD);
 
                 if (weapon != null)
                     m_entityLookCache.Append(weapon.TemplateId.ToString("x"));
@@ -206,7 +206,6 @@ namespace Codebreak.Service.World.Game.Entity
 
                 m_entityLookRefresh = false;
             }
-
             message.Append(m_entityLookCache.ToString());
         }
     }

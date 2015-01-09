@@ -79,7 +79,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return Grade.GetTemplate().GfxId;
+                return Grade.Template.GfxId;
             }
             set { }
         }
@@ -154,7 +154,7 @@ namespace Codebreak.Service.World.Game.Entity
             message.Append((int)EntityTypeEnum.TYPE_MONSTER_FIGHTER).Append(';');
             message.Append(Skin).Append('^').Append(SkinSize).Append(';');
             message.Append(Grade.Grade).Append(';');
-            message.Append(Grade.GetTemplate().Colors.Replace(",", ";"));
+            message.Append(Grade.Template.Colors.Replace(",", ";"));
             message.Append(";0,0,0,0;");
             message.Append(Life).Append(';');
             message.Append(AP).Append(';');

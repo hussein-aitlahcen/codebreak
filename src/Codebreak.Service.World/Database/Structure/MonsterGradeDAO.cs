@@ -123,16 +123,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        private MonsterDAO _template;
+        private MonsterDAO m_template;
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public MonsterDAO GetTemplate()
+        public MonsterDAO Template
         {
-            if (_template == null)
-                _template = MonsterRepository.Instance.GetById(MonsterId);
-            return _template;
+            get
+            {
+                if (m_template == null)
+                    m_template = MonsterRepository.Instance.GetById(MonsterId);
+                return m_template;
+            }
         }
     }
 }

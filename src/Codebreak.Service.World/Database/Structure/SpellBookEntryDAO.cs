@@ -62,31 +62,35 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
-        private SpellTemplate _template;
-        private SpellLevel _level;
+        private SpellTemplate m_template;
+        private SpellLevel m_level;
 
         /// <summary>
         /// 
         /// </summary>
-        public SpellTemplate GetTemplate()
+        [Write(false)]
+        public SpellTemplate Template
         {
-            if (_template == null)
+            get
             {
-                _template = SpellManager.Instance.GetTemplate(SpellId);
+                if (m_template == null)                
+                    m_template = SpellManager.Instance.GetTemplate(SpellId);                
+                return m_template;
             }
-            return _template;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public SpellLevel GetSpellLevel()
+        [Write(false)]
+        public SpellLevel SpellLevel
         {
-            if (_level == null || Level != _level.Level)
+            get
             {
-                _level = GetTemplate().GetLevel(Level);
+                if (m_level == null || Level != m_level.Level)
+                    m_level = Template.GetLevel(Level);
+                return m_level;
             }
-            return _level;
         }
     }
 }

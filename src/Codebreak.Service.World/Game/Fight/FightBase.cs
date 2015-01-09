@@ -187,7 +187,7 @@ namespace Codebreak.Service.World.Game.Fight
                     if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                     {
                         m_message.Append(character.AlignmentExperienceFloorCurrent).Append(';');
-                        m_message.Append(character.CharacterAlignment.Honour).Append(';');
+                        m_message.Append(character.Alignment.Honour).Append(';');
                         m_message.Append(character.AlignmentExperienceFloorNext).Append(';');
                         m_message.Append(honour).Append(';');
                         m_message.Append(character.AlignmentLevel).Append(';');
@@ -1716,7 +1716,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public bool CanUseWeapon(FighterBase fighter, InventoryItemDAO weapon, int cellId)
         {
-            var template = weapon.GetTemplate();
+            var template = weapon.Template;
 
             if (LoopState != FightLoopStateEnum.STATE_WAIT_TURN)
             {
@@ -1786,7 +1786,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return;
                     }
                     
-                    var weapon = fighter.Inventory.Items.Find(item => item.GetSlot() == ItemSlotEnum.SLOT_WEAPON);
+                    var weapon = fighter.Inventory.Items.Find(item => item.Slot == ItemSlotEnum.SLOT_WEAPON);
 
                     if(weapon == null)
                     {
@@ -1801,7 +1801,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return;
                     }
 
-                    var weaponTemplate = weapon.GetTemplate();
+                    var weaponTemplate = weapon.Template;
 
                     CurrentFighter.Team.CheckWeapon(fighter, weaponTemplate);
 
@@ -1852,7 +1852,7 @@ namespace Codebreak.Service.World.Game.Fight
                     if(criticalHit)                   
                         base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
 
-                    var effects = weaponTemplate.GetWeaponEffects();
+                    var effects = weaponTemplate.WeaponEffects;
                     var targetLists = new List<Tuple<Tuple<EffectEnum, int, int>, List<FighterBase>>>();
 
                     foreach (var effect in effects)

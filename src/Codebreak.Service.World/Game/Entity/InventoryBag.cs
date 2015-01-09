@@ -127,7 +127,7 @@ namespace Codebreak.Service.World.Game.Entity
                     entry.StringEffects == item.StringEffects && 
                     entry.Id != item.Id &&
                     entry.SlotId == item.SlotId &&
-                    !InventoryItemDAO.IsEquipedSlot(entry.GetSlot()));
+                    !InventoryItemDAO.IsEquipedSlot(entry.Slot));
             
             if(sameItem != null)
             {
@@ -163,7 +163,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public bool IsEquipedOf(long guid, int templateId)
         {
-            return Items.Any(item => item.Id != guid && item.IsEquiped() && item.TemplateId == templateId);
+            return Items.Any(item => item.Id != guid && item.IsEquiped && item.TemplateId == templateId);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public bool HasTemplateEquiped(int templateId)
         {
-            return Items.Any(item => item.TemplateId == templateId && item.IsEquiped());
+            return Items.Any(item => item.TemplateId == templateId && item.IsEquiped);
         }
                
         /// <summary>

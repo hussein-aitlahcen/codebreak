@@ -71,6 +71,16 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        public void EntityRemoved(int type, long id)
+        {
+            m_dataObjects.RemoveAll(item => item.OwnerType == type && item.OwnerId == id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override void UpdateAll()
         {         
             lock(m_syncLock)    

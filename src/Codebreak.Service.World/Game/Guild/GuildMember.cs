@@ -52,11 +52,11 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return m_character.GetCharacterGuild().GuildId;
+                return m_character.Guild.GuildId;
             }
             set
             {
-                m_character.GetCharacterGuild().GuildId = value;
+                m_character.Guild.GuildId = value;
             }
         }
 
@@ -78,11 +78,11 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return m_character.GetCharacterGuild().XPGiven;
+                return m_character.Guild.XPGiven;
             }
             set
             {
-                m_character.GetCharacterGuild().XPGiven = value;
+                m_character.Guild.XPGiven = value;
             }
         }
 
@@ -93,11 +93,11 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return m_character.GetCharacterGuild().XPSharePercent;
+                return m_character.Guild.XPSharePercent;
             }
             set
             {
-                m_character.GetCharacterGuild().XPSharePercent = value;
+                m_character.Guild.XPSharePercent = value;
             }
         }
 
@@ -108,11 +108,11 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return m_character.GetCharacterGuild().Power;
+                return m_character.Guild.Power;
             }
             set
             {
-                m_character.GetCharacterGuild().Power = value;
+                m_character.Guild.Power = value;
             }
         }
 
@@ -123,11 +123,11 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return (GuildRankEnum)m_character.GetCharacterGuild().Rank;
+                return (GuildRankEnum)m_character.Guild.Rank;
             }
             set
             {
-                m_character.GetCharacterGuild().Rank = (int)value;
+                m_character.Guild.Rank = (int)value;
             }
         }
 
@@ -451,7 +451,7 @@ namespace Codebreak.Service.World.Game.Guild
                 message.Append("1").Append(";");            
             else            
                 message.Append("0").Append(";");           
-            message.Append(m_character.GetCharacterAlignment().AlignmentId).Append(";");
+            message.Append(m_character.Alignment.AlignmentId).Append(";");
             message.Append("-1").Append('|');
         }
 
@@ -465,9 +465,9 @@ namespace Codebreak.Service.World.Game.Guild
             message.Append(m_character.Name).Append(';');
             message.Append(m_character.Skin).Append(';');
             message.Append(m_character.Level).Append(';');
-            message.Append(m_character.GetHexColor1()).Append(';');
-            message.Append(m_character.GetHexColor2()).Append(';');
-            message.Append(m_character.GetHexColor3());
+            message.Append(m_character.HexColor1).Append(';');
+            message.Append(m_character.HexColor2).Append(';');
+            message.Append(m_character.HexColor3);
         }
     }
 }

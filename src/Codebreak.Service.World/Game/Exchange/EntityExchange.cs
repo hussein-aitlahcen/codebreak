@@ -86,7 +86,7 @@ namespace Codebreak.Service.World.Game.Exchange
             if (quantity > item.Quantity)
                 quantity = item.Quantity;
 
-            if (item != null && item.GetSlot() == ItemSlotEnum.SLOT_INVENTORY)
+            if (item != null && item.Slot == ItemSlotEnum.SLOT_INVENTORY)
             {
                 var alreadyExchangedQuantity = GetQuantity(entity, guid);
                 if (alreadyExchangedQuantity > 0)

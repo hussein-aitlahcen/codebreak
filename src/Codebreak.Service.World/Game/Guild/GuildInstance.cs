@@ -107,7 +107,7 @@ namespace Codebreak.Service.World.Game.Guild
         {
             get
             {
-                return m_record.GetStatistics();
+                return m_record.Statistics;
             }
         }
 
@@ -251,7 +251,7 @@ namespace Codebreak.Service.World.Game.Guild
             m_members = new List<GuildMember>();
             m_taxCollectors = new List<TaxCollectorEntity>();
             m_taxCollectorDispatcher = new MessageDispatcher();
-            foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.GetCharacterGuild().GuildId == m_record.Id))
+            foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.Guild.GuildId == m_record.Id))
             {
                 AddMember(new GuildMember(this, character));
             }

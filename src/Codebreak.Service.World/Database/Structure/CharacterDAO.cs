@@ -352,69 +352,73 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         #region Unmapped
-        public string GetHexColor1()
+
+        private CharacterAlignmentDAO m_alignment;
+        private CharacterGuildDAO m_guild;
+
+        [Write(false)]
+        public string HexColor1
         {
-            if (Color1 == -1)
-                return "-1";
-            return Color1.ToString("x");
-        }
-        public string GetHexColor2()
-        {
-            if (Color2 == -1)
-                return "-1";
-            return Color2.ToString("x");
+            get
+            {
+                if (Color1 == -1)
+                    return "-1";
+                return Color1.ToString("x");
+            }
         }
 
-        public string GetHexColor3()
+        [Write(false)]
+        public string HexColor2
         {
-            if (Color3 == -1)
-                return "-1";
-            return Color3.ToString("x");
+            get
+            {
+                if (Color2 == -1)
+                    return "-1";
+                return Color2.ToString("x");
+            }
         }
 
-        private CharacterAlignmentDAO _alignment;
-        public CharacterAlignmentDAO GetCharacterAlignment()
+        [Write(false)]
+        public string HexColor3
         {
-            if (_alignment == null)
-                _alignment = CharacterAlignmentRepository.Instance.GetById(Id);
-            return _alignment;
+            get
+            {
+                if (Color3 == -1)
+                    return "-1";
+                return Color3.ToString("x");
+            }
         }
 
-        private CharacterGuildDAO _guild;
-        public CharacterGuildDAO GetCharacterGuild()
+        [Write(false)]
+        public CharacterAlignmentDAO Alignment
         {
-            if (_guild == null)
-                _guild = CharacterGuildRepository.Instance.GetById(Id);
-            return _guild;
+            get
+            {
+                if (m_alignment == null)
+                    m_alignment = CharacterAlignmentRepository.Instance.GetById(Id);
+                return m_alignment;
+            }
         }
 
-        private List<InventoryItemDAO> _items;
-        public List<InventoryItemDAO> GetItems()
+        [Write(false)]
+        public CharacterGuildDAO Guild
         {
-            if (_items == null)                      
-                _items = new List<InventoryItemDAO>(InventoryItemRepository.Instance.GetByOwner((int)EntityTypeEnum.TYPE_CHARACTER, Id));            
-            return _items;
+            get
+            {
+                if (m_guild == null)
+                    m_guild = CharacterGuildRepository.Instance.GetById(Id);
+                return m_guild;
+            }
         }
-
-        public InventoryItemDAO GetItemInSlot(ItemSlotEnum slot)
-        {
-            if (slot == ItemSlotEnum.SLOT_INVENTORY)
-                return null;
-            foreach (var item in GetItems())
-                if (item.SlotId == (int)slot)
-                    return item;
-            return null;
-        }
-
+           
         public void SerializeAs_ActorLookMessage(StringBuilder message)
         {
-            var items = GetItems();
-            var weapon = items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_WEAPON);
-            var hat = items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_HAT);
-            var cape = items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_CAPE);
-            var pet = items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_PET);
-            var shield = items.Find(entry => entry.GetSlot() == ItemSlotEnum.SLOT_SHIELD);
-
+            var items = new List<InventoryItemDAO>(InventoryItemRepository.Instance.GetByOwner((int)EntityTypeEnum.TYPE_CHARACTER, Id));
+            var weapon = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_WEAPON);
+            var hat = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_HAT);
+            var cape = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_CAPE);
+            var pet = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_PET);
+            var shield = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_SHIELD);
             if (weapon != null)
                 message.Append(weapon.TemplateId.ToString("x"));
             message.Append(',');

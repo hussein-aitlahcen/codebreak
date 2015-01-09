@@ -39,6 +39,15 @@ namespace Codebreak.RPC.Protocol
         /// <summary>
         /// 
         /// </summary>
+        public string Pseudo
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Power
         {
             get;
@@ -91,10 +100,11 @@ namespace Codebreak.RPC.Protocol
         /// <param name="lastConnection"></param>
         /// <param name="lastIp"></param>
         /// <param name="ticket"></param>
-        public GameTicketMessage(long accountId, string name, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
+        public GameTicketMessage(long accountId, string name, string pseudo, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
         {
             AccountId = accountId;
             Name = name;
+            Pseudo = pseudo;
             Power = power;
             RemainingSubscription = remainingSub;
             LastConnectionDate = lastConnection;
@@ -116,6 +126,7 @@ namespace Codebreak.RPC.Protocol
         {
             AccountId = base.ReadLong();
             Name = base.ReadString();
+            Pseudo = base.ReadString();
             Power = base.ReadInt();
             RemainingSubscription = base.ReadLong();
             LastConnectionDate = base.ReadLong();
@@ -130,6 +141,7 @@ namespace Codebreak.RPC.Protocol
         {
             base.WriteLong(AccountId);
             base.WriteString(Name);
+            base.WriteString(Pseudo);
             base.WriteInt(Power);
             base.WriteLong(RemainingSubscription);
             base.WriteLong(LastConnectionDate);

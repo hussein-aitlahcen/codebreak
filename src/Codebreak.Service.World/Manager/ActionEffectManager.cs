@@ -53,7 +53,7 @@ namespace Codebreak.Service.World.Manager
 
             if (item.StringEffects != string.Empty)
             {
-                foreach (var effect in item.GetStatistics().GetEffects())
+                foreach (var effect in item.Statistics.GetEffects())
                 {
                     if (m_effectById.ContainsKey(effect.Key))
                     {
@@ -63,9 +63,9 @@ namespace Codebreak.Service.World.Manager
             }
             else
             {
-                if (m_effectByType.ContainsKey((ItemTypeEnum)item.GetTemplate().Type))
+                if (m_effectByType.ContainsKey((ItemTypeEnum)item.Template.Type))
                 {
-                    foreach(var effect in m_effectByType[(ItemTypeEnum)item.GetTemplate().Type])
+                    foreach(var effect in m_effectByType[(ItemTypeEnum)item.Template.Type])
                     {
                         effect.ProcessItem(entity, item, null, targetId, targetCell);
                     }

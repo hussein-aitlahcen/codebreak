@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (monsterTemplate == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            var monsterGrade = monsterTemplate.GetGrades().FirstOrDefault(grade => grade.Grade == castInfos.Value2);
+            var monsterGrade = monsterTemplate.Grades.FirstOrDefault(grade => grade.Grade == castInfos.Value2);
             if (monsterGrade == null)
                 return FightActionResultEnum.RESULT_NOTHING;
 

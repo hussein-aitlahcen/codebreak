@@ -234,11 +234,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return CharacterAlignment.AlignmentId;
+                return Alignment.AlignmentId;
             }
             set
             {
-                CharacterAlignment.AlignmentId = value;
+                Alignment.AlignmentId = value;
             }
         }
 
@@ -249,11 +249,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return CharacterAlignment.Honour;
+                return Alignment.Honour;
             }
             set
             {
-                CharacterAlignment.Honour = value;
+                Alignment.Honour = value;
             }
         }
 
@@ -264,11 +264,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return CharacterAlignment.Dishonour;
+                return Alignment.Dishonour;
             }
             set
             {
-                CharacterAlignment.Dishonour = value;
+                Alignment.Dishonour = value;
             }
         }
         
@@ -279,11 +279,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return CharacterAlignment.Level;
+                return Alignment.Level;
             }
             set
             {
-                CharacterAlignment.Level = value;
+                Alignment.Level = value;
             }
         }
 
@@ -294,11 +294,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return CharacterAlignment.Promotion;
+                return Alignment.Promotion;
             }
             set
             {
-                CharacterAlignment.Promotion = value;
+                Alignment.Promotion = value;
             }
         }
 
@@ -309,11 +309,11 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return CharacterAlignment.Enabled;
+                return Alignment.Enabled;
             }
             set
             {
-                CharacterAlignment.Enabled = value;
+                Alignment.Enabled = value;
             }
         }
 
@@ -390,7 +390,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return DatabaseRecord.GetHexColor1();
+                return DatabaseRecord.HexColor1;
             }
         }
 
@@ -401,7 +401,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return DatabaseRecord.GetHexColor2();
+                return DatabaseRecord.HexColor2;
             }
         }
 
@@ -412,7 +412,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return DatabaseRecord.GetHexColor3();
+                return DatabaseRecord.HexColor3;
             }
         }
 
@@ -510,7 +510,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public GuildMember CharacterGuild
+        public GuildMember GuildMember
         {
             get;
             private set;
@@ -519,7 +519,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public CharacterAlignmentDAO CharacterAlignment
+        public CharacterAlignmentDAO Alignment
         {
             get;
             private set;
@@ -615,7 +615,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public int Power
+        public AccountTicket Account
         {
             get;
             set;
@@ -705,6 +705,46 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<SocialRelationDAO> Friends
+        {
+            get
+            {
+                return Relations.Where(relation => relation.Type == SocialRelationTypeEnum.TYPE_FRIEND);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<SocialRelationDAO> Ennemies
+        {
+            get
+            {
+                return Relations.Where(relation => relation.Type == SocialRelationTypeEnum.TYPE_ENNEMY);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<SocialRelationDAO> Relations
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool NotifyOnFriendConnection
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected string m_guildDisplayInfos;
         protected long m_lastRegenTime;
 
@@ -713,18 +753,19 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
-        public CharacterEntity(int power, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
+        public CharacterEntity(AccountTicket account, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
             : base(type, characterDAO.Id)
         {
             DatabaseRecord = characterDAO;
-            CharacterAlignment = characterDAO.GetCharacterAlignment();
-                     
-            Power = power;
+            Alignment = characterDAO.Alignment;
+
+            Account = account;
             PartyId = -1;
             PartyInvitedPlayerId = -1;
             PartyInviterPlayerId = -1;
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
+            NotifyOnFriendConnection = true;
 
             m_lastRegenTime = -1;
 
@@ -736,18 +777,27 @@ namespace Codebreak.Service.World.Game.Entity
             Inventory = new CharacterInventory(this);
             Bank = BankManager.Instance.GetBankByAccountId(AccountId);
             PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, Id);
+            Relations = SocialRelationRepository.Instance.GetByAccountId(AccountId);
+
             RefreshPersonalShopTaxe();
             
-            var guildMember = GuildManager.Instance.GetMember(characterDAO.GetCharacterGuild().GuildId, Id);
-            if (guildMember != null)
+            var guildMember = GuildManager.Instance.GetMember(characterDAO.Guild.GuildId, Id);
+            if (guildMember != null)            
+                guildMember.CharacterConnected(this);            
+
+            base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
+            base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
+
+            foreach(var friend in Friends)
             {
-                guildMember.CharacterConnected(this);
+                var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+                if (characterFriend != null && characterFriend.NotifyOnFriendConnection && characterFriend.Friends.Any(f => f.Pseudo == account.Pseudo))
+                {
+                    characterFriend.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FRIEND_ONLINE, Name));
+                }
             }
-
-            SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
-            SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -884,7 +934,7 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             }
 
-            var currentLevel = CharacterAlignment.Level;
+            var currentLevel = Alignment.Level;
             Honour += value;
 
             while (AlignmentExperienceFloorNext != -1 && Honour >= AlignmentExperienceFloorNext)
@@ -936,7 +986,7 @@ namespace Codebreak.Service.World.Game.Entity
             
             if(Dishonour > 0)
             {
-                Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unabled to disable your alignment because you are dishonored."));
+                Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -1030,9 +1080,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void SetCharacterGuild(GuildMember characterGuild)
         {
-            CharacterGuild = characterGuild;
-            if (CharacterGuild != null)
-                m_guildDisplayInfos = CharacterGuild.Guild.Name + ";" + CharacterGuild.Guild.DisplayEmblem;            
+            GuildMember = characterGuild;
+            if (GuildMember != null)
+                m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;            
             else
                 m_guildDisplayInfos = null;            
         }
@@ -1052,9 +1102,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="message"></param>
         public void DispatchGuildMessage(string message)
         {
-            if(CharacterGuild != null)
+            if(GuildMember != null)
             {
-                CharacterGuild.Guild.SafeDispatch(message);
+                GuildMember.Guild.SafeDispatch(message);
             }
         }
                 
@@ -1585,8 +1635,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override void Dispose()
         {
-            CharacterGuild = null;
-            CharacterAlignment = null;
+            GuildMember = null;
+            Alignment = null;
 
             FrameManager.Dispose();
             FrameManager = null;

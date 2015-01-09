@@ -44,11 +44,15 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
-        public MapInstance GetMap()
+        [Write(false)]
+        public MapInstance Map
         {
-            if (m_mapInstance == null)
-                m_mapInstance = MapManager.Instance.GetById(MapId);
-            return m_mapInstance;
+            get
+            {
+                if (m_mapInstance == null)
+                    m_mapInstance = MapManager.Instance.GetById(MapId);
+                return m_mapInstance;
+            }
         }
     }
 }

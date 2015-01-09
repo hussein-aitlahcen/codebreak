@@ -56,7 +56,7 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
-        private Dictionary<int, MonsterGradeDAO> _monsterGrades = new Dictionary<int, MonsterGradeDAO>();
+        private Dictionary<int, MonsterGradeDAO> m_monsterGrades = new Dictionary<int, MonsterGradeDAO>();
 
         /// <summary>
         /// 
@@ -64,16 +64,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="grade"></param>
         public void AddGrade(MonsterGradeDAO grade)
         {
-            _monsterGrades.Add(grade.Grade, grade);
+            m_monsterGrades.Add(grade.Grade, grade);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<MonsterGradeDAO> GetGrades()
+        public IEnumerable<MonsterGradeDAO> Grades
         {
-            return _monsterGrades.Values;
+            get
+            {
+                return m_monsterGrades.Values;
+            }
         }
     }
 }

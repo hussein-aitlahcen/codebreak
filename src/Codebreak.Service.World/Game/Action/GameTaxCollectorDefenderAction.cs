@@ -55,10 +55,10 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="args"></param>
         public override void Stop(params object[] args)
         {           
-            if (Character.CharacterGuild != null)
+            if (Character.GuildMember != null)
             {
-                Character.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_LEAVE(Character.CharacterGuild.TaxCollectorJoinedId, Character.Id));
-                Character.CharacterGuild.TaxCollectorLeave();
+                Character.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_LEAVE(Character.GuildMember.TaxCollectorJoinedId, Character.Id));
+                Character.GuildMember.TaxCollectorLeave();
             }
             base.Stop(args);   
         }

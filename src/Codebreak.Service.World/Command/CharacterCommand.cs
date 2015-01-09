@@ -361,7 +361,7 @@ namespace Codebreak.Service.World.Command
                         return;
                     }
 
-                    if(character.Power >= context.Character.Power)
+                    if (character.Account.Power >= context.Character.Account.Power)
                     {
                         context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("This player is a god, god cannot be kicked. In addition, he will be noticed."));
                         character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Player " + context.Character.Name + " tried to kick you."));

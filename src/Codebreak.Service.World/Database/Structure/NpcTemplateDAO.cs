@@ -247,27 +247,6 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         private List<RewardEntry> m_rewards;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public List<RewardEntry> GetRewards()
-        {
-            if(m_rewards == null)
-            {
-                m_rewards = new List<RewardEntry>();
-                if(Exchange != "-1")
-                {
-                    foreach(var reward in Exchange.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        m_rewards.Add(new RewardEntry(reward));
-                    }
-                }
-            }
-            return m_rewards;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -277,22 +256,49 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<ItemTemplateDAO> GetShopList()
+        [Write(false)]
+        public List<RewardEntry> Rewards
         {
-            if (m_templatesToSell == null)
+            get
             {
-                m_templatesToSell = new List<ItemTemplateDAO>();
-                if (Sell != "" && Sell != "-1")
+                if(m_rewards == null)
                 {
-                    foreach (var templateId in Sell.Split(','))
+                    m_rewards = new List<RewardEntry>();
+                    if(Exchange != "-1")
                     {
-                        var template = ItemTemplateRepository.Instance.GetById(int.Parse(templateId));
-                        if (template != null)
-                            m_templatesToSell.Add(template);
+                        foreach(var reward in Exchange.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            m_rewards.Add(new RewardEntry(reward));
+                        }
                     }
                 }
+                return m_rewards;
             }
-            return m_templatesToSell;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<ItemTemplateDAO> ShopList
+        {
+            get
+            {
+                if (m_templatesToSell == null)
+                {
+                    m_templatesToSell = new List<ItemTemplateDAO>();
+                    if (Sell != "" && Sell != "-1")
+                    {
+                        foreach (var templateId in Sell.Split(','))
+                        {
+                            var template = ItemTemplateRepository.Instance.GetById(int.Parse(templateId));
+                            if (template != null)
+                                m_templatesToSell.Add(template);
+                        }
+                    }
+                }
+                return m_templatesToSell;
+            }
         }
     }
 }

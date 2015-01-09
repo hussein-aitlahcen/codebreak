@@ -74,7 +74,7 @@ namespace Codebreak.Service.Auth.Frames
 
             client.Ticket = ticket;
 
-            world.Send(new GameTicketMessage(client.Account.Id, client.Account.Name, client.Account.Power, client.Account.RemainingSubscription.ToBinary(), client.Account.LastConnectionDate.ToBinary(), client.Account.LastConnectionIP, ticket));
+            world.Send(new GameTicketMessage(client.Account.Id, client.Account.Name, client.Account.Pseudo, client.Account.Power, client.Account.RemainingSubscription.ToBinary(), client.Account.LastConnectionDate.ToBinary(), client.Account.LastConnectionIP, ticket));
 
             AuthService.Instance.AddMessage(() =>
             {

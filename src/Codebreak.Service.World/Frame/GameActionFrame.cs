@@ -292,7 +292,7 @@ namespace Codebreak.Service.World.Frame
             }
 
             var taxCollector = distantEntity as TaxCollectorEntity;
-            if(character.CharacterGuild != null && character.CharacterGuild.GuildId == taxCollector.Guild.Id)
+            if(character.GuildMember != null && character.GuildMember.GuildId == taxCollector.Guild.Id)
             {
                 character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You cannot aggro your own taxcollector."));
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());

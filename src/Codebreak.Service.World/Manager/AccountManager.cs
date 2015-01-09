@@ -16,6 +16,7 @@ namespace Codebreak.Service.World.Manager
     {
         public long Id;
         public string Name;
+        public string Pseudo;
         public int Power;
         public DateTime RemainingSubscription;
         public DateTime LastConnectionTime;
@@ -60,12 +61,13 @@ namespace Codebreak.Service.World.Manager
         /// <param name="lastConnection"></param>
         /// <param name="lastIp"></param>
         /// <param name="ticket"></param>
-        public void AddTicket(long accountId, string name, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
+        public void AddTicket(long accountId, string name, string pseudo, int power, long remainingSub, long lastConnection, string lastIp, string ticket)
         {
             Logger.Info("GameTicket : account=" + name + " ticket=" + ticket);
             WorldService.Instance.AddMessage(() => m_accountByTicket.Add(ticket, new AccountTicket()
             { 
                 Id = accountId,
+                Pseudo = pseudo,
                 Name = name,
                 RemainingSubscription = new DateTime(remainingSub),
                 Power = power,

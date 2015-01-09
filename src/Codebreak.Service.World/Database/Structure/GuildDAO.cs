@@ -103,16 +103,21 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        private GuildStatistics _statistics;
+        private GuildStatistics m_statistics;
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public GuildStatistics GetStatistics()
+        [Write(false)]
+        public GuildStatistics Statistics
         {
-            if (_statistics == null)
-                _statistics = GuildStatistics.Deserialize(Stats);
-            return _statistics;
+            get
+            {
+                if (m_statistics == null)
+                    m_statistics = GuildStatistics.Deserialize(Stats);
+                return m_statistics;
+            }
         }
 
         /// <summary>
@@ -120,8 +125,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         public override void OnBeforeUpdate()
         {
-            if (_statistics != null)
-                Stats = _statistics.Serialize();
+            if (m_statistics != null)
+                Stats = m_statistics.Serialize();
         }
     }
 }

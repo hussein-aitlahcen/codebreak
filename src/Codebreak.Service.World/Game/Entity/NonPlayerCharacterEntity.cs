@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return "Npc_" + m_npcRecord.GetTemplate().Id + "_" + Id;
+                return "Npc_" + m_npcRecord.Template.Id + "_" + Id;
             }
         }
 
@@ -102,9 +102,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                if (m_npcRecord.GetTemplate().Color3 == -1)
+                if (m_npcRecord.Template.Color3 == -1)
                     return "-1";
-                return m_npcRecord.GetTemplate().Color3.ToString("x");
+                return m_npcRecord.Template.Color3.ToString("x");
             }
         }
 
@@ -115,9 +115,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                if (m_npcRecord.GetTemplate().Color3 == -1)
+                if (m_npcRecord.Template.Color3 == -1)
                     return "-1";
-                return m_npcRecord.GetTemplate().Color3.ToString("x");
+                return m_npcRecord.Template.Color3.ToString("x");
             }
         }
 
@@ -128,9 +128,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                if (m_npcRecord.GetTemplate().Color3 == -1)
+                if (m_npcRecord.Template.Color3 == -1)
                     return "-1";
-                return m_npcRecord.GetTemplate().Color3.ToString("x");
+                return m_npcRecord.Template.Color3.ToString("x");
             }
         }
 
@@ -208,10 +208,10 @@ namespace Codebreak.Service.World.Game.Entity
             Orientation = m_npcRecord.Orientation;
 
             Rewards = new List<RewardEntry>();
-            Rewards.AddRange(npcDAO.GetTemplate().GetRewards());
+            Rewards.AddRange(npcDAO.Template.Rewards);
 
             ShopItems = new List<ItemTemplateDAO>();
-            ShopItems.AddRange(npcDAO.GetTemplate().GetShopList());
+            ShopItems.AddRange(npcDAO.Template.ShopList);
         }
         
         /// <summary>
@@ -261,14 +261,14 @@ namespace Codebreak.Service.World.Game.Entity
                 m_cachedEntityMapInformations.Append(Id).Append(';');
                 m_cachedEntityMapInformations.Append(m_npcRecord.TemplateId).Append(';');
                 m_cachedEntityMapInformations.Append((int)EntityTypeEnum.TYPE_NPC).Append(';');
-                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().GfxID).Append('^');
-                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().ScaleX).Append(';'); // size
-                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().Sex).Append(';');
+                m_cachedEntityMapInformations.Append(m_npcRecord.Template.GfxID).Append('^');
+                m_cachedEntityMapInformations.Append(m_npcRecord.Template.ScaleX).Append(';'); // size
+                m_cachedEntityMapInformations.Append(m_npcRecord.Template.Sex).Append(';');
                 m_cachedEntityMapInformations.Append(HexColor1 + ';' + HexColor2 + ';' + HexColor3).Append(';');
-                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().EntityLook);
+                m_cachedEntityMapInformations.Append(m_npcRecord.Template.EntityLook);
                 m_cachedEntityMapInformations.Append(';');
                 m_cachedEntityMapInformations.Append("").Append(';'); // ExtraClip
-                m_cachedEntityMapInformations.Append(m_npcRecord.GetTemplate().CustomArtwork);
+                m_cachedEntityMapInformations.Append(m_npcRecord.Template.CustomArtwork);
             }
 
             message.Append(m_cachedEntityMapInformations);

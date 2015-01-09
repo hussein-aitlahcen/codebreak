@@ -346,7 +346,7 @@ namespace Codebreak.Service.World.Game.Fight
                     if (taxCollector == null)
                         return false;
 
-                    if(character.CharacterGuild != null && character.CharacterGuild.GuildId == taxCollector.Guild.Id)
+                    if(character.GuildMember != null && character.GuildMember.GuildId == taxCollector.Guild.Id)
                     {
                         character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("You can't take part in a fight against your own TaxCollector."));
                         return false;
@@ -355,7 +355,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 case FightTypeEnum.TYPE_AGGRESSION:
                     var leader = (CharacterEntity)GetFighter(LeaderId);
-                    return leader.CharacterAlignment.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.CharacterAlignment.AlignmentId == leader.CharacterAlignment.AlignmentId;
+                    return leader.Alignment.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.Alignment.AlignmentId == leader.Alignment.AlignmentId;
             }
 
             return true;

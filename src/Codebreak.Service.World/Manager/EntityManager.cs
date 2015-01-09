@@ -20,6 +20,7 @@ namespace Codebreak.Service.World.Manager
 
         private Dictionary<long, CharacterEntity> m_characterById;
         private Dictionary<long, CharacterEntity> m_characterByAccount;
+        private Dictionary<string, CharacterEntity> m_characterByPseudo;
         private Dictionary<string, CharacterEntity> m_characterByName;
 
         private Dictionary<long, NonPlayerCharacterEntity> m_npcById;
@@ -47,6 +48,7 @@ namespace Codebreak.Service.World.Manager
             m_characterById = new Dictionary<long, CharacterEntity>();
             m_characterByAccount = new Dictionary<long, CharacterEntity>();
             m_characterByName = new Dictionary<string, CharacterEntity>();
+            m_characterByPseudo = new Dictionary<string, CharacterEntity>();
 
             m_npcById = new Dictionary<long, NonPlayerCharacterEntity>();
 
@@ -58,13 +60,9 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            foreach(var character in CharacterRepository.Instance.GetAll())
-            {
-                if(character.Merchant)
-                {
+            foreach(var character in CharacterRepository.Instance.GetAll())            
+                if(character.Merchant)                
                     EntityManager.Instance.CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
-                }
-            }
         }
 
         /// <summary>
@@ -109,17 +107,18 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         /// <param name="characterDAO"></param>
         /// <returns></returns>
-        public CharacterEntity CreateCharacter(int power, CharacterDAO characterDAO)
+        public CharacterEntity CreateCharacter(AccountTicket account, CharacterDAO characterDAO)
         {
             // Uniquement 1 marchant par compte par serveur
             var merchant = GetMerchantByAccount(characterDAO.AccountId);
             if(merchant != null)            
                 RemoveMerchant(merchant);
             
-            var character = new CharacterEntity(power, characterDAO);         
+            var character = new CharacterEntity(account, characterDAO);         
             m_characterById.Add(character.Id, character);
             m_characterByName.Add(character.Name.ToLower(), character);
             m_characterByAccount.Add(character.AccountId, character);
+            m_characterByPseudo.Add(account.Pseudo.ToLower(), character);
             OnlinePlayers++;
             Logger.Info("EntityManager online players : " + OnlinePlayers);            
             return character;
@@ -166,8 +165,8 @@ namespace Codebreak.Service.World.Manager
                     character.AbortAction(character.CurrentAction.Type, character.Id);
                 if (character.HasGameAction(GameActionTypeEnum.MAP))
                     character.AbortAction(GameActionTypeEnum.MAP);
-                if (character.CharacterGuild != null)
-                    character.CharacterGuild.CharacterDisconnected();
+                if (character.GuildMember != null)
+                    character.GuildMember.CharacterDisconnected();
 
                 RemoveCharacter(character);
 
@@ -219,6 +218,7 @@ namespace Codebreak.Service.World.Manager
                     m_characterById.Remove(character.Id);
                     m_characterByName.Remove(character.Name.ToLower());
                     m_characterByAccount.Remove(character.AccountId);
+                    m_characterByPseudo.Remove(character.Account.Pseudo.ToLower());
                     Logger.Info("EntityManager online players : " + OnlinePlayers);
                 });
         }
@@ -244,6 +244,19 @@ namespace Codebreak.Service.World.Manager
         {
             if (m_characterByAccount.ContainsKey(accountId))
                 return m_characterByAccount[accountId];
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public CharacterEntity GetCharacterByPseudo(string pseudo)
+        {
+            pseudo = pseudo.ToLower();
+            if (m_characterByPseudo.ContainsKey(pseudo))
+                return m_characterByPseudo[pseudo];
             return null;
         }
 

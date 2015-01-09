@@ -180,6 +180,7 @@ namespace Codebreak.Service.World.RPC
                         (
                             ticketMessage.AccountId,
                             ticketMessage.Name,
+                            ticketMessage.Pseudo,
                             ticketMessage.Power,
                             ticketMessage.RemainingSubscription,
                             ticketMessage.LastConnectionDate,

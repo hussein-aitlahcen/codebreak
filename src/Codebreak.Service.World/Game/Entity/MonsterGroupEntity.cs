@@ -137,14 +137,14 @@ namespace Codebreak.Service.World.Game.Entity
                 var template = MonsterRepository.Instance.GetById(random);
                 if (template != null)
                 {
-                    if(template.GetGrades().Count() > 0)
+                    if(template.Grades.Count() > 0)
                     {                        
-                        m_monsters.Add(new MonsterEntity(monsterId--, template.GetGrades().Last()));
+                        m_monsters.Add(new MonsterEntity(monsterId--, template.Grades.Last()));
                     }
                 }
             }
 
-            AggressionRange = m_monsters.Max(monster => monster.Grade.GetTemplate().AggressionRange);
+            AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             MapId = mapId;
             CellId = cellId;
         }
@@ -167,9 +167,9 @@ namespace Codebreak.Service.World.Game.Entity
                     if (m_serializedMapInformations == null)
                     {
                         string mobIds = string.Join(",", m_monsters.Select(monster => monster.Grade.MonsterId.ToString()));
-                        string mobGfxs = string.Join(",", m_monsters.Select(monster => monster.Grade.GetTemplate().GfxId + "^100"));
+                        string mobGfxs = string.Join(",", m_monsters.Select(monster => monster.Grade.Template.GfxId + "^100"));
                         string mobLevels = string.Join(",", m_monsters.Select(monster => monster.Grade.Level.ToString()));
-                        string mobColors = string.Join("", m_monsters.Select(monster => monster.Grade.GetTemplate().Colors + ";0,0,0,0;"));
+                        string mobColors = string.Join("", m_monsters.Select(monster => monster.Grade.Template.Colors + ";0,0,0,0;"));
 
                         m_serializedMapInformations = new StringBuilder();
                         m_serializedMapInformations.Append(Id).Append(";");

@@ -356,7 +356,7 @@ namespace Codebreak.Service.World.Frame
                 {
                     case EntityTypeEnum.TYPE_TAX_COLLECTOR:
                         var taxCollector = (TaxCollectorEntity)distantEntity;
-                        if (character.CharacterGuild == null || taxCollector.Guild.Id != character.CharacterGuild.GuildId)
+                        if (character.GuildMember == null || taxCollector.Guild.Id != character.GuildMember.GuildId)
                         {
                             character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                             return;

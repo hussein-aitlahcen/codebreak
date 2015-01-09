@@ -73,6 +73,8 @@ namespace Codebreak.Service.World.Network
         INFO_BASIC_LAST_CONNECTION = 152, // precedente connexion ...
         INFO_BASIC_CURRENT_IP = 153, // votre ip actuelle est ...   
 
+        INFO_FRIEND_ONLINE = 143,
+
         INFO_FIGHT_SPECTATOR_JOINED = 36,
         INFO_FIGHT_TOGGLE_PARTY = 93,
         INFO_FIGHT_UNTOGGLE_PARTY = 94,
@@ -357,9 +359,9 @@ namespace Codebreak.Service.World.Network
                     message.Append(';').Append(character.Name);
                     message.Append(';').Append(character.Level);
                     message.Append(';').Append(character.Skin);
-                    message.Append(';').Append(character.GetHexColor1());
-                    message.Append(';').Append(character.GetHexColor2());
-                    message.Append(';').Append(character.GetHexColor3());
+                    message.Append(';').Append(character.HexColor1);
+                    message.Append(';').Append(character.HexColor2);
+                    message.Append(';').Append(character.HexColor3);
                     message.Append(';');
                     character.SerializeAs_ActorLookMessage(message);
                     message.Append(';').Append(0); // merchant
@@ -2084,7 +2086,7 @@ namespace Codebreak.Service.World.Network
             {
                 var price = 0;
                 if(waypoint.MapId != character.MapId)
-                    price = 10 * (Math.Abs(waypoint.GetMap().X - character.Map.X) + Math.Abs(waypoint.GetMap().Y - character.Map.Y) - 1);
+                    price = 10 * (Math.Abs(waypoint.Map.X - character.Map.X) + Math.Abs(waypoint.Map.Y - character.Map.Y) - 1);
                 message.Append('|').Append(waypoint.MapId).Append(';').Append(price);
             }
             return message.ToString();
@@ -2201,6 +2203,137 @@ namespace Codebreak.Service.World.Network
         public static string LIFE_RESTORE_TIME_FINISH(int lifeRestored)
         {
             return "ILF" + lifeRestored;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string FRIEND_DELETE_SUCCESS()
+        {
+            return "FD";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ownerPseudo"></param>
+        /// <param name="friend"></param>
+        /// <returns></returns>
+        public static string FRIEND_ADD(string ownerPseudo, SocialRelationDAO friend)
+        {
+            var message = new StringBuilder("FA");
+            message.Append('|');
+            message.Append(friend.Pseudo);
+            var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+            if (characterFriend != null)
+            {
+                message.Append(';');
+                if (characterFriend.Friends.Any(f => f.Pseudo == ownerPseudo))
+                {
+                    if (characterFriend.HasGameAction(GameActionTypeEnum.FIGHT))
+                        message.Append('1').Append(';');
+                    else
+                        message.Append('?').Append(';');
+                    message.Append(characterFriend.Name).Append(';');
+                    message.Append(characterFriend.Level).Append(';');
+                    message.Append(characterFriend.AlignmentId).Append(';');
+                }
+                else
+                {
+                    message.Append("?;");
+                    message.Append(characterFriend.Name).Append(';'); // name
+                    message.Append("?;"); // level
+                    message.Append("-1;"); // align
+                }
+                if (characterFriend.GuildMember != null)
+                    message.Append(characterFriend.GuildMember.Guild.Name).Append(';');
+                else
+                    message.Append(';');
+                message.Append(characterFriend.Sex).Append(';');
+                message.Append(characterFriend.SkinBase);
+            }
+            return message.ToString();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string FRIEND_ADD_ERROR_UNKNOW_PLAYER()
+        {
+            return "FAEf";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string FRIEND_ADD_ERROR_ALREADY()
+        {
+            return "FAEa";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string FRIEND_ADD_ERROR_FULL()
+        {
+            return "FAEm";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string FRIEND_ADD_ERROR_YOURSELF()
+        {
+            return "FAEy";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="friends"></param>
+        /// <returns></returns>
+        public static string FRIENDS_LIST(string ownerPseudo, IEnumerable<SocialRelationDAO> friends)
+        {
+            var message = new StringBuilder("FL");
+            foreach(var friend in friends)
+            {
+                message.Append('|');
+                message.Append(friend.Pseudo);
+                var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+                if(characterFriend != null)
+                {
+                    message.Append(';');
+                    if(characterFriend.Friends.Any(f => f.Pseudo == ownerPseudo))
+                    {
+                        if (characterFriend.HasGameAction(GameActionTypeEnum.FIGHT))
+                            message.Append('1').Append(';');
+                        else
+                            message.Append('?').Append(';');
+                        message.Append(characterFriend.Name).Append(';');
+                        message.Append(characterFriend.Level).Append(';');
+                        message.Append(characterFriend.AlignmentId).Append(';');
+                    }
+                    else
+                    {
+                        message.Append("?;");
+                        message.Append(characterFriend.Name).Append(';'); // name
+                        message.Append("?;"); // level
+                        message.Append("-1;"); // align
+                    }
+                    if (characterFriend.GuildMember != null)
+                        message.Append(characterFriend.GuildMember.Guild.Name).Append(';');
+                    else
+                        message.Append(';');
+                    message.Append(characterFriend.Sex).Append(';');
+                    message.Append(characterFriend.SkinBase);
+                }
+            }
+            return message.ToString();
         }
     }
 }

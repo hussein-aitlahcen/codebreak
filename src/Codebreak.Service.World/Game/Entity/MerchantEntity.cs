@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
         public MerchantEntity(CharacterDAO characterDAO)
-            : base(0, characterDAO, EntityTypeEnum.TYPE_MERCHANT)
+            : base(null, characterDAO, EntityTypeEnum.TYPE_MERCHANT)
         {
             Buyers = new List<CharacterEntity>();    
         }

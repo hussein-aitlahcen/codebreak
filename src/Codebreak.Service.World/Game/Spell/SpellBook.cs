@@ -109,7 +109,7 @@ namespace Codebreak.Service.World.Game.Spell
         /// <summary>
         /// 
         /// </summary>
-        private static SpellLevel _basicFist = SpellManager.Instance.GetSpellLevel(0, 1);
+        private static SpellLevel m_basicFist = SpellManager.Instance.GetSpellLevel(0, 1);
 
         /// <summary>
         /// 
@@ -117,7 +117,7 @@ namespace Codebreak.Service.World.Game.Spell
         /// <returns></returns>
         public IEnumerable<SpellLevel> GetSpells()
         {
-            return m_spellById.Values.Select(entry => entry.GetSpellLevel());
+            return m_spellById.Values.Select(entry => entry.SpellLevel);
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace Codebreak.Service.World.Game.Spell
         public SpellLevel GetSpellLevel(int spellId)
         {
             if (spellId == 0)
-                return _basicFist;
+                return m_basicFist;
 
             if (HasSpell(spellId))
             {
-                return m_spellById[spellId].GetSpellLevel();
+                return m_spellById[spellId].SpellLevel;
             }
 
             return null;

@@ -86,6 +86,7 @@
     <Compile Include="Database\Repository\NpcQuestionRepository.cs" />
     <Compile Include="Database\Repository\NpcResponseRepository.cs" />
     <Compile Include="Database\Repository\NpcTemplateRepository.cs" />
+    <Compile Include="Database\Repository\SocialRelationRepository.cs" />
     <Compile Include="Database\Repository\SpellBookEntryRepository.cs" />
     <Compile Include="Database\Repository\TaxCollectorRepository.cs" />
     <Compile Include="Database\Structure\AreaDAO.cs" />
@@ -109,12 +110,14 @@
     <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
     <Compile Include="Database\Structure\NpcResponseDAO.cs" />
     <Compile Include="Database\Structure\NpcTemplateDAO.cs" />
+    <Compile Include="Database\Structure\SocialRelationDAO.cs" />
     <Compile Include="Database\Structure\SpellBookEntryDAO.cs" />
     <Compile Include="Database\Structure\SubAreaDAO.cs" />
     <Compile Include="Database\Structure\SuperAreaDAO.cs" />
     <Compile Include="Database\Structure\TaxCollectorDAO.cs" />
     <Compile Include="Database\WorldDbMgr.cs" />
     <Compile Include="Frame\NpcDialogFrame.cs" />
+    <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
@@ -313,6 +316,7 @@
     <Compile Include="Manager\NpcManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
+    <Compile Include="Manager\SocialManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
     <Compile Include="Manager\WaypointManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
@@ -350,7 +354,9 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Game\Social\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

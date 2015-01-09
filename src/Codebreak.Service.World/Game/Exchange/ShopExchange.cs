@@ -111,7 +111,7 @@ namespace Codebreak.Service.World.Game.Exchange
             if (quantity > item.Quantity)
                 quantity = item.Quantity;
 
-            var sellPrice = (item.GetTemplate().Price / 10) * quantity;
+            var sellPrice = (item.Template.Price / 10) * quantity;
 
             entity.Inventory.RemoveItem(guid, quantity);
             entity.Inventory.AddKamas(sellPrice);

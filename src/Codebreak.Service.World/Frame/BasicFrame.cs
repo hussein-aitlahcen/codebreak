@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, EffectEnum> _statById = new Dictionary<int, EffectEnum>()
+        private Dictionary<int, EffectEnum> m_statById = new Dictionary<int, EffectEnum>()
         {
             {10, EffectEnum.AddStrength},
             {11, EffectEnum.AddVitality},
@@ -172,7 +172,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void BasicCommand(CharacterEntity character, string message)
         {
-            if(character.Power < 1)
+            if (character.Account.Power < 1)
             {
                 character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Not enought rights, attempt registered."));
                 Logger.Error("BasicFrame::BasicCommand player trying to use an admin command : " + character.Name + " -> " + message);
@@ -221,13 +221,13 @@ namespace Codebreak.Service.World.Frame
 
                     WorldService.Instance.AddMessage(() =>
                         {
-                            if (character.CharacterGuild == null)
+                            if (character.GuildMember == null)
                             {
                                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                                 return;
                             }
 
-                            character.CharacterGuild.RemoveTaxCollector(taxCollector);
+                            character.GuildMember.RemoveTaxCollector(taxCollector);
                         });
                 });
         }
@@ -239,13 +239,13 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildTaxCollectorInterfaceLeave(CharacterEntity character, string message)
         {
-            if (character.CharacterGuild == null)
+            if (character.GuildMember == null)
             {
                 character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            character.CharacterGuild.TaxCollectorsInterfaceLeave();
+            character.GuildMember.TaxCollectorsInterfaceLeave();
         }
         
         /// <summary>
@@ -255,7 +255,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         public void GuildTaxCollectorLeave(CharacterEntity character, string message)
         {
-            if (character.CharacterGuild == null)
+            if (character.GuildMember == null)
             {
                 character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
@@ -280,7 +280,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildTaxCollectorJoin(CharacterEntity character, string message)
         {
-            if (character.CharacterGuild == null)
+            if (character.GuildMember == null)
             {
                 character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
@@ -293,7 +293,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            character.CharacterGuild.TaxCollectorJoin(taxCollectorId);
+            character.GuildMember.TaxCollectorJoin(taxCollectorId);
         }
 
         /// <summary>
@@ -313,13 +313,13 @@ namespace Codebreak.Service.World.Frame
 
                     WorldService.Instance.AddMessage(() => 
                         {
-                            if (entity.CharacterGuild == null)
+                            if (entity.GuildMember == null)
                             {
                                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                                 return;
                             }
 
-                            entity.CharacterGuild.HireTaxCollector();
+                            entity.GuildMember.HireTaxCollector();
                         });
                 });
         }
@@ -331,13 +331,13 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildBoostStats(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.CharacterGuild.BoostGuildStats(message[2]);
+            entity.GuildMember.BoostGuildStats(message[2]);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildBoostSpell(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
@@ -360,7 +360,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            entity.CharacterGuild.BoostGuildSpell(spellId);
+            entity.GuildMember.BoostGuildSpell(spellId);
         }  
         
         /// <summary>
@@ -370,14 +370,14 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildTaxCollectorsList(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
-            entity.CharacterGuild.SendTaxCollectorsList();
-            entity.CharacterGuild.TaxCollectorsInterfaceJoin();
+            entity.GuildMember.SendTaxCollectorsList();
+            entity.GuildMember.TaxCollectorsInterfaceJoin();
         }
 
 
@@ -388,13 +388,13 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildBoostInformations(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.CharacterGuild.SendBoostInformations();
+            entity.GuildMember.SendBoostInformations();
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildCreationRequest(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild != null)
+            if (entity.GuildMember != null)
             {
                 entity.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_ALREADY_IN_GUILD());
                 return;
@@ -440,7 +440,7 @@ namespace Codebreak.Service.World.Frame
                         }
 
                         entity.SafeDispatch(WorldMessage.GUILD_CREATION_SUCCESS());
-                        entity.CharacterGuild.SendGuildStats();
+                        entity.GuildMember.SendGuildStats();
                         entity.RefreshOnMap();
 
                         entity.AddMessage(() =>
@@ -465,7 +465,6 @@ namespace Codebreak.Service.World.Frame
                         entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
-
                     entity.StopAction(GameActionTypeEnum.GUILD_CREATE);
                 });
         }
@@ -478,13 +477,12 @@ namespace Codebreak.Service.World.Frame
         private void GuildKick(CharacterEntity entity, string message)
         {
             var character = (CharacterEntity)entity;
-            if(character.CharacterGuild == null)
+            if(character.GuildMember == null)
             {
                 character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-
-            character.CharacterGuild.MemberKick(message.Substring(2));
+            character.GuildMember.MemberKick(message.Substring(2));
         }
 
         /// <summary>
@@ -494,7 +492,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildProfilUpdate(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
@@ -506,7 +504,7 @@ namespace Codebreak.Service.World.Frame
             var xpSharePercent = int.Parse(messageData[2]);
             var power = int.Parse(messageData[3]);
 
-            entity.CharacterGuild.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
+            entity.GuildMember.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
         }
 
         /// <summary>
@@ -582,7 +580,7 @@ namespace Codebreak.Service.World.Frame
             distantCharacter.GuildInviterPlayerId = -1;
             distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ACCEPTED_DISTANT(entity.Name));
 
-            distantCharacter.CharacterGuild.Guild.MemberJoin(entity);
+            distantCharacter.GuildMember.Guild.MemberJoin(entity);
 
             entity.SafeDispatch(WorldMessage.GUILD_JOIN_ACCEPTED_LOCAL());
             entity.SafeDispatch(WorldMessage.GUILD_JOIN_CLOSE());
@@ -596,7 +594,7 @@ namespace Codebreak.Service.World.Frame
         private void GuildJoinInvite(CharacterEntity entity, string message)
         {
             // not in guild
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
                 return;
@@ -613,7 +611,7 @@ namespace Codebreak.Service.World.Frame
             }
 
             // if in guild or already being invited or even inviting
-            if (distantCharacter.CharacterGuild != null)
+            if (distantCharacter.GuildMember != null)
             {
                 entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_ALREADY_IN_GUILD());
                 return;
@@ -629,7 +627,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            if (!entity.CharacterGuild.HasRight(GuildRightEnum.INVITE))
+            if (!entity.GuildMember.HasRight(GuildRightEnum.INVITE))
             {
                 entity.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
                 return;
@@ -639,7 +637,7 @@ namespace Codebreak.Service.World.Frame
             distantCharacter.GuildInviterPlayerId = entity.Id;
 
             entity.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_LOCAL(distantCharacterName));
-            distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_DISTANT(entity.Id, entity.Name, entity.CharacterGuild.Guild.Name));
+            distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_DISTANT(entity.Id, entity.Name, entity.GuildMember.Guild.Name));
         }
 
         /// <summary>
@@ -649,13 +647,13 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildGeneralInformations(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.CharacterGuild.SendGeneralInformations();
+            entity.GuildMember.SendGeneralInformations();
         }
 
         /// <summary>
@@ -665,13 +663,13 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void GuildMembersInformations(CharacterEntity entity, string message)
         {
-            if (entity.CharacterGuild == null)
+            if (entity.GuildMember == null)
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.CharacterGuild.SendMembersInformations();
+            entity.GuildMember.SendMembersInformations();
         }
 
         /// <summary>
@@ -863,7 +861,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            if (!_statById.ContainsKey(statId))
+            if (!m_statById.ContainsKey(statId))
             {
                 entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
@@ -871,7 +869,7 @@ namespace Codebreak.Service.World.Frame
 
             entity.AddMessage(() =>
             {
-                var effect = _statById[statId];
+                var effect = m_statById[statId];
                 var actualValue = entity.Statistics.GetEffect(effect).Base;
                 var boostValue = statId == 11 && entity.Breed == CharacterBreedEnum.BREED_SACRIEUR ? 2 : 1;
                 var requiredPoint = GenericStats.GetRequiredStatsPoint(entity.Breed, statId, actualValue);
