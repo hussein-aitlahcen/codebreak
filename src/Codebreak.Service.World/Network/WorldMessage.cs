@@ -2297,6 +2297,55 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="friends"></param>
         /// <returns></returns>
+        public static string FRIENDS_LIST_ON_CONNECT(CharacterEntity character, IEnumerable<SocialRelationDAO> friends)
+        {
+            var message = new StringBuilder("FL");
+            foreach (var friend in friends)
+            {
+                message.Append('|');
+                message.Append(friend.Pseudo);
+                var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+                if (characterFriend != null)
+                {
+                    message.Append(';');
+                    if (characterFriend.Friends.Any(f => f.Pseudo == character.Account.Pseudo))
+                    {
+                        if (characterFriend.HasGameAction(GameActionTypeEnum.FIGHT))
+                            message.Append('1').Append(';');
+                        else
+                            message.Append('?').Append(';');
+                        message.Append(characterFriend.Name).Append(';');
+                        message.Append(characterFriend.Level).Append(';');
+                        message.Append(characterFriend.AlignmentId).Append(';');
+
+                        if(characterFriend.NotifyOnFriendConnection)
+                        {
+                            characterFriend.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FRIEND_ONLINE, character.Name));
+                        }
+                    }
+                    else
+                    {
+                        message.Append("?;");
+                        message.Append(characterFriend.Name).Append(';'); // name
+                        message.Append("?;"); // level
+                        message.Append("-1;"); // align
+                    }
+                    if (characterFriend.GuildMember != null)
+                        message.Append(characterFriend.GuildMember.Guild.Name).Append(';');
+                    else
+                        message.Append(';');
+                    message.Append(characterFriend.Sex).Append(';');
+                    message.Append(characterFriend.SkinBase);
+                }
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="friends"></param>
+        /// <returns></returns>
         public static string FRIENDS_LIST(string ownerPseudo, IEnumerable<SocialRelationDAO> friends)
         {
             var message = new StringBuilder("FL");

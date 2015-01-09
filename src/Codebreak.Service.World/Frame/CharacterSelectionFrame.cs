@@ -401,6 +401,7 @@ namespace Codebreak.Service.World.Frame
                     InformationEnum.INFO_BASIC_CURRENT_IP,
                     client.Ip
                 ));
+            client.CurrentCharacter.Dispatch(WorldMessage.FRIENDS_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Friends));
             client.CurrentCharacter.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("There is " + EntityManager.Instance.OnlinePlayers + " player(s) online."));
             client.CurrentCharacter.CachedBuffer = false;
 

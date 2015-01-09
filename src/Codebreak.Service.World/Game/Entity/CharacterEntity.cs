@@ -765,7 +765,7 @@ namespace Codebreak.Service.World.Game.Entity
             PartyInviterPlayerId = -1;
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
-            NotifyOnFriendConnection = true;
+            NotifyOnFriendConnection = false;
 
             m_lastRegenTime = -1;
 
@@ -787,15 +787,6 @@ namespace Codebreak.Service.World.Game.Entity
 
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
-
-            foreach(var friend in Friends)
-            {
-                var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
-                if (characterFriend != null && characterFriend.NotifyOnFriendConnection && characterFriend.Friends.Any(f => f.Pseudo == account.Pseudo))
-                {
-                    characterFriend.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FRIEND_ONLINE, Name));
-                }
-            }
         }
         
         /// <summary>

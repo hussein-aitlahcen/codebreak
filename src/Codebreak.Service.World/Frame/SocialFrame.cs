@@ -38,11 +38,24 @@ namespace Codebreak.Service.World.Frame
 
                         case 'D':
                             return RemoveFriend;
+
+                        case 'O':
+                            return FriendNotifyChange;
                     }
                     break;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void FriendNotifyChange(CharacterEntity character, string message)
+        {
+            character.NotifyOnFriendConnection = message[2] == '+';
         }
 
         /// <summary>
