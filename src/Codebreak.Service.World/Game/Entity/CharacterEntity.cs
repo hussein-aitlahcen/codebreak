@@ -765,7 +765,7 @@ namespace Codebreak.Service.World.Game.Entity
             PartyInviterPlayerId = -1;
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
-            NotifyOnFriendConnection = false;
+            NotifyOnFriendConnection = true;
 
             m_lastRegenTime = -1;
 
@@ -792,17 +792,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        const double REGEN_TIMER = 1000;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public void StartRegeneration()
         {
             if (Life >= MaxLife)
                 return;
             m_lastRegenTime = UpdateTime;
-            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(REGEN_TIMER));
+            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(WorldConfig.REGEN_TIMER));
         }
 
         /// <summary>
@@ -812,7 +807,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (Life >= MaxLife)
                 return;
-            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / REGEN_TIMER);
+            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / WorldConfig.REGEN_TIMER);
             if (Life + lifeRestored > MaxLife)
                 lifeRestored = MaxLife - Life;
             Life += lifeRestored;
@@ -1595,7 +1590,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public void SerializeAs_PartyMemberListInformations(StringBuilder message)
+        public void SerializeAs_PartyMemberInformations(StringBuilder message)
         {
             message.Append(Id).Append(';');
             message.Append(Name).Append(';');
@@ -1610,6 +1605,70 @@ namespace Codebreak.Service.World.Game.Entity
             message.Append(Initiative).Append(';');
             message.Append(Prospection).Append(';');
             message.Append(0); // TODO : What is that shit ?
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_EnnemyInformations(string playerPseudo, StringBuilder message)
+        {
+            message.Append(';');
+            if (Ennemies.Any(f => f.Pseudo == playerPseudo))
+            {
+                if (HasGameAction(GameActionTypeEnum.FIGHT))
+                    message.Append('2').Append(';');
+                else
+                    message.Append('1').Append(';');
+                message.Append(Name).Append(';');
+                message.Append(Level).Append(';');
+                message.Append(AlignmentId).Append(';');
+            }
+            else
+            {
+                message.Append("?;");
+                message.Append(Name).Append(';'); // name
+                message.Append("?;"); // level
+                message.Append("-1;"); // align
+            }
+            if (GuildMember != null)
+                message.Append(GuildMember.Guild.Name).Append(';');
+            else
+                message.Append(';');
+            message.Append(Sex).Append(';');
+            message.Append(SkinBase);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_FriendInformations(string playerPseudo, StringBuilder message)
+        {
+            message.Append(';');
+            if (Friends.Any(f => f.Pseudo == playerPseudo))
+            {
+                if (HasGameAction(GameActionTypeEnum.FIGHT))
+                    message.Append('2').Append(';');
+                else
+                    message.Append('1').Append(';');
+                message.Append(Name).Append(';');
+                message.Append(Level).Append(';');
+                message.Append(AlignmentId).Append(';');
+            }
+            else
+            {
+                message.Append("?;");
+                message.Append(Name).Append(';'); // name
+                message.Append("?;"); // level
+                message.Append("-1;"); // align
+            }
+            if (GuildMember != null)
+                message.Append(GuildMember.Guild.Name).Append(';');
+            else
+                message.Append(';');
+            message.Append(Sex).Append(';');
+            message.Append(SkinBase);
         }
 
         /// <summary>

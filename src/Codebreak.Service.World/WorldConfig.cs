@@ -38,7 +38,12 @@ namespace Codebreak.Service.World
             MAX_MERCHANT_PER_MAP = 5;
 
         public const int
+            MAX_ENNEMIES = 100,
             MAX_FRIENDS = 100;
+
+        public const double
+            REGEN_TIMER = 1000;
+
 
         public const int
             TAXCOLLECTOR_MIN_NAME = 1,

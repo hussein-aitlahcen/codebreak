@@ -38,7 +38,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        private StringBuilder _serializedFlag;
+        private StringBuilder m_serializedFlag;
 
         /// <summary>
         /// 
@@ -125,11 +125,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in m_winnerTeam.Fighters)
+            foreach (var fighter in m_winnerTeam.Fighters.Where(f => f.Invocator == null))
             {
                 Result.AddResult(fighter, true);
             }
-            foreach (var fighter in m_loserTeam.Fighters)
+            foreach (var fighter in m_loserTeam.Fighters.Where(f => f.Invocator == null))
             {
                 Result.AddResult(fighter, false);
             }
@@ -164,22 +164,22 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="message"></param>
         public override void SerializeAs_FightFlag(StringBuilder message)
         {
-            if (_serializedFlag == null)
+            if (m_serializedFlag == null)
             {
-                _serializedFlag = new StringBuilder();
-                _serializedFlag.Append(Id).Append(';');
-                _serializedFlag.Append((int)Type).Append('|');
-                _serializedFlag.Append(Team0.LeaderId).Append(';');
-                _serializedFlag.Append(Team0.FlagCellId).Append(';');
-                _serializedFlag.Append('0').Append(';');
-                _serializedFlag.Append("-1").Append('|');
-                _serializedFlag.Append(Team1.LeaderId).Append(';');
-                _serializedFlag.Append(Team1.FlagCellId).Append(';');
-                _serializedFlag.Append('1').Append(';');
-                _serializedFlag.Append(MonsterGroup.Monsters.ElementAt(0).Grade.Template.Alignment);
+                m_serializedFlag = new StringBuilder();
+                m_serializedFlag.Append(Id).Append(';');
+                m_serializedFlag.Append((int)Type).Append('|');
+                m_serializedFlag.Append(Team0.LeaderId).Append(';');
+                m_serializedFlag.Append(Team0.FlagCellId).Append(';');
+                m_serializedFlag.Append('0').Append(';');
+                m_serializedFlag.Append("-1").Append('|');
+                m_serializedFlag.Append(Team1.LeaderId).Append(';');
+                m_serializedFlag.Append(Team1.FlagCellId).Append(';');
+                m_serializedFlag.Append('1').Append(';');
+                m_serializedFlag.Append(MonsterGroup.Monsters.ElementAt(0).Grade.Template.Alignment);
             }
 
-            message.Append(_serializedFlag.ToString());
+            message.Append(m_serializedFlag.ToString());
         }
 
         /// <summary>
@@ -190,8 +190,8 @@ namespace Codebreak.Service.World.Game.Fight
             Character = null;
             MonsterGroup = null;
             
-            _serializedFlag.Clear();
-            _serializedFlag = null;
+            m_serializedFlag.Clear();
+            m_serializedFlag = null;
 
             base.Dispose();
         }

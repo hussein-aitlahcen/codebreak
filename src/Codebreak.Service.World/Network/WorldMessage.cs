@@ -1435,7 +1435,7 @@ namespace Codebreak.Service.World.Network
             var message = new StringBuilder("PM+");
             foreach(var member in members)
             {
-                member.SerializeAs_PartyMemberListInformations(message);
+                member.SerializeAs_PartyMemberInformations(message);
                 message.Append("|");
             }
             message.Remove(message.Length - 1, 1);
@@ -2217,42 +2217,26 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ownerPseudo"></param>
+        /// <returns></returns>
+        public static string ENNEMY_DELETE_SUCCESS()
+        {
+            return "iD";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerPseudo"></param>
         /// <param name="friend"></param>
         /// <returns></returns>
-        public static string FRIEND_ADD(string ownerPseudo, SocialRelationDAO friend)
+        public static string FRIEND_ADD(string playerPseudo, SocialRelationDAO friend)
         {
             var message = new StringBuilder("FA");
             message.Append('|');
             message.Append(friend.Pseudo);
             var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
             if (characterFriend != null)
-            {
-                message.Append(';');
-                if (characterFriend.Friends.Any(f => f.Pseudo == ownerPseudo))
-                {
-                    if (characterFriend.HasGameAction(GameActionTypeEnum.FIGHT))
-                        message.Append('1').Append(';');
-                    else
-                        message.Append('?').Append(';');
-                    message.Append(characterFriend.Name).Append(';');
-                    message.Append(characterFriend.Level).Append(';');
-                    message.Append(characterFriend.AlignmentId).Append(';');
-                }
-                else
-                {
-                    message.Append("?;");
-                    message.Append(characterFriend.Name).Append(';'); // name
-                    message.Append("?;"); // level
-                    message.Append("-1;"); // align
-                }
-                if (characterFriend.GuildMember != null)
-                    message.Append(characterFriend.GuildMember.Guild.Name).Append(';');
-                else
-                    message.Append(';');
-                message.Append(characterFriend.Sex).Append(';');
-                message.Append(characterFriend.SkinBase);
-            }
+                characterFriend.SerializeAs_FriendInformations(playerPseudo, message);
             return message.ToString();
         }
         
@@ -2305,37 +2289,11 @@ namespace Codebreak.Service.World.Network
                 message.Append('|');
                 message.Append(friend.Pseudo);
                 var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
-                if (characterFriend != null)
+                if(characterFriend != null)                
                 {
-                    message.Append(';');
-                    if (characterFriend.Friends.Any(f => f.Pseudo == character.Account.Pseudo))
-                    {
-                        if (characterFriend.HasGameAction(GameActionTypeEnum.FIGHT))
-                            message.Append('1').Append(';');
-                        else
-                            message.Append('?').Append(';');
-                        message.Append(characterFriend.Name).Append(';');
-                        message.Append(characterFriend.Level).Append(';');
-                        message.Append(characterFriend.AlignmentId).Append(';');
-
-                        if(characterFriend.NotifyOnFriendConnection)
-                        {
-                            characterFriend.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FRIEND_ONLINE, character.Name));
-                        }
-                    }
-                    else
-                    {
-                        message.Append("?;");
-                        message.Append(characterFriend.Name).Append(';'); // name
-                        message.Append("?;"); // level
-                        message.Append("-1;"); // align
-                    }
-                    if (characterFriend.GuildMember != null)
-                        message.Append(characterFriend.GuildMember.Guild.Name).Append(';');
-                    else
-                        message.Append(';');
-                    message.Append(characterFriend.Sex).Append(';');
-                    message.Append(characterFriend.SkinBase);
+                    characterFriend.SerializeAs_FriendInformations(character.Account.Pseudo, message);
+                    if (characterFriend.NotifyOnFriendConnection)                    
+                        characterFriend.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FRIEND_ONLINE, character.Name));                    
                 }
             }
             return message.ToString();
@@ -2346,7 +2304,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="friends"></param>
         /// <returns></returns>
-        public static string FRIENDS_LIST(string ownerPseudo, IEnumerable<SocialRelationDAO> friends)
+        public static string FRIENDS_LIST(string playerPseudo, IEnumerable<SocialRelationDAO> friends)
         {
             var message = new StringBuilder("FL");
             foreach(var friend in friends)
@@ -2354,34 +2312,101 @@ namespace Codebreak.Service.World.Network
                 message.Append('|');
                 message.Append(friend.Pseudo);
                 var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
-                if(characterFriend != null)
-                {
-                    message.Append(';');
-                    if(characterFriend.Friends.Any(f => f.Pseudo == ownerPseudo))
-                    {
-                        if (characterFriend.HasGameAction(GameActionTypeEnum.FIGHT))
-                            message.Append('1').Append(';');
-                        else
-                            message.Append('?').Append(';');
-                        message.Append(characterFriend.Name).Append(';');
-                        message.Append(characterFriend.Level).Append(';');
-                        message.Append(characterFriend.AlignmentId).Append(';');
-                    }
-                    else
-                    {
-                        message.Append("?;");
-                        message.Append(characterFriend.Name).Append(';'); // name
-                        message.Append("?;"); // level
-                        message.Append("-1;"); // align
-                    }
-                    if (characterFriend.GuildMember != null)
-                        message.Append(characterFriend.GuildMember.Guild.Name).Append(';');
-                    else
-                        message.Append(';');
-                    message.Append(characterFriend.Sex).Append(';');
-                    message.Append(characterFriend.SkinBase);
-                }
+                if(characterFriend != null)                
+                    characterFriend.SerializeAs_FriendInformations(playerPseudo, message);                
             }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerPseudo"></param>
+        /// <param name="ennemies"></param>
+        /// <returns></returns>
+        public static string ENNEMIES_LIST(string playerPseudo, IEnumerable<SocialRelationDAO> ennemies)
+        {
+            var message = new StringBuilder("iL");
+            foreach (var ennemy in ennemies)
+            {
+                message.Append('|');
+                message.Append(ennemy.Pseudo);
+                var characterEnnemy = EntityManager.Instance.GetCharacterByPseudo(ennemy.Pseudo);
+                if (characterEnnemy != null)
+                    characterEnnemy.SerializeAs_EnnemyInformations(playerPseudo, message);
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ennemies"></param>
+        /// <returns></returns>
+        public static string ENNEMIES_LIST_ON_CONNECT(CharacterEntity character, IEnumerable<SocialRelationDAO> ennemies)
+        {
+            var message = new StringBuilder("iL");
+            foreach (var ennemy in ennemies)
+            {
+                message.Append('|');
+                message.Append(ennemy.Pseudo);
+                var characterEnnemy = EntityManager.Instance.GetCharacterByPseudo(ennemy.Pseudo);
+                if (characterEnnemy != null)                
+                    characterEnnemy.SerializeAs_EnnemyInformations(character.Account.Pseudo, message);                
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string ENNEMY_ADD_ERROR_UNKNOW_PLAYER()
+        {
+            return "iAEf";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string ENNEMY_ADD_ERROR_ALREADY()
+        {
+            return "iAEa";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string ENNEMY_ADD_ERROR_FULL()
+        {
+            return "iAEm";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string ENNEMY_ADD_ERROR_YOURSELF()
+        {
+            return "iAEy";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerPseudo"></param>
+        /// <param name="ennemy"></param>
+        /// <returns></returns>
+        public static string ENNEMY_ADD(string playerPseudo, SocialRelationDAO ennemy)
+        {
+            var message = new StringBuilder("iA");
+            message.Append('|');
+            message.Append(ennemy.Pseudo);
+            var characterEnnemy = EntityManager.Instance.GetCharacterByPseudo(ennemy.Pseudo);
+            if (characterEnnemy != null)
+                characterEnnemy.SerializeAs_EnnemyInformations(playerPseudo, message);
             return message.ToString();
         }
     }
