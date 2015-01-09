@@ -46,9 +46,11 @@ namespace Codebreak.Service.World.Frame
                 character.Dispatch(WorldMessage.GAME_CREATION_SUCCESS());
                 if (character.HasGameAction(Game.Action.GameActionTypeEnum.FIGHT))
                     character.Dispatch(WorldMessage.GAME_DATA_MAP(character.Fight.Map.Id, character.Fight.Map.CreateTime, character.Fight.Map.DataKey));
-                else                
+                else
+                {
                     character.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));
-                
+                    character.StartRegeneration();
+                }
                 character.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)character));
                 character.CachedBuffer = false;
             });

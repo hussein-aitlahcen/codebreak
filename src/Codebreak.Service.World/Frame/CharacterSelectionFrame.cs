@@ -378,10 +378,8 @@ namespace Codebreak.Service.World.Frame
             client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
             client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
             client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
-            if(client.CurrentCharacter.CharacterGuild != null)
-            {
+            if(client.CurrentCharacter.CharacterGuild != null)            
                 client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.CharacterGuild.Guild, client.CurrentCharacter.CharacterGuild.Power));
-            }
             client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
             client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
             client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
@@ -401,9 +399,11 @@ namespace Codebreak.Service.World.Frame
                     InformationEnum.INFO_BASIC_CURRENT_IP,
                     client.Ip
                 ));
+            client.CurrentCharacter.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("There is " + EntityManager.Instance.OnlinePlayers + " player(s) online."));
             client.CurrentCharacter.CachedBuffer = false;
+
             client.Account.LastConnectionTime = DateTime.Now;
-            client.Account.LastConnectionIP = client.Ip;            
+            client.Account.LastConnectionIP = client.Ip;      
         }
     }
 }

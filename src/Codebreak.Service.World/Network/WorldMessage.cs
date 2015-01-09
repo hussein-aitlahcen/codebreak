@@ -2182,5 +2182,25 @@ namespace Codebreak.Service.World.Network
         {
             return "GIP" + value;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public static string LIFE_RESTORE_TIME_START(double interval)
+        {
+            return "ILS" + interval;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public static string LIFE_RESTORE_TIME_FINISH(int lifeRestored)
+        {
+            return "ILF" + lifeRestored;
+        }
     }
 }

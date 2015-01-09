@@ -1,4 +1,5 @@
-﻿using Codebreak.Framework.Network;
+﻿using Codebreak.Framework.Generic;
+using Codebreak.Framework.Network;
 using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
@@ -705,6 +706,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         protected string m_guildDisplayInfos;
+        protected long m_lastRegenTime;
 
         /// <summary>
         /// 
@@ -713,7 +715,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="characterDAO"></param>
         public CharacterEntity(int power, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
             : base(type, characterDAO.Id)
-        {            
+        {
+            DatabaseRecord = characterDAO;
             CharacterAlignment = characterDAO.GetCharacterAlignment();
                      
             Power = power;
@@ -722,8 +725,9 @@ namespace Codebreak.Service.World.Game.Entity
             PartyInviterPlayerId = -1;
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
-            DatabaseRecord = characterDAO;
-            
+
+            m_lastRegenTime = -1;
+
             CharacterJobs = new JobBook();
             Statistics = new GenericStats(characterDAO);
             Spells = SpellBookFactory.Instance.Create(this);
@@ -744,6 +748,36 @@ namespace Codebreak.Service.World.Game.Entity
             SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        const double REGEN_TIMER = 1000;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StartRegeneration()
+        {
+            if (Life >= MaxLife)
+                return;
+            m_lastRegenTime = UpdateTime;
+            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(REGEN_TIMER));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StopRegeneration()
+        {
+            if (Life >= MaxLife)
+                return;
+            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / REGEN_TIMER);
+            if (Life + lifeRestored > MaxLife)
+                lifeRestored = MaxLife - Life;
+            Life += lifeRestored;
+            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_FINISH(lifeRestored));
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1285,6 +1319,7 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.FIGHT:
+                    FrameManager.RemoveFrame(MapFrame.Instance);
                     if (Fight.Map.Id != MapId)
                     {
                         Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
@@ -1292,6 +1327,7 @@ namespace Codebreak.Service.World.Game.Entity
                         FrameManager.AddFrame(GameInformationFrame.Instance);
                     }
                     FrameManager.AddFrame(FightPlacementFrame.Instance);
+                    StopRegeneration();
                     break;
             }
         }

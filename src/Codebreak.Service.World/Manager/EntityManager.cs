@@ -26,7 +26,14 @@ namespace Codebreak.Service.World.Manager
 
         private Dictionary<long, TaxCollectorEntity> m_taxCollectorById;
 
-        private long m_onlinePlayers = 0;
+        /// <summary>
+        /// 
+        /// </summary>
+        public long OnlinePlayers
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 
@@ -113,8 +120,8 @@ namespace Codebreak.Service.World.Manager
             m_characterById.Add(character.Id, character);
             m_characterByName.Add(character.Name.ToLower(), character);
             m_characterByAccount.Add(character.AccountId, character);
-            m_onlinePlayers++;
-            Logger.Info("EntityManager online players : " + m_onlinePlayers);            
+            OnlinePlayers++;
+            Logger.Info("EntityManager online players : " + OnlinePlayers);            
             return character;
         }
         
@@ -208,11 +215,11 @@ namespace Codebreak.Service.World.Manager
         {
             WorldService.Instance.AddMessage(() =>
                 {
-                    m_onlinePlayers--;
+                    OnlinePlayers--;
                     m_characterById.Remove(character.Id);
                     m_characterByName.Remove(character.Name.ToLower());
                     m_characterByAccount.Remove(character.AccountId);
-                    Logger.Info("EntityManager online players : " + m_onlinePlayers);
+                    Logger.Info("EntityManager online players : " + OnlinePlayers);
                 });
         }
 
