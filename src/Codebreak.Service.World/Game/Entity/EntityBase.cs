@@ -369,6 +369,24 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="emoteId"></param>
+        public virtual void EmoteUse(int emoteId, int timeout = 360000)
+        {            
+            Map.Dispatch(WorldMessage.EMOTE_USE(Id, emoteId, timeout));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="direction"></param>
+        public void ChangeDirection(int direction)
+        {
+            Map.Dispatch(WorldMessage.EMOTE_DIRECTION(Id, direction));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="channel"></param>
         /// <param name="message"></param>
         /// <param name="remoteEntity"></param>

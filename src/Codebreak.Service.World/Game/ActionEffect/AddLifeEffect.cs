@@ -39,7 +39,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
             switch((ItemTypeEnum)item.Template.Type)
             {
                 case ItemTypeEnum.TYPE_PAIN:
-                    entity.Map.Dispatch(WorldMessage.EMOTE_PLAY(entity.Id, EMOTE_EAT_BREAD));
+                    entity.EmoteUse(EMOTE_EAT_BREAD);
                     break;
                     
                 default:

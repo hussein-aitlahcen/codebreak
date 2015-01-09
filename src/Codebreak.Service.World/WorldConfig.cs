@@ -32,7 +32,8 @@ namespace Codebreak.Service.World
             CHARACTER_CREATION_SPELLPOINT = 0,
             CHARACTER_CREATION_CARACPOINT = 0,
             CHARACTER_CREATION_LIFE = 55,
-            CHARACTER_CREATION_ENERGY = 10000;
+            CHARACTER_CREATION_ENERGY = 10000,
+            CHARACTER_CREATION_EMOTE_CAPACITY = 1376255;
 
         public const int
             MAX_MERCHANT_PER_MAP = 5;
@@ -42,7 +43,8 @@ namespace Codebreak.Service.World
             MAX_FRIENDS = 100;
 
         public const double
-            REGEN_TIMER = 1000;
+            REGEN_TIMER_SIT = 500,
+            REGEN_TIMER = 1500;
 
 
         public const int

@@ -45,8 +45,8 @@ namespace Codebreak.Service.World.Frame
             switch (message[0])
             {
                 case 'g':
-                    switch(message[1])
-                    {                        
+                    switch (message[1])
+                    {
                         case 'P': // member profil update
                             return GuildProfilUpdate;
                         case 'K': // kick member
@@ -79,7 +79,7 @@ namespace Codebreak.Service.World.Frame
                             }
                             break;
                         case 'T':
-                            switch(message[2])
+                            switch (message[2])
                             {
                                 case 'J': // join tax collector fight
                                     return GuildTaxCollectorJoin;
@@ -88,7 +88,7 @@ namespace Codebreak.Service.World.Frame
                             }
                             break;
                         case 'I':
-                            switch(message[2])
+                            switch (message[2])
                             {
                                 case 'M': // guildMemberInfos
                                     return GuildMembersInformations;
@@ -101,7 +101,7 @@ namespace Codebreak.Service.World.Frame
                                 case 'H': // house info
                                     break;
                                 case 'T':
-                                    if(message.Length > 3)
+                                    if (message.Length > 3)
                                         return GuildTaxCollectorInterfaceLeave;
                                     else
                                         return GuildTaxCollectorsList;
@@ -109,7 +109,7 @@ namespace Codebreak.Service.World.Frame
                             break;
                     }
                     break;
-
+                
                 case 'P':
                     switch(message[1])
                     {

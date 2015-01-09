@@ -23,6 +23,17 @@ namespace Codebreak.Service.World.Frame
 
             switch (message[0])
             {
+                case 'e':
+                    switch(message[1])
+                    {
+                        case 'D': // onDirection
+                            return EmoteDirection;
+
+                        case 'U': // onUse
+                            return EmoteUse;
+                    }
+                    break;
+
                 case 'f':
                     switch (message[1])
                     {
@@ -59,6 +70,32 @@ namespace Codebreak.Service.World.Frame
             }
 
             return null;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void EmoteDirection(CharacterEntity character, string message)
+        {
+            character.AddMessage(() =>
+                {
+                    character.ChangeDirection(int.Parse(message.Substring(2)));
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void EmoteUse(CharacterEntity character, string message)
+        {
+            character.AddMessage(() =>
+                {
+                    character.EmoteUse(int.Parse(message.Substring(2)));
+                });
         }
 
         /// <summary>

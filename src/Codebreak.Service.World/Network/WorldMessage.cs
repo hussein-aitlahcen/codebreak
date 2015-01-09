@@ -1924,19 +1924,7 @@ namespace Codebreak.Service.World.Network
             }
             return message.ToString();
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="targetId"></param>
-        /// <param name="emoteId"></param>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public static string EMOTE_PLAY(long targetId, int emoteId, long time = 360000)
-        {
-            return "eUK" + targetId + "|" + emoteId + "|" + time;
-        }
-
+             
         /// <summary>
         /// 
         /// </summary>
@@ -2408,6 +2396,39 @@ namespace Codebreak.Service.World.Network
             if (characterEnnemy != null)
                 characterEnnemy.SerializeAs_EnnemyInformations(playerPseudo, message);
             return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static string EMOTE_DIRECTION(long playerId, int direction)
+        {
+            return "eD" + playerId + "|" + direction;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="targetId"></param>
+        /// <param name="emoteId"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static string EMOTE_USE(long targetId, int emoteId, long time = 360000)
+        {
+            return "eUK" + targetId + "|" + emoteId + "|" + time;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="capacity"></param>
+        /// <returns></returns>
+        public static string EMOTES_LIST(int capacity)
+        {
+            return "eL" + capacity + "|" + capacity;
         }
     }
 }

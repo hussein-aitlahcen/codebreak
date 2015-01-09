@@ -25,6 +25,33 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
+    public enum EmoteTypeEnum
+    {
+        Sit = 1,
+        Bye = 2,
+        Applause = 4,
+        Angry = 8,
+        Fear = 16,
+        Weapon = 32,
+        Flute = 64,
+        Pet = 128,
+        Hello = 256,
+        Kiss = 512,
+        Stone = 1024,
+        Sheet = 2048,
+        Scissors = 4096,
+        CrossArm = 8192,
+        Point = 16384,
+        Crow = 32768,
+        Rest = 262144,
+        Champ = 1048576,
+        PowerAura = 2097152,
+        VampyrAura = 4194304,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class CharacterEntity : FighterBase, IDisposable
     {
         /// <summary>
@@ -184,6 +211,21 @@ namespace Codebreak.Service.World.Game.Entity
             set
             {
                 DatabaseRecord.SpellPoint = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int EmoteCapacity
+        {
+            get
+            {
+                return DatabaseRecord.EmoteCapacity;
+            }
+            set
+            {
+                DatabaseRecord.EmoteCapacity = value;
             }
         }
 
@@ -747,6 +789,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         protected string m_guildDisplayInfos;
         protected long m_lastRegenTime;
+        protected double m_regenTimer;
+        protected int m_lastEmoteId;
 
         /// <summary>
         /// 
@@ -768,6 +812,7 @@ namespace Codebreak.Service.World.Game.Entity
             NotifyOnFriendConnection = true;
 
             m_lastRegenTime = -1;
+            m_lastEmoteId = -1;
 
             CharacterJobs = new JobBook();
             Statistics = new GenericStats(characterDAO);
@@ -788,16 +833,46 @@ namespace Codebreak.Service.World.Game.Entity
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        public void StartRegeneration()
+        /// <param name="emoteId"></param>
+        public override void EmoteUse(int emoteId, int timeout = 360000)
+        {
+            if (emoteId == 1)
+            {
+                if (m_lastEmoteId == emoteId)
+                {
+                    timeout = 0;
+                    emoteId = 0;
+                    m_lastEmoteId = -1;
+
+                    StopRegeneration();
+                    StartRegeneration();
+                }
+                else
+                {
+                    m_lastEmoteId = emoteId;
+
+                    StopRegeneration();
+                    StartRegeneration(WorldConfig.REGEN_TIMER_SIT);
+                }
+            }
+
+            base.EmoteUse(emoteId, timeout);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StartRegeneration(double timer = WorldConfig.REGEN_TIMER)
         {
             if (Life >= MaxLife)
                 return;
+            m_regenTimer = timer;
             m_lastRegenTime = UpdateTime;
-            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(WorldConfig.REGEN_TIMER));
+            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(timer));
         }
 
         /// <summary>
@@ -807,7 +882,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (Life >= MaxLife)
                 return;
-            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / WorldConfig.REGEN_TIMER);
+            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / m_regenTimer);
             if (Life + lifeRestored > MaxLife)
                 lifeRestored = MaxLife - Life;
             Life += lifeRestored;
@@ -1318,6 +1393,13 @@ namespace Codebreak.Service.World.Game.Entity
 
             switch (actionType)
             {
+                case GameActionTypeEnum.MAP_MOVEMENT:
+                    if(m_lastEmoteId == 1)
+                    {
+                        EmoteUse(1);
+                    }
+                    break;
+
                 case GameActionTypeEnum.MAP_TELEPORT:
                     Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
                     break;

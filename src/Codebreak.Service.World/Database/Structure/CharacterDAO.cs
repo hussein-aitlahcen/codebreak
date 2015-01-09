@@ -351,6 +351,15 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int EmoteCapacity
+        {
+            get;
+            set;
+        }
+
         #region Unmapped
 
         private CharacterAlignmentDAO m_alignment;
