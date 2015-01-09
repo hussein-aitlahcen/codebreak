@@ -47,30 +47,30 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        public void DialogReply(CharacterEntity entity, string message)
+        public void DialogReply(CharacterEntity character, string message)
         {
             var dialogData = message.Substring(2).Split('|');
             var questionId = int.Parse(dialogData[0]);
             var responseId = int.Parse(dialogData[1]);
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    ((GameNpcDialogAction)entity.CurrentAction).Dialog.ProcessResponse(responseId);
+                    ((GameNpcDialogAction)character.CurrentAction).Dialog.ProcessResponse(responseId);
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        public void DialogLeave(CharacterEntity entity, string message)
+        public void DialogLeave(CharacterEntity character, string message)
         {
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    entity.StopAction(GameActionTypeEnum.NPC_DIALOG);
+                    character.StopAction(GameActionTypeEnum.NPC_DIALOG);
                 });
         }
     }

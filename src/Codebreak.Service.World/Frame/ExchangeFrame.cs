@@ -121,7 +121,7 @@ namespace Codebreak.Service.World.Frame
 
                     character.Inventory.SubKamas(character.MerchantTaxe);
                     character.Merchant = true;
-                    character.SafeKick();
+                    character.ServerKick("Merchant mode");
                 });            
         }
 
@@ -439,20 +439,20 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ExchangeLeave(CharacterEntity entity, string message)
+        private void ExchangeLeave(CharacterEntity character, string message)
         {
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
                 {
-                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + entity.Name);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    Logger.Debug("ExchangeFrame::Leave entity is not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                entity.AbortAction(GameActionTypeEnum.EXCHANGE, entity.Id);
+                character.AbortAction(GameActionTypeEnum.EXCHANGE, character.Id);
             });
         }
 

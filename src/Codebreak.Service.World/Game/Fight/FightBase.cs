@@ -1683,7 +1683,7 @@ namespace Codebreak.Service.World.Game.Fight
                 return FightSpellLaunchResultEnum.RESULT_NO_AP;
            
             var distance = Pathfinding.GoalDistance(Map, cellId, castCell);
-            var maxPo = spellLevel.AllowPOBoost ? spellLevel.MaxPO + fighter.Statistics.GetTotal(EffectEnum.AddPO) : spellLevel.MaxPO;
+            var maxPo = spellLevel.MaxPO + fighter.Statistics.GetTotal(EffectEnum.AddPO);
           
             if (maxPo < spellLevel.MinPO)
                 maxPo = spellLevel.MinPO;

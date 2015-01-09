@@ -43,78 +43,80 @@ namespace Codebreak.Service.World.Frame
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void SpellMove(CharacterEntity entity, string message)
+        private void SpellMove(CharacterEntity character, string message)
         {
             var data = message.Substring(2).Split('|');
             if (data.Length != 2)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var spellId = int.Parse(data[0]);
             var position = int.Parse(data[1]);
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    if (entity.Spells == null)
+                    if (character.Spells == null)
                     {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    if (!entity.Spells.HasSpell(spellId))
+                    if (!character.Spells.HasSpell(spellId))
                     {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    entity.Spells.MoveSpell(spellId, position);
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.Spells.MoveSpell(spellId, position);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void SpellBoost(CharacterEntity entity, string message)
+        private void SpellBoost(CharacterEntity character, string message)
         {
             var spellId = -1;
             if (!int.TryParse(message.Substring(2), out spellId))
             {
-                entity.SafeDispatch(WorldMessage.SPELL_UPGRADE_ERROR());
+                character.SafeDispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (entity.Spells == null)
+                if (character.Spells == null)
                 {
-                    entity.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
+                    character.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                     return;
                 }
 
-                if (!entity.Spells.HasSpell(spellId))
+                if (!character.Spells.HasSpell(spellId))
                 {
-                    entity.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
+                    character.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                     return;
                 }
 
-                var spell = entity.Spells.GetSpellLevel(spellId);
+                var spell = character.Spells.GetSpellLevel(spellId);
 
-                if (entity.SpellPoint < spell.Level)
+                if (character.SpellPoint < spell.Level)
                 {
-                    entity.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
+                    character.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                     return;
                 }
 
-                entity.Spells.LevelUp(spellId);
-                entity.SpellPoint -= spell.Level;
+                character.Spells.LevelUp(spellId);
+                character.SpellPoint -= spell.Level;
 
-                entity.Dispatch(WorldMessage.SPELL_UPGRADE_SUCCESS(spellId, spell.Level + 1));
-                entity.Dispatch(WorldMessage.ACCOUNT_STATS(entity));
+                character.CachedBuffer = true;
+                character.Dispatch(WorldMessage.SPELL_UPGRADE_SUCCESS(spellId, spell.Level + 1));
+                character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+                character.CachedBuffer = false;
             });
         }
     }

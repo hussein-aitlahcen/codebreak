@@ -32,22 +32,25 @@ namespace Codebreak.Service.World.Frame
 
             var ticket = message.Substring(2);
 
-            var account = AccountManager.Instance.GetAccountTicket(ticket);
-            if (account == null)
-            {
-                client.Send(WorldMessage.ACCOUNT_TICKET_ERROR());
-                return;
-            }
-
             WorldService.Instance.AddMessage(() =>
                 {
-                    client.Account = account;
+                    var account = AccountManager.Instance.GetAccountTicket(ticket);
+                    if (account == null)
+                    {
+                        client.Send(WorldMessage.ACCOUNT_TICKET_ERROR());
+                        return;
+                    }
 
-                    AccountManager.Instance.ClientAuthentified(client);
-                    
-                    client.FrameManager.AddFrame(CharacterSelectionFrame.Instance);
+                    WorldService.Instance.AddMessage(() =>
+                        {
+                            client.Account = account;
 
-                    client.Send(WorldMessage.ACCOUNT_TICKET_SUCCESS());
+                            AccountManager.Instance.ClientAuthentified(client);
+
+                            client.FrameManager.AddFrame(CharacterSelectionFrame.Instance);
+
+                            client.Send(WorldMessage.ACCOUNT_TICKET_SUCCESS());
+                        });
                 });
         }
     }

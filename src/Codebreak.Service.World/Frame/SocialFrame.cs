@@ -79,20 +79,24 @@ namespace Codebreak.Service.World.Frame
         private void RemoveEnnemy(CharacterEntity character, string message)
         {
             var pseudo = message.Substring(3);
-            var relation = character.Ennemies.FirstOrDefault(ennemy => ennemy.Pseudo == pseudo);
-            if (relation == null)
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
 
-            if (!SocialRelationRepository.Instance.Remove(relation))
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+            WorldService.Instance.AddMessage(() =>
+                {
+                    var relation = character.Ennemies.FirstOrDefault(ennemy => ennemy.Pseudo == pseudo);
+                    if (relation == null)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            character.SafeDispatch(WorldMessage.ENNEMY_DELETE_SUCCESS());
+                    if (!SocialRelationRepository.Instance.Remove(relation))
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    character.SafeDispatch(WorldMessage.ENNEMY_DELETE_SUCCESS());
+                });
         }
 
         /// <summary>
@@ -103,51 +107,55 @@ namespace Codebreak.Service.World.Frame
         private void AddEnnemy(CharacterEntity character, string message)
         {
             var name = message.Substring(2);
-            var target = EntityManager.Instance.GetCharacterByName(name);
-            if (target == null || target.Account == null)
-            {
-                character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_UNKNOW_PLAYER());
-                return;
-            }
 
-            if (target.Id == character.Id)
-            {
-                character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_YOURSELF());
-                return;
-            } 
-            
-            if (character.Friends.Any(friend => friend.Pseudo == target.Account.Pseudo))
-            {
-                character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_ALREADY());
-                return;
-            }
+            WorldService.Instance.AddMessage(() =>
+                {
+                    var target = EntityManager.Instance.GetCharacterByName(name);
+                    if (target == null || target.Account == null)
+                    {
+                        character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_UNKNOW_PLAYER());
+                        return;
+                    }
 
-            if (character.Ennemies.Any(ennemy => ennemy.Pseudo == target.Account.Pseudo))
-            {
-                character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_ALREADY());
-                return;
-            }
+                    if (target.Id == character.Id)
+                    {
+                        character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_YOURSELF());
+                        return;
+                    }
 
-            if (character.Ennemies.Count() >= WorldConfig.MAX_ENNEMIES)
-            {
-                character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_FULL());
-                return;
-            }
+                    if (character.Friends.Any(friend => friend.Pseudo == target.Account.Pseudo))
+                    {
+                        character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_ALREADY());
+                        return;
+                    }
 
-            var relation = new SocialRelationDAO()
-            {
-                AccountId = character.AccountId,
-                Pseudo = target.Account.Pseudo,
-                TypeId = (int)SocialRelationTypeEnum.TYPE_ENNEMY
-            };
+                    if (character.Ennemies.Any(ennemy => ennemy.Pseudo == target.Account.Pseudo))
+                    {
+                        character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_ALREADY());
+                        return;
+                    }
 
-            if (!SocialRelationRepository.Instance.InsertWithKey(relation))
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+                    if (character.Ennemies.Count() >= WorldConfig.MAX_ENNEMIES)
+                    {
+                        character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_FULL());
+                        return;
+                    }
 
-            character.SafeDispatch(WorldMessage.ENNEMY_ADD(character.Account.Pseudo, relation));
+                    var relation = new SocialRelationDAO()
+                    {
+                        AccountId = character.AccountId,
+                        Pseudo = target.Account.Pseudo,
+                        TypeId = (int)SocialRelationTypeEnum.TYPE_ENNEMY
+                    };
+
+                    if (!SocialRelationRepository.Instance.InsertWithKey(relation))
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    character.SafeDispatch(WorldMessage.ENNEMY_ADD(character.Account.Pseudo, relation));
+                });
         }
 
         /// <summary>
@@ -157,7 +165,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void FriendNotifyChange(CharacterEntity character, string message)
         {
-            character.NotifyOnFriendConnection = message[2] == '+';
+            WorldService.Instance.AddMessage(() => character.NotifyOnFriendConnection = message[2] == '+');
         }
 
         /// <summary>
@@ -167,7 +175,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void FriendsList(CharacterEntity character, string message)
         {
-            character.SafeDispatch(WorldMessage.FRIENDS_LIST(character.Account.Pseudo, character.Friends));
+            WorldService.Instance.AddMessage(() => character.SafeDispatch(WorldMessage.FRIENDS_LIST(character.Account.Pseudo, character.Friends)));
         }
 
         /// <summary>
@@ -178,20 +186,24 @@ namespace Codebreak.Service.World.Frame
         private void RemoveFriend(CharacterEntity character, string message)
         {
             var pseudo = message.Substring(3);
-            var relation = character.Friends.FirstOrDefault(friend => friend.Pseudo == pseudo);
-            if(relation == null)
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
 
-            if (!SocialRelationRepository.Instance.Remove(relation))
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+            WorldService.Instance.AddMessage(() =>
+                {
+                    var relation = character.Friends.FirstOrDefault(friend => friend.Pseudo == pseudo);
+                    if (relation == null)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            character.SafeDispatch(WorldMessage.FRIEND_DELETE_SUCCESS());
+                    if (!SocialRelationRepository.Instance.Remove(relation))
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    character.SafeDispatch(WorldMessage.FRIEND_DELETE_SUCCESS());
+                });
         }
 
         /// <summary>
@@ -202,51 +214,55 @@ namespace Codebreak.Service.World.Frame
         private void AddFriend(CharacterEntity character, string message)
         {
             var name = message.Substring(2);
-            var target = EntityManager.Instance.GetCharacterByName(name);
-            if(target == null || target.Account == null)
-            {
-                character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_UNKNOW_PLAYER());
-                return;
-            }
 
-            if(target.Id == character.Id)
-            {
-                character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_YOURSELF());
-                return;
-            }
+            WorldService.Instance.AddMessage(() =>
+                {
+                    var target = EntityManager.Instance.GetCharacterByName(name);
+                    if (target == null || target.Account == null)
+                    {
+                        character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_UNKNOW_PLAYER());
+                        return;
+                    }
 
-            if (character.Friends.Any(friend => friend.Pseudo == target.Account.Pseudo))
-            {
-                character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_ALREADY());
-                return;
-            }
+                    if (target.Id == character.Id)
+                    {
+                        character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_YOURSELF());
+                        return;
+                    }
 
-            if (character.Ennemies.Any(ennemy => ennemy.Pseudo == target.Account.Pseudo))
-            {
-                character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_ALREADY());
-                return;
-            }
+                    if (character.Friends.Any(friend => friend.Pseudo == target.Account.Pseudo))
+                    {
+                        character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_ALREADY());
+                        return;
+                    }
 
-            if(character.Friends.Count() >= WorldConfig.MAX_FRIENDS)
-            {
-                character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_FULL());
-                return;
-            }
+                    if (character.Ennemies.Any(ennemy => ennemy.Pseudo == target.Account.Pseudo))
+                    {
+                        character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_ALREADY());
+                        return;
+                    }
 
-            var relation = new SocialRelationDAO()
-            {
-                AccountId = character.AccountId,
-                Pseudo = target.Account.Pseudo,
-                TypeId = (int)SocialRelationTypeEnum.TYPE_FRIEND
-            };
+                    if (character.Friends.Count() >= WorldConfig.MAX_FRIENDS)
+                    {
+                        character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_FULL());
+                        return;
+                    }
 
-            if(!SocialRelationRepository.Instance.InsertWithKey(relation))
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+                    var relation = new SocialRelationDAO()
+                    {
+                        AccountId = character.AccountId,
+                        Pseudo = target.Account.Pseudo,
+                        TypeId = (int)SocialRelationTypeEnum.TYPE_FRIEND
+                    };
 
-            character.SafeDispatch(WorldMessage.FRIEND_ADD(character.Account.Pseudo, relation));
+                    if (!SocialRelationRepository.Instance.InsertWithKey(relation))
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    character.SafeDispatch(WorldMessage.FRIEND_ADD(character.Account.Pseudo, relation));
+                });
         }
     }
 }

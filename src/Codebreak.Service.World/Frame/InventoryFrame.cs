@@ -49,23 +49,23 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ObjectMove(CharacterEntity entity, string message)
+        private void ObjectMove(CharacterEntity character, string message)
         {            
             var data = message.Substring(2).Split('|');
 
             long itemId = -1;
             if(!long.TryParse(data[0], out itemId))
             {
-                entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                character.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                 return;
             }
 
             int slotId = -1;
             if(!int.TryParse(data[1], out slotId))
             {
-                entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                character.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                 return;
             }
 
@@ -74,36 +74,36 @@ namespace Codebreak.Service.World.Frame
             {
                 if (!int.TryParse(data[2], out quantity))
                 {
-                    entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                    character.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                     return;
                 }
             }
 
             if(!Enum.IsDefined(typeof(ItemSlotEnum), slotId))
             {
-                entity.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                character.SafeDispatch(WorldMessage.OBJECT_MOVE_ERROR());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    var item = entity.Inventory.Items.Find(x => x.Id == itemId);
+                    var item = character.Inventory.Items.Find(x => x.Id == itemId);
                     if(item == null)
                     {
-                        entity.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
+                        character.Dispatch(WorldMessage.OBJECT_MOVE_ERROR());
                         return;
                     }
 
-                    entity.Inventory.MoveItem(item, (ItemSlotEnum)slotId, quantity);
+                    character.Inventory.MoveItem(item, (ItemSlotEnum)slotId, quantity);
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ObjectUse(CharacterEntity entity, string message)
+        private void ObjectUse(CharacterEntity character, string message)
         {
             var data = message.Substring(2);
             var useData = data.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -111,7 +111,7 @@ namespace Codebreak.Service.World.Frame
             long itemId = -1;
             if (!long.TryParse(useData[0], out itemId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -120,7 +120,7 @@ namespace Codebreak.Service.World.Frame
             {
                 if (!long.TryParse(useData[1], out targetId))
                 {
-                    entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
             }
@@ -130,23 +130,23 @@ namespace Codebreak.Service.World.Frame
             {
                 if (!int.TryParse(useData[2], out targetCell))
                 {
-                    entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
             }
 
-            entity.AddMessage(() => 
+            character.AddMessage(() => 
                 {
-                    ActionEffectManager.Instance.ApplyEffects(entity, itemId, targetId, targetCell);
+                    ActionEffectManager.Instance.ApplyEffects(character, itemId, targetId, targetCell);
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void ObjectDelete(CharacterEntity entity, string message)
+        private void ObjectDelete(CharacterEntity character, string message)
         {
            
         }

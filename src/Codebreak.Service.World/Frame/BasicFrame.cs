@@ -196,7 +196,14 @@ namespace Codebreak.Service.World.Frame
         /// <param name="character"></param>
         /// <param name="message"></param>
         private void GuildTaxCollectorRemove(CharacterEntity character, string message)
-        {           
+        {
+            long taxCollectorId = -1;
+            if (!long.TryParse(message.Substring(2), out taxCollectorId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
             character.AddMessage(() =>
                 {
                     if(!character.HasGameAction(GameActionTypeEnum.MAP))
@@ -204,14 +211,7 @@ namespace Codebreak.Service.World.Frame
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
-
-                    long taxCollectorId = -1;
-                    if (!long.TryParse(message.Substring(2), out taxCollectorId))
-                    {
-                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
-
+                    
                     var taxCollector = character.Map.GetEntity(taxCollectorId) as TaxCollectorEntity;
                     if(taxCollector == null)
                     {
@@ -223,7 +223,7 @@ namespace Codebreak.Service.World.Frame
                         {
                             if (character.GuildMember == null)
                             {
-                                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                                 return;
                             }
 
@@ -254,15 +254,15 @@ namespace Codebreak.Service.World.Frame
         /// <param name="character"></param>
         /// <param name="message"></param>
         public void GuildTaxCollectorLeave(CharacterEntity character, string message)
-        {
-            if (character.GuildMember == null)
-            {
-                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
+        {           
             character.AddMessage(() =>
                 {
+                    if (character.GuildMember == null)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
                     if (!character.HasGameAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION))
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -302,7 +302,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="entity"></param>
         /// <param name="message"></param>
         private void GuildHireTaxcollector(CharacterEntity entity, string message)
-        {            
+        {
             entity.AddMessage(() =>
                 {
                     if (!entity.HasGameAction(GameActionTypeEnum.MAP))
@@ -311,16 +311,13 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    WorldService.Instance.AddMessage(() => 
-                        {
-                            if (entity.GuildMember == null)
-                            {
-                                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                                return;
-                            }
+                    if (entity.GuildMember == null)
+                    {
+                        entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-                            entity.GuildMember.HireTaxCollector();
-                        });
+                    entity.GuildMember.HireTaxCollector();
                 });
         }
 
@@ -366,50 +363,44 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         ///
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildTaxCollectorsList(CharacterEntity entity, string message)
+        private void GuildTaxCollectorsList(CharacterEntity character, string message)
         {
-            if (entity.GuildMember == null)
+            if (character.GuildMember == null)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
             
-            entity.GuildMember.SendTaxCollectorsList();
-            entity.GuildMember.TaxCollectorsInterfaceJoin();
+            character.GuildMember.SendTaxCollectorsList();
+            character.GuildMember.TaxCollectorsInterfaceJoin();
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildBoostInformations(CharacterEntity entity, string message)
+        private void GuildBoostInformations(CharacterEntity character, string message)
         {
-            if (entity.GuildMember == null)
+            if (character.GuildMember == null)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.GuildMember.SendBoostInformations();
+            character.GuildMember.SendBoostInformations();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildCreationRequest(CharacterEntity entity, string message)
-        {
-            if (entity.GuildMember != null)
-            {
-                entity.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_ALREADY_IN_GUILD());
-                return;
-            }
-
+        private void GuildCreationRequest(CharacterEntity character, string message)
+        {       
             var guildData = message.Substring(2).Split('|');
             var backId = int.Parse(guildData[0]);
             var backColor = int.Parse(guildData[1]);
@@ -417,11 +408,17 @@ namespace Codebreak.Service.World.Frame
             var symbolColor = int.Parse(guildData[3]);
             var name = guildData[4];
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (!entity.HasGameAction(GameActionTypeEnum.GUILD_CREATE))
+                if (character.GuildMember != null)
                 {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    character.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_ALREADY_IN_GUILD());
+                    return;
+                }
+
+                if (!character.HasGameAction(GameActionTypeEnum.GUILD_CREATE))
+                {
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
@@ -429,23 +426,23 @@ namespace Codebreak.Service.World.Frame
                     {
                         if(GuildManager.Instance.Exists(name))
                         {
-                            entity.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_NAME_ALREADY_EXISTS());
+                            character.SafeDispatch(WorldMessage.GUILD_CREATION_ERROR_NAME_ALREADY_EXISTS());
                             return;
                         }
 
-                        if (!GuildManager.Instance.Create(entity, name, backId, backColor, symbolId, symbolColor))
+                        if (!GuildManager.Instance.Create(character, name, backId, backColor, symbolId, symbolColor))
                         {
-                            entity.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create the guild, unknow error."));
+                            character.SafeDispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create the guild, unknow error."));
                             return;
                         }
 
-                        entity.SafeDispatch(WorldMessage.GUILD_CREATION_SUCCESS());
-                        entity.GuildMember.SendGuildStats();
-                        entity.RefreshOnMap();
+                        character.SafeDispatch(WorldMessage.GUILD_CREATION_SUCCESS());
+                        character.GuildMember.SendGuildStats();
+                        character.RefreshOnMap();
 
-                        entity.AddMessage(() =>
+                        character.AddMessage(() =>
                             {
-                                entity.StopAction(GameActionTypeEnum.GUILD_CREATE);
+                                character.StopAction(GameActionTypeEnum.GUILD_CREATE);
                             });
                     });
             });
@@ -454,47 +451,47 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildCreationLeave(CharacterEntity entity, string message)
+        private void GuildCreationLeave(CharacterEntity character, string message)
         {
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    if (!entity.HasGameAction(GameActionTypeEnum.GUILD_CREATE))
+                    if (!character.HasGameAction(GameActionTypeEnum.GUILD_CREATE))
                     {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
-                    entity.StopAction(GameActionTypeEnum.GUILD_CREATE);
+                    character.StopAction(GameActionTypeEnum.GUILD_CREATE);
                 });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildKick(CharacterEntity entity, string message)
+        private void GuildKick(CharacterEntity character, string message)
         {
-            var character = (CharacterEntity)entity;
             if(character.GuildMember == null)
             {
                 character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
+
             character.GuildMember.MemberKick(message.Substring(2));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildProfilUpdate(CharacterEntity entity, string message)
+        private void GuildProfilUpdate(CharacterEntity character, string message)
         {
-            if (entity.GuildMember == null)
+            if (character.GuildMember == null)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
@@ -504,86 +501,91 @@ namespace Codebreak.Service.World.Frame
             var xpSharePercent = int.Parse(messageData[2]);
             var power = int.Parse(messageData[3]);
 
-            entity.GuildMember.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
+            character.GuildMember.MemberProfilUpdate(profilId, rank, xpSharePercent, power);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        public void GuildJoinRefuse(CharacterEntity entity, string message)
+        public void GuildJoinRefuse(CharacterEntity character, string message)
         {
-            // if not being invited and not even inviting
-            if (entity.GuildInvitedPlayerId == -1 && entity.GuildInviterPlayerId == -1)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            CharacterEntity distantCharacter = null;
-
-            // get the remote character
-            if (entity.GuildInvitedPlayerId != -1)
-                distantCharacter = EntityManager.Instance.GetCharacterById(entity.GuildInvitedPlayerId);
-            else
-                distantCharacter = EntityManager.Instance.GetCharacterById(entity.GuildInviterPlayerId);
-            
-            // be safe even if this should never happend
-            if (distantCharacter != null)
-            {
-                if (entity.Id == distantCharacter.GuildInvitedPlayerId)
+            WorldService.Instance.AddMessage(() =>
                 {
-                    entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_LOCAL());
-                    distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_DISTANT(entity.Name));
-                }
-                else
-                {
-                    entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_LOCAL());
-                    distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_LOCAL());
-                }
-                distantCharacter.GuildInvitedPlayerId = -1;
-                distantCharacter.GuildInviterPlayerId = -1;
-            }
+                    // if not being invited and not even inviting
+                    if (character.GuildInvitedPlayerId == -1 && character.GuildInviterPlayerId == -1)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            entity.GuildInvitedPlayerId = -1;
-            entity.GuildInviterPlayerId = -1;
+                    CharacterEntity distantCharacter = null;
+
+                    // get the remote character
+                    if (character.GuildInvitedPlayerId != -1)
+                        distantCharacter = EntityManager.Instance.GetCharacterById(character.GuildInvitedPlayerId);
+                    else
+                        distantCharacter = EntityManager.Instance.GetCharacterById(character.GuildInviterPlayerId);
+
+                    // be safe even if this should never happend
+                    if (distantCharacter != null)
+                    {
+                        if (character.Id == distantCharacter.GuildInvitedPlayerId)
+                        {
+                            character.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_LOCAL());
+                            distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_DISTANT(character.Name));
+                        }
+                        else
+                        {
+                            character.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_LOCAL());
+                            distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_REFUSED_LOCAL());
+                        }
+                        distantCharacter.GuildInvitedPlayerId = -1;
+                        distantCharacter.GuildInviterPlayerId = -1;
+                    }
+                    character.GuildInvitedPlayerId = -1;
+                    character.GuildInviterPlayerId = -1;
+                });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildJoinAccept(CharacterEntity entity, string message)
+        private void GuildJoinAccept(CharacterEntity character, string message)
         {
-            // not being invited ?
-            if (entity.GuildInviterPlayerId == -1)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+            WorldService.Instance.AddMessage(() =>
+                {
+                    // not being invited ?
+                    if (character.GuildInviterPlayerId == -1)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            var distantCharacter = EntityManager.Instance.GetCharacterById(entity.GuildInviterPlayerId);
+                    var distantCharacter = EntityManager.Instance.GetCharacterById(character.GuildInviterPlayerId);
 
-            entity.GuildInvitedPlayerId = -1;
-            entity.GuildInviterPlayerId = -1;
+                    character.GuildInvitedPlayerId = -1;
+                    character.GuildInviterPlayerId = -1;
 
-            // should never happend
-            if (distantCharacter == null)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
+                    // should never happend
+                    if (distantCharacter == null)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-            distantCharacter.GuildInvitedPlayerId = -1;
-            distantCharacter.GuildInviterPlayerId = -1;
-            distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ACCEPTED_DISTANT(entity.Name));
+                    distantCharacter.GuildInvitedPlayerId = -1;
+                    distantCharacter.GuildInviterPlayerId = -1;
+                    distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_ACCEPTED_DISTANT(character.Name));
 
-            distantCharacter.GuildMember.Guild.MemberJoin(entity);
+                    distantCharacter.GuildMember.Guild.MemberJoin(character);
 
-            entity.SafeDispatch(WorldMessage.GUILD_JOIN_ACCEPTED_LOCAL());
-            entity.SafeDispatch(WorldMessage.GUILD_JOIN_CLOSE());
+                    character.SafeDispatch(WorldMessage.GUILD_JOIN_ACCEPTED_LOCAL());
+                    character.SafeDispatch(WorldMessage.GUILD_JOIN_CLOSE());
+                });
         }
 
         /// <summary>
@@ -592,370 +594,385 @@ namespace Codebreak.Service.World.Frame
         /// <param name="entity"></param>
         /// <param name="message"></param>
         private void GuildJoinInvite(CharacterEntity entity, string message)
-        {
-            // not in guild
-            if (entity.GuildMember == null)
-            {
-                entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
-                return;
-            }
-
-            var distantCharacterName = message.Substring(3);
-
-            // if disconnected or fake
-            var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
-            if (distantCharacter == null)
-            {
-                entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
-                return;
-            }
-
-            // if in guild or already being invited or even inviting
-            if (distantCharacter.GuildMember != null)
-            {
-                entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_ALREADY_IN_GUILD());
-                return;
-            }
-
-            // if being invited or inviting
-            if (entity.GuildInvitedPlayerId != -1 ||
-                entity.GuildInviterPlayerId != -1 || 
-                distantCharacter.GuildInvitedPlayerId != -1 || 
-                distantCharacter.GuildInviterPlayerId != -1)
-            {
-                entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_OCCUPIED());
-                return;
-            }
-
-            if (!entity.GuildMember.HasRight(GuildRightEnum.INVITE))
-            {
-                entity.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
-                return;
-            }
-
-            entity.GuildInvitedPlayerId = distantCharacter.Id;
-            distantCharacter.GuildInviterPlayerId = entity.Id;
-
-            entity.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_LOCAL(distantCharacterName));
-            distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_DISTANT(entity.Id, entity.Name, entity.GuildMember.Guild.Name));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        private void GuildGeneralInformations(CharacterEntity entity, string message)
-        {
-            if (entity.GuildMember == null)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            entity.GuildMember.SendGeneralInformations();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        private void GuildMembersInformations(CharacterEntity entity, string message)
-        {
-            if (entity.GuildMember == null)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            entity.GuildMember.SendMembersInformations();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        private void PartyInvite(CharacterEntity entity, string message)
-        {
-            var distantCharacterName = message.Substring(2);
-
-            // if disconnected or fake
-            var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
-            if(distantCharacter == null)
-            {
-                entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_PLAYER_OFFLINE(distantCharacterName));
-                return;
-            }
-
-            // if in party or being invited or even inviting
-            if(distantCharacter.PartyId != -1 || distantCharacter.PartyInvitedPlayerId != -1 || distantCharacter.PartyInviterPlayerId != -1)
-            {
-                entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_ALREADY_IN_PARTY());
-                return;
-            }
-                                                           
-            // if being invited or inviting
-            if (entity.PartyInvitedPlayerId != -1 || entity.PartyInviterPlayerId != -1)
-            {
-                entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_ALREADY_IN_PARTY());
-                return;
-            }
-
-            // if party full
-            var party = PartyManager.Instance.GetParty(entity.PartyId);
-            if(party != null)  
-            {         
-                if(party.MemberCount > 7)
+        {            
+            WorldService.Instance.AddMessage(() =>
                 {
-                    entity.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_FULL());
+                    // not in guild
+                    if (entity.GuildMember == null)
+                    {
+                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
+                        return;
+                    }
+
+                    var distantCharacterName = message.Substring(3);
+
+                    // if disconnected or fake
+                    var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
+                    if (distantCharacter == null)
+                    {
+                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
+                        return;
+                    }
+
+                    // if in guild or already being invited or even inviting
+                    if (distantCharacter.GuildMember != null)
+                    {
+                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_ALREADY_IN_GUILD());
+                        return;
+                    }
+
+                    // if being invited or inviting
+                    if (entity.GuildInvitedPlayerId != -1 ||
+                        entity.GuildInviterPlayerId != -1 ||
+                        distantCharacter.GuildInvitedPlayerId != -1 ||
+                        distantCharacter.GuildInviterPlayerId != -1)
+                    {
+                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_OCCUPIED());
+                        return;
+                    }
+
+                    if (!entity.GuildMember.HasRight(GuildRightEnum.INVITE))
+                    {
+                        entity.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                        return;
+                    }
+
+                    entity.GuildInvitedPlayerId = distantCharacter.Id;
+                    distantCharacter.GuildInviterPlayerId = entity.Id;
+
+                    entity.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_LOCAL(distantCharacterName));
+                    distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_DISTANT(entity.Id, entity.Name, entity.GuildMember.Guild.Name));
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GuildGeneralInformations(CharacterEntity character, string message)
+        {
+            if (character.GuildMember == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.GuildMember.SendGeneralInformations();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void GuildMembersInformations(CharacterEntity character, string message)
+        {
+            if (character.GuildMember == null)
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.GuildMember.SendMembersInformations();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void PartyInvite(CharacterEntity character, string message)
+        {
+            WorldService.Instance.AddMessage(() =>
+                {
+                    var distantCharacterName = message.Substring(2);
+
+                    // if disconnected or fake
+                    var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
+                    if (distantCharacter == null)
+                    {
+                        character.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_PLAYER_OFFLINE(distantCharacterName));
+                        return;
+                    }
+
+                    // if in party or being invited or even inviting
+                    if (distantCharacter.PartyId != -1 || distantCharacter.PartyInvitedPlayerId != -1 || distantCharacter.PartyInviterPlayerId != -1)
+                    {
+                        character.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_ALREADY_IN_PARTY());
+                        return;
+                    }
+
+                    // if being invited or inviting
+                    if (character.PartyInvitedPlayerId != -1 || character.PartyInviterPlayerId != -1)
+                    {
+                        character.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_ALREADY_IN_PARTY());
+                        return;
+                    }
+
+                    // if party full
+                    var party = PartyManager.Instance.GetParty(character.PartyId);
+                    if (party != null)
+                    {
+                        if (party.MemberCount > 7)
+                        {
+                            character.SafeDispatch(WorldMessage.PARTY_INVITE_ERROR_FULL());
+                            return;
+                        }
+                    }
+
+                    character.PartyInvitedPlayerId = distantCharacter.Id;
+                    distantCharacter.PartyInviterPlayerId = character.Id;
+
+                    message = WorldMessage.PARTY_INVITE_SUCCESS(character.Name, distantCharacterName);
+
+                    character.SafeDispatch(message);
+                    distantCharacter.SafeDispatch(message);
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        public void PartyRefuse(CharacterEntity character, string message)
+        {           
+            WorldService.Instance.AddMessage(() =>
+                {
+                    // if not being invited and not even inviting
+                    if (character.PartyInvitedPlayerId == -1 && character.PartyInviterPlayerId == -1)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    CharacterEntity distantCharacter = null;
+
+                    // get the remote character
+                    if (character.PartyInvitedPlayerId != -1)
+                        distantCharacter = EntityManager.Instance.GetCharacterById(character.PartyInvitedPlayerId);
+                    else
+                        distantCharacter = EntityManager.Instance.GetCharacterById(character.PartyInviterPlayerId);
+
+                    // be safe even if this should never happend
+                    if (distantCharacter != null)
+                    {
+                        distantCharacter.PartyInvitedPlayerId = -1;
+                        distantCharacter.PartyInviterPlayerId = -1;
+                        distantCharacter.SafeDispatch(WorldMessage.PARTY_REFUSE());
+                    }
+
+                    character.PartyInvitedPlayerId = -1;
+                    character.PartyInviterPlayerId = -1;
+                    character.SafeDispatch(WorldMessage.PARTY_REFUSE());
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void PartyAccept(CharacterEntity character, string message)
+        {
+            WorldService.Instance.AddMessage(() =>
+            {
+                // not being invited ?
+                if (character.PartyInviterPlayerId == -1)
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
-            }
 
-            entity.PartyInvitedPlayerId = distantCharacter.Id;
-            distantCharacter.PartyInviterPlayerId = entity.Id;
+                var distantCharacter = EntityManager.Instance.GetCharacterById(character.PartyInviterPlayerId);
 
-            message = WorldMessage.PARTY_INVITE_SUCCESS(entity.Name, distantCharacterName);
+                character.PartyInvitedPlayerId = -1;
+                character.PartyInviterPlayerId = -1;
 
-            entity.SafeDispatch(message);
-            distantCharacter.SafeDispatch(message);
-        }
+                // should never happend
+                if (distantCharacter == null)
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        public void PartyRefuse(CharacterEntity entity, string message)
-        {
-            // if not being invited and not even inviting
-            if (entity.PartyInvitedPlayerId == -1 && entity.PartyInviterPlayerId == -1)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            CharacterEntity distantCharacter = null;
-
-            // get the remote character
-            if (entity.PartyInvitedPlayerId != -1)
-                distantCharacter = EntityManager.Instance.GetCharacterById(entity.PartyInvitedPlayerId);
-            else
-                distantCharacter = EntityManager.Instance.GetCharacterById(entity.PartyInviterPlayerId);
-
-            // be safe even if this should never happend
-            if (distantCharacter != null)
-            {
                 distantCharacter.PartyInvitedPlayerId = -1;
                 distantCharacter.PartyInviterPlayerId = -1;
+
                 distantCharacter.SafeDispatch(WorldMessage.PARTY_REFUSE());
-            }
 
-            entity.PartyInvitedPlayerId = -1;
-            entity.PartyInviterPlayerId = -1;
-            entity.SafeDispatch(WorldMessage.PARTY_REFUSE());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        private void PartyAccept(CharacterEntity entity, string message)
-        {
-            // not being invited ?
-            if (entity.PartyInviterPlayerId == -1)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            var distantCharacter = EntityManager.Instance.GetCharacterById(entity.PartyInviterPlayerId);
-
-            entity.PartyInvitedPlayerId = -1;
-            entity.PartyInviterPlayerId = -1;
-
-            // should never happend
-            if(distantCharacter == null)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-            
-            distantCharacter.PartyInvitedPlayerId = -1;
-            distantCharacter.PartyInviterPlayerId = -1;
-            
-            distantCharacter.SafeDispatch(WorldMessage.PARTY_REFUSE());
-
-            // already in party so we add the new one
-            if(distantCharacter.PartyId != -1)
-            {
-                var party = PartyManager.Instance.GetParty(distantCharacter.PartyId);
-                if(party == null)
+                // already in party so we add the new one
+                if (distantCharacter.PartyId != -1)
                 {
-                    entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    var party = PartyManager.Instance.GetParty(distantCharacter.PartyId);
+                    if (party == null)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
+                    party.AddMember(character);
                     return;
                 }
 
-                party.AddMember(entity);
-                return;
-            }
-
-            // create new party
-            PartyManager.Instance.CreateParty(distantCharacter, entity);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        private void PartyLeave(CharacterEntity entity, string message)
-        {
-            // not in party ?
-            if (entity.PartyId == -1)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            // null party should never happend but be sure
-            var party = PartyManager.Instance.GetParty(entity.PartyId);
-            if(party == null)
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            // wants to leave
-            if (message == "PV")
-            {
-                party.RemoveMember(entity);
-                return;
-            }
-
-            long kickedPlayerId = -1;
-            if(!long.TryParse(message.Substring(2), out kickedPlayerId))
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            party.KickMember(entity, kickedPlayerId);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="message"></param>
-        private void BoostStats(CharacterEntity entity, string message)
-        {
-            var statId = 0;
-
-            if (!int.TryParse(message.Substring(2), out statId))
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            if (!m_statById.ContainsKey(statId))
-            {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            entity.AddMessage(() =>
-            {
-                var effect = m_statById[statId];
-                var actualValue = entity.Statistics.GetEffect(effect).Base;
-                var boostValue = statId == 11 && entity.Breed == CharacterBreedEnum.BREED_SACRIEUR ? 2 : 1;
-                var requiredPoint = GenericStats.GetRequiredStatsPoint(entity.Breed, statId, actualValue);
-
-                if (entity.CaractPoint < requiredPoint)
-                {
-                    entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                    return;
-                }
-
-                entity.CaractPoint -= requiredPoint;
-
-                switch (effect)
-                {
-                    case EffectEnum.AddStrength:
-                        entity.DatabaseRecord.Strength += boostValue;
-                        break;
-
-                    case EffectEnum.AddVitality:
-                        entity.DatabaseRecord.Vitality += boostValue;
-                        break;
-
-                    case EffectEnum.AddWisdom:
-                        entity.DatabaseRecord.Wisdom += boostValue;
-                        break;
-
-                    case EffectEnum.AddIntelligence:
-                        entity.DatabaseRecord.Intelligence += boostValue;
-                        break;
-
-                    case EffectEnum.AddAgility:
-                        entity.DatabaseRecord.Agility += boostValue;
-                        break;
-                }
-
-                entity.Statistics.AddBase(effect, boostValue);
-                entity.Dispatch(WorldMessage.ACCOUNT_STATS(entity));
+                // create new party
+                PartyManager.Instance.CreateParty(distantCharacter, character);
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void BasicPong(CharacterEntity entity, string message)
+        private void PartyLeave(CharacterEntity character, string message)
         {
-            entity.SafeDispatch(WorldMessage.BASIC_PONG());
+            WorldService.Instance.AddMessage(() =>
+            {
+                // not in party ?
+                if (character.PartyId == -1)
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                // null party should never happend but be sure
+                var party = PartyManager.Instance.GetParty(character.PartyId);
+                if (party == null)
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                // wants to leave
+                if (message == "PV")
+                {
+                    party.RemoveMember(character);
+                    return;
+                }
+
+                long kickedPlayerId = -1;
+                if (!long.TryParse(message.Substring(2), out kickedPlayerId))
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                party.KickMember(character, kickedPlayerId);
+            });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void BasicQPong(CharacterEntity entity, string message)
+        private void BoostStats(CharacterEntity character, string message)
         {
-            entity.SafeDispatch(WorldMessage.BASIC_QPONG());
+            var statId = 0;
+
+            if (!int.TryParse(message.Substring(2), out statId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if (!m_statById.ContainsKey(statId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.AddMessage(() =>
+            {
+                var effect = m_statById[statId];
+                var actualValue = character.Statistics.GetEffect(effect).Base;
+                var boostValue = statId == 11 && character.Breed == CharacterBreedEnum.BREED_SACRIEUR ? 2 : 1;
+                var requiredPoint = GenericStats.GetRequiredStatsPoint(character.Breed, statId, actualValue);
+
+                if (character.CaractPoint < requiredPoint)
+                {
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                character.CaractPoint -= requiredPoint;
+
+                switch (effect)
+                {
+                    case EffectEnum.AddStrength:
+                        character.DatabaseRecord.Strength += boostValue;
+                        break;
+
+                    case EffectEnum.AddVitality:
+                        character.DatabaseRecord.Vitality += boostValue;
+                        break;
+
+                    case EffectEnum.AddWisdom:
+                        character.DatabaseRecord.Wisdom += boostValue;
+                        break;
+
+                    case EffectEnum.AddIntelligence:
+                        character.DatabaseRecord.Intelligence += boostValue;
+                        break;
+
+                    case EffectEnum.AddAgility:
+                        character.DatabaseRecord.Agility += boostValue;
+                        break;
+                }
+
+                character.Statistics.AddBase(effect, boostValue);
+                character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+            });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void BasicDate(CharacterEntity entity, string message)
+        private void BasicPong(CharacterEntity character, string message)
         {
-            entity.SafeDispatch(WorldMessage.BASIC_DATE());
+            character.SafeDispatch(WorldMessage.BASIC_PONG());
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void BasicTime(CharacterEntity entity, string message)
+        private void BasicQPong(CharacterEntity character, string message)
         {
-            entity.SafeDispatch(WorldMessage.BASIC_TIME());
+            character.SafeDispatch(WorldMessage.BASIC_QPONG());
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void BasicMessage(CharacterEntity entity, string message)
+        private void BasicDate(CharacterEntity character, string message)
+        {
+            character.SafeDispatch(WorldMessage.BASIC_DATE());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void BasicTime(CharacterEntity character, string message)
+        {
+            character.SafeDispatch(WorldMessage.BASIC_TIME());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void BasicMessage(CharacterEntity character, string message)
         {
             var messageData = message.Substring(2).Split('|');
             var channel = messageData[0];
@@ -963,30 +980,33 @@ namespace Codebreak.Service.World.Frame
 
             if (channel.Length == 1)
             {
-                entity.AddMessage(() =>
+                character.AddMessage(() =>
                     {
-                        entity.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent);
+                        character.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent);
                     });
             }
             else
             {
-                var remoteEntity = EntityManager.Instance.GetCharacterByName(channel);
+                WorldService.Instance.AddMessage(() =>
+                    {
+                        var remoteEntity = EntityManager.Instance.GetCharacterByName(channel);
 
-                if (remoteEntity == null)
-                {
-                    entity.SafeDispatch(WorldMessage.CHAT_MESSAGE_ERROR_PLAYER_OFFLINE());
-                    return;
-                }
+                        if (remoteEntity == null)
+                        {
+                            character.SafeDispatch(WorldMessage.CHAT_MESSAGE_ERROR_PLAYER_OFFLINE());
+                            return;
+                        }
 
-                entity.AddMessage(() =>
-                {
-                    entity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity);
-                });
+                        character.AddMessage(() =>
+                        {
+                            character.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity);
+                        });
 
-                remoteEntity.AddMessage(() =>
-                {
-                    remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, entity);
-                });
+                        remoteEntity.AddMessage(() =>
+                        {
+                            remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, character);
+                        });
+                    });
             }
         }
     }

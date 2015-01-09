@@ -133,13 +133,13 @@ namespace Codebreak.Service.World.Frame
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightList(CharacterEntity entity, string message)
+        private void FightList(CharacterEntity character, string message)
         {
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
             {
-                if (entity.Map.FightManager.FightCount > 0)
+                if (character.Map.FightManager.FightCount > 0)
                 {
-                    entity.Dispatch(WorldMessage.FIGHT_LIST(entity.Map.FightManager.Fights));
+                    character.Dispatch(WorldMessage.FIGHT_LIST(character.Map.FightManager.Fights));
                 }
             });
         }
@@ -149,21 +149,21 @@ namespace Codebreak.Service.World.Frame
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="message"></param>
-        private void FightDetails(CharacterEntity entity, string message)
+        private void FightDetails(CharacterEntity character, string message)
         {
             if (message.Length < 3)
                 return;
 
             var fightId = int.Parse(message.Substring(2));
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    var fight = entity.Map.FightManager.GetFight(fightId);
+                    var fight = character.Map.FightManager.GetFight(fightId);
 
                     if (fight == null)
                         return;
 
-                    entity.Dispatch(WorldMessage.FIGHT_DETAILS(fight));
+                    character.Dispatch(WorldMessage.FIGHT_DETAILS(fight));
                 });
         }
     }

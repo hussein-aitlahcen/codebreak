@@ -26,23 +26,23 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GameInformation(CharacterEntity entity, string message)
+        private void GameInformation(CharacterEntity character, string message)
         {
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    entity.FrameManager.RemoveFrame(GameInformationFrame.Instance);
+                    character.FrameManager.RemoveFrame(GameInformationFrame.Instance);
 
-                    if (entity.HasGameAction(GameActionTypeEnum.FIGHT))
+                    if (character.HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        entity.Fight.SendFightJoinInfos(entity);
+                        character.Fight.SendFightJoinInfos(character);
                         return;
                     }
 
-                    WorldService.Instance.RemoveUpdatable(entity);
+                    WorldService.Instance.RemoveUpdatable(character);
 
-                    entity.StartAction(Game.Action.GameActionTypeEnum.MAP);
+                    character.StartAction(Game.Action.GameActionTypeEnum.MAP);
                 });
         }
     }

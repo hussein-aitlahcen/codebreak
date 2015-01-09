@@ -207,6 +207,48 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
+        public sealed class EmoteCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "emote"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Play an emote on the map. Arguments %emoteId%"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                var emoteId = -1;
+                if(!Int32.TryParse(context.TextCommandArgument.NextWord(), out emoteId))
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character emote %emoteId%"));
+                    return;
+                }
+
+                foreach(var entity in context.Character.Map.Entities)
+                    entity.AddMessage(() => entity.EmoteUse(emoteId));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class AlignmentResetCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 

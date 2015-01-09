@@ -66,40 +66,40 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void DialogCreate(CharacterEntity entity, string message)
+        private void DialogCreate(CharacterEntity character, string message)
         {
             long npcId = -1;
             if (!long.TryParse(message.Substring(2), out npcId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.AddMessage(() =>
+            character.AddMessage(() =>
                 {
-                    var target = entity.Map.GetEntity(npcId);
+                    var target = character.Map.GetEntity(npcId);
                     if(target == null || target.Type != EntityTypeEnum.TYPE_NPC)
                     {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
                     var npc = (NonPlayerCharacterEntity)target;
                     if(npc.InitialQuestion == null)
                     {
-                        entity.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    if(!entity.CanGameAction(GameActionTypeEnum.NPC_DIALOG))
+                    if(!character.CanGameAction(GameActionTypeEnum.NPC_DIALOG))
                     {
-                        entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                        character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
                         return;
                     }
 
-                    entity.NpcDialogStart(npc);
+                    character.NpcDialogStart(npc);
                 });
         }
 
@@ -524,15 +524,17 @@ namespace Codebreak.Service.World.Frame
 
             var actionArgs = abortData[1];
 
-            var action = character.CurrentAction;
-            if (action == null)
-            {
-                Logger.Debug("GameActionFrame::GameActionFinish entity has empty action : " + character.Name);
-                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            character.AbortAction(character.CurrentAction.Type, actionArgs);
+            character.AddMessage(() =>
+                {
+                    var action = character.CurrentAction;
+                    if (action == null)
+                    {
+                        Logger.Debug("GameActionFrame::GameActionFinish entity has empty action : " + character.Name);
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }                    
+                    character.AbortAction(character.CurrentAction.Type, actionArgs);
+                });
         }
 
         /// <summary>
@@ -549,14 +551,16 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            var action = character.CurrentAction;
-            if (action == null)
-            {
-                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
-            character.StopAction(action.Type);
+            character.AddMessage(() =>
+                {
+                    var action = character.CurrentAction;
+                    if (action == null)
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+                    character.StopAction(action.Type);
+                });
         }
     }
 }

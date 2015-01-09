@@ -151,29 +151,23 @@ namespace Codebreak.Service.World
         {
             foreach (var message in client.Receive(buffer, offset, count))
             {
-                AddMessage(() =>
+                Logger.Debug("Client : " + message);
+
+
+                if (client.CurrentCharacter != null)
                 {
-                    Logger.Debug("Client : " + message);
-
-					Stopwatch sw = Stopwatch.StartNew();
-
-                    if (client.CurrentCharacter != null)
+                    if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
                     {
-                        if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
-                        {
-                            client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                        }
+                        client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                     }
-                    else
+                }
+                else
+                {
+                    if (!client.FrameManager.ProcessMessage(message))
                     {
-                        if (!client.FrameManager.ProcessMessage(message))
-                        {
-                            client.Send(WorldMessage.BASIC_NO_OPERATION());
-                        }
-                    }      
-
-					Logger.Debug("Message processed in : " + sw.ElapsedMilliseconds);
-                });
+                        client.Send(WorldMessage.BASIC_NO_OPERATION());
+                    }
+                }
             }
         }
         
