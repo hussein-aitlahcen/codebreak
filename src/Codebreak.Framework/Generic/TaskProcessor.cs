@@ -210,8 +210,6 @@ namespace Codebreak.Framework.Generic
         {
             Logger.Info("TaskQueue[" + Name + "] started.");
 
-            Thread.CurrentThread.Name = Name;
-
             InternalUpdate();
         }
 

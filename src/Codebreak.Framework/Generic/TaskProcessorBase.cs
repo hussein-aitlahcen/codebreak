@@ -208,9 +208,7 @@ namespace Codebreak.Framework.Generic
         private void InternalStart()
         {
             Logger.Info("TaskQueue[" + Name + "] started.");
-
-            Thread.CurrentThread.Name = Name;
-
+            
             InternalUpdate();
         }
 
@@ -218,7 +216,7 @@ namespace Codebreak.Framework.Generic
         /// 
         /// </summary>
         private void InternalUpdate()
-        {       
+        {
             var timeStart = m_queueTimer.ElapsedMilliseconds;
             var updateDelta = timeStart - LastUpdate;
             LastUpdate = timeStart;
