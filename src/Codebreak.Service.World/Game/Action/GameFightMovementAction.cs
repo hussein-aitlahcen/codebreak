@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Game.Fight;
+﻿using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="entity"></param>
         /// <param name="path"></param>
         public GameFightMovementAction(FighterBase entity, MovementPath path)
-            : base(GameActionTypeEnum.MAP_MOVEMENT, entity, (long)path.MovementTime)
+            : base(GameActionTypeEnum.MAP_MOVEMENT, entity, entity.Type == EntityTypeEnum.TYPE_CHARACTER ? 5000 : (long)path.MovementTime)
         {
             Path = path;
         }

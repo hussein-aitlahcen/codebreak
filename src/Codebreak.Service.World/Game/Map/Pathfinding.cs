@@ -389,7 +389,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static double GetPathTime(int length, int direction)
         {
-            return ((length >= 4 ? Pathfinding.RUN_SPEEDS[direction] : Pathfinding.WALK_SPEEDS[direction]) * 1000 * length);
+            return ((length >= 4 ? Pathfinding.RUN_SPEEDS[direction] : Pathfinding.WALK_SPEEDS[direction]) * 1100 * length);
         }
 
         /// <summary>
