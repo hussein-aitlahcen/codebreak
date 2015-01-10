@@ -591,16 +591,16 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildJoinInvite(CharacterEntity entity, string message)
+        private void GuildJoinInvite(CharacterEntity character, string message)
         {            
             WorldService.Instance.AddMessage(() =>
                 {
                     // not in guild
-                    if (entity.GuildMember == null)
+                    if (character.GuildMember == null)
                     {
-                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
+                        character.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
                         return;
                     }
 
@@ -610,38 +610,38 @@ namespace Codebreak.Service.World.Frame
                     var distantCharacter = EntityManager.Instance.GetCharacterByName(distantCharacterName);
                     if (distantCharacter == null)
                     {
-                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
+                        character.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_UNKNOW());
                         return;
                     }
 
                     // if in guild or already being invited or even inviting
                     if (distantCharacter.GuildMember != null)
                     {
-                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_ALREADY_IN_GUILD());
+                        character.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_ALREADY_IN_GUILD());
                         return;
                     }
 
                     // if being invited or inviting
-                    if (entity.GuildInvitedPlayerId != -1 ||
-                        entity.GuildInviterPlayerId != -1 ||
+                    if (character.GuildInvitedPlayerId != -1 ||
+                        character.GuildInviterPlayerId != -1 ||
                         distantCharacter.GuildInvitedPlayerId != -1 ||
                         distantCharacter.GuildInviterPlayerId != -1)
                     {
-                        entity.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_OCCUPIED());
+                        character.SafeDispatch(WorldMessage.GUILD_JOIN_ERROR_OCCUPIED());
                         return;
                     }
 
-                    if (!entity.GuildMember.HasRight(GuildRightEnum.INVITE))
+                    if (!character.GuildMember.HasRight(GuildRightEnum.INVITE))
                     {
-                        entity.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+                        character.SafeDispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
                         return;
                     }
 
-                    entity.GuildInvitedPlayerId = distantCharacter.Id;
-                    distantCharacter.GuildInviterPlayerId = entity.Id;
+                    character.GuildInvitedPlayerId = distantCharacter.Id;
+                    distantCharacter.GuildInviterPlayerId = character.Id;
 
-                    entity.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_LOCAL(distantCharacterName));
-                    distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_DISTANT(entity.Id, entity.Name, entity.GuildMember.Guild.Name));
+                    character.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_LOCAL(distantCharacterName));
+                    distantCharacter.SafeDispatch(WorldMessage.GUILD_JOIN_REQUEST_DISTANT(character.Id, character.Name, character.GuildMember.Guild.Name));
                 });
         }
 

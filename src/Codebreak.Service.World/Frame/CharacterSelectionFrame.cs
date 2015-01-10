@@ -117,7 +117,9 @@ namespace Codebreak.Service.World.Frame
                 client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.Spells));
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
-                client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST());
+                client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST()); 
+                if (client.CurrentCharacter.GuildMember != null)
+                    client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.GuildMember.Guild, client.CurrentCharacter.GuildMember.Power));
                 client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
                 client.CurrentCharacter.Dispatch(WorldMessage.EMOTES_LIST(client.CurrentCharacter.EmoteCapacity));
                 client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
