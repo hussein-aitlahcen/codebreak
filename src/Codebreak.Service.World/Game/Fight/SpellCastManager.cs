@@ -12,16 +12,16 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class SpellCastManager : IDisposable
     {
-        private Dictionary<int, List<SpellTarget>> _targets = new Dictionary<int, List<SpellTarget>>();
-        private Dictionary<int, SpellCooldown> _cooldowns = new Dictionary<int, SpellCooldown>();
+        private Dictionary<int, List<SpellTarget>> m_targets = new Dictionary<int, List<SpellTarget>>();
+        private Dictionary<int, SpellCooldown> m_cooldowns = new Dictionary<int, SpellCooldown>();
 
         /// <summary>
         /// 
         /// </summary>
         public void Clear()
         {
-            _targets.Clear();
-            _cooldowns.Clear();
+            m_targets.Clear();
+            m_cooldowns.Clear();
         }
 
         /// <summary>
@@ -29,10 +29,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void Dispose()
         {
-            _targets.Clear();
-            _cooldowns.Clear();
-            _targets = null;
-            _cooldowns = null;
+            m_targets.Clear();
+            m_cooldowns.Clear();
+            m_targets = null;
+            m_cooldowns = null;
         }
         
         /// <summary>
@@ -46,11 +46,11 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (spell.Cooldown > 0)
             {
-                if (_cooldowns.ContainsKey(spellId))
+                if (m_cooldowns.ContainsKey(spellId))
                 {
-                    if (_cooldowns[spellId] != null)
+                    if (m_cooldowns[spellId] != null)
                     {
-                        if (_cooldowns[spellId].Cooldown > 0)
+                        if (m_cooldowns[spellId].Cooldown > 0)
                             return false;
                     }
                 }
@@ -61,9 +61,9 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (spell.MaxLaunchPerTurn > 0)
             {
-                if (_targets.ContainsKey(spellId))
+                if (m_targets.ContainsKey(spellId))
                 {
-                    if (_targets[spellId].Count >= spell.MaxLaunchPerTurn)
+                    if (m_targets[spellId].Count >= spell.MaxLaunchPerTurn)
                         return false;
                 }
             }
@@ -73,9 +73,9 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (spell.MaxLaunchPerTarget > 0)
             {
-                if (_targets.ContainsKey(spellId))
+                if (m_targets.ContainsKey(spellId))
                 {
-                    if (_targets[spellId].Count(spellTarget => spellTarget.TargetId == targetId) >= spell.MaxLaunchPerTarget)
+                    if (m_targets[spellId].Count(spellTarget => spellTarget.TargetId == targetId) >= spell.MaxLaunchPerTarget)
                         return false;
                 }
             }
@@ -93,34 +93,22 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (spell.Cooldown > 0)
             {
-                if (!_cooldowns.ContainsKey(spellId))
+                if (!m_cooldowns.ContainsKey(spellId))
                 {
-                    _cooldowns.Add(spellId, new SpellCooldown(spell.Cooldown));
+                    m_cooldowns.Add(spellId, new SpellCooldown(spell.Cooldown));
                 }
                 else
                 {
-                    _cooldowns[spellId].Cooldown = spell.Cooldown;
+                    m_cooldowns[spellId].Cooldown = spell.Cooldown;
                 }
             }
 
             if (spell.MaxLaunchPerTurn == 0 && spell.MaxLaunchPerTarget == 0)
                 return;
 
-            if (spell.MaxLaunchPerTurn > 0)
-            {
-                if (!_targets.ContainsKey(spellId))
-                {
-                    _targets.Add(spellId, new List<SpellTarget>());
-                }
-            }
-
-            if (spell.MaxLaunchPerTarget > 0)
-            {
-                if (_targets.ContainsKey(spellId))
-                {
-                    _targets[spellId].Add(new SpellTarget(targetId));
-                }
-            }
+            if (!m_targets.ContainsKey(spellId))
+                m_targets.Add(spellId, new List<SpellTarget>());
+            m_targets[spellId].Add(new SpellTarget(targetId));
         }
 
         /// <summary>
@@ -128,10 +116,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void EndTurn()
         {
-            foreach (var target in _targets.Values)
+            foreach (var target in m_targets.Values)
                 target.Clear();
 
-            foreach (var cooldown in _cooldowns.Values)
+            foreach (var cooldown in m_cooldowns.Values)
                 cooldown.Decrement();
         }
     }
