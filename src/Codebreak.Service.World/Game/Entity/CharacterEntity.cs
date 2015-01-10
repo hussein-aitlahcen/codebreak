@@ -963,7 +963,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (Honour < 0)
                 Honour = 0;
 
-            while (AlignmentExperienceFloorCurrent != -1 && Honour < AlignmentExperienceFloorCurrent)
+            while (Honour < AlignmentExperienceFloorCurrent)
                 AlignmentLevel--;
 
             base.CachedBuffer = true;
@@ -998,7 +998,7 @@ namespace Codebreak.Service.World.Game.Entity
             var currentLevel = Alignment.Level;
             Honour += value;
 
-            while (AlignmentExperienceFloorNext != -1 && Honour >= AlignmentExperienceFloorNext)
+            while (Honour > AlignmentExperienceFloorNext)
                 AlignmentLevel++;
 
             base.CachedBuffer = true;
@@ -1322,21 +1322,16 @@ namespace Codebreak.Service.World.Game.Entity
 
             var currentLevel = Level;
 
-            if (Experience > ExperienceFloorNext)
-            {
-                do
-                {
-                    LevelUp();
-                }
-                while (Experience > ExperienceFloorNext && ExperienceFloorNext != -1);
-
-                base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
-            }
+            while (Experience > ExperienceFloorNext)
+                LevelUp();
 
             if (Level != currentLevel)
             {
+                base.CachedBuffer = true;
+                base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
                 base.Dispatch(WorldMessage.SPELLS_LIST(Spells));
                 base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+                base.CachedBuffer = false;
             }
         }
 

@@ -152,8 +152,7 @@ namespace Codebreak.Service.World
             foreach (var message in client.Receive(buffer, offset, count))
             {
                 Logger.Debug("Client : " + message);
-
-
+                
                 if (client.CurrentCharacter != null)
                 {
                     if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
