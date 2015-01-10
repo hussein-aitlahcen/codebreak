@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Frame
 
             WorldService.Instance.AddMessage(() =>
                 {
-                    var account = AccountManager.Instance.GetAccountTicket(ticket);
+                    var account = ClientManager.Instance.GetAccountTicket(ticket);
                     if (account == null)
                     {
                         client.Send(WorldMessage.ACCOUNT_TICKET_ERROR());
@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Frame
                         {
                             client.Account = account;
 
-                            AccountManager.Instance.ClientAuthentified(client);
+                            ClientManager.Instance.ClientAuthentified(client);
 
                             client.FrameManager.AddFrame(CharacterSelectionFrame.Instance);
 

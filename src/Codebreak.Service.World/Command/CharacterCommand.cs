@@ -419,6 +419,41 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
+        public sealed class LifeCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "life"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Restore your life."; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                context.Character.Life = context.Character.MaxLife;
+                context.Character.Dispatch(WorldMessage.ACCOUNT_STATS(context.Character));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class GuildCreateCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
@@ -464,7 +499,7 @@ namespace Codebreak.Service.World.Command
         {
             private readonly string[] _aliases = 
             {
-                "teleportme"
+                "teleme"
             };
 
             public override string[] Aliases
@@ -531,7 +566,7 @@ namespace Codebreak.Service.World.Command
         {
             private readonly string[] _aliases = 
             {
-                "teleportto"
+                "teleto"
             };
 
             public override string[] Aliases
@@ -759,7 +794,7 @@ namespace Codebreak.Service.World.Command
                         {
                             context.Character.Inventory.AddItem(instance);
                             context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE(
-                                String.Format("Item {0} added in your inventory", itemTemplate.Id, itemTemplate.Name)
+                                String.Format("Item {0} added in your inventory", itemTemplate.Name)
                                 ));
                         }
                     }

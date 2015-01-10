@@ -49,7 +49,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        private StringBuilder _serializedFlag;
+        private StringBuilder m_serializedFlag;
 
         /// <summary>
         /// 
@@ -210,22 +210,22 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="message"></param>
         public override void SerializeAs_FightFlag(StringBuilder message)
         {
-            if (_serializedFlag == null)
+            if (m_serializedFlag == null)
             {
-                _serializedFlag = new StringBuilder();
-                _serializedFlag.Append(Id).Append(';');
-                _serializedFlag.Append((int)Type).Append('|');
-                _serializedFlag.Append(Team0.LeaderId).Append(';');
-                _serializedFlag.Append(Team0.FlagCellId).Append(';');
-                _serializedFlag.Append('0').Append(';');
-                _serializedFlag.Append("-1").Append('|'); // neutral
-                _serializedFlag.Append(Team1.LeaderId).Append(';');
-                _serializedFlag.Append(Team1.FlagCellId).Append(';');
-                _serializedFlag.Append('3').Append(';');
-                _serializedFlag.Append("-1");
+                m_serializedFlag = new StringBuilder();
+                m_serializedFlag.Append(Id).Append(';');
+                m_serializedFlag.Append((int)Type).Append('|');
+                m_serializedFlag.Append(Team0.LeaderId).Append(';');
+                m_serializedFlag.Append(Team0.FlagCellId).Append(';');
+                m_serializedFlag.Append('0').Append(';');
+                m_serializedFlag.Append("-1").Append('|'); // neutral
+                m_serializedFlag.Append(Team1.LeaderId).Append(';');
+                m_serializedFlag.Append(Team1.FlagCellId).Append(';');
+                m_serializedFlag.Append('3').Append(';');
+                m_serializedFlag.Append("-1");
             }
 
-            message.Append(_serializedFlag.ToString());
+            message.Append(m_serializedFlag.ToString());
         }
 
         /// <summary>
@@ -236,8 +236,8 @@ namespace Codebreak.Service.World.Game.Fight
             Attacker = null;
             TaxCollector = null;
 
-            _serializedFlag.Clear();
-            _serializedFlag = null;
+            m_serializedFlag.Clear();
+            m_serializedFlag = null;
 
             base.Dispose();
         }

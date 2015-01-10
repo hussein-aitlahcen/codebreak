@@ -45,8 +45,7 @@ namespace Codebreak.Service.World
         public const double
             REGEN_TIMER_SIT = 500,
             REGEN_TIMER = 1500;
-
-
+        
         public const int
             TAXCOLLECTOR_MIN_NAME = 1,
             TAXCOLLECTOR_MAX_NAME = 228,

@@ -176,7 +176,7 @@ namespace Codebreak.Service.World.RPC
 
                 case (int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET:
                     var ticketMessage = (GameTicketMessage)message;
-                    AccountManager.Instance.AddTicket
+                    ClientManager.Instance.AddTicket
                         (
                             ticketMessage.AccountId,
                             ticketMessage.Name,

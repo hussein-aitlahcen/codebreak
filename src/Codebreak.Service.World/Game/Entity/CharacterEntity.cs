@@ -963,7 +963,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (Honour < 0)
                 Honour = 0;
 
-            while (Honour < AlignmentExperienceFloorCurrent)
+            while (Honour < AlignmentExperienceFloorCurrent && AlignmentLevel > 1)
                 AlignmentLevel--;
 
             base.CachedBuffer = true;
@@ -998,7 +998,7 @@ namespace Codebreak.Service.World.Game.Entity
             var currentLevel = Alignment.Level;
             Honour += value;
 
-            while (Honour > AlignmentExperienceFloorNext)
+            while (Honour > AlignmentExperienceFloorNext && AlignmentLevel < 10)
                 AlignmentLevel++;
 
             base.CachedBuffer = true;

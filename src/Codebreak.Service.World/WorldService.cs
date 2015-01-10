@@ -93,7 +93,7 @@ namespace Codebreak.Service.World
             WorldDbMgr.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();
             JobManager.Instance.Initialize();
-            AccountManager.Instance.Initialize();
+            ClientManager.Instance.Initialize();
             SpellManager.Instance.Initialize();
             AreaManager.Instance.Initialize();
             MapManager.Instance.Initialize();
@@ -136,7 +136,7 @@ namespace Codebreak.Service.World
                     client.Characters = null;
                     client.CurrentCharacter = null;
                 }
-                AccountManager.Instance.ClientDisconnected(client);
+                ClientManager.Instance.ClientDisconnected(client);
             });
         }
 

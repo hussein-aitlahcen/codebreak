@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Network
             get;
             set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>

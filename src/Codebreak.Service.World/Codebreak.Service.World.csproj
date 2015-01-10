@@ -86,6 +86,7 @@
     <Compile Include="Database\Repository\NpcQuestionRepository.cs" />
     <Compile Include="Database\Repository\NpcResponseRepository.cs" />
     <Compile Include="Database\Repository\NpcTemplateRepository.cs" />
+    <Compile Include="Database\Repository\OLD.cs" />
     <Compile Include="Database\Repository\SocialRelationRepository.cs" />
     <Compile Include="Database\Repository\SpellBookEntryRepository.cs" />
     <Compile Include="Database\Repository\TaxCollectorRepository.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
     <Compile Include="Database\Structure\NpcResponseDAO.cs" />
     <Compile Include="Database\Structure\NpcTemplateDAO.cs" />
+    <Compile Include="Database\Structure\OLD.cs" />
     <Compile Include="Database\Structure\SocialRelationDAO.cs" />
     <Compile Include="Database\Structure\SpellBookEntryDAO.cs" />
     <Compile Include="Database\Structure\SubAreaDAO.cs" />
@@ -301,7 +303,7 @@
     <Compile Include="Frame\MapFrame.cs" />
     <Compile Include="Frame\InventoryFrame.cs" />
     <Compile Include="Frame\SpellFrame.cs" />
-    <Compile Include="Manager\AccountManager.cs" />
+    <Compile Include="Manager\ClientManager.cs" />
     <Compile Include="Manager\ActionEffectManager.cs" />
     <Compile Include="Manager\AreaManager.cs" />
     <Compile Include="Manager\AuctionHouseManager.cs" />

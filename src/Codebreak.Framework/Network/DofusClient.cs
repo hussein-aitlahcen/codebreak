@@ -13,12 +13,7 @@ namespace Codebreak.Framework.Network
     /// <typeparam name="T"></typeparam>
     public abstract class DofusClient<T> : TcpClientBase<T>
         where T : DofusClient<T>, new()
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        private BinaryQueue m_messageQueue;
-
+    {      
         /// <summary>
         /// 
         /// </summary>
@@ -27,6 +22,29 @@ namespace Codebreak.Framework.Network
             get;
             private set;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CumulatedPacketInOneSecond
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long LastPacketTime
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private BinaryQueue m_messageQueue;
 
         /// <summary>
         /// 
@@ -50,6 +68,23 @@ namespace Codebreak.Framework.Network
             {
                 if (buffer[i] == 0x00)
                 {
+                    if (Environment.TickCount - LastPacketTime < 1000)
+                    {
+                        CumulatedPacketInOneSecond++;
+                        if (CumulatedPacketInOneSecond > 30)
+                        {
+                            Logger.Warn("Client kicked due to packet spam : " + Ip);
+                            Disconnect();
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        CumulatedPacketInOneSecond = 1;
+                    }
+
+                    LastPacketTime = Environment.TickCount;
+
                     yield return Encoding.Default.GetString(m_messageQueue.ReadBytes(m_messageQueue.Count));
                 }
                 else

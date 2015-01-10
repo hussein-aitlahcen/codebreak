@@ -52,33 +52,33 @@ namespace Codebreak.Framework.Generic
         {
             get
             {
-                return _running;
+                return m_running;
             }
         }
         
         /// <summary>
         /// 
         /// </summary>
-        private Stopwatch _queueTimer;
-        private LockFreeQueue<Action> _messageQueue;
-        private List<Updatable> _updatableObjects;
-        private List<UpdatableTimer> _timerList;
-        private bool _running;
+        private Stopwatch m_queueTimer;
+        private LockFreeQueue<Action> m_messageQueue;
+        private List<Updatable> m_updatableObjects;
+        private List<UpdatableTimer> m_timerList;
+        private bool m_running;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="updateInterval"></param>
-        public TaskProcessorBase(string name, int updateInterval = 1)
+        public TaskProcessorBase(string name, int updateInterval = 10)
         {
             UpdateInterval = updateInterval;
             Name = name;
 
-            _running = false;
-            _messageQueue = new LockFreeQueue<Action>();
-            _updatableObjects = new List<Updatable>();
-            _timerList = new List<UpdatableTimer>();
-            _queueTimer = new Stopwatch();
+            m_running = false;
+            m_messageQueue = new LockFreeQueue<Action>();
+            m_updatableObjects = new List<Updatable>();
+            m_timerList = new List<UpdatableTimer>();
+            m_queueTimer = new Stopwatch();
 
             Start();
         }
@@ -87,8 +87,8 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         public void Start()
         {
-            _running = true;
-            _queueTimer.Start();
+            m_running = true;
+            m_queueTimer.Start();
             
             Task.Factory.StartNewDelayed(UpdateInterval, InternalStart);
         }
@@ -99,8 +99,8 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _running = false;
-                _queueTimer.Reset();
+                m_running = false;
+                m_queueTimer.Reset();
                 LastUpdate = 0;
 
                 Logger.Info("TaskQueue[" + Name + "] stopped.");
@@ -112,7 +112,7 @@ namespace Codebreak.Framework.Generic
         /// <param name="message"></param>
         public void AddMessage(Action message)
         {
-            _messageQueue.Enqueue(message);
+            m_messageQueue.Enqueue(message);
         }
         /// <summary>
         /// 
@@ -152,7 +152,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _updatableObjects.Add(updatable);
+                m_updatableObjects.Add(updatable);
             });
         }
         /// <summary>
@@ -163,7 +163,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _updatableObjects.Remove(updatable);
+                m_updatableObjects.Remove(updatable);
             });
         }
         /// <summary>
@@ -176,7 +176,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Add(new UpdatableTimer(delay, callback, oneshot));
+                m_timerList.Add(new UpdatableTimer(delay, callback, oneshot));
             });
         }
         /// <summary>
@@ -187,7 +187,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Add(timer);
+                m_timerList.Add(timer);
             });
         }
         /// <summary>
@@ -198,7 +198,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
-                _timerList.Remove(timer);
+                m_timerList.Remove(timer);
             });
         }
 
@@ -219,11 +219,11 @@ namespace Codebreak.Framework.Generic
         /// </summary>
         private void InternalUpdate()
         {       
-            var timeStart = _queueTimer.ElapsedMilliseconds;
+            var timeStart = m_queueTimer.ElapsedMilliseconds;
             var updateDelta = timeStart - LastUpdate;
             LastUpdate = timeStart;
 
-            foreach (var timer in _timerList)
+            foreach (var timer in m_timerList)
             {
                 if ((LastUpdate - timer.LastActivated) >= timer.Delay)
                 {
@@ -242,7 +242,7 @@ namespace Codebreak.Framework.Generic
                 }
             }
 
-            foreach (var updatableObject in _updatableObjects)
+            foreach (var updatableObject in m_updatableObjects)
             {
                 try
                 {
@@ -255,7 +255,7 @@ namespace Codebreak.Framework.Generic
             }
 
             Action msg = null;
-            while (_messageQueue.TryDequeue(out msg))
+            while (m_messageQueue.TryDequeue(out msg))
             {
                 try
                 {
@@ -267,13 +267,13 @@ namespace Codebreak.Framework.Generic
                 }
             }
 
-            var timeStop = _queueTimer.ElapsedMilliseconds;
+            var timeStop = m_queueTimer.ElapsedMilliseconds;
             var updateLagged = timeStop - timeStart > UpdateInterval;
             var nextDelay = 0;
             if (!updateLagged)
                 nextDelay = (int)((timeStart + UpdateInterval) - timeStop);
 
-            if (_running)            
+            if (m_running)            
                 Task.Factory.StartNewDelayed(nextDelay, InternalUpdate);            
         }
     }
