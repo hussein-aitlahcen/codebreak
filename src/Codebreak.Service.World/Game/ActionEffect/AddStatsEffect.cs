@@ -38,7 +38,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            EffectEnum addEffect = EffectEnum.None;
+            var addEffect = EffectEnum.None;
             var effectType = (EffectEnum)int.Parse(parameters["statsId"]);
             var value = int.Parse(parameters["value"]);
 

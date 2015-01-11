@@ -573,10 +573,10 @@ namespace Codebreak.Service.World.Game.Spell
         Name = 997,
 
         /* ACTION SPECIALES BDD SCRIPT */
-        NpcDialogReply = 2000,
-        NpcDialogLeave = 2001,
-        NpcOpenBank = 2002,
-        NpcAddStatistic = 2003,
+        DialogReply = 2000,
+        DialogLeave = 2001,
+        OpenBank = 2002,
+        AddStatistic = 2003,
     }
 
     /// <summary>

@@ -30,10 +30,10 @@ namespace Codebreak.Service.World.Manager
         {
             m_effectById = new Dictionary<EffectEnum, IActionEffect>();
 
-            m_effectById.Add(EffectEnum.NpcDialogLeave, NpcDialogLeaveEffect.Instance);
-            m_effectById.Add(EffectEnum.NpcDialogReply, NpcDialogReplyEffect.Instance);
-            m_effectById.Add(EffectEnum.NpcOpenBank, OpenBankEffect.Instance);
-            m_effectById.Add(EffectEnum.NpcAddStatistic, AddStatsEffect.Instance);
+            m_effectById.Add(EffectEnum.DialogLeave, DialogLeaveEffect.Instance);
+            m_effectById.Add(EffectEnum.DialogReply, DialogReplyEffect.Instance);
+            m_effectById.Add(EffectEnum.OpenBank, OpenBankEffect.Instance);
+            m_effectById.Add(EffectEnum.AddStatistic, AddStatsEffect.Instance);
 
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
 

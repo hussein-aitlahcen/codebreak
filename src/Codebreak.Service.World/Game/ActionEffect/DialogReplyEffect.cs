@@ -1,4 +1,6 @@
-﻿using Codebreak.Service.World.Game.Entity;
+﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,10 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class NpcDialogLeaveEffect : ActionEffectBase<NpcDialogLeaveEffect>
+    public sealed class DialogReplyEffect : ActionEffectBase<DialogReplyEffect>
     {
         /// <summary>
-        /// SHOULD NEVER BE CALLED
+        /// 
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="item"></param>
@@ -33,7 +35,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="parameters"></param>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            character.StopAction(Action.GameActionTypeEnum.NPC_DIALOG);
+            ((GameNpcDialogAction)character.CurrentAction).Dialog.SendQuestion(NpcQuestionRepository.Instance.GetById(int.Parse(parameters["questionId"])));
 
             return true;
         }
