@@ -15,7 +15,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     public sealed class NpcDialogReplyEffect : ActionEffectBase<NpcDialogReplyEffect>
     {
         /// <summary>
-        /// SHOULD NEVER BE CALLED
+        /// 
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="item"></param>
@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public override bool ProcessItem(EntityBase entity, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
         {
             throw new NotImplementedException();
         }
@@ -33,9 +33,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="parameters"></param>
-        public override bool Process(EntityBase entity, Dictionary<string, string> parameters)
+        public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            ((GameNpcDialogAction)entity.CurrentAction).Dialog.SendQuestion(NpcQuestionRepository.Instance.GetById(int.Parse(parameters["questionId"])));
+            ((GameNpcDialogAction)character.CurrentAction).Dialog.SendQuestion(NpcQuestionRepository.Instance.GetById(int.Parse(parameters["questionId"])));
 
             return true;
         }

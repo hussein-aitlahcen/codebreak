@@ -4,6 +4,8 @@ using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Stats;
 using PropertyChanged;
 using Codebreak.Service.World.Game.Spell;
+using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Condition;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -95,7 +97,7 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
-
+              
         /// <summary>
         /// 
         /// </summary>
@@ -173,6 +175,18 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public bool SatisfyConditions(CharacterEntity character)
+        {
+            if (Template.Conditions == string.Empty)
+                return true;
+            return ConditionParser.Instance.Check(Template.Conditions, character);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
         public static bool IsEquipedSlot(ItemSlotEnum slot)
@@ -220,11 +234,10 @@ namespace Codebreak.Service.World.Database.Structure
             instance.Effects = Statistics.Serialize();
             instance.StringEffects = Statistics.ToItemStats();
             instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
+            instance.IsDirty = false;
 
             if (InventoryItemRepository.Instance.Insert(instance))
                 return instance;
-            else
-                InventoryItemRepository.Logger.Debug("InventoryItemDAO::Clone error while inserting in database");
             return null;
         }
 
@@ -245,11 +258,10 @@ namespace Codebreak.Service.World.Database.Structure
             instance.Effects = statistics.Serialize();
             instance.StringEffects = statistics.ToItemStats();
             instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
+            instance.IsDirty = false;
 
             if (InventoryItemRepository.Instance.Insert(instance))
                 return instance;
-            else
-                InventoryItemRepository.Logger.Debug("InventoryItemDAO::Create error while inserting in database");
             return null;
         }
     }

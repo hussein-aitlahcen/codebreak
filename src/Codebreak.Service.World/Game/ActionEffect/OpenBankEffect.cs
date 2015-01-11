@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public override bool ProcessItem(Entity.EntityBase entity, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
         {
             throw new NotImplementedException();
         }
@@ -30,12 +30,11 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public override bool Process(EntityBase entity, Dictionary<string, string> parameters)
+        public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            var character = (CharacterEntity)entity;
             if(!character.CanGameAction(Action.GameActionTypeEnum.EXCHANGE))
             {
                 character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));

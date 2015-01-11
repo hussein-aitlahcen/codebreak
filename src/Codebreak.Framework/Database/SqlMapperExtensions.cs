@@ -312,7 +312,9 @@ namespace Codebreak.Framework.Database
           sb.AppendFormat("update {0} set ", name);
 
           var allProperties = TypePropertiesCache(type);
-          var nonIdProps = allProperties.Where(a => !keyProperties.Contains(a));
+          var nonIdProps = allProperties.Except(keyProperties);
+          if (nonIdProps.Count() == 0)
+              return 0;
 
           for (var i = 0; i < nonIdProps.Count(); i++)
           {

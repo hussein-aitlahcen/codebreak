@@ -16,6 +16,7 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(SubAreaRepository.Instance);
             base.AddRepository(AreaRepository.Instance);
             base.AddRepository(SuperAreaRepository.Instance);
+            base.AddRepository(ItemSetRepository.Instance);
             base.AddRepository(ItemTemplateRepository.Instance);
             base.AddRepository(InventoryItemRepository.Instance);
             base.AddRepository(SpellBookEntryRepository.Instance);

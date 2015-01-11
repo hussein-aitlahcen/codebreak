@@ -102,7 +102,7 @@ namespace Codebreak.Service.World
             GuildManager.Instance.Initialize();
             EntityManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
-
+            
             base.Start(WorldServiceIP, WorldServicePort);
         }
 

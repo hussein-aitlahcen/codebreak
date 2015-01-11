@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Database;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Manager;
 using System;
@@ -53,6 +54,25 @@ namespace Codebreak.Service.World.Database.Structure
                     m_mapInstance = MapManager.Instance.GetById(MapId);
                 return m_mapInstance;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <param name="mapId"></param>
+        /// <returns></returns>
+        public static CharacterWaypointDAO Create(long characterId, int mapId)
+        {
+            var instance = new CharacterWaypointDAO()
+            {
+                CharacterId = characterId,
+                MapId = mapId,
+            };
+            instance.IsDirty = false;
+            if (CharacterWaypointRepository.Instance.InsertWithKey(instance))
+                return instance;
+            return null;
         }
     }
 }

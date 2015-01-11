@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell);
+        bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell);
 
         /// <summary>
         /// 
@@ -31,6 +31,6 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="entity"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        bool Process(EntityBase entity, Dictionary<string, string> parameters);
+        bool Process(CharacterEntity character, Dictionary<string, string> parameters);
     }
 }

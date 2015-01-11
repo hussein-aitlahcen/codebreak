@@ -20,19 +20,19 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="item"></param>
         /// <param name="effect"></param>
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public abstract bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell);
+        public abstract bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="parameters"></param>
-        public abstract bool Process(EntityBase entity, Dictionary<string, string> parameters);
+        public abstract bool Process(CharacterEntity character, Dictionary<string, string> parameters);
     }
 }

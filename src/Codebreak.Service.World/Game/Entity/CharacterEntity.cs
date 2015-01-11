@@ -1762,6 +1762,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override void Dispose()
         {
+            StopRegeneration();
+
             GuildMember = null;
             Alignment = null;
 

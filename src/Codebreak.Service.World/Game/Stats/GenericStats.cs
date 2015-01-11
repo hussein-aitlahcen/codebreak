@@ -568,7 +568,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         public string ToItemStats()
         {
-            return string.Join(",", m_weaponEffects.Select(x => x.ToString())) + (m_genericEffects.Count > 0 ? "," : "") +  string.Join(",", m_genericEffects.Select(x => x.Value.ToItemString()));
+            return string.Join(",", (m_weaponEffects.Count > 0 ? m_weaponEffects.Select(x => x.ToString()) + (m_genericEffects.Count > 0 ? "," : "") : "") +  string.Join(",", m_genericEffects.Select(x => x.Value.ToItemString())));
         }
 
         /// <summary>

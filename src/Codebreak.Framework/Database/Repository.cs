@@ -308,7 +308,6 @@ namespace Codebreak.Framework.Database
                     {
                         obj.OnBeforeUpdate();
                         obj.IsDirty = false;
-
                         yield return obj;
                     }
                 }

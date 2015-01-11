@@ -15,7 +15,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// </summary>
     public sealed class AddLifeEffect : ActionEffectBase<AddLifeEffect>
     {
-        const int EMOTE_EAT_BREAD = 17;
+        const int EMOTE_EAT_REST = 17;
 
         /// <summary>
         /// 
@@ -27,26 +27,27 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetCell"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public override bool ProcessItem(EntityBase entity, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell)
         {            
             if(targetId != -1)
             {
-                entity = entity.Map.GetEntity(targetId);
-                if (entity == null)
+                var entity = character.Map.GetEntity(targetId);
+                character = entity as CharacterEntity;
+                if (character == null)
                     return false;
             }
 
             switch((ItemTypeEnum)item.Template.Type)
             {
                 case ItemTypeEnum.TYPE_PAIN:
-                    entity.EmoteUse(EMOTE_EAT_BREAD);
+                    character.EmoteUse(EMOTE_EAT_REST);
                     break;
                     
                 default:
                     break;
             }
 
-            return Process(entity, new Dictionary<string, string>() { { "life", effect.Items.ToString() } });
+            return Process(character, new Dictionary<string, string>() { { "life", effect.Items.ToString() } });
         }
 
         /// <summary>
@@ -54,18 +55,17 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="parameters"></param>
-        public override bool Process(EntityBase entity, Dictionary<string, string> parameters)
+        public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
             var heal = int.Parse(parameters["life"]);
-            if (entity.Life + heal > entity.MaxLife)
-                heal = entity.MaxLife - entity.Life;
-            entity.Life += heal;
+            if (character.Life + heal > character.MaxLife)
+                heal = character.MaxLife - character.Life;
+            character.Life += heal;
 
-            if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
-            {
-                entity.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)entity));
-                entity.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_LIFE_RECOVERED, heal));
-            }
+            character.CachedBuffer = true;
+            character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+            character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_LIFE_RECOVERED, heal));
+            character.CachedBuffer = false;
 
             return true;
         }

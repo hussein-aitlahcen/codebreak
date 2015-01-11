@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using log4net;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,11 @@ namespace Codebreak.Framework.Database
     public abstract class DataAccessObject<T> : INotifyPropertyChanged
         where T : DataAccessObject<T>, new()
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public static ILog Logger = LogManager.GetLogger(typeof(T));
+
         /// <summary>
         /// 
         /// </summary>

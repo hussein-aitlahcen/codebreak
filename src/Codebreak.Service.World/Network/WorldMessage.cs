@@ -54,6 +54,8 @@ namespace Codebreak.Service.World.Network
 
         INFO_GAVE_KAMAS_TO_OPEN = 20,
 
+        INFO_CARACTERISTIC_UPGRADED = 15,
+
         INFO_WAYPOINT_SAVED = 6,
         INFO_WAYPOINT_REGISTERED = 24,
 
@@ -97,6 +99,8 @@ namespace Codebreak.Service.World.Network
         INFO_AUCTION_BANK_CREDITED = 65,
         INFO_AUCTION_EXPIRED = 67,
         INFO_AUCTION_LOT_BOUGHT = 68,
+
+        ERROR_CONDITIONS_UNSATISFIED = 19,
 
         ERROR_STORAGE_ALREADY_IN_USE = 20,
 
@@ -364,7 +368,7 @@ namespace Codebreak.Service.World.Network
                     message.Append(';').Append(character.HexColor3);
                     message.Append(';');
                     character.SerializeAs_ActorLookMessage(message);
-                    message.Append(';').Append(0); // merchant
+                    message.Append(';').Append(character.Merchant ? '1' : '0');
                     message.Append(';').Append(WorldConfig.GAME_ID);
                     message.Append(';').Append(character.Dead ? '1' : '0');
                     message.Append(';').Append(character.DeathCount);
@@ -2429,6 +2433,20 @@ namespace Codebreak.Service.World.Network
         public static string EMOTES_LIST(int capacity)
         {
             return "eL" + capacity + "|" + capacity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static string ITEM_SET(ItemSetDAO set, IEnumerable<InventoryItemDAO> items)
+        {
+            var message = new StringBuilder("OS+").Append(set.Id).Append('|');
+            message.Append(String.Join(";", items.Select(item => item.TemplateId))).Append('|');
+            message.Append(set.GetStats(items.Count()).ToItemStats());
+            return message.ToString();
         }
     }
 }

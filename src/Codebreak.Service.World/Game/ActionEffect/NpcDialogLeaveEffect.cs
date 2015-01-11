@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public override bool ProcessItem(EntityBase entity, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
         {
             throw new NotImplementedException();
         }
@@ -31,9 +31,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="parameters"></param>
-        public override bool Process(EntityBase entity, Dictionary<string, string> parameters)
+        public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            entity.StopAction(Action.GameActionTypeEnum.NPC_DIALOG);
+            character.StopAction(Action.GameActionTypeEnum.NPC_DIALOG);
 
             return true;
         }

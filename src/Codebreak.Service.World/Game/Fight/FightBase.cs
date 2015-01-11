@@ -1858,7 +1858,7 @@ namespace Codebreak.Service.World.Game.Fight
                     foreach (var effect in effects)
                     {
                         var targetList = new List<FighterBase>();
-                        foreach (var currentCellId in CellZone.GetCells(Map, cellId, fighter.Cell.Id, weaponTemplate.RangeType()))
+                        foreach (var currentCellId in CellZone.GetCells(Map, cellId, fighter.Cell.Id, weaponTemplate.RangeType))
                         {
                             var fightCell = GetCell(currentCellId);
                             if (fightCell != null)
@@ -1903,7 +1903,7 @@ namespace Codebreak.Service.World.Game.Fight
                                                         0,
                                                         fighter,
                                                         null,
-                                                        weaponTemplate.RangeType(), 
+                                                        weaponTemplate.RangeType, 
                                                         0, 
                                                         -1,
                                                         isMelee)
@@ -1924,7 +1924,7 @@ namespace Codebreak.Service.World.Game.Fight
                                                         0,
                                                         fighter,
                                                         target,
-                                                        weaponTemplate.RangeType(),
+                                                        weaponTemplate.RangeType,
                                                         target.Cell.Id,
                                                         -1,
                                                         isMelee));

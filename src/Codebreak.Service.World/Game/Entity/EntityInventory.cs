@@ -41,6 +41,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        private Dictionary<int, int> m_equippedSets;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private StringBuilder m_entityLookCache;
 
         /// <summary>
@@ -55,6 +60,8 @@ namespace Codebreak.Service.World.Game.Entity
         public EntityInventory(EntityBase entity, int type, long id)
             : base(type, id)
         {
+            m_equippedSets = new Dictionary<int, int>();
+
             Entity = entity;
             AddHandler(Entity.Dispatch);
         }
@@ -65,8 +72,13 @@ namespace Codebreak.Service.World.Game.Entity
         public void Initialize()
         {
             foreach (var item in Items)
+            {
                 if (item.IsEquiped)
+                {
+                    AddSet(item);
                     Entity.Statistics.Merge(item.Statistics);
+                }
+            }
         }
                
         /// <summary>
@@ -106,16 +118,23 @@ namespace Codebreak.Service.World.Game.Entity
                 m_entityLookRefresh = true;
                 bool merged = AddItem(MoveQuantity(item, 1));
 
+                RemoveSet(item);
                 Entity.Statistics.UnMerge(item.Statistics);
-
-                Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
 
                 // send new stats
                 if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
+                    Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
+
+                    base.CachedBuffer = true;
                     if (!merged)
                         base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, item.SlotId));
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
+                    if (item.Template.SetId != 0)
+                    {
+                        base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));
+                    }
+                    base.CachedBuffer = false;
                 }
                 return;
             }
@@ -141,6 +160,15 @@ namespace Codebreak.Service.World.Game.Entity
                     return;
                 }
 
+                if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+                {
+                    if (!item.SatisfyConditions((CharacterEntity)Entity))
+                    {
+                        base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_CONDITIONS_UNSATISFIED));
+                        return;
+                    }
+                }
+
                 var equipedItem = Items.Find(entry => entry.SlotId == (int)slot && entry.Id != item.Id);
 
                 // already equiped in slot ? remove it
@@ -148,20 +176,27 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     MoveItem(equipedItem, ItemSlotEnum.SLOT_INVENTORY);
                 }
-
-
+                
                 m_entityLookRefresh = true;
                 var newItem = MoveQuantity(item, 1);
                 newItem.SlotId = (int)slot;
                 AddItem(newItem, false);
 
+                AddSet(newItem);
                 Entity.Statistics.Merge(newItem.Statistics);
-
-                Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
 
                 // send new stats
                 if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+                {
+                    Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
+
+                    base.CachedBuffer = true;
+                    Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
+                    if(item.Template.SetId != 0)                    
+                        base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));
+                    base.CachedBuffer = false;
+                }
             }
             else
             {
@@ -169,6 +204,63 @@ namespace Codebreak.Service.World.Game.Entity
                 newItem.SlotId = (int)slot;
                 if(!AddItem(newItem, false))
                    base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, item.SlotId));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendSets()
+        {
+            if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+            {
+                base.CachedBuffer = true;
+                foreach (var set in m_equippedSets)
+                    if (set.Value > 0)
+                        base.Dispatch(WorldMessage.ITEM_SET(ItemSetRepository.Instance.GetSetById(set.Key), Items.Where(entry => entry.Template.SetId == set.Key && entry.IsEquiped)));
+                base.CachedBuffer = false;
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        public void AddSet(InventoryItemDAO item)
+        {
+            if (item.Template.SetId == 0)
+                return;
+
+            var set = item.Template.Set;
+            if (!m_equippedSets.ContainsKey(set.Id))
+                m_equippedSets.Add(set.Id, 0);
+            var count = ++m_equippedSets[set.Id];
+
+            if (count > 2)            
+                Entity.Statistics.UnMerge(set.GetStats(count - 1));
+
+            if(count > 1)
+                Entity.Statistics.Merge(set.GetStats(count));            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RemoveSet(InventoryItemDAO item)
+        {
+            if (item.Template.SetId == 0)
+                return;
+
+            var set = item.Template.Set;
+            var count = --m_equippedSets[set.Id];
+
+            if (count > 0)
+            {
+                Entity.Statistics.Merge(set.GetStats(count));
+                if (count > 1)
+                {
+                    Entity.Statistics.UnMerge(set.GetStats(count + 1));
+                }
             }
         }
 

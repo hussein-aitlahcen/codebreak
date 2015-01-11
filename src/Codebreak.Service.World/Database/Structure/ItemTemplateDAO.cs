@@ -5,6 +5,7 @@ using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Database.Repository;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -332,14 +333,6 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        public string WeaponInfos
-        {
-            get;
-            set;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
         public bool TwoHands
         {
             get;
@@ -469,6 +462,25 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        private ItemSetDAO m_set;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public ItemSetDAO Set
+        {
+            get
+            {
+                if (m_set == null)
+                    m_set = ItemSetRepository.Instance.GetSetById(SetId);
+                return m_set;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private List<Tuple<EffectEnum, int, int>> m_effects;
         private List<Tuple<EffectEnum, int, int>> m_weaponEffects;
         private string m_rangeType;
@@ -477,33 +489,38 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
-        public string RangeType()
-        { 
-            if(m_rangeType == null)
+        [Write(false)]
+        public string RangeType
+        {
+            get
             {
-                switch((ItemTypeEnum)Type)
+                if (m_rangeType == null)
                 {
-                    case ItemTypeEnum.TYPE_MARTEAU:
-                        m_rangeType = "Xb";
-                        break;
-                    case ItemTypeEnum.TYPE_BATON:
-                        m_rangeType =  "Tb";
-                        break;
-                    case  ItemTypeEnum.TYPE_ARBALETE:
-                        m_rangeType =  "Lc";
-                        break;
-                    default:
-                        m_rangeType = "Pa";
-                        break;
+                    switch ((ItemTypeEnum)Type)
+                    {
+                        case ItemTypeEnum.TYPE_MARTEAU:
+                            m_rangeType = "Xb";
+                            break;
+                        case ItemTypeEnum.TYPE_BATON:
+                            m_rangeType = "Tb";
+                            break;
+                        case ItemTypeEnum.TYPE_ARBALETE:
+                            m_rangeType = "Lc";
+                            break;
+                        default:
+                            m_rangeType = "Pa";
+                            break;
+                    }
                 }
-            }
 
-            return m_rangeType;
+                return m_rangeType;
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
         public List<Tuple<EffectEnum, int, int>> GenericEffects
         {
             get
@@ -517,6 +534,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
         public List<Tuple<EffectEnum, int, int>> WeaponEffects
         {
             get
@@ -534,19 +552,25 @@ namespace Codebreak.Service.World.Database.Structure
         {
             m_effects = new List<Tuple<EffectEnum, int, int>>();
             m_weaponEffects = new List<Tuple<EffectEnum, int, int>>();
-
             if (Effects != "")
             {
                 foreach (var effect in Effects.Split(','))
                 {
-                    var effectDatas = effect.Split('#');
-                    var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
-                    var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
-                    var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
-                    if (ItemTemplateDAO.IsWeaponEffect(effectType))
-                        m_weaponEffects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
-                    else
-                        m_effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                    try
+                    {
+                        var effectDatas = effect.Split('#');
+                        var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
+                        var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
+                        var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
+                        if (ItemTemplateDAO.IsWeaponEffect(effectType))
+                            m_weaponEffects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                        else
+                            m_effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.Info("Error while parsing item template effect. Id=" + Id + " Effect=" + effect);
+                    }
                 }
             }
         }

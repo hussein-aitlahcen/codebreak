@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="ExpressionEvaluator">
+      <HintPath>..\..\packages\ExpressionEvaluator.2.0.1.0\lib\net40\ExpressionEvaluator.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.9.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\MySql.Data.6.9.5\lib\net45\MySql.Data.dll</HintPath>
@@ -77,6 +83,7 @@
     <Compile Include="Database\Repository\ExperienceTemplateRepository.cs" />
     <Compile Include="Database\Repository\GuildRepository.cs" />
     <Compile Include="Database\Repository\InventoryItemRepository.cs" />
+    <Compile Include="Database\Repository\ItemSetRepository.cs" />
     <Compile Include="Database\Repository\ItemTemplateRepository.cs" />
     <Compile Include="Database\Repository\MapRepository.cs" />
     <Compile Include="Database\Repository\MapTriggerRepository.cs" />
@@ -102,6 +109,7 @@
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
     <Compile Include="Database\Structure\InventoryItemDAO.cs" />
+    <Compile Include="Database\Structure\ItemSetDAO.cs" />
     <Compile Include="Database\Structure\ItemTemplateDAO.cs" />
     <Compile Include="Database\Structure\MapTemplateDAO.cs" />
     <Compile Include="Database\Structure\MapTriggerDAO.cs" />
@@ -123,6 +131,7 @@
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
+    <Compile Include="Game\ActionEffect\AddStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\NpcDialogLeaveEffect.cs" />
     <Compile Include="Game\ActionEffect\NpcDialogReplyEffect.cs" />
@@ -157,6 +166,7 @@
     <Compile Include="Game\Auction\AuctionCategory.cs" />
     <Compile Include="Game\Auction\AuctionEntry.cs" />
     <Compile Include="Game\Auction\AuctionHouseInstance.cs" />
+    <Compile Include="Game\Condition\ConditionParser.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
     <Compile Include="Game\Entity\BankInventory.cs" />
     <Compile Include="Game\Entity\CharacterInventory.cs" />
@@ -356,9 +366,7 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Game\Social\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

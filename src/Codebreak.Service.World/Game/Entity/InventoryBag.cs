@@ -171,6 +171,26 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="templateId"></param>
         /// <returns></returns>
+        public bool HasTemplate(int templateId)
+        {
+            return Items.Any(item => item.TemplateId == templateId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public bool NotHasTemplate(int templateId)
+        {
+            return !HasTemplate(templateId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
         public bool HasTemplateEquiped(int templateId)
         {
             return Items.Any(item => item.TemplateId == templateId && item.IsEquiped);

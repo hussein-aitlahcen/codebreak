@@ -80,8 +80,8 @@ namespace Codebreak.Service.World.Game.Spell
         {
             if (!HasSpell(spellId))
             {
-                var spellBookEntry = new SpellBookEntryDAO() { OwnerId = m_entityId, SpellId = spellId, Level = level, Position = position };
-                if(SpellBookEntryRepository.Instance.Insert(spellBookEntry))
+                var spellBookEntry = SpellBookEntryDAO.Create(m_entityType, m_entityId, spellId,  level, position);
+                if(spellBookEntry != null)
                     m_spellById.Add(spellId, spellBookEntry);
             }
             else
