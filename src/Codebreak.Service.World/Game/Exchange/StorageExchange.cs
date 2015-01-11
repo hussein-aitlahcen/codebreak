@@ -25,7 +25,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <summary>
         /// 
         /// </summary>
-        public PersistentInventory Storage
+        public StorageInventory Storage
         {
             get;
             private set;
@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="inventory"></param>
         /// <param name="type"></param>
-        public StorageExchange(CharacterEntity character, PersistentInventory storage, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_STORAGE)
+        public StorageExchange(CharacterEntity character, StorageInventory storage, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_STORAGE)
             : base(type)
         {
             Character = character;
@@ -56,6 +56,7 @@ namespace Codebreak.Service.World.Game.Exchange
             }
 
             Storage.ActualUser = Character.Id;
+            Storage.AddHandler(Character.Dispatch);
 
             Character.CachedBuffer = true;
             base.Create();
@@ -73,6 +74,7 @@ namespace Codebreak.Service.World.Game.Exchange
             {
                 base.Leave(success);
                 Storage.ActualUser = -1;
+                Storage.RemoveHandler(Character.Dispatch);
             }
         }
 
@@ -81,7 +83,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         public void SendItemsList()
         {
-            Character.Dispatch(WorldMessage.EXCHANGE_TAXCOLLECTOR_ITEMS_LIST(Storage.Items, Storage.Kamas));
+            Character.Dispatch(WorldMessage.EXCHANGE_STORAGE_ITEMS_LIST(Storage.Items, Storage.Kamas));
         }
 
         /// <summary>
@@ -111,8 +113,6 @@ namespace Codebreak.Service.World.Game.Exchange
                 Storage.AddKamas(quantity);
                 Character.Inventory.SubKamas(quantity);
             }
-
-            Character.Dispatch(WorldMessage.EXCHANGE_STORAGE_KAMAS_VALUE(Storage.Kamas));
             Character.CachedBuffer = false;
 
             return quantity;
@@ -132,10 +132,7 @@ namespace Codebreak.Service.World.Game.Exchange
             if (item == null)
                 return 0;
             
-            Character.CachedBuffer = true;
             Storage.AddItem(item);
-            SendItemsList();
-            Character.CachedBuffer = false;
 
             return item.Quantity;
         }
@@ -153,10 +150,7 @@ namespace Codebreak.Service.World.Game.Exchange
             if (item == null)
                 return 0;
 
-            Character.CachedBuffer = true;
             Character.Inventory.AddItem(item);
-            SendItemsList();
-            Character.CachedBuffer = false;
 
             return item.Quantity;
         }

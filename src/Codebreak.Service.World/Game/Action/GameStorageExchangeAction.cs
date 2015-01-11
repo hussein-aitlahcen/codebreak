@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="character"></param>
         /// <param name="storage"></param>
-        public GameStorageExchangeAction(CharacterEntity character, PersistentInventory storage, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_STORAGE)
+        public GameStorageExchangeAction(CharacterEntity character, StorageInventory storage, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_STORAGE)
             : base(new StorageExchange(character, storage, type), character, null)
         {
         }

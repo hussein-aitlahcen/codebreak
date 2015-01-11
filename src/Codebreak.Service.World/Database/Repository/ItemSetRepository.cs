@@ -50,7 +50,9 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public ItemSetDAO GetSetById(int id)
         {
-            return m_setById[id];
+            if(m_setById.ContainsKey(id))
+                return m_setById[id];
+            return null;
         }
     }
 }

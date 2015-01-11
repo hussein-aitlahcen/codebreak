@@ -40,7 +40,6 @@ namespace Codebreak.Service.World.Frame
                     character.MapId = WorldConfig.WORLD_MAP_START;
                     character.CellId = WorldConfig.WORLD_CELL_START;
                     map = character.Map;
-                    return;
                 }
                 character.CachedBuffer = true;
                 character.Dispatch(WorldMessage.GAME_CREATION_SUCCESS());
@@ -48,8 +47,7 @@ namespace Codebreak.Service.World.Frame
                     character.Dispatch(WorldMessage.GAME_DATA_MAP(character.Fight.Map.Id, character.Fight.Map.CreateTime, character.Fight.Map.DataKey));
                 else
                 {
-                    character.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));
-                    character.StartRegeneration();
+                    character.Dispatch(WorldMessage.GAME_DATA_MAP(map.Id, map.CreateTime, map.DataKey));             
                 }
                 character.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)character));
                 character.CachedBuffer = false;

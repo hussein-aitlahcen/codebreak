@@ -132,6 +132,13 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var fighter in m_loserTeam.Fighters.Where(f => f.Invocator == null))
             {
                 Result.AddResult(fighter, false);
+
+                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                {
+                    var character = fighter as CharacterEntity;
+                    character.MapId = character.SavedMapId;
+                    character.CellId = character.SavedCellId;
+                }
             }
         }
 

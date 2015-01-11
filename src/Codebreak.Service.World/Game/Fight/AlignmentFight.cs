@@ -234,6 +234,9 @@ namespace Codebreak.Service.World.Game.Fight
                     character.SubstractHonour(honour);
                 }
                 Result.AddResult(character, false, false, 0, 0, -honour, dishonour);
+
+                character.MapId = character.SavedMapId;
+                character.CellId = character.SavedCellId;
             }
         }
 

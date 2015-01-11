@@ -225,6 +225,15 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
+        public string ToExchangeString()
+        {
+            return Id.ToString() + "|" + Quantity + "|" + TemplateId + "|" + StringEffects;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public InventoryItemDAO Clone(int quantity)
         {
             var instance = new InventoryItemDAO();

@@ -40,7 +40,6 @@ namespace Codebreak.Service.World.Game.Entity
         public override void OnItemAdded(InventoryItemDAO item)
         {
             base.Dispatch(WorldMessage.OBJECT_ADD_SUCCESS(item));
-            base.OnItemAdded(item);
         }
 
         /// <summary>

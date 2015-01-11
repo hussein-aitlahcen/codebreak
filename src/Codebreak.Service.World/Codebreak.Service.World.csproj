@@ -131,6 +131,7 @@
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
+    <Compile Include="Game\ActionEffect\AddSpellEffect.cs" />
     <Compile Include="Game\ActionEffect\AddStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\NpcDialogLeaveEffect.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
     <Compile Include="Game\Entity\PersistentInventory.cs" />
+    <Compile Include="Game\Entity\StorageInventory.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />

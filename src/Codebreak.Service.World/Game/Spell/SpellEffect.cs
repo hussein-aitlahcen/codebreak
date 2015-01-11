@@ -576,6 +576,7 @@ namespace Codebreak.Service.World.Game.Spell
         NpcDialogReply = 2000,
         NpcDialogLeave = 2001,
         NpcOpenBank = 2002,
+        NpcAddStatistic = 2003,
     }
 
     /// <summary>

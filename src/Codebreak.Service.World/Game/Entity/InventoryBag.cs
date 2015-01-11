@@ -56,6 +56,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="item"></param>
+        public virtual void OnOwnerChange(InventoryItemDAO item)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="itemId"></param>
         /// <param name="quantity"></param>
         public virtual void OnItemQuantity(long itemId, int quantity)
@@ -111,6 +119,7 @@ namespace Codebreak.Service.World.Game.Entity
             
             Items.Add(item);
             OnItemAdded(item);
+            OnOwnerChange(item);
 
             return false;
         }

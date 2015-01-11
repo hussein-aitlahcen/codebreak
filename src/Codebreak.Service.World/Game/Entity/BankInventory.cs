@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public sealed class BankInventory : PersistentInventory
+    public sealed class BankInventory : StorageInventory
     {
         /// <summary>
         /// 

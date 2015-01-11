@@ -19,7 +19,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
-        private PersistentInventory m_storage;
+        private StorageInventory m_storage;
 
         /// <summary>
         /// 
@@ -29,7 +29,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         public TrashCan(MapInstance map, int cellId) 
             : base(map, cellId, false)
         {
-            m_storage = new PersistentInventory(-1, -1);
+            m_storage = new StorageInventory();
         }
 
         /// <summary>

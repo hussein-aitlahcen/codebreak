@@ -207,6 +207,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public StorageInventory Storage
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Dictionary<int, int> FarmedItems
         {
             get;
@@ -228,7 +237,7 @@ namespace Codebreak.Service.World.Game.Entity
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
             Spells = SpellBookFactory.Instance.Create(this);
-            Inventory = new EntityInventory(this, (int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
+            Storage = new StorageInventory((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
         }
 
         /// <summary>

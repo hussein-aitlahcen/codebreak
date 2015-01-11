@@ -29,9 +29,18 @@ namespace Codebreak.Service.World.Game.Condition
         {
             m_compiledExpressions = new Dictionary<string, Func<CharacterEntity, bool>>();
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="conditions"></param>
+        /// <param name="character"></param>
+        /// <returns></returns>
         public bool Check(string conditions, CharacterEntity character)
         {
+            if (conditions == string.Empty)
+                return true;
+
             Func<CharacterEntity, bool> method;
             lock(m_compiledExpressions)
             {

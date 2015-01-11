@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="character"></param>
         /// <param name="taxCollector"></param>
         public TaxCollectorExchange(CharacterEntity character, TaxCollectorEntity taxCollector)
-            : base(character, taxCollector.Inventory, ExchangeTypeEnum.EXCHANGE_TAXCOLLECTOR)
+            : base(character, taxCollector.Storage, ExchangeTypeEnum.EXCHANGE_TAXCOLLECTOR)
         {
             TaxCollector = taxCollector;
         }

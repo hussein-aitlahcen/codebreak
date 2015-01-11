@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +13,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// 
     /// </summary>
     public class PersistentInventory : InventoryBag
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public long ActualUser
-        {
-            get;
-            set;
-        }
-
+    {     
         /// <summary>
         /// 
         /// </summary>
@@ -77,14 +69,13 @@ namespace Codebreak.Service.World.Game.Entity
 
             OwnerType = ownerType;
             OwnerId = ownerId;
-            ActualUser = -1;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public override void OnItemAdded(InventoryItemDAO item)
+        public override void OnOwnerChange(InventoryItemDAO item)
         {
             item.OwnerId = OwnerId;
             item.OwnerType = OwnerType;

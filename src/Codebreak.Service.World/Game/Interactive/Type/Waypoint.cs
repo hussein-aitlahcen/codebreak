@@ -61,6 +61,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         public void Save(CharacterEntity character)
         {
             character.SavedMapId = Map.Id;
+            character.SavedCellId = character.CellId;
             character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_WAYPOINT_SAVED));
         }
 

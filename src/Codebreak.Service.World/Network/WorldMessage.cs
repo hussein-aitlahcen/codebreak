@@ -938,6 +938,18 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="move"></param>
+        /// <param name="operation"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string EXCHANGE_STORAGE_MOVEMENT(ExchangeMoveEnum move, OperatorEnum operation, string args)
+        {
+            return "EsK" + (char)move + (char)operation + args;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="type"></param>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -2136,7 +2148,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public static string EXCHANGE_TAXCOLLECTOR_ITEMS_LIST(IEnumerable<InventoryItemDAO> items, long kamas)
+        public static string EXCHANGE_STORAGE_ITEMS_LIST(IEnumerable<InventoryItemDAO> items, long kamas)
         {
             var message = new StringBuilder("EL");
             foreach (var item in items)

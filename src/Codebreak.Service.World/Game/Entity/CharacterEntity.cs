@@ -111,6 +111,21 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int SavedCellId
+        {
+            get
+            {
+                return DatabaseRecord.SavedCellId;
+            }
+            set
+            {
+                DatabaseRecord.SavedCellId = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override int MapId
         {
             get
@@ -853,12 +868,12 @@ namespace Codebreak.Service.World.Game.Entity
                 }
                 else
                 {
-                    m_lastEmoteId = emoteId;
-
                     StopRegeneration();
                     StartRegeneration(WorldConfig.REGEN_TIMER_SIT);
                 }
             }
+
+            m_lastEmoteId = emoteId;
 
             base.EmoteUse(emoteId, timeout);
         }
@@ -871,7 +886,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (Life >= MaxLife)
                 return;
             m_regenTimer = timer;
-            m_lastRegenTime = UpdateTime;
+            m_lastRegenTime = Environment.TickCount;
             base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(timer));
         }
 
@@ -882,7 +897,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (Life >= MaxLife)
                 return;
-            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / m_regenTimer);
+            var lifeRestored = (int)Math.Floor((Environment.TickCount - m_lastRegenTime) / m_regenTimer);
             if (Life + lifeRestored > MaxLife)
                 lifeRestored = MaxLife - Life;
             Life += lifeRestored;
@@ -1276,7 +1291,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="storage"></param>
-        public void ExchangeStorage(PersistentInventory storage)
+        public void ExchangeStorage(StorageInventory storage)
         {
             CurrentAction = new GameStorageExchangeAction(this, storage);
             StartAction(GameActionTypeEnum.EXCHANGE);
@@ -1389,14 +1404,13 @@ namespace Codebreak.Service.World.Game.Entity
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP_MOVEMENT:
-                    if(m_lastEmoteId == 1)
-                    {
-                        EmoteUse(1);
-                    }
+                    if(m_lastEmoteId == 1)                    
+                        EmoteUse(1);                    
                     break;
 
                 case GameActionTypeEnum.MAP_TELEPORT:
                     Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
+                    StopRegeneration();
                     break;
 
                 case GameActionTypeEnum.MAP:
@@ -1407,6 +1421,7 @@ namespace Codebreak.Service.World.Game.Entity
                         FrameManager.AddFrame(ExchangeFrame.Instance);
                         FrameManager.AddFrame(GameActionFrame.Instance);
                     }
+                    StartRegeneration();
                     break;
 
                 case GameActionTypeEnum.WAYPOINT:

@@ -33,21 +33,32 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private List<NpcResponseDAO> m_responses;
-        public List<NpcResponseDAO> GetResponses()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public List<NpcResponseDAO> ResponseList
         {
-            if (m_responses == null)
+            get
             {
-                m_responses = new List<NpcResponseDAO>();
-                if(Responses != string.Empty)
+                if (m_responses == null)
                 {
-                    foreach(var response in Responses.Split(';'))
+                    m_responses = new List<NpcResponseDAO>();
+                    if (Responses != string.Empty)
                     {
-                        m_responses.Add(NpcResponseRepository.Instance.GetById(int.Parse(response)));
+                        foreach (var response in Responses.Split(';'))
+                        {
+                            m_responses.Add(NpcResponseRepository.Instance.GetById(int.Parse(response)));
+                        }
                     }
                 }
+                return m_responses;
             }
-            return m_responses;
         }
     }
 }

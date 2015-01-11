@@ -228,7 +228,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="item"></param>
         public void AddSet(InventoryItemDAO item)
         {
-            if (item.Template.SetId == 0)
+            if (item.Template.SetId == 0 || item.Template.Set == null)
                 return;
 
             var set = item.Template.Set;
@@ -248,7 +248,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void RemoveSet(InventoryItemDAO item)
         {
-            if (item.Template.SetId == 0)
+            if (item.Template.SetId == 0 || item.Template.Set == null)
                 return;
 
             var set = item.Template.Set;

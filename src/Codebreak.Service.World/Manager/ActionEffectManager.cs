@@ -33,8 +33,11 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.NpcDialogLeave, NpcDialogLeaveEffect.Instance);
             m_effectById.Add(EffectEnum.NpcDialogReply, NpcDialogReplyEffect.Instance);
             m_effectById.Add(EffectEnum.NpcOpenBank, OpenBankEffect.Instance);
+            m_effectById.Add(EffectEnum.NpcAddStatistic, AddStatsEffect.Instance);
 
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
+
+            m_effectById.Add(EffectEnum.AddSpell, AddSpellEffect.Instance);
 
             m_effectById.Add(EffectEnum.AddCaractVitality, AddStatsEffect.Instance);
             m_effectById.Add(EffectEnum.AddCaractWisdom, AddStatsEffect.Instance);
