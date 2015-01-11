@@ -52,7 +52,6 @@ namespace Codebreak.Service.World.Game.Dialog
         /// 
         /// </summary>
         private IEnumerable<NpcResponseDAO> m_possibleResponses;
-        private string m_parameter;
 
         /// <summary>
         /// 
@@ -71,13 +70,9 @@ namespace Codebreak.Service.World.Game.Dialog
         /// <param name="question"></param>
         public void SendQuestion(NpcQuestionDAO question)
         {
-            m_possibleResponses = question.ResponseList.Where(response => ConditionParser.Instance.Check(response.Conditions, Character));
-            
             CurrentQuestion = question;
-
-            ApplyParameter();
-
-            Character.Dispatch(WorldMessage.DIALOG_QUESTION(CurrentQuestion.Id, m_parameter, m_possibleResponses.Select(response => response.Id)));
+            m_possibleResponses = CurrentQuestion.ResponseList.Where(response => ConditionParser.Instance.Check(response.Conditions, Character));
+            Character.Dispatch(WorldMessage.DIALOG_QUESTION(CurrentQuestion.Id, ApplyParameter(), m_possibleResponses.Select(response => response.Id)));
         }
 
         /// <summary>
@@ -92,24 +87,21 @@ namespace Codebreak.Service.World.Game.Dialog
                 Character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-
-            foreach(var action in response.GetActions())
-            {
-                ActionEffectManager.Instance.ApplyEffect(Character, action.Key, action.Value);
-            }
+            foreach(var action in response.ActionsList)            
+                ActionEffectManager.Instance.ApplyEffect(Character, action.Key, action.Value);            
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void ApplyParameter()
+        private string ApplyParameter()
         {
             switch(CurrentQuestion.Params)
             {
                 case BANK_COST:
-                    m_parameter = Character.Bank.Items.GroupBy(item => item.TemplateId).Count().ToString();
-                    break;
+                    return Character.Bank.Items.GroupBy(item => item.TemplateId).Count().ToString();
             }
+            return "";
         }
     }
 }

@@ -33,26 +33,37 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<EffectEnum, Dictionary<string, string>> m_actions;
-        public Dictionary<EffectEnum, Dictionary<string, string>> GetActions()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public Dictionary<EffectEnum, Dictionary<string, string>> ActionsList
         {
-            if(m_actions == null)
+            get
             {
-                m_actions = new Dictionary<EffectEnum, Dictionary<string, string>>();
-                foreach(var action in Actions.Split(';'))
+                if (m_actions == null)
                 {
-                    var actionData = action.Split(':');
-                    var actionId = (EffectEnum)int.Parse(actionData[0]);
-                    var actionParams = new Dictionary<string, string>();
-                    foreach (var param in actionData[1].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+                    m_actions = new Dictionary<EffectEnum, Dictionary<string, string>>();
+                    foreach (var action in Actions.Split(';'))
                     {
-                        var paramData = param.Split('=');
-                        actionParams.Add(paramData[0], paramData[1]);
+                        var actionData = action.Split(':');
+                        var actionId = (EffectEnum)int.Parse(actionData[0]);
+                        var actionParams = new Dictionary<string, string>();
+                        foreach (var param in actionData[1].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            var paramData = param.Split('=');
+                            actionParams.Add(paramData[0], paramData[1]);
+                        }
+                        m_actions.Add(actionId, actionParams);
                     }
-                    m_actions.Add(actionId, actionParams);
                 }
+                return m_actions;
             }
-            return m_actions;
         }
     }
 }
