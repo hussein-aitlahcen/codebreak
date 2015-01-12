@@ -32,23 +32,23 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public List<FighterBase> Spectators
+        public List<CharacterEntity> Spectators
         {
             get
             {
-                return _spectators;
+                return m_spectators;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private List<FighterBase> _spectators;
+        private List<CharacterEntity> m_spectators;
 
         /// <summary>
         /// 
         /// </summary>
-        private FightBase _fight;
+        private FightBase m_fight;
 
         /// <summary>
         /// 
@@ -57,9 +57,9 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _fight.State == FightStateEnum.STATE_FIGHTING &&
-                    !_fight.Team0.IsOptionLocked(FightOptionTypeEnum.TYPE_SPECTATOR) &&
-                    !_fight.Team1.IsOptionLocked(FightOptionTypeEnum.TYPE_SPECTATOR);
+                return m_fight.State == FightStateEnum.STATE_FIGHTING &&
+                    !m_fight.Team0.IsOptionLocked(FightOptionTypeEnum.TYPE_SPECTATOR) &&
+                    !m_fight.Team1.IsOptionLocked(FightOptionTypeEnum.TYPE_SPECTATOR);
             }
         }
 
@@ -69,26 +69,26 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fight"></param>
         public SpectatorTeam(FightBase fight)
         {
-            _fight = fight;
-            _spectators = new List<FighterBase>();
+            m_fight = fight;
+            m_spectators = new List<CharacterEntity>();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void AddSpectator(FighterBase fighter)
+        public void AddSpectator(CharacterEntity fighter)
         {
-            _spectators.Add(fighter);
+            m_spectators.Add(fighter);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void RemoveSpectator(FighterBase fighter)
+        public void RemoveSpectator(CharacterEntity fighter)
         {
-            _spectators.Remove(fighter);
+            m_spectators.Remove(fighter);
         }
 
         /// <summary>
@@ -96,9 +96,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void Dispose()
         {
-            _fight = null;
-            _spectators.Clear();
-            _spectators = null;
+            m_fight = null;
+            m_spectators.Clear();
+            m_spectators = null;
 
             base.Dispose();
         }

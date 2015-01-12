@@ -172,7 +172,7 @@ namespace Codebreak.Service.World.Frame
                 }
 
                 var selectedFighter = character.Team.GetFighter(fighterId);
-                if (selectedFighter == null)
+                if (selectedFighter == null || selectedFighter.Type != EntityTypeEnum.TYPE_CHARACTER)
                 {
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
@@ -185,7 +185,9 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                character.Fight.AddMessage(() => character.Fight.FightQuit(selectedFighter, true));
+                var selectedCharacter = selectedFighter as CharacterEntity;
+
+                character.Fight.AddMessage(() => character.Fight.FightQuit(selectedCharacter, true));
             });
         }
     }

@@ -124,10 +124,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
+        /// <param name="character"></param>
         /// <param name="kick"></param>
         /// <returns></returns>
-        public override FightActionResultEnum FightQuit(FighterBase fighter, bool kick = false)
+        public override FightActionResultEnum FightQuit(CharacterEntity character, bool kick = false)
         {
             if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
                 return FightActionResultEnum.RESULT_NOTHING;
@@ -135,9 +135,9 @@ namespace Codebreak.Service.World.Game.Fight
             switch (State)
             {
                 case FightStateEnum.STATE_PLACEMENT:
-                    if (fighter.IsLeader)
+                    if (character.IsLeader)
                     {
-                        foreach (var teamFighter in fighter.Team.Fighters)
+                        foreach (var teamFighter in character.Team.Fighters)
                         {
                             if (base.TryKillFighter(teamFighter, teamFighter.Id, true, true) == FightActionResultEnum.RESULT_END)
                             {
@@ -149,27 +149,27 @@ namespace Codebreak.Service.World.Game.Fight
                     }
                     else
                     {
-                        fighter.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, fighter.Team.LeaderId, fighter));
-                        fighter.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
-                        fighter.LeaveFight();
-                        fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        character.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, character.Team.LeaderId, character));
+                        character.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, character));
+                        character.LeaveFight();
+                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
                 case FightStateEnum.STATE_FIGHTING:
-                    if (fighter.IsSpectating)
+                    if (character.IsSpectating)
                     {
-                        fighter.LeaveFight(kick);
-                        fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        character.LeaveFight(kick);
+                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
-                    if (TryKillFighter(fighter, fighter.Id, true, true) != FightActionResultEnum.RESULT_END)
+                    if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
                     {
-                        fighter.LeaveFight();
-                        fighter.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        character.LeaveFight();
+                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_DEATH;
                     }

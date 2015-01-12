@@ -218,7 +218,7 @@ namespace Codebreak.Service.World.Game.Fight
         public FightBase Fight
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -477,53 +477,8 @@ namespace Codebreak.Service.World.Game.Fight
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Team.Dispatch);
             StartAction(GameActionTypeEnum.FIGHT);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fight"></param>
-        public virtual void JoinSpectator(FightBase fight)
-        {
-            Fight = fight;
-            IsSpectating = true;
-
-            Fight.SpectatorTeam.AddSpectator(this);
-            Fight.SpectatorTeam.AddUpdatable(this);
-            Fight.SpectatorTeam.AddHandler(Dispatch);
-
-            SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
-            StartAction(GameActionTypeEnum.FIGHT);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void LeaveFight(bool kicked = false)
-        {
-            if (IsSpectating)
-            {
-                Fight.SpectatorTeam.RemoveSpectator(this);
-                Fight.SpectatorTeam.RemoveUpdatable(this);
-                Fight.SpectatorTeam.RemoveHandler(Dispatch);
-            }
-            else
-            {
-                Team.RemoveFighter(this);
-                Team.RemoveUpdatable(this);
-                Team.RemoveHandler(Dispatch);
-
-                if (!kicked)
-                {
-                    Fight.Result.AddResult(this, false, true);
-                }
-
-                Fight.TurnProcessor.RemoveFighter(this);
-            }
-            
-            EndFight();
-        }
-
+        }       
+                
         /// <summary>
         /// 
         /// </summary>
@@ -540,6 +495,8 @@ namespace Codebreak.Service.World.Game.Fight
                             Life = 1;
                             break;
 
+                        case FightTypeEnum.TYPE_AGGRESSION:
+                        case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
                             if (Type == EntityTypeEnum.TYPE_CHARACTER)
                                 Life = 1; // 
@@ -555,7 +512,7 @@ namespace Codebreak.Service.World.Game.Fight
             }
             else
             {
-                Fight.SpectatorTeam.RemoveSpectator(this);
+                Fight.SpectatorTeam.RemoveSpectator((CharacterEntity)this);
                 Fight.SpectatorTeam.RemoveUpdatable(this);
                 Fight.SpectatorTeam.RemoveHandler(Dispatch);
             }
@@ -624,24 +581,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <returns></returns>
         public virtual FightActionResultEnum EndTurn()
-        {
-            if (IsDisconnected)
-            {
-                if (DisconnectedTurnLeft == 0)
-                {
-                    Fight.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_KICKED_DUE_TO_DISCONNECTION, Name));
-
-                    if (Fight.FightQuit(this) == FightActionResultEnum.RESULT_END)                    
-                        return FightActionResultEnum.RESULT_END;                    
-                }
-                else
-                {
-                    Fight.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_DISCONNECT_TURN_REMAIN, Name, DisconnectedTurnLeft));
-                }
-
-                DisconnectedTurnLeft--;
-            }
-
+        {            
             SpellManager.EndTurn();
 
             return BuffManager.EndTurn();
@@ -880,7 +820,9 @@ namespace Codebreak.Service.World.Game.Fight
                 if (Cell == cell)
                     return FightActionResultEnum.RESULT_NOTHING;
 
-                Cell.RemoveObject(this);
+                var removeResult = Cell.RemoveObject(this);
+                if (removeResult != FightActionResultEnum.RESULT_NOTHING)
+                    return removeResult;
             }
 
             Cell = cell;
@@ -894,14 +836,14 @@ namespace Codebreak.Service.World.Game.Fight
                 var buffResult = BuffManager.EndMove();
                 if (buffResult != FightActionResultEnum.RESULT_NOTHING)
                     return buffResult;
+
+                if (Fight.LoopState != FightLoopStateEnum.STATE_ENDED)
+                    return Fight.TryKillFighter(this, Id);
             }
 
             if (Fight.State != FightStateEnum.STATE_FIGHTING)
                 return FightActionResultEnum.RESULT_NOTHING;
-
-            if(Fight.LoopState != FightLoopStateEnum.STATE_ENDED)
-                return Fight.TryKillFighter(this, Id);
-
+            
             return FightActionResultEnum.RESULT_NOTHING;
         }
 

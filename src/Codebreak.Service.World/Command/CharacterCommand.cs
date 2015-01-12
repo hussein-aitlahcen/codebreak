@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 using Codebreak.Framework.Command;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game;
@@ -8,6 +9,7 @@ using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Spell;
+using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Command
 {
@@ -757,6 +759,39 @@ namespace Codebreak.Service.World.Command
                 {
                     context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character levelup %level%"));
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class WinFightCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases =
+            {
+                "winfight"
+            };
+
+            public override string[] Aliases
+            {
+                get { return _aliases; }
+            }
+
+            public override string Description
+            {
+                get { return "Win the current fight in the favor of your team."; }
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                if(!context.Character.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to execute this command out of fight."));
+                    return;
+                }
+
+                foreach (var fighter in context.Character.Team.OpponentTeam.AliveFighters)
+                    fighter.Life = 0;
             }
         }
 

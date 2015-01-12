@@ -517,6 +517,17 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int BreedId
+        {
+            get
+            {
+                return DatabaseRecord.Breed;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Sex
         {
             get
@@ -847,6 +858,88 @@ namespace Codebreak.Service.World.Game.Entity
 
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fight"></param>
+        public virtual void JoinSpectator(FightBase fight)
+        {
+            Fight = fight;
+            IsSpectating = true;
+
+            Fight.SpectatorTeam.AddSpectator(this);
+            Fight.SpectatorTeam.AddUpdatable(this);
+            Fight.SpectatorTeam.AddHandler(Dispatch);
+
+            SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
+
+            StartAction(GameActionTypeEnum.FIGHT);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override FightActionResultEnum EndTurn()
+        {
+            if (IsDisconnected)
+            {
+                if (DisconnectedTurnLeft == 0)
+                {
+                    Fight.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_KICKED_DUE_TO_DISCONNECTION, Name));
+
+                    if (Fight.FightQuit(this) == FightActionResultEnum.RESULT_END)
+                        return FightActionResultEnum.RESULT_END;
+                }
+                else
+                {
+                    Fight.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_DISCONNECT_TURN_REMAIN, Name, DisconnectedTurnLeft));
+                }
+
+                DisconnectedTurnLeft--;
+            }
+
+            return base.EndTurn();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void LeaveFight(bool kicked = false)
+        {
+            if (IsSpectating)
+            {
+                Fight.SpectatorTeam.RemoveSpectator(this);
+                Fight.SpectatorTeam.RemoveUpdatable(this);
+                Fight.SpectatorTeam.RemoveHandler(Dispatch);
+            }
+            else
+            {
+                Team.RemoveFighter(this);
+                Team.RemoveUpdatable(this);
+                Team.RemoveHandler(Dispatch);
+
+                if (!kicked)
+                {
+                    Fight.Result.AddResult(this, false, true);
+                    switch (Fight.Type)
+                    {
+                        case FightTypeEnum.TYPE_AGGRESSION:
+                        case FightTypeEnum.TYPE_PVM:
+                        case FightTypeEnum.TYPE_PVT:
+                            MapId = SavedMapId;
+                            CellId = SavedCellId;
+                            Life = 1;
+                            break;
+                    }
+                }
+
+                Fight.TurnProcessor.RemoveFighter(this);
+            }
+
+            base.EndFight();
         }
 
         /// <summary>

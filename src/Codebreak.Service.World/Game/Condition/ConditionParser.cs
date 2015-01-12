@@ -81,7 +81,7 @@ namespace Codebreak.Service.World.Game.Condition
                     realConditions.Replace("PP", "character.AlignmentPromotion");
                     realConditions.Replace("PL", "character.Level");
                     realConditions.Replace("PK", "character.Inventory.Kamas");
-                    realConditions.Replace("PG", "(int)character.Breed");
+                    realConditions.Replace("PG", "character.BreedId");
                     realConditions.Replace("PS", "character.Sex");
                     realConditions.Replace("PZ", "1"); // Abonné
                     realConditions.Replace("PN", "character.Name");

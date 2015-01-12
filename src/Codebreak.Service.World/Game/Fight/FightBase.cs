@@ -993,33 +993,33 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
-        public void TrySpectate(FighterBase fighter)
+        /// <param name="character"></param>
+        public void TrySpectate(CharacterEntity character)
         {
             AddMessage(() =>
                     {
                         if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
                         {
-                            fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                            character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                             return;
                         }
 
                         if (State != FightStateEnum.STATE_FIGHTING)
                         {
-                            Logger.Debug("FightBase::TrySpectate cannot spectate placement " + fighter.Name);
-                            fighter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_SPECTATOR_LOCKED));
+                            Logger.Debug("FightBase::TrySpectate cannot spectate placement " + character.Name);
+                            character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_SPECTATOR_LOCKED));
                             return;
                         }
                         
                         if (!SpectatorTeam.CanJoin)
                         {
-                            fighter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_SPECTATOR_LOCKED));
+                            character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_SPECTATOR_LOCKED));
                             return;
                         }
 
-                        fighter.JoinSpectator(this);
+                        character.JoinSpectator(this);
 
-                        SendFightJoinInfos(fighter);                        
+                        SendFightJoinInfos(character);                        
                     });
         }
 
@@ -1126,7 +1126,7 @@ namespace Codebreak.Service.World.Game.Fight
                 // disconnected during placement or spectator disconnected
                 if (fighter.IsSpectating)
                 {
-                    FightQuit(fighter, true);
+                    FightQuit((CharacterEntity)fighter, true);
                     return;
                 }
 
@@ -1699,8 +1699,17 @@ namespace Codebreak.Service.World.Game.Fight
                 return FightSpellLaunchResultEnum.RESULT_WRONG_TARGET;            
 
             if(spellLevel.InLine && !Pathfinding.InLine(Map, cellId, castCell))            
-                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;            
-            
+                return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
+
+            if(spellLevel.Effects.Any(effect => effect.TypeEnum == EffectEnum.Invocation))
+            {
+                var invocationCount = fighter.Team.AliveFighters.Count(f => f.Invocator == fighter);
+                if(invocationCount >= fighter.Statistics.GetTotal(EffectEnum.AddInvocationMax))
+                {
+                    return FightSpellLaunchResultEnum.RESULT_ERROR;
+                }
+            }
+
             var target = GetFighterOnCell(castCell);
             long targetId = 0;
             if (target != null)
@@ -2503,7 +2512,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public abstract FightActionResultEnum FightQuit(FighterBase fighter, bool kick = false);
+        public abstract FightActionResultEnum FightQuit(CharacterEntity character, bool kick = false);
 
         /// <summary>
         /// 

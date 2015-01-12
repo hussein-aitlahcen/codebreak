@@ -20,7 +20,6 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         public override FightActionResultEnum ApplyEffect(CastInfos castInfos)
         {
             var invocationCount = castInfos.Caster.Team.AliveFighters.Count(fighter => fighter.Invocator == castInfos.Caster);
-
             if (invocationCount >= castInfos.Caster.Statistics.GetTotal(Spell.EffectEnum.AddInvocationMax))
                 return FightActionResultEnum.RESULT_NOTHING;
 

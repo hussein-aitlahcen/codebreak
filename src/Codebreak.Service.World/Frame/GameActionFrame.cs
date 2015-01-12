@@ -345,7 +345,7 @@ namespace Codebreak.Service.World.Frame
 
             if(fightData.Length == 1)
             {
-                fight.TrySpectate((FighterBase)character);
+                fight.TrySpectate(character);
                 return;
             }
             
