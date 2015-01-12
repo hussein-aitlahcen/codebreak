@@ -287,6 +287,7 @@ namespace Codebreak.Service.World.Game.Guild
                         return;
                     }
 
+                    taxCollector.Map.SubArea.TaxCollector = null;
                     taxCollector.StopAction(GameActionTypeEnum.MAP);
 
                     AddMessage(() =>
@@ -315,34 +316,14 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="taxCollector"></param>
         public void FarmTaxCollector(GuildMember member, TaxCollectorEntity taxCollector)
         {
-            if (taxCollector.Guild != this)
+            taxCollector.Map.SubArea.TaxCollector = null;
+            taxCollector.StopAction(GameActionTypeEnum.MAP);
+
+            AddMessage(() =>
             {
-                member.SendHasNotEnoughRights();
-                return;
-            }
+                RemoveTaxCollector(taxCollector);
 
-            if (!member.HasRight(GuildRightEnum.COLLECT_TAXCOLLECTOR))
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
-
-            taxCollector.AddMessage(() =>
-            {
-                if (!taxCollector.HasGameAction(GameActionTypeEnum.MAP))
-                {
-                    member.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                    return;
-                }
-
-                taxCollector.StopAction(GameActionTypeEnum.MAP);
-
-                AddMessage(() =>
-                {
-                    RemoveTaxCollector(taxCollector);
-
-                    SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_FARMED(taxCollector, member.Name));
-                });
+                SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_FARMED(taxCollector, member.Name));
             });
         }
 
@@ -424,10 +405,9 @@ namespace Codebreak.Service.World.Game.Guild
             }
 
             var character = member.Character;
-            if (character == null)
-            {
+            if (character == null)            
                 return;
-            }
+            
 
             character.AddMessage(() =>
             {
@@ -504,23 +484,18 @@ namespace Codebreak.Service.World.Game.Guild
                 member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already hired the maximum TaxCollector."));
                 return;
             }
-
-            foreach (var collector in m_taxCollectors)
-            {
-                if (collector.Map.SubAreaId == member.Character.Map.SubAreaId)
-                {
-                    member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED, 1)); // MAX COLLECTOR BY SUBAREA
-                    return;
-                }
-            }
-
-            if (member.Character == null)
-            {
+                       
+            if (member.Character == null)            
                 return;
-            }
-
+            
             member.Character.AddMessage(() =>
                 {
+                    if (member.Character.Map.SubArea.TaxCollector != null)
+                    {
+                        member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_TAXCOLLECTOR_BY_SUBAREA_REACHED, 1)); // MAX COLLECTOR BY SUBAREA
+                        return;
+                    }
+
                     if (member.Character.Inventory.Kamas < TaxCollectorPrice)
                     {
                         member.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS, TaxCollectorPrice));
@@ -540,6 +515,7 @@ namespace Codebreak.Service.World.Game.Guild
                                 Skin = WorldConfig.TAXCOLLECTOR_SKIN_BASE,
                                 SkinSize = WorldConfig.TAXCOLLECTOR_SKIN_SIZE_BASE,
                                 Kamas = 0,
+                                Experience = 0,
                             };
 
                             if (!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))

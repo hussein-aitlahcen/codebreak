@@ -233,6 +233,22 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="actionType"></param>
+        /// <param name="args"></param>
+        public override void StopAction(GameActionTypeEnum actionType, params object[] args)
+        {
+            switch(actionType)
+            {
+                case GameActionTypeEnum.MAP:
+
+                    break;
+            }
+            base.StopAction(actionType, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public override bool CanBeMoved()
         {
@@ -341,6 +357,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        private StringBuilder m_serialized;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="operation"></param>
         /// <param name="message"></param>
         public override void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message)
@@ -356,16 +377,21 @@ namespace Codebreak.Service.World.Game.Entity
                     if (HasGameAction(GameActionTypeEnum.MAP))
                     {
                         message.Append(CellId).Append(';');
-                        message.Append(Orientation).Append(';'); ;
-                        message.Append(0).Append(';');
-                        message.Append(Id).Append(';');
-                        message.Append(Name).Append(';');
-                        message.Append((int)Type).Append(';');
-                        message.Append(SkinBase).Append('^');
-                        message.Append(SkinSizeBase).Append(';');
-                        message.Append(Level).Append(';');
-                        message.Append(Guild.Name).Append(';');
-                        message.Append(Guild.DisplayEmblem);
+                        message.Append(Orientation).Append(';');
+                        if (m_serialized == null)
+                        {
+                            m_serialized = new StringBuilder();
+                            m_serialized.Append(0).Append(';');
+                            m_serialized.Append(Id).Append(';');
+                            m_serialized.Append(Name).Append(';');
+                            m_serialized.Append((int)Type).Append(';');
+                            m_serialized.Append(SkinBase).Append('^');
+                            m_serialized.Append(SkinSizeBase).Append(';');
+                            m_serialized.Append(Level).Append(';');
+                            m_serialized.Append(Guild.Name).Append(';');
+                            m_serialized.Append(Guild.DisplayEmblem);
+                        }
+                        message.Append(m_serialized.ToString());
                     }
                     else if (HasGameAction(GameActionTypeEnum.FIGHT))
                     {

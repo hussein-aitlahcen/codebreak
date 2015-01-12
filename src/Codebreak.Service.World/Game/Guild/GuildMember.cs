@@ -382,10 +382,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="taxCollector"></param>
         public void FarmTaxCollector(TaxCollectorEntity taxCollector)
         {
-            Guild.AddMessage(() =>
-                {
-                    Guild.FarmTaxCollector(this, taxCollector);
-                });
+            Guild.FarmTaxCollector(this, taxCollector);
         }
 
         /// <summary>

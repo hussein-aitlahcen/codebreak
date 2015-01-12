@@ -233,6 +233,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 character.MapId = character.SavedMapId;
                 character.CellId = character.SavedCellId;
+                character.Life = 1;
             }
         }
 

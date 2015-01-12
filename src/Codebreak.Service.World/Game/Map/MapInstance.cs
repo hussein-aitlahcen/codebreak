@@ -413,15 +413,6 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public bool HasTaxCollector()
-        {
-            return m_entityById.Values.Any(entity => entity.Type == EntityTypeEnum.TYPE_TAX_COLLECTOR);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="cellId"></param>
         /// <returns></returns>
         public bool IsWalkable(int cellId)
@@ -485,7 +476,7 @@ namespace Codebreak.Service.World.Game.Map
 
                         if(!m_movementInitialized)                        
                             InitEntitiesMovements();
-                        
+
                         base.AddHandler(entity.Dispatch);
                         entity.CachedBuffer = true;
                         entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
@@ -518,12 +509,12 @@ namespace Codebreak.Service.World.Game.Map
 
                 if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
+                    base.RemoveHandler(entity.Dispatch);
                     m_entityByName.Remove(entity.Name.ToLower());
                     m_playerCount--;
                 }
 
                 base.RemoveUpdatable(entity);
-                base.RemoveHandler(entity.Dispatch);
                 base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, entity));
             }
         }

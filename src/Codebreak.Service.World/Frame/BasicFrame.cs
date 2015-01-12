@@ -206,29 +206,26 @@ namespace Codebreak.Service.World.Frame
 
             character.AddMessage(() =>
                 {
-                    if(!character.HasGameAction(GameActionTypeEnum.MAP))
+                    if (!character.HasGameAction(GameActionTypeEnum.MAP))
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
-                    
+
                     var taxCollector = character.Map.GetEntity(taxCollectorId) as TaxCollectorEntity;
-                    if(taxCollector == null)
+                    if (taxCollector == null)
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    WorldService.Instance.AddMessage(() =>
-                        {
-                            if (character.GuildMember == null)
-                            {
-                                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                                return;
-                            }
+                    if (character.GuildMember == null)
+                    {
+                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
 
-                            character.GuildMember.RemoveTaxCollector(taxCollector);
-                        });
+                    character.GuildMember.RemoveTaxCollector(taxCollector);
                 });
         }
 

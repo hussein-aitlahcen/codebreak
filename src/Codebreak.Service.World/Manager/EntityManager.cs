@@ -89,6 +89,7 @@ namespace Codebreak.Service.World.Manager
         {
             var taxCollector = new TaxCollectorEntity(guild, taxCollectorDAO);
             taxCollector.StartAction(GameActionTypeEnum.MAP);
+            taxCollector.Map.SubArea.TaxCollector = taxCollector;
             m_taxCollectorById.Add(taxCollector.Id, taxCollector);
             return taxCollector;
         }

@@ -172,9 +172,14 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 Result.AddResult(fighter, true);
             }
-            foreach (var fighter in m_losersTeam.Fighters)
+
+            foreach (var player in m_losersFighter.OfType<CharacterEntity>())
             {
-                Result.AddResult(fighter, false);
+                player.MapId = player.SavedMapId;
+                player.CellId = player.SavedCellId;
+                player.Life = 1;
+
+                Result.AddResult(player, false);
             }
         }
 

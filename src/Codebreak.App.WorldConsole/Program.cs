@@ -4,10 +4,20 @@ using log4net.Config;
 
 namespace Codebreak.App.WorldConsole
 {
-    class Program
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private static readonly ILog Logger = LogManager.GetLogger(typeof(Program));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         private static void Main(string[] args)
         {
             XmlConfigurator.Configure();
@@ -23,20 +33,27 @@ namespace Codebreak.App.WorldConsole
                 System.Console.ReadLine();
         }
 
-        // ReSharper disable once InconsistentNaming
+        /// <summary>
+        /// 
+        /// </summary>
         private static void InitializeGCServer()
         {
             GCSettings.LatencyMode = GCSettings.IsServerGC ? GCLatencyMode.Batch : GCLatencyMode.Interactive;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private static void ConfigureConsole()
         {
+            System.Console.WindowWidth = 100;
             System.Console.Title = "Codebreak : WorldService";
             Logger.Info("   ###################################");
-            Logger.Info(" #######################################");
-            Logger.Info("#####           CODEBREAK           #####");
-            Logger.Info("#####             WORLD             #####");
-            Logger.Info(" #######################################");
+            Logger.Info("  #####################################");
+            Logger.Info(" ####           CODEBREAK           ####");
+            Logger.Info("#####         SERVICE.WORLD         #####");
+            Logger.Info(" ####            Smarken            ####");
+            Logger.Info("  #####################################");
             Logger.Info("   ###################################");
         }
     }

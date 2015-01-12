@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Framework.Generic;
+using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Game.Area
 {
@@ -45,6 +46,15 @@ namespace Codebreak.Service.World.Game.Area
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public TaxCollectorEntity TaxCollector
+        {
+            get;
+            set;
         }
 
         /// <summary>
