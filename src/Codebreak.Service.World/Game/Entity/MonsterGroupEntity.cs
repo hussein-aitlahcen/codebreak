@@ -152,6 +152,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public override bool CanBeMoved()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="operation"></param>
         /// <param name="message"></param>
         public override void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message)
@@ -163,7 +172,12 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case OperatorEnum.OPERATOR_ADD:
-                case OperatorEnum.OPERATOR_REFRESH:
+                case OperatorEnum.OPERATOR_REFRESH:         
+           
+                    // cell/orientation/bonus may change
+                    message.Append(CellId).Append(";");
+                    message.Append(Orientation).Append(';');
+                    message.Append('0').Append(';');
                     if (m_serializedMapInformations == null)
                     {
                         string mobIds = string.Join(",", m_monsters.Select(monster => monster.Grade.MonsterId.ToString()));
@@ -179,23 +193,9 @@ namespace Codebreak.Service.World.Game.Entity
                         m_serializedMapInformations.Append(mobLevels).Append(";");
                         m_serializedMapInformations.Append(mobColors);
                     }
-
-                    // cell/orientation/bonus may change
-                    message.Append(CellId).Append(";");
-                    message.Append(Orientation).Append(';');
-                    message.Append('0').Append(';');
                     message.Append(m_serializedMapInformations.ToString());
                     break;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -11,7 +11,27 @@ namespace Codebreak.Service.World
     /// </summary>
     public static class WorldConfig
     {
-        public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000; 
+        public static string[] NPC_BEGIN_TRADE_SPEAK = 
+        {
+            "Encore un client, que désirez vous {0} ?",
+            "Des nouveautés tous les jours !",
+        };
+
+        public static string[] NPC_BUY_TRADE_SPEAK = 
+        {
+            "{0} est riche !",
+            "L'aura de {0} n'a d'egale que sa richesse.",
+        };
+
+        public static string[] NPC_LEAVE_TRADE_SPEAK = 
+        {
+            "J'espère vous revoir très prochainement.",
+            "A bientôt, sachez que je suis toujours ouvert.",
+        };
+
+        public const int
+            RPC_ACCOUNT_TICKET_CHECK_INTERVAL = 1000,
+            RPC_ACCOUNT_TICKET_TIMEOUT = 5000; 
 
         public const int
             WORLD_SAVE_INTERVAL = 60 * 1000,
@@ -45,7 +65,22 @@ namespace Codebreak.Service.World
         public const double
             REGEN_TIMER_SIT = 500,
             REGEN_TIMER = 1500;
-        
+
+        public const int 
+            PVT_TELEPORT_DEFENDERS_TIMEOUT = 45000,
+            PVT_START_TIMEOUT = 60000,
+            PVT_TURN_TIME = 30000;
+
+
+        public const int 
+            PVP_START_TIMEOUT = 60000,
+            PVP_TURN_TIME = 30000;
+
+        public const int
+            AGGRESSION_KNGIHT_MONSTER_ID = 394,
+            AGGRESSION_START_TIMEOUT = 60000,
+            AGGRESSION_TURN_TIME = 30000;
+
         public const int
             TAXCOLLECTOR_MIN_NAME = 1,
             TAXCOLLECTOR_MAX_NAME = 228,
@@ -56,7 +91,7 @@ namespace Codebreak.Service.World
 
         public const int 
             FIGHT_DISCONNECTION_TURN = 20, 
-            FIGHT_PUSH_CELL_TIME = 300,
+            FIGHT_PUSH_CELL_TIME = 300, // Slide should be 250 ms
             FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
 
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);

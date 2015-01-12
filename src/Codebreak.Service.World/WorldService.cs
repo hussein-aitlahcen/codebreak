@@ -86,9 +86,9 @@ namespace Codebreak.Service.World
             CommandManager = new CommandManager<WorldCommandContext>();
             CommandManager.RegisterCommands();
 
-            AddUpdatable(Dispatcher = new MessageDispatcher());
-            AddUpdatable(RPCManager.Instance);
-            AddTimer(WorldSaveInternal, SaveWorld);
+            base.AddUpdatable(Dispatcher = new MessageDispatcher());
+            base.AddUpdatable(RPCManager.Instance);
+            base.AddTimer(WorldSaveInternal, SaveWorld);
 
             WorldDbMgr.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();

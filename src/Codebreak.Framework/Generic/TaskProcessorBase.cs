@@ -166,19 +166,19 @@ namespace Codebreak.Framework.Generic
                 m_updatableObjects.Remove(updatable);
             });
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="delay"></param>
         /// <param name="callback"></param>
-        /// <param name="oneshot"></param>
-        public void AddTimer(int delay, Action callback, bool oneshot = false)
+        public UpdatableTimer AddTimer(int delay, Action callback, bool oneshot = false)
         {
-            AddMessage(() =>
-            {
-                m_timerList.Add(new UpdatableTimer(delay, callback, oneshot));
-            });
+            var timer = new UpdatableTimer(delay, callback, oneshot);
+            AddTimer(timer);
+            return timer;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -187,9 +187,11 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
+                timer.LastActivated = LastUpdate;
                 m_timerList.Add(timer);
             });
         }
+
         /// <summary>
         /// 
         /// </summary>

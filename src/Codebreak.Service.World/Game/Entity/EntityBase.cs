@@ -137,6 +137,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int LastCellId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Orientation
         {
             get;
@@ -486,6 +495,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public virtual bool CanBeMoved()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="actionType"></param>
         /// <returns></returns>
         public bool HasGameAction(GameActionTypeEnum actionType)
@@ -700,6 +718,5 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="message"></param>
         public abstract void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message);
-        public abstract void SerializeAs_ShopItemsListInformations(StringBuilder message);
     }
 }

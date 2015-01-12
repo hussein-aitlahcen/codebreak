@@ -55,5 +55,10 @@ namespace Codebreak.Service.World.Database.Repository
                 return m_templateById[templateId];
             return null;
         }
+
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
+        }
     }
 }

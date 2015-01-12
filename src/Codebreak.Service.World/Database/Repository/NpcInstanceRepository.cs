@@ -13,5 +13,9 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class NpcInstanceRepository : Repository<NpcInstanceRepository, NpcInstanceDAO>
     {
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            /// NO UPDATE ON NPC
+        }
     }
 }

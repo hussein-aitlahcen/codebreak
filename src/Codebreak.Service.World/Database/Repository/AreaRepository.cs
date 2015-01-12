@@ -38,6 +38,11 @@ namespace Codebreak.Service.World.Database.Repository
         public override void OnObjectRemoved(SuperAreaDAO superArea)
         {
         }
+
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
+        }
     }
 
     /// <summary>
@@ -74,6 +79,11 @@ namespace Codebreak.Service.World.Database.Repository
         public override void OnObjectRemoved(AreaDAO area)
         {
         }
+
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
+        }
     }
 
     /// <summary>
@@ -109,6 +119,11 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="subArea"></param>
         public override void OnObjectRemoved(SubAreaDAO subArea)
         {
+        }
+
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
         }
     }
 }

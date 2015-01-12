@@ -46,6 +46,12 @@ namespace Codebreak.Service.World.Database.Repository
             m_spellBookEntriesByOwner[spellBookEntry.OwnerId].Remove(spellBookEntry);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ownerType"></param>
+        /// <param name="ownerId"></param>
+        /// <returns></returns>
         public IEnumerable<SpellBookEntryDAO> GetSpellEntries(int ownerType, long ownerId)
         {
             if (m_spellBookEntriesByOwner.ContainsKey(ownerId))

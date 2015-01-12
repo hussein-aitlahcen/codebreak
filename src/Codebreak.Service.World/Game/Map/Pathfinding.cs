@@ -798,8 +798,14 @@ namespace Codebreak.Service.World.Game.Map
             
             finalPath.AddCell(actualCell, direction);
 
+            const int MAX_LOOP = 100;
+            var time = 0;
             do
             {
+                time++;
+                if(time > MAX_LOOP)
+                    return -1;
+
                 actualCell = Pathfinding.NextCell(map, actualCell, direction);
                 if (!map.IsWalkable(actualCell))
                 {
@@ -819,7 +825,6 @@ namespace Codebreak.Service.World.Game.Map
                 length++;
                 lastCell = actualCell;
                 finalPath.MovementLength++;
-
             } while (actualCell != endCell);
 
             finalPath.AddCell(lastCell, direction);
@@ -1232,7 +1237,7 @@ namespace Codebreak.Service.World.Game.Map
                     break; // TODO: might not be correct. Was : Exit While
                 }
 
-                for (int i = 0; i <= (Diagonal ? 8 : 4 - 1); i++)
+                for (int i = 0; i <= (Diagonal ? 8 - 1 : 4 - 1); i++)
                 {
                     NewLocation = Location + directions[i];
                     if (Pathfinding.GetPoint(map, NewLocation).X == -1000)

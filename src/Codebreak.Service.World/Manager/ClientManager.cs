@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            WorldService.Instance.AddTimer(1000, Update);
+            WorldService.Instance.AddTimer(WorldConfig.RPC_ACCOUNT_TICKET_CHECK_INTERVAL, Update);
         }
 
         /// <summary>
@@ -139,9 +139,8 @@ namespace Codebreak.Service.World.Manager
                 for (int i = m_accountByTicket.Count - 1; i > -1; i--)
                 {
                     var value = m_accountByTicket.ElementAt(i).Value;
-                    var elapsedTime = WorldService.Instance.LastUpdate - value.Time;
-
-                    if (elapsedTime >= WorldConfig.RPC_ACCOUNT_TICKET_TIMEOUT)
+                    var elapsed = WorldService.Instance.LastUpdate - value.Time;
+                    if (elapsed >= WorldConfig.RPC_ACCOUNT_TICKET_TIMEOUT)
                     {
                         Logger.Debug("Ticket timed out : " + value.Ticket);
                         m_accountByTicket.Remove(value.Ticket);

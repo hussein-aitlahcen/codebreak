@@ -18,8 +18,8 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="buyer"></param>
         /// <param name="shop"></param>
-        public GameShopExchangeAction(EntityBase buyer, NonPlayerCharacterEntity shop)
-            : base(new ShopExchange(buyer, shop), buyer, shop)
+        public GameShopExchangeAction(CharacterEntity character, NonPlayerCharacterEntity npc)
+            : base(new ShopExchange(character, npc), character, npc)
         {
         }
 
@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         public override void Start()
         {
-            Accept();
+            base.Accept();
         }
 
         /// <summary>

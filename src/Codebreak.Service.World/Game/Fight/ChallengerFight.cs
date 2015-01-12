@@ -15,9 +15,6 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class ChallengerFight : FightBase, IDisposable
     {
-        public const int CHALLENGE_START_TIMEOUT = 60000;
-        public const int CHALLENGE_TURN_TIME = 30000;
-
         /// <summary>
         /// 
         /// </summary>
@@ -45,7 +42,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public ChallengerFight(MapInstance map, long id, CharacterEntity attacker, CharacterEntity defender)
-            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, attacker.Id, 0, attacker.CellId, defender.Id, 0, defender.CellId, CHALLENGE_START_TIMEOUT, CHALLENGE_TURN_TIME, true)
+            : base(FightTypeEnum.TYPE_CHALLENGE, map, id, attacker.Id, 0, attacker.CellId, defender.Id, 0, defender.CellId, WorldConfig.PVP_START_TIMEOUT, WorldConfig.PVP_TURN_TIME, true)
         {
             Attacker = attacker;
             Defender = defender;

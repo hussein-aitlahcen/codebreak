@@ -19,11 +19,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public const int KNGIHT_MONSTER_ID = 394;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public bool IsNeutralAgression
         {
             get;
@@ -59,7 +54,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="aggressor"></param>
         /// <param name="victim"></param>
         public AlignmentFight(MapInstance map, long id, CharacterEntity aggressor, CharacterEntity victim)
-            : base(FightTypeEnum.TYPE_AGGRESSION, map, id, aggressor.Id, aggressor.AlignmentId, aggressor.CellId, victim.Id, victim.AlignmentId, victim.CellId, 30000, 30000, false, true)
+            : base(FightTypeEnum.TYPE_AGGRESSION, map, id, aggressor.Id, aggressor.AlignmentId, aggressor.CellId, victim.Id, victim.AlignmentId, victim.CellId, WorldConfig.AGGRESSION_START_TIMEOUT, WorldConfig.AGGRESSION_TURN_TIME, false, true)
         {
             Aggressor = aggressor;
             Victim = victim;
@@ -95,10 +90,11 @@ namespace Codebreak.Service.World.Game.Fight
                 else
                     knighLevel = 5;
 
-                var knight = MonsterRepository.Instance.GetById(KNGIHT_MONSTER_ID);
+                var knight = MonsterRepository.Instance.GetById(WorldConfig.AGGRESSION_KNGIHT_MONSTER_ID);
                 if (knight != null)                
-                    if (knight.Grades.Count() > knighLevel)                    
-                        SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id); 
+                    if (knight.Grades.Count() > knighLevel)                
+                        if(Victim.Team.FreePlace != null)
+                            SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id); 
             }
         }
 

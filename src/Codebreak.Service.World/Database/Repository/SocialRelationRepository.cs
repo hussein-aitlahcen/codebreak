@@ -57,5 +57,15 @@ namespace Codebreak.Service.World.Database.Repository
                 m_relationByAccountId.Add(accountId, new List<SocialRelationDAO>());
             return m_relationByAccountId[accountId];
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
+        }
     }
 }

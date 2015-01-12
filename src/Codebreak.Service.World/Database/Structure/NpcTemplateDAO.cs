@@ -175,6 +175,11 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
+        public string Name
+        {
+            get;
+            set;
+        }
         public int BonusValue
         {
             get;

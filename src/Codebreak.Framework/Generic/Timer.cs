@@ -25,7 +25,7 @@ namespace Codebreak.Framework.Generic
         public long LastActivated
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>

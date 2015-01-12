@@ -25,14 +25,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override int MapId
         {
-            get
-            {
-                return DatabaseRecord.MapId;
-            }
-            set
-            {
-                DatabaseRecord.MapId = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -40,14 +34,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override int CellId
         {
-            get
-            {
-                return DatabaseRecord.CellId;
-            }
-            set
-            {
-                DatabaseRecord.CellId = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -129,7 +117,6 @@ namespace Codebreak.Service.World.Game.Entity
             }
             set
             {
-
             }
         }
                
@@ -231,6 +218,9 @@ namespace Codebreak.Service.World.Game.Entity
             DatabaseRecord = record;
             Guild = guild;
 
+            MapId = DatabaseRecord.MapId;
+            CellId = DatabaseRecord.CellId;
+
             Defenders = new List<GuildMember>();
             FarmedItems = new Dictionary<int, int>();
 
@@ -238,6 +228,15 @@ namespace Codebreak.Service.World.Game.Entity
             Statistics.Merge(guild.Statistics.BaseStatistics);
             Spells = SpellBookFactory.Instance.Create(this);
             Storage = new StorageInventory((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override bool CanBeMoved()
+        {
+            return true;
         }
 
         /// <summary>

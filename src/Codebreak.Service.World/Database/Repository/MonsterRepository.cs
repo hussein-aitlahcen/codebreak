@@ -46,5 +46,15 @@ namespace Codebreak.Service.World.Database.Repository
         {
             m_monsterById.Add(monster.Id, monster);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
+        }
     }
 }

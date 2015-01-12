@@ -48,5 +48,10 @@ namespace Codebreak.Service.World.Database.Repository
                 m_waypointByCharacter.Add(characterId, new List<CharacterWaypointDAO>());
             return m_waypointByCharacter[characterId];
         }
+
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            // NO UPDATE
+        }
     }
 }

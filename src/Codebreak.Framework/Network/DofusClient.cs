@@ -84,7 +84,7 @@ namespace Codebreak.Framework.Network
                         LastPacketTime = Environment.TickCount;
                     }
 
-                    yield return Encoding.Default.GetString(m_messageQueue.ReadBytes(m_messageQueue.Count));
+                    yield return Encoding.UTF8.GetString(m_messageQueue.ReadBytes(m_messageQueue.Count));
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace Codebreak.Framework.Network
 
             Logger.Debug("Server : " + message);
 
-            base.Send(Encoding.Default.GetBytes(message));
+            base.Send(Encoding.UTF8.GetBytes(message));
         }
     }
 }

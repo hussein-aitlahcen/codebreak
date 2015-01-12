@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return "Npc_" + m_npcRecord.Template.Id + "_" + Id;
+                return m_npcRecord.Template.Name;
             }
         }
 
@@ -32,14 +32,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override int MapId
         {
-            get
-            {
-                return m_npcRecord.MapId;
-            }
-            set
-            {
-                m_npcRecord.MapId = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -47,14 +41,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override int CellId
         {
-            get
-            {
-                return m_npcRecord.CellId;
-            }
-            set
-            {
-                m_npcRecord.CellId = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -193,7 +181,8 @@ namespace Codebreak.Service.World.Game.Entity
         private AuctionHouseInstance m_auctionInstance;
         private NpcInstanceDAO m_npcRecord;
         private NpcQuestionDAO m_initialQuestion;
-        private StringBuilder m_cachedEntityMapInformations, m_cachedShopListInformations;
+        private StringBuilder m_cachedShopListInformations;
+        private int m_beginTradeSpeakIndex, m_buyTradeSpeakIndex, m_leaveTradeSpealIndex;
 
         /// <summary>
         /// 
@@ -206,6 +195,8 @@ namespace Codebreak.Service.World.Game.Entity
             m_npcRecord = npcDAO;
 
             Orientation = m_npcRecord.Orientation;
+            MapId = npcDAO.MapId;
+            CellId = npcDAO.CellId;
 
             Rewards = new List<RewardEntry>();
             Rewards.AddRange(npcDAO.Template.Rewards);
@@ -213,7 +204,16 @@ namespace Codebreak.Service.World.Game.Entity
             ShopItems = new List<ItemTemplateDAO>();
             ShopItems.AddRange(npcDAO.Template.ShopList);
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override bool CanBeMoved()
+        {
+            return ShopItems.Count == 0 && AuctionHouse == null && Rewards.Count == 0;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -248,37 +248,40 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        private StringBuilder m_serialized;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="operation"></param>
         /// <param name="message"></param>
         public override void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message)
         {
-            if (m_cachedEntityMapInformations == null)
+            message.Append(CellId).Append(';');
+            message.Append(Orientation).Append(';');
+            if (m_serialized == null)
             {
-                m_cachedEntityMapInformations = new StringBuilder();
-                m_cachedEntityMapInformations.Append(CellId).Append(';');
-                m_cachedEntityMapInformations.Append(Orientation).Append(';');
-                m_cachedEntityMapInformations.Append('0').Append(';'); // Unknow
-                m_cachedEntityMapInformations.Append(Id).Append(';');
-                m_cachedEntityMapInformations.Append(m_npcRecord.TemplateId).Append(';');
-                m_cachedEntityMapInformations.Append((int)EntityTypeEnum.TYPE_NPC).Append(';');
-                m_cachedEntityMapInformations.Append(m_npcRecord.Template.GfxID).Append('^');
-                m_cachedEntityMapInformations.Append(m_npcRecord.Template.ScaleX).Append(';'); // size
-                m_cachedEntityMapInformations.Append(m_npcRecord.Template.Sex).Append(';');
-                m_cachedEntityMapInformations.Append(HexColor1 + ';' + HexColor2 + ';' + HexColor3).Append(';');
-                m_cachedEntityMapInformations.Append(m_npcRecord.Template.EntityLook);
-                m_cachedEntityMapInformations.Append(';');
-                m_cachedEntityMapInformations.Append("").Append(';'); // ExtraClip
-                m_cachedEntityMapInformations.Append(m_npcRecord.Template.CustomArtwork);
+                m_serialized = new StringBuilder();
+                m_serialized.Append('0').Append(';'); // Unknow
+                m_serialized.Append(Id).Append(';');
+                m_serialized.Append(TemplateId).Append(';');
+                m_serialized.Append((int)EntityTypeEnum.TYPE_NPC).Append(';');
+                m_serialized.Append(m_npcRecord.Template.GfxID).Append('^');
+                m_serialized.Append(m_npcRecord.Template.ScaleX).Append(';'); // size
+                m_serialized.Append(m_npcRecord.Template.Sex).Append(';');
+                m_serialized.Append(HexColor1 + ';' + HexColor2 + ';' + HexColor3).Append(';');
+                m_serialized.Append(m_npcRecord.Template.EntityLook).Append(';');
+                m_serialized.Append(m_npcRecord.Template.ExtraClip).Append(';'); // ExtraClip
+                m_serialized.Append(m_npcRecord.Template.CustomArtwork);
             }
-
-            message.Append(m_cachedEntityMapInformations);
+            message.Append(m_serialized);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
+        public void SerializeAs_ShopItemsListInformations(StringBuilder message)
         {
             if (m_cachedShopListInformations == null)
             {
@@ -290,6 +293,36 @@ namespace Codebreak.Service.World.Game.Entity
                 }
             }
             message.Append(m_cachedShopListInformations);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void OnBeginTrade(CharacterEntity character)
+        {
+            character.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GENERAL, Id, Name,
+                String.Format(WorldConfig.NPC_BEGIN_TRADE_SPEAK[(m_beginTradeSpeakIndex++ % WorldConfig.NPC_BEGIN_TRADE_SPEAK.Length)], character.Name)));
+        } 
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void OnBuyTrade(CharacterEntity character)
+        {
+            base.DispatchChatMessage(ChatChannelEnum.CHANNEL_GENERAL,
+                String.Format(WorldConfig.NPC_BUY_TRADE_SPEAK[(m_buyTradeSpeakIndex++ % WorldConfig.NPC_BUY_TRADE_SPEAK.Length)], character.Name));
+        } 
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void OnLeaveTrade(CharacterEntity character)
+        {
+            character.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GENERAL, Id, Name,
+                String.Format(WorldConfig.NPC_LEAVE_TRADE_SPEAK[(m_leaveTradeSpealIndex++ % WorldConfig.NPC_LEAVE_TRADE_SPEAK.Length)], character.Name)));
         }
     }
 }

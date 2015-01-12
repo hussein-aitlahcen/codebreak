@@ -16,19 +16,31 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <summary>
         /// 
         /// </summary>
-        private EntityBase m_buyer;
-        private NonPlayerCharacterEntity m_shop;
+        public CharacterEntity Character
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public NonPlayerCharacterEntity Npc
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="buyer"></param>
         /// <param name="shop"></param>
-        public ShopExchange(EntityBase buyer, NonPlayerCharacterEntity shop)
+        public ShopExchange(CharacterEntity character, NonPlayerCharacterEntity npc)
             : base(ExchangeTypeEnum.EXCHANGE_SHOP)
         {
-            m_buyer = buyer;
-            m_shop = shop;
+            Character = character;
+            Npc = npc;
         }
 
         /// <summary>
@@ -37,7 +49,20 @@ namespace Codebreak.Service.World.Game.Exchange
         public override void Create()
         {
             base.Create();
-            base.Dispatch(WorldMessage.EXCHANGE_ITEMS_LIST(m_shop));
+            base.Dispatch(WorldMessage.EXCHANGE_SHOP_LIST(Npc));
+
+            Npc.OnBeginTrade(Character);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
+        public override void Leave(bool success = false)
+        {
+            base.Leave(success);
+
+            Npc.OnLeaveTrade(Character);
         }
         
         /// <summary>
@@ -51,24 +76,24 @@ namespace Codebreak.Service.World.Game.Exchange
             if (quantity < 1)
             {
                 Logger.Debug("ShopExchange unable to buy, quantity < 0 : " + entity.Name);
-                entity.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
+                Character.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
                 return;
             }
 
-            var template = m_shop.ShopItems.Find(x => x.Id == templateId);
+            var template = Npc.ShopItems.Find(x => x.Id == templateId);
             if (template == null)
             {
                 Logger.Debug("ShopExchange unable to buy null template : " + entity.Name);
-                entity.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
+                Character.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
                 return;
             }
 
             var price = template.Price * quantity;
 
-            if (entity.Inventory.Kamas < price)
+            if (Character.Inventory.Kamas < price)
             {
                 Logger.Debug("ShopExchange no enought kamas to buy item : " + entity.Name);
-                entity.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
+                Character.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
                 return;
             }
 
@@ -76,12 +101,16 @@ namespace Codebreak.Service.World.Game.Exchange
             if (instance == null)
             {
                 Logger.Debug("ShopExchange error while creating object : " + entity.Name);
-                entity.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
+                Character.Dispatch(WorldMessage.EXCHANGE_BUY_ERROR());
                 return;
             }
 
-            entity.Inventory.SubKamas(price);
-            entity.Inventory.AddItem(instance);
+            Character.CachedBuffer = true;
+            Character.Inventory.SubKamas(price);
+            Character.Inventory.AddItem(instance);
+            Character.CachedBuffer = false;
+
+            Npc.OnBuyTrade(Character);
         }
 
         /// <summary>
@@ -123,7 +152,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <returns></returns>
         protected override string SerializeAs_ExchangeCreate()
         {
-            return m_shop.Id.ToString();
+            return Npc.Id.ToString();
         }
     }
 }

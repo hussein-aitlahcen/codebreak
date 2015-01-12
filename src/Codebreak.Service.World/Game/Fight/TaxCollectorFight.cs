@@ -15,10 +15,6 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class TaxCollectorFight : FightBase, IDisposable
     {
-        public const int PVT_TELEPORT_DEFENDERS_TIMEOUT = 45000;
-        public const int PVT_START_TIMEOUT = 60000;
-        public const int PVT_TURN_TIME = 30000;
-
         /// <summary>
         /// 
         /// </summary>
@@ -55,7 +51,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public TaxCollectorFight(MapInstance map, long id, CharacterEntity attacker, TaxCollectorEntity taxCollector)
-            : base(FightTypeEnum.TYPE_PVT, map, id, attacker.Id, 0, attacker.CellId, taxCollector.Id, 0, taxCollector.CellId, PVT_START_TIMEOUT, PVT_TURN_TIME)
+            : base(FightTypeEnum.TYPE_PVT, map, id, attacker.Id, 0, attacker.CellId, taxCollector.Id, 0, taxCollector.CellId, WorldConfig.PVT_START_TIMEOUT, WorldConfig.PVT_TURN_TIME)
         {
             CanDefend = true;
             Attacker = attacker;
@@ -64,7 +60,7 @@ namespace Codebreak.Service.World.Game.Fight
             JoinFight(Attacker, Team0);
             JoinFight(TaxCollector, Team1);
 
-            base.AddTimer(PVT_TELEPORT_DEFENDERS_TIMEOUT, TeleportDefenders, true);
+            base.AddTimer(WorldConfig.PVT_TELEPORT_DEFENDERS_TIMEOUT, TeleportDefenders, true);
             base.Start();
         }
 
@@ -224,7 +220,6 @@ namespace Codebreak.Service.World.Game.Fight
                 m_serializedFlag.Append('3').Append(';');
                 m_serializedFlag.Append("-1");
             }
-
             message.Append(m_serializedFlag.ToString());
         }
 

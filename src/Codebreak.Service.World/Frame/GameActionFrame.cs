@@ -201,7 +201,7 @@ namespace Codebreak.Service.World.Frame
                     var action = character.CurrentAction as GameMapMovementAction;
                     if(action == null)
                     {
-                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        character.Map.InteractiveExecute(character, cellId, skillId);
                         return;
                     }
                     

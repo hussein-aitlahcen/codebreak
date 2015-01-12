@@ -163,6 +163,7 @@ namespace Codebreak.Framework.Generic
         {
             AddMessage(() =>
             {
+                timer.LastActivated = UpdateTime;
                 m_timerList.Add(timer);
             });
         }

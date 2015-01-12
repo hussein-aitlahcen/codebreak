@@ -842,7 +842,7 @@ namespace Codebreak.Service.World.Game.Entity
             RefreshPersonalShopTaxe();
             
             var guildMember = GuildManager.Instance.GetMember(characterDAO.Guild.GuildId, Id);
-            if (guildMember != null)            
+            if (guildMember != null && type == EntityTypeEnum.TYPE_CHARACTER)            
                 guildMember.CharacterConnected(this);            
 
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
@@ -1607,9 +1607,9 @@ namespace Codebreak.Service.World.Game.Entity
                         Inventory.SerializeAs_ActorLookMessage(message);
                         message.Append(';');
                         message.Append(Aura).Append(';');
-                        message.Append("").Append(';'); // DisplayEmotes
-                        message.Append("").Append(';'); // EmotesTimer
-                        if (m_guildDisplayInfos != null) // && CharacterGuild.Guild.IsActive)
+                        message.Append(m_lastEmoteId).Append(';'); // DisplayEmotes
+                        message.Append(360000).Append(';'); // EmotesTimer
+                        if (m_guildDisplayInfos != null && GuildMember.Guild.IsActive)
                         {
                             message.Append(m_guildDisplayInfos).Append(';');
                         }
@@ -1762,16 +1762,7 @@ namespace Codebreak.Service.World.Game.Entity
             message.Append(Sex).Append(';');
             message.Append(SkinBase);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
-        {
-            throw new NotImplementedException();
-        }
-        
+                
         /// <summary>
         /// 
         /// </summary>

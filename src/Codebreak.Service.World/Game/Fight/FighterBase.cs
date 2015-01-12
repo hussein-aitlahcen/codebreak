@@ -975,15 +975,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="message"></param>
-        public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         public int CompareTo(IFightObstacle obj)

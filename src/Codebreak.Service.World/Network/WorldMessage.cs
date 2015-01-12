@@ -1010,10 +1010,10 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="actorNpc"></param>
         /// <returns></returns>
-        public static string EXCHANGE_ITEMS_LIST(EntityBase entity)
+        public static string EXCHANGE_SHOP_LIST(NonPlayerCharacterEntity npc)
         {
             var message = new StringBuilder("EL");
-            entity.SerializeAs_ShopItemsListInformations(message);
+            npc.SerializeAs_ShopItemsListInformations(message);
             return message.ToString();
         }
 
@@ -1834,14 +1834,14 @@ namespace Codebreak.Service.World.Network
                 if (taxCollector.HasGameAction(GameActionTypeEnum.FIGHT))
                 {
                     message.Append('1').Append(';');
-                    message.Append(TaxCollectorFight.PVT_TELEPORT_DEFENDERS_TIMEOUT - taxCollector.Fight.UpdateTime).Append(';');
+                    message.Append(WorldConfig.PVT_TELEPORT_DEFENDERS_TIMEOUT - taxCollector.Fight.UpdateTime).Append(';');
                 }
                 else
                 {
                     message.Append('0').Append(';');
                     message.Append('0').Append(';');
                 }
-                message.Append(TaxCollectorFight.PVT_TELEPORT_DEFENDERS_TIMEOUT).Append(';');
+                message.Append(WorldConfig.PVT_TELEPORT_DEFENDERS_TIMEOUT).Append(';');
                 message.Append('7').Append('|'); // allowed players to join            
             }
             message.Remove(message.Length - 1, 1);

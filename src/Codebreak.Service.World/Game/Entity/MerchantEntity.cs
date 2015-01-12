@@ -29,6 +29,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        private StringBuilder m_serializedMapInformations;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="power"></param>
         /// <param name="characterDAO"></param>
         public MerchantEntity(CharacterDAO characterDAO)
@@ -64,44 +69,40 @@ namespace Codebreak.Service.World.Game.Entity
                 case OperatorEnum.OPERATOR_REFRESH:
                     if (HasGameAction(GameActionTypeEnum.MAP))
                     {
-                        message.Append(CellId).Append(';');
-                        message.Append(Orientation).Append(';');
-                        message.Append(0).Append(';'); // ???
-                        message.Append(Id).Append(';');
-                        message.Append(Name).Append(';');
-                        message.Append((int)Type).Append(';');
-                        message.Append(DatabaseRecord.Skin).Append('^');
-                        message.Append(DatabaseRecord.SkinSize).Append(';');
-                        message.Append(HexColor1).Append(';');
-                        message.Append(HexColor2).Append(';');
-                        message.Append(HexColor3).Append(';');
-                        Inventory.SerializeAs_ActorLookMessage(message);
-                        message.Append(';');
-                        if (m_guildDisplayInfos != null)
+                        if (m_serializedMapInformations == null)
                         {
-                            message.Append(m_guildDisplayInfos).Append(';');
+                            m_serializedMapInformations = new StringBuilder();
+                            m_serializedMapInformations.Append(CellId).Append(';');
+                            m_serializedMapInformations.Append(Orientation).Append(';');
+                            m_serializedMapInformations.Append(0).Append(';'); // ???
+                            m_serializedMapInformations.Append(Id).Append(';');
+                            m_serializedMapInformations.Append(Name).Append(';');
+                            m_serializedMapInformations.Append((int)Type).Append(';');
+                            m_serializedMapInformations.Append(DatabaseRecord.Skin).Append('^');
+                            m_serializedMapInformations.Append(DatabaseRecord.SkinSize).Append(';');
+                            m_serializedMapInformations.Append(HexColor1).Append(';');
+                            m_serializedMapInformations.Append(HexColor2).Append(';');
+                            m_serializedMapInformations.Append(HexColor3).Append(';');
+                            Inventory.SerializeAs_ActorLookMessage(m_serializedMapInformations);
+                            m_serializedMapInformations.Append(';');
+                            if (m_guildDisplayInfos != null && GuildMember.Guild.IsActive)
+                            {
+                                m_serializedMapInformations.Append(m_guildDisplayInfos).Append(';');
+                            }
+                            else
+                            {
+                                m_serializedMapInformations.Append("").Append(';');
+                                m_serializedMapInformations.Append("").Append(';');
+                            }
+                            m_serializedMapInformations.Append("0") // OffLineType
+                                .Append(';');
                         }
-                        else
-                        {
-                            message.Append("").Append(';');
-                            message.Append("").Append(';');
-                        }
-                        message.Append("0") // OffLineType
-                            .Append(';');
+                        message.Append(m_serializedMapInformations);
                     }
                     break;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        public override void SerializeAs_ShopItemsListInformations(StringBuilder message)
-        {
-            throw new NotImplementedException();
-        }
-        
+                
         /// <summary>
         /// 
         /// </summary>
