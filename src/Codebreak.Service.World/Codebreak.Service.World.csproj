@@ -333,7 +333,6 @@
     <Compile Include="Manager\NpcManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
-    <Compile Include="Manager\SocialManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
     <Compile Include="Manager\WaypointManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />

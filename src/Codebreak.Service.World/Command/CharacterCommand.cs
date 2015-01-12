@@ -632,7 +632,7 @@ namespace Codebreak.Service.World.Command
         {
             private readonly string[] _aliases = 
             {
-                "teleport"
+                "tele"
             };
 
             public override string[] Aliases
@@ -730,7 +730,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Levelup your character. Arguments : %level%"; }
+                get { return "Level up your character. Arguments : %level%"; }
             }
 
             protected override void Process(WorldCommandContext context)
@@ -740,10 +740,9 @@ namespace Codebreak.Service.World.Command
                 {
                     if (level > context.Character.Level)
                     {
-                        while (level > context.Character.Level)
-                        {
+                        while (level > context.Character.Level)                        
                             context.Character.LevelUp();
-                        }
+                        
                         context.Character.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(context.Character.Level));
                         context.Character.Dispatch(WorldMessage.SPELLS_LIST(context.Character.Spells));
                         context.Character.Dispatch(WorldMessage.ACCOUNT_STATS(context.Character));
