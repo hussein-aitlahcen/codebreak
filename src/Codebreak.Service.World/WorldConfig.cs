@@ -102,7 +102,7 @@ namespace Codebreak.Service.World
 
         public const int 
             FIGHT_DISCONNECTION_TURN = 20, 
-            FIGHT_PUSH_CELL_TIME = 300, // Slide should be 250 ms
+            FIGHT_PUSH_CELL_TIME = 270, // Slide should be 250 ms
             FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
 
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);
