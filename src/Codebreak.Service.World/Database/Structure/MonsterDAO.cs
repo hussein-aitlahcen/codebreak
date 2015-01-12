@@ -56,15 +56,35 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+
+        private int m_minKamas = -1, m_maxKamas = -1;
+        private List<DropTemplateDAO> m_drops = new List<DropTemplateDAO>();
         private Dictionary<int, MonsterGradeDAO> m_monsterGrades = new Dictionary<int, MonsterGradeDAO>();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="grade"></param>
-        public void AddGrade(MonsterGradeDAO grade)
+        public int MinKamas
         {
-            m_monsterGrades.Add(grade.Grade, grade);
+            get
+            {
+                if (m_minKamas == -1)
+                    InitKamas();
+                return m_minKamas;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int MaxKamas
+        {
+            get
+            {
+                if (m_maxKamas == -1)
+                    InitKamas();
+                return m_maxKamas;
+            }
         }
 
         /// <summary>
@@ -78,5 +98,44 @@ namespace Codebreak.Service.World.Database.Structure
                 return m_monsterGrades.Values;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<DropTemplateDAO> Drops
+        {
+            get
+            {
+                return m_drops;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitKamas()
+        {
+            var data = Kamas.Split(';');
+            m_minKamas = int.Parse(data[0]);
+            m_maxKamas = int.Parse(data[1]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="grade"></param>
+        public void AddGrade(MonsterGradeDAO grade)
+        {
+            m_monsterGrades.Add(grade.Grade, grade);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="drop"></param>
+        public void AddDrop(DropTemplateDAO drop)
+        {
+            m_drops.Add(drop);
+        }        
     }
 }

@@ -71,6 +71,17 @@ namespace Codebreak.Service.World
             PVT_START_TIMEOUT = 60000,
             PVT_TURN_TIME = 30000;
 
+        public const int            
+            PVM_START_TIMEOUT = 60000,
+            PVM_TURN_TIME = 30000;
+
+        public static double[]
+            PVM_RATE_GROUP =  { 1, 1.1, 1.5, 2.3, 3.1, 3.6, 4.2, 4.7 };
+
+        public const double
+            RATE_XP = 5,
+            RATE_DROP = 3,
+            RATE_KAMAS = 3;
 
         public const int 
             PVP_START_TIMEOUT = 60000,

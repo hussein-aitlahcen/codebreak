@@ -102,12 +102,13 @@ namespace Codebreak.Service.World.Game.Exchange
                 return;
             }
 
-            item.MerchantPrice = -1;
+            var removedItem = Merchant.PersonalShop.RemoveItem(itemId, (int)quantity);
+            removedItem.MerchantPrice = -1;
             Merchant.Inventory.AddKamas(price);
 
             Character.CachedBuffer = true;
             Character.Inventory.SubKamas(price);
-            Character.Inventory.AddItem(Merchant.PersonalShop.RemoveItem(itemId, (int)quantity));
+            Character.Inventory.AddItem(removedItem);
             SendItemsList();
             Character.CachedBuffer = false;
 

@@ -190,8 +190,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            m_losersLevel = m_loserTeam.Fighters.OfType<CharacterEntity>().Sum(fighter => fighter.Level);
-            m_winnersLevel = m_winnerTeam.Fighters.OfType<CharacterEntity>().Sum(fighter => fighter.Level);                                
+            m_losersLevel = m_losersTeam.Fighters.OfType<CharacterEntity>().Sum(fighter => fighter.Level);
+            m_winnersLevel = m_winnersTeam.Fighters.OfType<CharacterEntity>().Sum(fighter => fighter.Level);                                
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void ApplyEndCalculation()
         {
-            foreach (var character in m_winnerTeam.Fighters.OfType<CharacterEntity>())
+            foreach (var character in m_winnersTeam.Fighters.OfType<CharacterEntity>())
             {
                 var honour = 0;
                 var dishonour = 0;
@@ -219,7 +219,7 @@ namespace Codebreak.Service.World.Game.Fight
                 Result.AddResult(character, true, false, 0, 0, honour, dishonour);
             }
 
-            foreach (var character in m_loserTeam.Fighters.OfType<CharacterEntity>())
+            foreach (var character in m_losersTeam.Fighters.OfType<CharacterEntity>())
             {
                 var honour = 0;
                 var dishonour = 0; 

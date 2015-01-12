@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Codebreak.Framework.Utils;
+using Codebreak.Service.World.Game.Fight;
+using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World
 {
@@ -125,6 +128,62 @@ namespace Codebreak.Service.World
             var coef = losersLevel / winnersLevel;
 
             return (int)Math.Floor(basic * coef);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="loot"></param>
+        /// <param name="PP"></param>
+        /// <param name="winnersTotalPP"></param>
+        /// <returns></returns>
+        public static long CalculPVMKamas(long loot, int PP, long winnersTotalPP)
+        {
+            return (long)Math.Round(loot * (PP / (double)winnersTotalPP) * WorldConfig.RATE_KAMAS);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="monsters"></param>
+        /// <param name="players"></param>
+        /// <param name="level"></param>
+        /// <param name="wisdom"></param>
+        /// <param name="ageBonus"></param>
+        /// <returns></returns>
+        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<CharacterEntity> players, int level, int wisdom, int ageBonus = 0)
+        {
+            var monstersExperience = monsters.Sum(monster => monster.Grade.Experience);
+            var monstersTotalLevel = monsters.Sum(monster => monster.Grade.Level);
+            var monstersMaxLevel = monsters.Max(monster => monster.Grade.Level);
+
+            var playersTotalLevel = players.Sum(player => player.Level);
+
+            double totalLevelDeltaRate = 1;
+            if (playersTotalLevel - 5 > monstersTotalLevel)
+                totalLevelDeltaRate = monstersTotalLevel / (double)playersTotalLevel;
+            else if (playersTotalLevel + 10 < monstersTotalLevel)
+                totalLevelDeltaRate = (playersTotalLevel + 10) / (double)monstersTotalLevel;
+
+            double levelDeltaRate = 1;
+            if (level - 5 > monstersTotalLevel)
+                levelDeltaRate = monstersTotalLevel / (double)level;
+            else if (level + 10 < monstersTotalLevel)
+                levelDeltaRate = (level + 10) / (double)monstersTotalLevel;
+
+            var a = Math.Min(level, Math.Truncate(2.5 * monstersMaxLevel));
+            var b = Math.Truncate(a / (double)level * 100);
+            var c = Math.Truncate(a / (double)playersTotalLevel * 100);
+            var d = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[0] * levelDeltaRate);
+            var e = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[Math.Max(0, players.Count() - 1)] * totalLevelDeltaRate);
+            var f = Math.Truncate(b / 100 * d);
+            var g = Math.Truncate(c / 100 * e);
+            var h = wisdom;
+            var i = Math.Max(1, ageBonus / 100.0);
+            var j = Math.Truncate((g * (100 + h) / 100.0) * i);
+            var k = WorldConfig.RATE_XP;
+
+            return (long)Math.Truncate(j * k);
         }
     }
 }

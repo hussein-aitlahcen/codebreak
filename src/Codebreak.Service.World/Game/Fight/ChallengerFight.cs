@@ -127,11 +127,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in m_winnerTeam.Fighters)
+            foreach (var fighter in m_winnersTeam.Fighters)
             {
                 Result.AddResult(fighter, true);
             }
-            foreach (var fighter in m_loserTeam.Fighters)
+            foreach (var fighter in m_losersTeam.Fighters)
             {
                 Result.AddResult(fighter, false);
             }

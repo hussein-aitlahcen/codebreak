@@ -80,6 +80,7 @@
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
     <Compile Include="Database\Repository\CharacterWaypointRepository.cs" />
+    <Compile Include="Database\Repository\DropTemplateRepository.cs" />
     <Compile Include="Database\Repository\ExperienceTemplateRepository.cs" />
     <Compile Include="Database\Repository\GuildRepository.cs" />
     <Compile Include="Database\Repository\InventoryItemRepository.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
     <Compile Include="Database\Structure\CharacterWaypointDAO.cs" />
+    <Compile Include="Database\Structure\DropTemplateDAO.cs" />
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
     <Compile Include="Database\Structure\InventoryItemDAO.cs" />
@@ -320,6 +322,7 @@
     <Compile Include="Manager\AreaManager.cs" />
     <Compile Include="Manager\AuctionHouseManager.cs" />
     <Compile Include="Manager\BankManager.cs" />
+    <Compile Include="Manager\DropManager.cs" />
     <Compile Include="Manager\EntityManager.cs" />
     <Compile Include="Manager\ExperienceManager.cs" />
     <Compile Include="Game\Map\FightManager.cs" />

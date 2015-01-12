@@ -82,9 +82,11 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
+                character.CachedBuffer = true;
                 character.Inventory.SubKamas(price);
                 character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_KAMAS_LOST, price));
                 character.StopAction(GameActionTypeEnum.WAYPOINT);
+                character.CachedBuffer = false;
 
                 var nearestCell = waypoint.Map.GetNearestCell(waypoint.CellId);
                 if (nearestCell == -1)

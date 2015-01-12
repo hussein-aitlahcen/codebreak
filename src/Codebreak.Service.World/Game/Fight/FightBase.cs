@@ -171,7 +171,7 @@ namespace Codebreak.Service.World.Game.Fight
             long dishonour = 0,
             long guildxp = 0,
             long mountxp = 0,
-            Dictionary<int, uint> items = null)
+            Dictionary<int, int> items = null)
         {
             m_message.Append('|').Append(win ? '2' : '0').Append(';');
             m_message.Append(fighter.Id).Append(';');
@@ -858,7 +858,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        protected FightTeam m_winnerTeam, m_loserTeam;
+        protected IEnumerable<FighterBase> m_winnersFighter, m_losersFighter;
+        protected FightTeam m_winnersTeam, m_losersTeam;
         private long m_loopTimeout, m_turnTimeout, m_subActionTimeout, m_synchronizationTimeout;
         private Dictionary<FighterBase, List<FightActivableObject>> m_activableObjects;
         private LinkedList<CastInfos> m_processingTargets;
@@ -1420,8 +1421,11 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (GetWinners() != null)
             {
-                m_winnerTeam = GetWinners();
-                m_loserTeam = m_winnerTeam.OpponentTeam;
+                m_winnersTeam = GetWinners();
+                m_winnersFighter = m_winnersTeam.Fighters.Where(f => f.Invocator == null);
+
+                m_losersTeam = m_winnersTeam.OpponentTeam;
+                m_losersFighter = m_losersTeam.Fighters.Where(f => f.Invocator == null);
 
                 LoopState = FightLoopStateEnum.STATE_WAIT_END;
 
@@ -2202,10 +2206,10 @@ namespace Codebreak.Service.World.Game.Fight
             
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
 
-            foreach (var fighter in m_winnerTeam.Fighters.ToArray())            
+            foreach (var fighter in m_winnersTeam.Fighters.ToArray())            
                 fighter.EndFight(true);            
 
-            foreach (var fighter in m_loserTeam.Fighters.ToArray())
+            foreach (var fighter in m_losersTeam.Fighters.ToArray())
                 fighter.EndFight();            
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())

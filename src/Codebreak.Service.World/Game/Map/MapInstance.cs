@@ -345,7 +345,7 @@ namespace Codebreak.Service.World.Game.Map
             {
                 var cellId = entity.LastCellId;
                 if (cellId < 1)
-                    cellId = GetNearestCell(entity.CellId);
+                    cellId = GetNearestMovementCell(entity.CellId);
 
                 entity.LastCellId = entity.CellId;
 
@@ -374,13 +374,29 @@ namespace Codebreak.Service.World.Game.Map
             m_cellById.TryGetValue(id, out cell);
             return cell;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cellId"></param>
         /// <returns></returns>
         public int GetNearestCell(int cellId)
+        {
+            foreach(var nextCell in CellZone.GetAdjacentCells(this, cellId))
+            {
+                var cell = GetCell(nextCell);
+                if (cell != null && cell.Walkable)
+                    return nextCell;
+            }
+            return -1;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <returns></returns>
+        public int GetNearestMovementCell(int cellId)
         {
             var rand = Util.Next(0, 100);
             var direction = 1;

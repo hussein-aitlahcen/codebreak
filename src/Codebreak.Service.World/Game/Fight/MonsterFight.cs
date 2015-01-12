@@ -1,5 +1,8 @@
-﻿using Codebreak.Service.World.Game.Entity;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Map;
+using Codebreak.Service.World.Game.Spell;
+using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -14,9 +17,6 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class MonsterFight : FightBase, IDisposable
     {        
-        public const int MONSTERFIGHT_START_TIMEOUT = 60000;
-        public const int MONSTERFIGHT_TURN_TIME = 30000;
-
         /// <summary>
         /// 
         /// </summary>
@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public MonsterFight(MapInstance map, long id, CharacterEntity character, MonsterGroupEntity monsterGroup)
-            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, 0, character.CellId, monsterGroup.Id, monsterGroup.Monsters.First().Grade.Template.Alignment, monsterGroup.CellId, MONSTERFIGHT_START_TIMEOUT, MONSTERFIGHT_TURN_TIME)
+            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, 0, character.CellId, monsterGroup.Id, monsterGroup.Monsters.First().Grade.Template.Alignment, monsterGroup.CellId, WorldConfig.PVM_START_TIMEOUT, WorldConfig.PVM_TURN_TIME)
         {
             Character = character;
             MonsterGroup = monsterGroup;
@@ -120,24 +120,44 @@ namespace Codebreak.Service.World.Game.Fight
             return FightActionResultEnum.RESULT_NOTHING;
         }
 
+        // end fight calculation
+        private long m_winnersMaxLevel;
+        private long m_winnersTotalLevel;
+        private long m_winnersTotalPP;
+        private long m_losersTotalLevel;
+        private long m_kamasLoot;
+        private Dictionary<CharacterEntity, List<InventoryItemDAO>> m_distributedDrops;
+        private List<InventoryItemDAO> m_itemLoot;
+        
         /// <summary>
         /// 
         /// </summary>
         public override void InitEndCalculation()
-        {
-            foreach (var fighter in m_winnerTeam.Fighters.Where(f => f.Invocator == null))
+        {            
+            // Player win
+            if (m_winnersTeam == Team0)
             {
-                Result.AddResult(fighter, true);
-            }
-            foreach (var fighter in m_loserTeam.Fighters.Where(f => f.Invocator == null))
-            {
-                Result.AddResult(fighter, false);
-
-                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                m_winnersMaxLevel = m_winnersFighter.Max(fighter => fighter.Level);
+                m_winnersTotalLevel = m_winnersFighter.Sum(fighter => fighter.Level);
+                m_winnersTotalPP = m_winnersFighter.Sum(fighter => fighter.Prospection);
+                m_losersTotalLevel = m_losersFighter.Sum(fighter => fighter.Level);
+                m_itemLoot = new List<InventoryItemDAO>();
+               
+                foreach (var monster in m_losersFighter.OfType<MonsterEntity>())
                 {
-                    var character = fighter as CharacterEntity;
-                    character.MapId = character.SavedMapId;
-                    character.CellId = character.SavedCellId;
+                    m_kamasLoot += (long)Math.Round(Util.Next(monster.Grade.Template.MinKamas, monster.Grade.Template.MaxKamas) * WorldConfig.RATE_KAMAS);
+                    m_itemLoot.AddRange(DropManager.Instance.GetDrops(m_winnersTotalPP, monster, WorldConfig.RATE_DROP));
+                }
+
+                m_distributedDrops = DropManager.Instance.Distribute(m_winnersFighter.OfType<CharacterEntity>(), m_winnersTotalPP, m_itemLoot);           
+            }
+            else // Monsters win
+            {
+                foreach (var player in m_losersFighter.OfType<CharacterEntity>())
+                {
+                    player.MapId = player.SavedMapId;
+                    player.CellId = player.SavedCellId;
+                    player.Life = 1;
                 }
             }
         }
@@ -147,6 +167,43 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void ApplyEndCalculation()
         {
+            // Player win
+            if (m_winnersTeam == Team0)
+            {
+                foreach (var player in m_winnersFighter.OfType<CharacterEntity>())
+                {
+                    var exp = Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter.OfType<CharacterEntity>(), player.Level, player.Statistics.GetTotal(EffectEnum.AddWisdom));
+                    var kamas = Util.CalculPVMKamas(m_kamasLoot, player.Prospection, m_winnersTotalPP);
+                    var items = m_distributedDrops[player];
+                    Dictionary<int, int> itemCount = new Dictionary<int, int>();
+
+                    player.CachedBuffer = true;
+                    foreach (var item in items)
+                    {
+                        player.Inventory.AddItem(item);
+                        if (!itemCount.ContainsKey(item.TemplateId))
+                            itemCount.Add(item.TemplateId, 0);
+                        itemCount[item.TemplateId]++;
+                    }
+                    player.Inventory.AddKamas(kamas);
+                    player.AddExperience(exp);
+                    player.CachedBuffer = false;
+
+                    Result.AddResult(player, true, false, kamas, exp, 0, 0, 0, 0, itemCount);
+                }
+            }
+            else
+            {
+                foreach (var player in m_winnersFighter)
+                {
+                    Result.AddResult(player, true);
+                }
+            }
+
+            foreach (var fighter in m_losersFighter)
+            {
+                Result.AddResult(fighter, false);
+            }
         }
 
         /// <summary>
