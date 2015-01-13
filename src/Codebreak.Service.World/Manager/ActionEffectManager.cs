@@ -71,20 +71,13 @@ namespace Codebreak.Service.World.Manager
             if(item == null)            
                 return;
 
-            if(!item.Template.Usable)
+            if (!item.Template.Usable && !item.Template.Targetable && targetId != -1 && targetCell != -1)
             {
-                Logger.Debug("ActionEffectManager::Apply non usable item name=" + character.Name);                
+                Logger.Debug("ActionEffectManager::Apply non usable/targetable item name=" + character.Name);                
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-
-            if(!item.Template.Targetable && targetId != -1 && targetCell != -1)
-            {
-                Logger.Debug("ActionEffectManager::Apply non targetable item name=" + character.Name);
-                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-
+            
             if(!item.SatisfyConditions(character))
             {
                 character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_CONDITIONS_UNSATISFIED));

@@ -184,6 +184,7 @@
     <Compile Include="Game\Entity\PersistentInventory.cs" />
     <Compile Include="Game\Entity\StorageInventory.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
+    <Compile Include="Game\Entity\TaxCollectorInventory.cs" />
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseSellExchange.cs" />

@@ -311,10 +311,21 @@ namespace Codebreak.Service.World.Frame
         private void ExchangeRequest(CharacterEntity character, string message)
         {
             var exchangeData = message.Substring(2).Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var exchangeTypeId = int.Parse(exchangeData[0]);
+            int exchangeTypeId = -1;
+            if(!int.TryParse(exchangeData[0], out exchangeTypeId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
             var exchangeActorId = -1;
             if(exchangeData.Length > 1)
-                exchangeActorId = int.Parse(exchangeData[1]);
+                if (!int.TryParse(exchangeData[1], out exchangeActorId))
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
 
             if (!Enum.IsDefined(typeof(ExchangeTypeEnum), exchangeTypeId))
             {
@@ -634,11 +645,27 @@ namespace Codebreak.Service.World.Frame
             }
 
             var add = data[0][0] == '+';
-            var itemId = long.Parse(data[0].Substring(1));
-            var quantity = int.Parse(data[1]);
+            long itemId = -1;
+            if (!long.TryParse(data[0].Substring(1), out itemId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            int quantity = -1;
+            if (!int.TryParse(data[1], out quantity))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
             long price = -1;
             if (data.Length > 2)
-                price = long.Parse(data[2]);
+                if (!long.TryParse(data[2], out price))
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
 
             character.AddMessage(() =>
             {

@@ -399,6 +399,7 @@ namespace Codebreak.Service.World.Game.Guild
         public void LevelUp()
         {
             Level++;
+            BoostPoint += 5;
             Statistics.BaseStatistics.AddBase(EffectEnum.AddInitiative, 100);
             Statistics.BaseStatistics.AddBase(EffectEnum.AddVitality, 100);
             Statistics.BaseStatistics.AddBase(EffectEnum.AddWisdom,  4);
@@ -562,19 +563,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// </summary>
         /// <param name="member"></param>
         public void HireTaxCollector(GuildMember member)
-        {
-            if (!member.HasRight(GuildRightEnum.HIRE_TAXCOLLECTOR))
-            {
-                member.SendHasNotEnoughRights();
-                return;
-            }
-
-            if (m_taxCollectors.Count >= Statistics.MaxTaxcollector)
-            {
-                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already hired the maximum TaxCollector."));
-                return;
-            }
-                       
+        {       
             if (member.Character == null)            
                 return;
             
@@ -594,6 +583,18 @@ namespace Codebreak.Service.World.Game.Guild
                     
                     AddMessage(() =>
                         {
+                            if (!member.HasRight(GuildRightEnum.HIRE_TAXCOLLECTOR))
+                            {
+                                member.SendHasNotEnoughRights();
+                                return;
+                            }
+
+                            if (m_taxCollectors.Count >= Statistics.MaxTaxcollector)
+                            {
+                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Your guild has already hired the maximum TaxCollector."));
+                                return;
+                            }
+
                             var taxCollectorDAO = new TaxCollectorDAO()
                             {
                                 GuildId = Id,

@@ -147,17 +147,47 @@ namespace Codebreak.Service.World.Frame
                     }
 
                     var infos = message.Substring(2).Split('|');
+                    if(infos.Length < 6)
+                    {
+                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                        return;
+                    }
 
                     var name = infos[0];
-                    var breed = byte.Parse(infos[1]);
-                    var sex = int.Parse(infos[2]) == 1;
-                    var color1 = int.Parse(infos[3]);
-                    var color2 = int.Parse(infos[4]);
-                    var color3 = int.Parse(infos[5]);
+
+                    byte breed = 0;
+                    if(!byte.TryParse(infos[1], out breed))
+                    {
+                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                        return;
+                    }
+
+                    bool sex = infos[2] == "1";
+
+                    var color1 = -1;
+                    if (!int.TryParse(infos[3], out color1))
+                    {
+                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                        return;
+                    }
+
+                    var color2 = -1;
+                    if (!int.TryParse(infos[4], out color2))
+                    {
+                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                        return;
+                    }
+
+                    var color3 = -1;
+                    if (!int.TryParse(infos[5], out color3))
+                    {
+                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                        return;
+                    }
 
                     if (client.Characters.Count > 4)
                     {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR_FULL());
                         return;
                     }
 

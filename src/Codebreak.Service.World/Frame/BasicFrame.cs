@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Codebreak.Framework.Network;
 using Codebreak.Service.World.Game;
@@ -323,38 +324,38 @@ namespace Codebreak.Service.World.Frame
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="message"></param>
-        private void GuildBoostStats(CharacterEntity entity, string message)
+        private void GuildBoostStats(CharacterEntity character, string message)
         {
-            if (entity.GuildMember == null)
+            if (character.GuildMember == null)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.GuildMember.BoostGuildStats(message[2]);
+            character.GuildMember.BoostGuildStats(message[2]);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="message"></param>
-        private void GuildBoostSpell(CharacterEntity entity, string message)
+        private void GuildBoostSpell(CharacterEntity character, string message)
         {
-            if (entity.GuildMember == null)
+            if (character.GuildMember == null)
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             var spellId = -1;
             if (!int.TryParse(message.Substring(2), out spellId))
             {
-                entity.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
-            entity.GuildMember.BoostGuildSpell(spellId);
+            character.GuildMember.BoostGuildSpell(spellId);
         }  
         
         /// <summary>
@@ -973,36 +974,25 @@ namespace Codebreak.Service.World.Frame
         {
             var messageData = message.Substring(2).Split('|');
             var channel = messageData[0];
-            var messageContent = messageData[1];
+            var messageContent = string.Join("", messageData.Skip(1));
 
             if (channel.Length == 1)
             {
-                character.AddMessage(() =>
-                    {
-                        character.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent);
-                    });
+                character.AddMessage(() => character.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent));
             }
             else
             {
                 WorldService.Instance.AddMessage(() =>
                     {
                         var remoteEntity = EntityManager.Instance.GetCharacterByName(channel);
-
                         if (remoteEntity == null)
                         {
                             character.SafeDispatch(WorldMessage.CHAT_MESSAGE_ERROR_PLAYER_OFFLINE());
                             return;
                         }
 
-                        character.AddMessage(() =>
-                        {
-                            character.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity);
-                        });
-
-                        remoteEntity.AddMessage(() =>
-                        {
-                            remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, character);
-                        });
+                        character.AddMessage(() => character.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity));
+                        remoteEntity.AddMessage(() => remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, character));
                     });
             }
         }

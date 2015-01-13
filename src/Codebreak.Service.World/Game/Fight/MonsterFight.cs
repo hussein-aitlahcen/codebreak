@@ -252,7 +252,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                         case EntityTypeEnum.TYPE_TAX_COLLECTOR:
                             var taxCollector = fighter as TaxCollectorEntity;
-                            exp = Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom));          
+                            exp = Util.CalculPVMExperienceTaxCollector(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom));          
                             kamas = Util.CalculPVMKamas(m_kamasLoot, fighter.Prospection, m_droppersTotalPP);
                             taxCollector.Storage.AddKamas(kamas);
                             taxCollector.ExperienceGathered += exp;

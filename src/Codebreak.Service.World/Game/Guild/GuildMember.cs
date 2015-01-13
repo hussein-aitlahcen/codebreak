@@ -188,10 +188,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// </summary>
         public void HireTaxCollector()
         {
-            Guild.AddMessage(() =>
-                {
-                    Guild.HireTaxCollector(this);
-                });
+            Guild.HireTaxCollector(this);
         }
 
         /// <summary>

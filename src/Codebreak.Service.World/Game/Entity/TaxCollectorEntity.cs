@@ -194,7 +194,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public StorageInventory Storage
+        public TaxCollectorInventory Storage
         {
             get;
             private set;
@@ -227,7 +227,7 @@ namespace Codebreak.Service.World.Game.Entity
             Statistics = new GenericStats();
             Statistics.Merge(guild.Statistics.BaseStatistics);
             Spells = SpellBookFactory.Instance.Create(this);
-            Storage = new StorageInventory((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, Id);
+            Storage = new TaxCollectorInventory(this);
         }
 
         /// <summary>
