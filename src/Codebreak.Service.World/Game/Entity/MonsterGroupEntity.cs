@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Database.Repository;
+﻿using Codebreak.Framework.Generic;
+using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Network;
 using System;
@@ -118,10 +119,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public int AgeBonus
         {
-            get
-            {
-                return (int)((UpdateTime / 1000) / WorldConfig.PVM_MONSTER_STAR_TIME);
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -134,6 +133,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         private List<MonsterEntity> m_monsters;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private UpdatableTimer m_ageTimer;
+        
         /// <summary>
         /// 
         /// </summary>
@@ -159,6 +163,18 @@ namespace Codebreak.Service.World.Game.Entity
             AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             MapId = mapId;
             CellId = cellId;
+
+            base.AddTimer(m_ageTimer = new UpdatableTimer(1000 * WorldConfig.PVM_STAR_BONUS_PERCENT_SECONDS, UpdateAge));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateAge()
+        {
+            if (AgeBonus > WorldConfig.PVM_MAX_STAR_BONUS - 2)
+                base.RemoveTimer(m_ageTimer);
+            AgeBonus++;
         }
 
         /// <summary>
