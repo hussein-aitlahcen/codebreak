@@ -222,7 +222,8 @@ namespace Codebreak.Service.World.Frame
                         TitleId = 0,
                         TitleParams = "",
                         Merchant = false,
-                        SavedMapId = 7411,
+                        SavedMapId = WorldConfig.WORLD_MAP_START,
+                        SavedCellId = WorldConfig.WORLD_CELL_START,
                         Kamas = 0,
                     };
 

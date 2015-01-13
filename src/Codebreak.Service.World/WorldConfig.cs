@@ -56,6 +56,9 @@ namespace Codebreak.Service.World
             CHARACTER_CREATION_EMOTE_CAPACITY = 1376255;
 
         public const int
+            LIVING_CHEST_ID = 285;
+
+        public const int
             MAX_MERCHANT_PER_MAP = 5;
 
         public const int

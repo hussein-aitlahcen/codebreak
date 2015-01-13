@@ -40,6 +40,9 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(AuctionHouseRepository.Instance);
             base.AddRepository(AuctionHouseEntryRepository.Instance);
             base.AddRepository(AuctionHouseAllowedTypeRepository.Instance);
+
+            // OLD DATA
+            base.AddRepository(MonstersRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
 
             base.LoadAll(DbConnection);

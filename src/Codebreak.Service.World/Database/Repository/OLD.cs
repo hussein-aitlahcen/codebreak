@@ -11,6 +11,14 @@ namespace Codebreak.Service.World.Database.Repository
     /// <summary>
     /// 
     /// </summary>
+    public sealed class MonstersRepository : Repository<MonstersRepository, monsters>
+    {
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class SortsRepository : Repository<SortsRepository, sorts>
     {
         /// <summary>

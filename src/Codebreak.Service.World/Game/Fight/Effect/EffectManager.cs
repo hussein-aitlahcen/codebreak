@@ -17,165 +17,166 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<EffectEnum, EffectBase> _effects;
+        private Dictionary<EffectEnum, EffectBase> m_effects;
 
         /// <summary>
         /// 
         /// </summary>
         public EffectManager()
         {
-            _effects = new Dictionary<EffectEnum, EffectBase>();
+            m_effects = new Dictionary<EffectEnum, EffectBase>();
 
             // Dégats
-            _effects.Add(EffectEnum.SelfDamage, new SelfDamageEffect());
-            _effects.Add(EffectEnum.DamageEarth, new DamageEffect());
-            _effects.Add(EffectEnum.DamageNeutral, new DamageEffect());
-            _effects.Add(EffectEnum.DamageFire, new DamageEffect());
-            _effects.Add(EffectEnum.DamageWater, new DamageEffect());
-            _effects.Add(EffectEnum.DamageAir, new DamageEffect());
+            m_effects.Add(EffectEnum.SelfDamage, new SelfDamageEffect());
+            m_effects.Add(EffectEnum.DamageEarth, new DamageEffect());
+            m_effects.Add(EffectEnum.DamageNeutral, new DamageEffect());
+            m_effects.Add(EffectEnum.DamageFire, new DamageEffect());
+            m_effects.Add(EffectEnum.DamageWater, new DamageEffect());
+            m_effects.Add(EffectEnum.DamageAir, new DamageEffect());
 
             // Vol de statistique
-            _effects.Add(EffectEnum.StealNeutral, new LifeStealEffect());
-            _effects.Add(EffectEnum.StealEarth, new LifeStealEffect());
-            _effects.Add(EffectEnum.StealFire, new LifeStealEffect());
-            _effects.Add(EffectEnum.StealWater, new LifeStealEffect());
-            _effects.Add(EffectEnum.StealAir, new LifeStealEffect());
+            m_effects.Add(EffectEnum.StealNeutral, new LifeStealEffect());
+            m_effects.Add(EffectEnum.StealEarth, new LifeStealEffect());
+            m_effects.Add(EffectEnum.StealFire, new LifeStealEffect());
+            m_effects.Add(EffectEnum.StealWater, new LifeStealEffect());
+            m_effects.Add(EffectEnum.StealAir, new LifeStealEffect());
 
             // Soin
-            _effects.Add(EffectEnum.Heal, new HealEffect());
+            m_effects.Add(EffectEnum.Heal, new HealEffect());
 
             // Teleporation
-            _effects.Add(EffectEnum.Teleport, new TeleportEffect());
+            m_effects.Add(EffectEnum.Teleport, new TeleportEffect());
 
             // Armure et bouclié feca
-            _effects.Add(EffectEnum.AddArmor, new ArmorEffect());
-            _effects.Add(EffectEnum.AddArmorBis, new ArmorEffect());
+            m_effects.Add(EffectEnum.AddArmor, new ArmorEffect());
+            m_effects.Add(EffectEnum.AddArmorBis, new ArmorEffect());
 
             // Ajout ou reduction AP/MP
-            _effects.Add(EffectEnum.AddAP, new StatsEffect());
-            _effects.Add(EffectEnum.AddMP, new StatsEffect());
-            _effects.Add(EffectEnum.SubAP, new StatsEffect());
-            _effects.Add(EffectEnum.SubMP, new StatsEffect());
-            _effects.Add(EffectEnum.SubAPDodgeable, new APDodgeSubstractEffect());
-            _effects.Add(EffectEnum.SubMPDodgeable, new MPDodgeSubstractEffect());
-            _effects.Add(EffectEnum.AddAPDodge, new StatsEffect());
-            _effects.Add(EffectEnum.AddMPDodge, new StatsEffect());
-            _effects.Add(EffectEnum.SubAPDodge, new StatsEffect());
-            _effects.Add(EffectEnum.SubMPDodge, new StatsEffect());
+            m_effects.Add(EffectEnum.AddAP, new StatsEffect());
+            m_effects.Add(EffectEnum.AddMP, new StatsEffect());
+            m_effects.Add(EffectEnum.SubAP, new StatsEffect());
+            m_effects.Add(EffectEnum.SubMP, new StatsEffect());
+            m_effects.Add(EffectEnum.SubAPDodgeable, new APDodgeSubstractEffect());
+            m_effects.Add(EffectEnum.SubMPDodgeable, new MPDodgeSubstractEffect());
+            m_effects.Add(EffectEnum.AddAPDodge, new StatsEffect());
+            m_effects.Add(EffectEnum.AddMPDodge, new StatsEffect());
+            m_effects.Add(EffectEnum.SubAPDodge, new StatsEffect());
+            m_effects.Add(EffectEnum.SubMPDodge, new StatsEffect());
 
             // Caracteristiques Ajout/Reduction
-            _effects.Add(EffectEnum.AddReduceDamagePhysic, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamageMagic, new StatsEffect());
-            _effects.Add(EffectEnum.AddPO, new StatsEffect());
-            _effects.Add(EffectEnum.SubPO, new StatsEffect());
-            _effects.Add(EffectEnum.AddStrength, new StatsEffect());
-            _effects.Add(EffectEnum.AddIntelligence, new StatsEffect());
-            _effects.Add(EffectEnum.AddAgility, new StatsEffect());
-            _effects.Add(EffectEnum.AddChance, new StatsEffect());
-            _effects.Add(EffectEnum.AddWisdom, new StatsEffect());
-            _effects.Add(EffectEnum.AddLife, new StatsEffect());
-            _effects.Add(EffectEnum.AddVitality, new StatsEffect());
-            _effects.Add(EffectEnum.SubStrength, new StatsEffect());
-            _effects.Add(EffectEnum.SubIntelligence, new StatsEffect());
-            _effects.Add(EffectEnum.SubAgility, new StatsEffect());
-            _effects.Add(EffectEnum.SubChance, new StatsEffect());
-            _effects.Add(EffectEnum.SubWisdom, new StatsEffect());
-            _effects.Add(EffectEnum.SubVitality, new StatsEffect());
-            _effects.Add(EffectEnum.AddInvocationMax, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamagePhysic, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamageMagic, new StatsEffect());
+            m_effects.Add(EffectEnum.AddPO, new StatsEffect());
+            m_effects.Add(EffectEnum.SubPO, new StatsEffect());
+            m_effects.Add(EffectEnum.AddStrength, new StatsEffect());
+            m_effects.Add(EffectEnum.AddIntelligence, new StatsEffect());
+            m_effects.Add(EffectEnum.AddAgility, new StatsEffect());
+            m_effects.Add(EffectEnum.AddChance, new StatsEffect());
+            m_effects.Add(EffectEnum.AddWisdom, new StatsEffect());
+            m_effects.Add(EffectEnum.AddLife, new StatsEffect());
+            m_effects.Add(EffectEnum.AddVitality, new StatsEffect());
+            m_effects.Add(EffectEnum.SubStrength, new StatsEffect());
+            m_effects.Add(EffectEnum.SubIntelligence, new StatsEffect());
+            m_effects.Add(EffectEnum.SubAgility, new StatsEffect());
+            m_effects.Add(EffectEnum.SubChance, new StatsEffect());
+            m_effects.Add(EffectEnum.SubWisdom, new StatsEffect());
+            m_effects.Add(EffectEnum.SubVitality, new StatsEffect());
+            m_effects.Add(EffectEnum.AddInvocationMax, new StatsEffect());
+            m_effects.Add(EffectEnum.AddProspection, new StatsEffect());
 
             // Soins
-            _effects.Add(EffectEnum.AddHealCare, new StatsEffect());
-            _effects.Add(EffectEnum.SubHealCare, new StatsEffect());
+            m_effects.Add(EffectEnum.AddHealCare, new StatsEffect());
+            m_effects.Add(EffectEnum.SubHealCare, new StatsEffect());
 
             // Resistances ajout/suppressions
-            _effects.Add(EffectEnum.AddReduceDamageAir, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamageWater, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamageFire, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamageNeutral, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamageEarth, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamageAir, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamageWater, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamageFire, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamageNeutral, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamageEarth, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamageAir, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamageWater, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamageFire, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamageNeutral, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamageEarth, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamageAir, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamageWater, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamageFire, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamageNeutral, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamageEarth, new StatsEffect());
 
-            _effects.Add(EffectEnum.AddReduceDamagePercentAir, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamagePercentWater, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamagePercentFire, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamagePercentNeutral, new StatsEffect());
-            _effects.Add(EffectEnum.AddReduceDamagePercentEarth, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamagePercentAir, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamagePercentWater, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamagePercentFire, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamagePercentNeutral, new StatsEffect());
-            _effects.Add(EffectEnum.SubReduceDamagePercentEarth, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamagePercentAir, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamagePercentWater, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamagePercentFire, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamagePercentNeutral, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReduceDamagePercentEarth, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamagePercentAir, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamagePercentWater, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamagePercentFire, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamagePercentNeutral, new StatsEffect());
+            m_effects.Add(EffectEnum.SubReduceDamagePercentEarth, new StatsEffect());
 
             // Ajout ou reduction de dommage
-            _effects.Add(EffectEnum.AddDamage, new StatsEffect());
-            _effects.Add(EffectEnum.AddEchecCritic, new StatsEffect());
-            _effects.Add(EffectEnum.AddDamageCritic, new StatsEffect());
-            _effects.Add(EffectEnum.AddDamagePercent, new StatsEffect());
-            _effects.Add(EffectEnum.SubDamagePercent, new StatsEffect());
-            _effects.Add(EffectEnum.SubDamage, new StatsEffect());
-            _effects.Add(EffectEnum.SubDamageCritic, new StatsEffect());
-            _effects.Add(EffectEnum.AddReflectDamage, new StatsEffect());
-            _effects.Add(EffectEnum.AddReflectDamageItem, new StatsEffect());
+            m_effects.Add(EffectEnum.AddDamage, new StatsEffect());
+            m_effects.Add(EffectEnum.AddEchecCritic, new StatsEffect());
+            m_effects.Add(EffectEnum.AddDamageCritic, new StatsEffect());
+            m_effects.Add(EffectEnum.AddDamagePercent, new StatsEffect());
+            m_effects.Add(EffectEnum.SubDamagePercent, new StatsEffect());
+            m_effects.Add(EffectEnum.SubDamage, new StatsEffect());
+            m_effects.Add(EffectEnum.SubDamageCritic, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReflectDamage, new StatsEffect());
+            m_effects.Add(EffectEnum.AddReflectDamageItem, new StatsEffect());
 
             // Chatiment sacris
-            _effects.Add(EffectEnum.AddChatiment, new PunishmentEffect());
+            m_effects.Add(EffectEnum.AddChatiment, new PunishmentEffect());
 
             // Effet de push back/fear
-            _effects.Add(EffectEnum.PushBack, new PushEffect());
-            _effects.Add(EffectEnum.PushFront, new PushEffect());
-            _effects.Add(EffectEnum.PushFear, new PushFearEffect());
+            m_effects.Add(EffectEnum.PushBack, new PushEffect());
+            m_effects.Add(EffectEnum.PushFront, new PushEffect());
+            m_effects.Add(EffectEnum.PushFear, new PushFearEffect());
 
             // Ajout d'un etat / changement de skin
-            _effects.Add(EffectEnum.ChangeSkin, new SkinChangeEffect());
-            _effects.Add(EffectEnum.AddState, new StateAddEffect());
-            _effects.Add(EffectEnum.RemoveState, new StateRemoveEffect());
-            _effects.Add(EffectEnum.Stealth, new StateAddEffect());
+            m_effects.Add(EffectEnum.ChangeSkin, new SkinChangeEffect());
+            m_effects.Add(EffectEnum.AddState, new StateAddEffect());
+            m_effects.Add(EffectEnum.RemoveState, new StateRemoveEffect());
+            m_effects.Add(EffectEnum.Stealth, new StateAddEffect());
 
             // Steal de statistique
-            _effects.Add(EffectEnum.StrengthSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.WisdomSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.IntelligenceSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.AgilitySteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.ChanceSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.APSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.MPSteal, new StatsStealEffect());
-            _effects.Add(EffectEnum.POSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.StrengthSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.WisdomSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.IntelligenceSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.AgilitySteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.ChanceSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.APSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.MPSteal, new StatsStealEffect());
+            m_effects.Add(EffectEnum.POSteal, new StatsStealEffect());
 
             // Autres
-            _effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect());
-            _effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
-            _effects.Add(EffectEnum.Punition, new PunishmentDamageEffect());
-            _effects.Add(EffectEnum.ReflectSpell, new ReflectSpellEffect());
-            _effects.Add(EffectEnum.DamageDropLife, new DropLifeEffect());
-            _effects.Add(EffectEnum.LifeSteal, new PureLifeStealEffect());
+            m_effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect());
+            m_effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
+            m_effects.Add(EffectEnum.Punition, new PunishmentDamageEffect());
+            m_effects.Add(EffectEnum.ReflectSpell, new ReflectSpellEffect());
+            m_effects.Add(EffectEnum.DamageDropLife, new DropLifeEffect());
+            m_effects.Add(EffectEnum.LifeSteal, new PureLifeStealEffect());
 
             // Sacrifice
-            _effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());
-            _effects.Add(EffectEnum.Transpose, new TransposeEffect());
+            m_effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());
+            m_effects.Add(EffectEnum.Transpose, new TransposeEffect());
 
             // Derobade
-            _effects.Add(EffectEnum.Evasion, new DamageDodgeEffect());
+            m_effects.Add(EffectEnum.Evasion, new DamageDodgeEffect());
             
             // Augmente de X les domamges de base du sort Y
-            _effects.Add(EffectEnum.IncreaseSpellDamage, new IncreaseSpellJetEffect());
+            m_effects.Add(EffectEnum.IncreaseSpellDamage, new IncreaseSpellJetEffect());
 
             // Invocation
-            _effects.Add(EffectEnum.Invocation, new SummoningEffect());
+            m_effects.Add(EffectEnum.Invocation, new SummoningEffect());
 
             // Debuff
-            _effects.Add(EffectEnum.DeleteAllBonus, new BuffRemoveEffect());
+            m_effects.Add(EffectEnum.DeleteAllBonus, new BuffRemoveEffect());
 
             // Panda
-            _effects.Add(EffectEnum.PandaCarrier, new PandaCarrierEffect());
-            _effects.Add(EffectEnum.PandaLaunch, new PandaLaunchEffect());
+            m_effects.Add(EffectEnum.PandaCarrier, new PandaCarrierEffect());
+            m_effects.Add(EffectEnum.PandaLaunch, new PandaLaunchEffect());
 
             // ActivableObjects
-            _effects.Add(EffectEnum.UseGlyph, new ActivableObjectEffect());
-            _effects.Add(EffectEnum.UseTrap, new ActivableObjectEffect());
+            m_effects.Add(EffectEnum.UseGlyph, new ActivableObjectEffect());
+            m_effects.Add(EffectEnum.UseTrap, new ActivableObjectEffect());
         }
 
         /// <summary>
@@ -185,12 +186,12 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <returns></returns>
         public FightActionResultEnum TryApplyEffect(CastInfos castInfos)
         {
-            if (!_effects.ContainsKey(castInfos.EffectType))
+            if (!m_effects.ContainsKey(castInfos.EffectType))
             {
                 Logger.Debug("EffectManager::TryApplyEffect unknow effect : " + castInfos.EffectType);
                 return FightActionResultEnum.RESULT_NOTHING;
             }
-            return _effects[castInfos.EffectType].ApplyEffect(castInfos);
+            return m_effects[castInfos.EffectType].ApplyEffect(castInfos);
         }
     }
 }

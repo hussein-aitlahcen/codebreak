@@ -12,19 +12,11 @@ namespace Codebreak.Service.World.Database.Structure
     [Table("spellbookentry")]
     [ImplementPropertyChanged]
     public sealed class SpellBookEntryDAO : DataAccessObject<SpellBookEntryDAO>
-    { 
+    {
         /// <summary>
         /// 
         /// </summary>
         [Key]
-        public long Id
-        {
-            get;
-            set;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
         public int OwnerType
         {
             get;
@@ -33,6 +25,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Key]
         public long OwnerId
         {
             get;
@@ -41,6 +34,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Key]
         public int SpellId
         {
             get;
@@ -114,7 +108,7 @@ namespace Codebreak.Service.World.Database.Structure
                 Position = position
             };
             instance.IsDirty = false;
-            if(SpellBookEntryRepository.Instance.Insert(instance))
+            if(SpellBookEntryRepository.Instance.InsertWithKey(instance))
                 return instance;
             return null;
         }

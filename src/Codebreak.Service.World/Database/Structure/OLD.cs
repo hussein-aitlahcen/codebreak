@@ -7,6 +7,22 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Database.Structure
 {
+    [Table("monsters")]
+    public class monsters : DataAccessObject<monsters>
+    {
+        public int Id
+        {
+            get;
+            set;
+        }
+
+        public string Spells
+        {
+            get;
+            set;
+        }
+    }
+
     [Table("sorts")]
     public class sorts : DataAccessObject<sorts>
     {

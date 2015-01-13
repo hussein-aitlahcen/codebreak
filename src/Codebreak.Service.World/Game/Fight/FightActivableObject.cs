@@ -145,11 +145,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        protected FightBase _fight;
-        protected FighterBase _caster;
-        protected SpellTemplate _actionSpell;
-        protected SpellLevel _actionEffect;
-        protected int _spellId;
+        protected FightBase m_fight;
+        protected FighterBase m_caster;
+        protected SpellTemplate m_actionSpell;
+        protected SpellLevel m_actionEffect;
+        protected int m_spellId;
 
         /// <summary>
         /// 
@@ -179,11 +179,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="hide"></param>
         public FightActivableObject(FightObstacleTypeEnum type, ActiveType activeType, FightBase fight, FighterBase caster, CastInfos castInfos, int cell, int duration, int actionId, bool canGoThrough, bool canStack, bool hide = false)
         {
-            _fight = fight;
-            _caster = caster;
-            _spellId = castInfos.SpellId;
-            _actionSpell = SpellManager.Instance.GetTemplate(castInfos.Value1);
-            _actionEffect = _actionSpell.GetLevel(castInfos.Value2);
+            m_fight = fight;
+            m_caster = caster;
+            m_spellId = castInfos.SpellId;
+            m_actionSpell = SpellManager.Instance.GetTemplate(castInfos.Value1);
+            m_actionEffect = m_actionSpell.GetLevel(castInfos.Value2);
 
             Cell = fight.GetCell(cell);
             ObstacleType = type;
@@ -198,7 +198,7 @@ namespace Codebreak.Service.World.Game.Fight
             ActionId = actionId;
             Hide = hide;
                         
-            foreach(var effect in _actionEffect.Effects)
+            foreach(var effect in m_actionEffect.Effects)
             {
                 if(CastInfos.IsDamageEffect(effect.TypeEnum))
                 {
@@ -209,7 +209,7 @@ namespace Codebreak.Service.World.Game.Fight
             // On ajout l'objet a toutes les cells qu'il affecte
             foreach (var cellId in CellZone.GetCircleCells(fight.Map, cell, Length))
             {
-                var fightCell = _fight.GetCell(cellId);
+                var fightCell = m_fight.GetCell(cellId);
                 if (fightCell != null)
                 {
                     fightCell.AddObject(this);
@@ -252,25 +252,25 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Activated = true;
 
-            _fight.CurrentProcessingFighter = activator;
-            _fight.Dispatch(WorldMessage.GAME_ACTION(ActionId, activator.Id, _spellId + "," + Cell.Id + "," + _actionSpell.Sprite + "," + _actionEffect.Level + ",1," + _caster.Id));
+            m_fight.CurrentProcessingFighter = activator;
+            m_fight.Dispatch(WorldMessage.GAME_ACTION(ActionId, activator.Id, m_spellId + "," + Cell.Id + "," + m_actionSpell.Sprite + "," + m_actionEffect.Level + ",1," + m_caster.Id));
 
             foreach (var target in Targets)
             {
                 if (!target.IsFighterDead)
                 {
-                    foreach (var effect in _actionEffect.Effects)
+                    foreach (var effect in m_actionEffect.Effects)
                     {
-                        _fight.AddProcessingTarget(new CastInfos(
+                        m_fight.AddProcessingTarget(new CastInfos(
                                             effect.TypeEnum,
-                                            _spellId,
+                                            m_spellId,
                                             Cell.Id,
                                             effect.Value1,
                                             effect.Value2,
                                             effect.Value3,
                                             effect.Chance,
                                             effect.Duration,
-                                            _caster,
+                                            m_caster,
                                             target,
                                             "",
                                             target.Cell.Id,

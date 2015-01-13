@@ -25,7 +25,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public StorageInventory(int ownerType = -1, long ownerId = -1)
+        public StorageInventory(int ownerType = (int)EntityTypeEnum.TYPE_STORAGE, long ownerId = -1)
             : base(ownerType, ownerId)
         {
             ActualUser = -1;

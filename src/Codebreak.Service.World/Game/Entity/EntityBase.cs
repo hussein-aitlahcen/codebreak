@@ -25,7 +25,6 @@ namespace Codebreak.Service.World.Game.Entity
     public enum EntityTypeEnum
     {
         TYPE_NONE = -1,
-
         TYPE_CHARACTER = 0,
         TYPE_MONSTER_FIGHTER = -2,
         TYPE_MONSTER_GROUP = -3,
@@ -39,6 +38,7 @@ namespace Codebreak.Service.World.Game.Entity
         // TYPE SPECIAL BDD ITEMS
         TYPE_BANK = -20,
         TYPE_AUCTION_HOUSE = -21,
+        TYPE_STORAGE = -22,
     }
 
     /// <summary>

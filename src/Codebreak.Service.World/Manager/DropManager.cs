@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Fight;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,19 +62,19 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="players"></param>
+        /// <param name="fighters"></param>
         /// <param name="totalProspection"></param>
         /// <param name="drops"></param>
         /// <returns></returns>
-        public Dictionary<CharacterEntity, List<InventoryItemDAO>> Distribute(IEnumerable<CharacterEntity> players, long totalProspection, List<InventoryItemDAO> drops)
+        public Dictionary<FighterBase, List<InventoryItemDAO>> Distribute(IEnumerable<FighterBase> fighters, long totalProspection, List<InventoryItemDAO> drops)
         {
-            var distributed = new Dictionary<CharacterEntity, List<InventoryItemDAO>>();
-            var orderedPlayers = players.OrderBy(player => player.Prospection);   
-            foreach (var player in players)
+            var distributed = new Dictionary<FighterBase, List<InventoryItemDAO>>();
+            var orderedPlayers = fighters.OrderBy(player => player.Prospection);   
+            foreach (var player in fighters)
                 distributed.Add(player, new List<InventoryItemDAO>());
             while(drops.Count > 0)
             {
-                foreach(var player in players)
+                foreach(var player in fighters)
                 {
                     for (int i = drops.Count - 1; i > -1; i--)
                     {
@@ -82,7 +83,6 @@ namespace Codebreak.Service.World.Manager
                         if (rand < rate)
                         {
                             distributed[player].Add(drops[i]);
-
                             drops.RemoveAt(i);
                         }
                     }

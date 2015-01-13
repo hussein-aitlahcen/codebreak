@@ -390,7 +390,6 @@ namespace Codebreak.Service.World.Game.Fight
                 if (FightObjects[i] is FightActivableObject)
                 {
                     var activableObject = (FightActivableObject)FightObjects[i];
-
                     if (activableObject.ActivationType == ActiveType.ACTIVE_BEGINTURN)
                     {
                         activableObject.LoadTargets(fighter);
@@ -402,6 +401,9 @@ namespace Codebreak.Service.World.Game.Fight
             return FightActionResultEnum.RESULT_NOTHING;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             FightObjects.Clear();
@@ -1635,15 +1637,15 @@ namespace Codebreak.Service.World.Game.Fight
                     switch (LoopEndState)
                     {
                         case FightEndStateEnum.STATE_INIT_CALCULATION:
+                            LoopEndState = FightEndStateEnum.STATE_PROCESS_CALCULATION;
                             Team0.FightEnd();
                             Team1.FightEnd(); 
                             InitEndCalculation();
-                            LoopEndState = FightEndStateEnum.STATE_PROCESS_CALCULATION;
                             break;
 
                         case FightEndStateEnum.STATE_PROCESS_CALCULATION:
-                            ApplyEndCalculation();
                             LoopEndState = FightEndStateEnum.STATE_END_CALCULATION;
+                            ApplyEndCalculation();
                             break;
 
                         case FightEndStateEnum.STATE_END_CALCULATION:

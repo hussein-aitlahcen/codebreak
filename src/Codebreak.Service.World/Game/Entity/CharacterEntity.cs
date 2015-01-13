@@ -948,27 +948,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="emoteId"></param>
         public override void EmoteUse(int emoteId, int timeout = 360000)
         {
-            if (emoteId == 1)
-            {
-                if (m_lastEmoteId == emoteId)
-                {
-                    timeout = 0;
-                    emoteId = 0;
-                    m_lastEmoteId = -1;
+            if (m_lastEmoteId == 1)            
+                StopRegeneration();            
+            else if(emoteId == 1)
+                StartRegeneration(WorldConfig.REGEN_TIMER_SIT);
 
-                    StopRegeneration();
-                    StartRegeneration();
-                }
-                else
-                {
-                    StopRegeneration();
-                    StartRegeneration(WorldConfig.REGEN_TIMER_SIT);
-                }
-            }
+            timeout = emoteId == m_lastEmoteId ? 0 : timeout;
+            m_lastEmoteId = emoteId == m_lastEmoteId ? 0 : emoteId;
 
-            m_lastEmoteId = emoteId;
-
-            base.EmoteUse(emoteId, timeout);
+            base.EmoteUse(m_lastEmoteId, timeout);
         }
 
         /// <summary>
@@ -988,13 +976,18 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void StopRegeneration()
         {
-            if (Life >= MaxLife)
+            if (Life >= MaxLife || m_lastRegenTime == -1)
                 return;
             var lifeRestored = (int)Math.Floor((Environment.TickCount - m_lastRegenTime) / m_regenTimer);
             if (Life + lifeRestored > MaxLife)
                 lifeRestored = MaxLife - Life;
             Life += lifeRestored;
+            m_lastRegenTime = -1;
+
+            base.CachedBuffer = true;
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
             base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_FINISH(lifeRestored));
+            base.CachedBuffer = false;
         }
         
         /// <summary>
@@ -1503,7 +1496,8 @@ namespace Codebreak.Service.World.Game.Entity
 
                 case GameActionTypeEnum.MAP_TELEPORT:
                     Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
-                    StopRegeneration();
+                    if(m_lastEmoteId == 1)                    
+                        EmoteUse(1);    
                     break;
 
                 case GameActionTypeEnum.MAP:
@@ -1514,7 +1508,6 @@ namespace Codebreak.Service.World.Game.Entity
                         FrameManager.AddFrame(ExchangeFrame.Instance);
                         FrameManager.AddFrame(GameActionFrame.Instance);
                     }
-                    StartRegeneration();
                     break;
 
                 case GameActionTypeEnum.WAYPOINT:

@@ -101,6 +101,33 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="dataObject"></param>
+        public bool InsertWithKey<T>(IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
+        {
+            using (var connection = CreateConnection())
+            {
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.InsertWithKey<T>(dataObjects, transaction);
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Logger.Error("Fatal errror while inserting in database : " + ex.Message);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="dataObjects"></param>
         /// <returns></returns>
         public bool Insert<T>(IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()

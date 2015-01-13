@@ -137,5 +137,17 @@ namespace Codebreak.Service.World.Database.Structure
         {
             m_drops.Add(drop);
         }        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="grade"></param>
+        /// <returns></returns>
+        public MonsterGradeDAO GetGrade(int grade)
+        {
+            if (!m_monsterGrades.ContainsKey(grade))
+                return null;
+            return m_monsterGrades[grade];
+        }
     }
 }

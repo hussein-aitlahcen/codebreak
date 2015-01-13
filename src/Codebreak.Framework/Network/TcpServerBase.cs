@@ -127,6 +127,8 @@ namespace Codebreak.Framework.Network
             {
                 StartAccept(null);
             }
+
+            Logger.Info(GetType().Name + " listening on " + host + ":" + port);
         }
 
         /// <summary>

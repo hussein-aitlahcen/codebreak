@@ -522,16 +522,7 @@ namespace Codebreak.Service.World.Game.Fight
             
             if (IsDisconnected)
                 EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
-
-            SetCell(null);
-            Team = null;
-            Fight = null;
-            IsSpectating = false;
-            IsDisconnected = false;
-            TurnPass = false;
-            TurnReady = false;
-            Invocator = null;
-
+            
             if (SpellManager != null)
             {
                 SpellManager.Dispose();
@@ -547,6 +538,15 @@ namespace Codebreak.Service.World.Game.Fight
                 BuffManager.Dispose();
                 BuffManager = null;
             }
+
+            SetCell(null);
+            Team = null;
+            Fight = null;
+            IsSpectating = false;
+            IsDisconnected = false;
+            TurnPass = false;
+            TurnReady = false;
+            Invocator = null;
         }
         
         /// <summary>

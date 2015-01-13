@@ -316,27 +316,7 @@ namespace Codebreak.Service.World.Game.Fight
 
             return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Clear()
-        {
-            foreach (var buff in DecrementBuffs[DecrementType.TYPE_BEGINTURN].ToArray())
-                buff.RemoveEffect();
-
-            foreach (var buff in DecrementBuffs[DecrementType.TYPE_ENDTURN].ToArray())
-                buff.RemoveEffect();
-
-            foreach (var buff in DecrementBuffs[DecrementType.TYPE_ENDMOVE].ToArray())
-                buff.RemoveEffect();
-
-            foreach (var buffList in ActiveBuffs.Values)
-                buffList.Clear();
-            foreach (var buffList in DecrementBuffs.Values)
-                buffList.Clear();
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
