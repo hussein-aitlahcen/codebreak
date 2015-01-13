@@ -347,7 +347,10 @@ namespace Codebreak.Service.World.Game.Map
                 if (cellId < 1)
                     cellId = GetNearestMovementCell(entity.CellId);
 
-                entity.LastCellId = entity.CellId;
+                if (entity.LastCellId == 0)
+                    entity.LastCellId = entity.CellId;
+                else
+                    entity.LastCellId = 0;
 
                 if (cellId < 1)
                     return;
@@ -398,10 +401,15 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public int GetNearestMovementCell(int cellId)
         {
-            var rand = Util.Next(0, 100);
+            var rand = Util.Next(0, 101);
             var direction = 1;
-            if (rand < 50)
+            if (rand < 25)
                 direction = 3;
+            else if (rand < 50)
+                direction = 5;
+            else if (rand < 75)
+                direction = 7;
+
             var nextCellId = Pathfinding.NextCell(this, cellId, direction);            
             var cell = GetCell(nextCellId);
             if(cell != null && cell.Walkable)            
