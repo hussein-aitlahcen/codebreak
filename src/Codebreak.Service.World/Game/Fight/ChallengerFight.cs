@@ -129,11 +129,11 @@ namespace Codebreak.Service.World.Game.Fight
         {
             foreach (var fighter in m_winnersTeam.Fighters)
             {
-                Result.AddResult(fighter, true);
+                Result.AddResult(fighter, FightEndTypeEnum.END_WINNER);
             }
             foreach (var fighter in m_losersTeam.Fighters)
             {
-                Result.AddResult(fighter, false);
+                Result.AddResult(fighter);
             }
         }
 

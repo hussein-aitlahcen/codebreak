@@ -146,18 +146,32 @@ namespace Codebreak.Service.World
         /// 
         /// </summary>
         /// <param name="monsters"></param>
-        /// <param name="players"></param>
+        /// <param name="droppers"></param>
         /// <param name="level"></param>
         /// <param name="wisdom"></param>
         /// <param name="ageBonus"></param>
         /// <returns></returns>
-        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<CharacterEntity> players, int level, int wisdom, int ageBonus = 0)
+        public static long CalculPVMExperienceTaxCollector(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int ageBonus = 0)
+        {
+            return (long)(CalculPVMExperience(monsters, droppers, level, wisdom, ageBonus) * WorldConfig.TAXCOLLECTOR_XP_RATIO);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="monsters"></param>
+        /// <param name="droppers"></param>
+        /// <param name="level"></param>
+        /// <param name="wisdom"></param>
+        /// <param name="ageBonus"></param>
+        /// <returns></returns>
+        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int ageBonus = 0)
         {
             var monstersExperience = monsters.Sum(monster => monster.Grade.Experience);
             var monstersTotalLevel = monsters.Sum(monster => monster.Grade.Level);
             var monstersMaxLevel = monsters.Max(monster => monster.Grade.Level);
 
-            var playersTotalLevel = players.Sum(player => player.Level);
+            var playersTotalLevel = droppers.Sum(player => player.Level);
 
             double totalLevelDeltaRate = 1;
             if (playersTotalLevel - 5 > monstersTotalLevel)
@@ -175,7 +189,7 @@ namespace Codebreak.Service.World
             var b = Math.Truncate(a / (double)level * 100);
             var c = Math.Truncate(a / (double)playersTotalLevel * 100);
             var d = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[0] * levelDeltaRate);
-            var e = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[Math.Max(0, players.Count() - 1)] * totalLevelDeltaRate);
+            var e = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[Math.Max(0, droppers.Count() - 1)] * totalLevelDeltaRate);
             var f = Math.Truncate(b / 100 * d);
             var g = Math.Truncate(c / 100 * e);
             var h = wisdom;

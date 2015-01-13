@@ -294,7 +294,7 @@ namespace Codebreak.Service.World.Game.Entity
         public EntityInventory Inventory
         {
             get;
-            protected set;
+            set;
         }
 
         /// <summary>

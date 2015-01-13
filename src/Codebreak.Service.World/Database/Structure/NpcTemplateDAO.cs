@@ -3,6 +3,8 @@ using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repository;
 using System;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -246,6 +248,20 @@ namespace Codebreak.Service.World.Database.Structure
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string m_chatName;
+        public string ChatName
+        {
+            get
+            {
+                if (m_chatName == null)
+                    m_chatName = Regex.Replace(Name, "[^a-zA-Z0-9 ]+", "", RegexOptions.Compiled);
+                return m_chatName;
+            }
         }
 
         /// <summary>

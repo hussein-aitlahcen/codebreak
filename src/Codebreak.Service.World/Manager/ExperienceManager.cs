@@ -11,7 +11,9 @@ namespace Codebreak.Service.World.Manager
         CHARACTER,
         JOB,
         MOUNT,
-        AGGRESSION
+        PVP,
+        LIVING,
+        GUILD,
     }
 
     /// <summary>
@@ -34,12 +36,16 @@ namespace Codebreak.Service.World.Manager
             {
                 case ExperienceTypeEnum.CHARACTER:
                     return template.Character;
-                case ExperienceTypeEnum.AGGRESSION:
-                    return template.Aggression;
+                case ExperienceTypeEnum.PVP:
+                    return template.Pvp;
                 case ExperienceTypeEnum.JOB:
                     return template.Job;
                 case ExperienceTypeEnum.MOUNT:
                     return template.Mount;
+                case ExperienceTypeEnum.GUILD:
+                    return template.Guild;
+                case ExperienceTypeEnum.LIVING:
+                    return template.Living;
                 default:
                     return -1;
             }

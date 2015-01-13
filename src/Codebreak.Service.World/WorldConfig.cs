@@ -95,6 +95,9 @@ namespace Codebreak.Service.World
             AGGRESSION_START_TIMEOUT = 60000,
             AGGRESSION_TURN_TIME = 30000;
 
+        public const double
+            TAXCOLLECTOR_XP_RATIO = 0.1;
+
         public const int
             TAXCOLLECTOR_MIN_NAME = 1,
             TAXCOLLECTOR_MAX_NAME = 228,

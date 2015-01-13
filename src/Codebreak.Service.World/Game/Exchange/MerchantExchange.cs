@@ -85,16 +85,15 @@ namespace Codebreak.Service.World.Game.Exchange
             }
 
             var item = Merchant.PersonalShop.GetItem(itemId);
-            if(item == null)
+            if(item == null || quantity > item.Quantity)
             {
-                Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_ALREADY_SOLD));
+                Character.CachedBuffer = true;
+                Character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ITEM_ALREADY_SOLD));
                 SendItemsList();
+                Character.CachedBuffer = false;
                 return;
             }
-
-            if (quantity > item.Quantity)
-                quantity = item.Quantity;
-
+            
             var price = item.MerchantPrice * quantity;
             if(Character.Inventory.Kamas < price)
             {

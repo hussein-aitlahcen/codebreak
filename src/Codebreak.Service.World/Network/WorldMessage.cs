@@ -95,7 +95,7 @@ namespace Codebreak.Service.World.Network
         INFO_AUCTION_TOO_MANY_ITEMS = 59,
         INFO_AUCTION_RARE = 60,
         INFO_AUCTION_ADD_INVALID_TYPE = 61,
-        INFO_AUCTION_ALREADY_SOLD = 64,
+        INFO_ITEM_ALREADY_SOLD = 64,
         INFO_AUCTION_BANK_CREDITED = 65,
         INFO_AUCTION_EXPIRED = 67,
         INFO_AUCTION_LOT_BOUGHT = 68,
@@ -1555,7 +1555,7 @@ namespace Codebreak.Service.World.Network
         /// <param name="experienceFloorNext"></param>
         /// <param name="experience"></param>
         /// <returns></returns>
-        public static string GUILD_GENERAL_INFORMATIONS(bool isActive, int level, int experienceFloorCurrent, int experienceFloorNext, long experience)
+        public static string GUILD_GENERAL_INFORMATIONS(bool isActive, int level, long experienceFloorCurrent, long experienceFloorNext, long experience)
         {
             return "gIG" + (isActive ? "1" : "0") + "|" + level + "|" + experienceFloorCurrent + "|" + experience + "|" + experienceFloorNext;
         }

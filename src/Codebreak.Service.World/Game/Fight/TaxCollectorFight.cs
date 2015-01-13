@@ -170,7 +170,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             foreach (var fighter in m_winnersTeam.Fighters)
             {
-                Result.AddResult(fighter, true);
+                Result.AddResult(fighter, FightEndTypeEnum.END_WINNER);
             }
 
             foreach (var player in m_losersFighter.OfType<CharacterEntity>())
@@ -179,7 +179,7 @@ namespace Codebreak.Service.World.Game.Fight
                 player.CellId = player.SavedCellId;
                 player.Life = 1;
 
-                Result.AddResult(player, false);
+                Result.AddResult(player);
             }
         }
 

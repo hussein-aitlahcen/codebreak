@@ -216,7 +216,7 @@ namespace Codebreak.Service.World.Game.Fight
                     character.AddDishonour(dishonour);
                 }
 
-                Result.AddResult(character, true, false, 0, 0, honour, dishonour);
+                Result.AddResult(character, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
             }
 
             foreach (var character in m_losersTeam.Fighters.OfType<CharacterEntity>())
@@ -229,7 +229,7 @@ namespace Codebreak.Service.World.Game.Fight
                         honour = Util.CalculWinHonor(character.Level, m_winnersLevel, m_losersLevel);
                     character.SubstractHonour(honour);
                 }
-                Result.AddResult(character, false, false, 0, 0, -honour, dishonour);
+                Result.AddResult(character, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
 
                 character.MapId = character.SavedMapId;
                 character.CellId = character.SavedCellId;

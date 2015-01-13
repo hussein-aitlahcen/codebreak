@@ -29,7 +29,17 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
-        public long Aggression
+        public long Pvp
+        {
+            get;
+            set;
+        }
+        public int Living
+        {
+            get;
+            set;
+        }
+        public long Guild
         {
             get;
             set;

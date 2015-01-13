@@ -381,7 +381,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                var next = ExperienceManager.Instance.GetFloor(AlignmentLevel + 1, ExperienceTypeEnum.AGGRESSION);
+                var next = ExperienceManager.Instance.GetFloor(AlignmentLevel + 1, ExperienceTypeEnum.PVP);
                 if (next == -1)
                     return Honour;
                 return next;
@@ -395,7 +395,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return ExperienceManager.Instance.GetFloor(AlignmentLevel, ExperienceTypeEnum.AGGRESSION);
+                return ExperienceManager.Instance.GetFloor(AlignmentLevel, ExperienceTypeEnum.PVP);
             }
         }
 
@@ -853,8 +853,11 @@ namespace Codebreak.Service.World.Game.Entity
             RefreshPersonalShopTaxe();
             
             var guildMember = GuildManager.Instance.GetMember(characterDAO.Guild.GuildId, Id);
-            if (guildMember != null && type == EntityTypeEnum.TYPE_CHARACTER)            
-                guildMember.CharacterConnected(this);            
+            if (guildMember != null)
+                if (type == EntityTypeEnum.TYPE_CHARACTER)
+                    guildMember.CharacterConnected(this);
+                else
+                    SetCharacterGuild(guildMember); // Merchant
 
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
@@ -923,7 +926,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 if (!kicked)
                 {
-                    Fight.Result.AddResult(this, false, true);
+                    Fight.Result.AddResult(this, FightEndTypeEnum.END_LOSER, true);
                     switch (Fight.Type)
                     {
                         case FightTypeEnum.TYPE_AGGRESSION:

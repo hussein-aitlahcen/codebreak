@@ -123,13 +123,61 @@ namespace Codebreak.Service.World.Game.Fight
         // end fight calculation
         private long m_winnersMaxLevel;
         private long m_winnersTotalLevel;
-        private long m_winnersTotalPP;
+        private long m_droppersTotalPP;
         private long m_losersTotalLevel;
         private long m_kamasLoot;
         private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops;
-        private IEnumerable<FighterBase> m_droppers;
+        private List<FighterBase> m_droppers;
         private List<InventoryItemDAO> m_itemLoot;
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitCalculs()
+        {
+            m_winnersMaxLevel = m_winnersFighter.Max(fighter => fighter.Level);
+            m_winnersTotalLevel = m_winnersFighter.Sum(fighter => fighter.Level);
+            m_losersTotalLevel = m_losersFighter.Sum(fighter => fighter.Level);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private void InitDroppers()
+        {
+            m_droppers = new List<FighterBase>();
+            m_droppers.AddRange(m_winnersTeam.Fighters.Where
+                (
+                    fighter => fighter.Type == EntityTypeEnum.TYPE_CHARACTER ||
+                    (fighter.Invocator != null && fighter.Invocator.Type == EntityTypeEnum.TYPE_CHARACTER && ((MonsterEntity)fighter).Grade.MonsterId == WorldConfig.LIVING_CHEST_ID)
+                ));
+            if (Map.SubArea.TaxCollector != null)
+                m_droppers.Add(Map.SubArea.TaxCollector); // Perco
+            m_droppersTotalPP = m_droppers.Sum(fighter => fighter.Prospection); // Total PP
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitLoots()
+        {
+            m_itemLoot = new List<InventoryItemDAO>();
+            foreach (var monster in m_losersFighter.OfType<MonsterEntity>())
+            {
+                m_kamasLoot += (long)Math.Round(Util.Next(monster.Grade.Template.MinKamas, monster.Grade.Template.MaxKamas) * WorldConfig.RATE_KAMAS);
+                m_itemLoot.AddRange(DropManager.Instance.GetDrops(m_droppersTotalPP, monster, WorldConfig.RATE_DROP));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitDistribution()
+        {
+            m_distributedDrops = DropManager.Instance.Distribute(m_droppers, m_droppersTotalPP, m_itemLoot);  
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -138,22 +186,10 @@ namespace Codebreak.Service.World.Game.Fight
             // Player win
             if (m_winnersTeam == Team0)
             {
-                m_winnersMaxLevel = m_winnersFighter.Max(fighter => fighter.Level);
-                m_winnersTotalLevel = m_winnersFighter.Sum(fighter => fighter.Level);
-                m_losersTotalLevel = m_losersFighter.Sum(fighter => fighter.Level);
-                m_itemLoot = new List<InventoryItemDAO>();
-                m_droppers = m_winnersTeam.Fighters.Where(
-                    fighter => fighter.Type == EntityTypeEnum.TYPE_CHARACTER ||
-                    (fighter.Invocator != null && fighter.Invocator.Type == EntityTypeEnum.TYPE_CHARACTER && ((MonsterEntity)fighter).Grade.MonsterId == WorldConfig.LIVING_CHEST_ID));
-                m_winnersTotalPP = m_droppers.Sum(fighter => fighter.Prospection);
-
-                foreach (var monster in m_losersFighter.OfType<MonsterEntity>())
-                {
-                    m_kamasLoot += (long)Math.Round(Util.Next(monster.Grade.Template.MinKamas, monster.Grade.Template.MaxKamas) * WorldConfig.RATE_KAMAS);
-                    m_itemLoot.AddRange(DropManager.Instance.GetDrops(m_winnersTotalPP, monster, WorldConfig.RATE_DROP));
-                }
-                
-                m_distributedDrops = DropManager.Instance.Distribute(m_droppers, m_winnersTotalPP, m_itemLoot);           
+                InitCalculs();
+                InitDroppers();
+                InitLoots();
+                InitDistribution();        
             }
             else // Monsters win
             {
@@ -165,6 +201,7 @@ namespace Codebreak.Service.World.Game.Fight
                 }
             }
         }
+
 
         /// <summary>
         /// 
@@ -180,50 +217,70 @@ namespace Codebreak.Service.World.Game.Fight
                     long kamas = 0;
                     var items = m_distributedDrops[fighter];
                     Dictionary<int, int> itemCount = new Dictionary<int, int>();
-                    
-                    if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+
+                    fighter.CachedBuffer = true;
+                                        
+                    switch(fighter.Type)
                     {
-                        var character = fighter as CharacterEntity;
-                        exp = Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter.OfType<CharacterEntity>(), fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom));
-                        kamas = Util.CalculPVMKamas(m_kamasLoot, fighter.Prospection, m_winnersTotalPP);
-                        character.CachedBuffer = true;
-                        foreach (var item in items)
-                        {
-                            character.Inventory.AddItem(item);
-                            if (!itemCount.ContainsKey(item.TemplateId))
-                                itemCount.Add(item.TemplateId, 0);
-                            itemCount[item.TemplateId]++;
-                        }
-                        character.Inventory.AddKamas(kamas);
-                        character.AddExperience(exp);
-                        character.CachedBuffer = false;
-                    }
-                    else
-                    {
-                        foreach (var item in items)
-                        {
-                            if (!itemCount.ContainsKey(item.TemplateId))
-                                itemCount.Add(item.TemplateId, 0);
-                            itemCount[item.TemplateId]++;
-                            if(fighter.Invocator != null)                            
-                                fighter.Invocator.Inventory.AddItem(item);                            
-                        }
+                        case EntityTypeEnum.TYPE_CHARACTER:
+                            var character = fighter as CharacterEntity;
+                            exp = Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_droppers, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom));
+                            kamas = Util.CalculPVMKamas(m_kamasLoot, fighter.Prospection, m_droppersTotalPP);
+                            character.Inventory.AddKamas(kamas);
+                            character.AddExperience(exp);
+                            foreach (var item in items)
+                            {
+                                character.Inventory.AddItem(item);
+                                if (!itemCount.ContainsKey(item.TemplateId))
+                                    itemCount.Add(item.TemplateId, 0);
+                                itemCount[item.TemplateId]++;
+                            }
+                            Result.AddResult(fighter, FightEndTypeEnum.END_WINNER, false, kamas, exp, 0, 0, 0, 0, itemCount);
+                            break;
+
+                        case EntityTypeEnum.TYPE_MONSTER_FIGHTER:
+                            foreach (var item in items)
+                            {
+                                if(fighter.Invocator != null && fighter.Invocator.Inventory != null)
+                                    fighter.Invocator.Inventory.AddItem(item);
+                                if (!itemCount.ContainsKey(item.TemplateId))
+                                    itemCount.Add(item.TemplateId, 0);
+                                itemCount[item.TemplateId]++;
+                            }
+                            Result.AddResult(fighter, FightEndTypeEnum.END_WINNER, false, kamas, exp, 0, 0, 0, 0, itemCount);
+                            break;
+
+                        case EntityTypeEnum.TYPE_TAX_COLLECTOR:
+                            var taxCollector = fighter as TaxCollectorEntity;
+                            exp = Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom));          
+                            kamas = Util.CalculPVMKamas(m_kamasLoot, fighter.Prospection, m_droppersTotalPP);
+                            taxCollector.Storage.AddKamas(kamas);
+                            taxCollector.ExperienceGathered += exp;
+                            foreach (var item in items)
+                            {
+                                taxCollector.Storage.AddItem(item);
+                                if (!itemCount.ContainsKey(item.TemplateId))
+                                    itemCount.Add(item.TemplateId, 0);
+                                itemCount[item.TemplateId]++;
+                            }
+                            Result.AddResult(fighter, FightEndTypeEnum.END_TAXCOLLECTOR, false, kamas, 0, 0, 0, exp, 0, itemCount);
+                            break;
                     }
 
-                    Result.AddResult(fighter, true, false, kamas, exp, 0, 0, 0, 0, itemCount);
+                    fighter.CachedBuffer = false;
                 }
             }
             else
             {
                 foreach (var player in m_winnersFighter)
                 {
-                    Result.AddResult(player, true);
+                    Result.AddResult(player, FightEndTypeEnum.END_WINNER);
                 }
             }
 
             foreach (var fighter in m_losersFighter)
             {
-                Result.AddResult(fighter, false);
+                Result.AddResult(fighter);
             }
         }
 

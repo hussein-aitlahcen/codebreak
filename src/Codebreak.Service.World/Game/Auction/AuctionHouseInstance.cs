@@ -233,7 +233,7 @@ namespace Codebreak.Service.World.Game.Auction
             switch (category.Buy(character, floor, price))
             {
                 case AuctionBuyResultEnum.ALREADY_SOLD:
-                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_ALREADY_SOLD));
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ITEM_ALREADY_SOLD));
                     SendCategoriesByTemplate(character, category.TemplateId);
                     break;
 

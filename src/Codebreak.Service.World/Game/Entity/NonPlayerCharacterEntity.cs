@@ -23,10 +23,10 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return m_npcRecord.Template.Name;
+                return m_npcRecord.Template.ChatName;
             }
         }
-
+                
         /// <summary>
         /// 
         /// </summary>
@@ -182,6 +182,7 @@ namespace Codebreak.Service.World.Game.Entity
         private NpcInstanceDAO m_npcRecord;
         private NpcQuestionDAO m_initialQuestion;
         private StringBuilder m_cachedShopListInformations;
+        private string m_chatName;
         private int m_beginTradeSpeakIndex, m_buyTradeSpeakIndex, m_leaveTradeSpealIndex;
 
         /// <summary>
@@ -211,7 +212,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public override bool CanBeMoved()
         {
-            return ShopItems.Count == 0 && AuctionHouse == null && Rewards.Count == 0;
+            return AuctionHouse == null && m_npcRecord.Template.GfxID <= 121;
         }
 
         /// <summary>

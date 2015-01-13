@@ -87,7 +87,11 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public volatile bool IsActive;
+        public bool IsActive
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// 
@@ -163,6 +167,46 @@ namespace Codebreak.Service.World.Game.Guild
             get
             {
                 return m_record.BackgroundColor;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long Experience
+        {
+            get
+            {
+                return m_record.Experience;
+            }
+            set
+            {
+                m_record.Experience = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long ExperienceFloorCurrent
+        {
+            get
+            {
+                return ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.GUILD);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public long ExperienceFloorNext
+        {
+            get
+            {
+                var next = ExperienceManager.Instance.GetFloor(Level + 1, ExperienceTypeEnum.GUILD);
+                if (next == -1)
+                    return Experience;
+                return next;
             }
         }
 
@@ -323,8 +367,54 @@ namespace Codebreak.Service.World.Game.Guild
             {
                 RemoveTaxCollector(taxCollector);
 
+                AddExperience(taxCollector.ExperienceGathered);
+
                 SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_FARMED(taxCollector, member.Name));
             });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="experience"></param>
+        public void AddExperience(long experience)
+        {
+            AddMessage(() =>
+                {
+                    Experience += experience;
+
+                    var currentLevel = Level;
+
+                    while (Experience > ExperienceFloorNext)
+                        LevelUp();
+
+                    if (Level != currentLevel)                    
+                        base.Dispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(IsActive, Level, ExperienceFloorCurrent, ExperienceFloorNext, Experience));                    
+                });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void LevelUp()
+        {
+            Level++;
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddInitiative, 100);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddVitality, 100);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddWisdom,  4);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddStrength, 1);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddIntelligence, 1);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddAgility, 1);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddChance, 1);
+            Statistics.BaseStatistics.AddBase(EffectEnum.AddDamage, 1);
+            if ((Level % 2) == 0)
+            {
+                Statistics.BaseStatistics.AddBase(EffectEnum.AddReduceDamagePercentAir, 1);
+                Statistics.BaseStatistics.AddBase(EffectEnum.AddReduceDamagePercentWater, 1);
+                Statistics.BaseStatistics.AddBase(EffectEnum.AddReduceDamagePercentFire, 1);
+                Statistics.BaseStatistics.AddBase(EffectEnum.AddReduceDamagePercentEarth, 1);
+                Statistics.BaseStatistics.AddBase(EffectEnum.AddReduceDamagePercentNeutral, 1);
+            }
         }
 
         /// <summary>
@@ -886,7 +976,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void SendGeneralInformations(GuildMember member)
         {            
-            member.Dispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(IsActive, Level, 0, 0, 0));   
+            member.Dispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(IsActive, Level, ExperienceFloorCurrent, ExperienceFloorNext, Experience));   
         }
     }
 }

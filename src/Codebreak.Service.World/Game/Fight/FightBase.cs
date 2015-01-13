@@ -96,6 +96,16 @@ namespace Codebreak.Service.World.Game.Fight
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public enum FightEndTypeEnum
+    {
+        END_LOSER = 0,
+        END_WINNER = 2,
+        END_TAXCOLLECTOR = 5,
+    }
+
+    /// <summary>
     /// /
     /// </summary>
     public sealed class FightEndResult : IDisposable
@@ -163,7 +173,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="mountxp"></param>
         /// <param name="items"></param>
         public void AddResult(FighterBase fighter,
-            bool win,
+            FightEndTypeEnum type = FightEndTypeEnum.END_LOSER,
             bool leave = false,
             long kamas = 0,
             long exp = 0,
@@ -173,7 +183,7 @@ namespace Codebreak.Service.World.Game.Fight
             long mountxp = 0,
             Dictionary<int, int> items = null)
         {
-            m_message.Append('|').Append(win ? '2' : '0').Append(';');
+            m_message.Append('|').Append((int)type).Append(';');                   
             m_message.Append(fighter.Id).Append(';');
             m_message.Append(fighter.Name).Append(';');
             m_message.Append(fighter.Level).Append(';');
@@ -202,7 +212,7 @@ namespace Codebreak.Service.World.Game.Fight
                         m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
                     else
                         m_message.Append("").Append(';');
-                    m_message.Append(kamas).Append(';');
+                    m_message.Append(kamas > 0 ? kamas.ToString() : "").Append(';');
                     m_message.Append(character.ExperienceFloorCurrent).Append(';');
                     m_message.Append(character.Experience).Append(';');
                     m_message.Append(character.ExperienceFloorNext).Append(';');
@@ -211,26 +221,38 @@ namespace Codebreak.Service.World.Game.Fight
             }
             else
             {
-                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                switch(fighter.Type)
                 {
-                    var character = (CharacterEntity)fighter;
-                    m_message.Append(character.ExperienceFloorCurrent).Append(';');
-                    m_message.Append(character.Experience).Append(';');
-                    m_message.Append(character.ExperienceFloorNext).Append(';');
-                    m_message.Append(exp).Append(';');
-                    m_message.Append(guildxp).Append(';');
-                    m_message.Append(mountxp).Append(';');
-                }
-                else
-                {
-                    m_message.Append(";;;;;;");
+                    case EntityTypeEnum.TYPE_CHARACTER:                        
+                        var character = (CharacterEntity)fighter;
+                        m_message.Append(character.ExperienceFloorCurrent).Append(';');
+                        m_message.Append(character.Experience).Append(';');
+                        m_message.Append(character.ExperienceFloorNext).Append(';');
+                        m_message.Append(exp).Append(';');
+                        m_message.Append(guildxp).Append(';');
+                        m_message.Append(mountxp).Append(';');
+                        break;
+
+                    case EntityTypeEnum.TYPE_TAX_COLLECTOR:
+                        var taxCollector = (TaxCollectorEntity)fighter;
+                        m_message.Append(taxCollector.Level).Append(';');
+                        m_message.Append("").Append(';');
+                        m_message.Append("").Append(';');
+                        m_message.Append("").Append(';');
+                        m_message.Append(guildxp).Append(';');
+                        m_message.Append("").Append(';');
+                        break;
+                        
+                    default:
+                        m_message.Append(";;;;;;");
+                        break;
                 }
 
                 if (items != null && items.Count > 0)
                     m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
                 else
                     m_message.Append("").Append(';');
-                m_message.Append(kamas);
+                m_message.Append(kamas > 0 ? kamas.ToString() : "");
             }
         }
 
