@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game.Spell;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public Dictionary<EffectEnum, Dictionary<string, string>> ActionsList
         {
             get

@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repository;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -41,9 +42,16 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private NpcTemplateDAO m_template;
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public NpcTemplateDAO Template
         {
             get

@@ -375,6 +375,7 @@ namespace Codebreak.Service.World.Database.Structure
         private CharacterGuildDAO m_guild;
 
         [Write(false)]
+        [DoNotNotify]
         public string HexColor1
         {
             get
@@ -386,6 +387,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
+        [DoNotNotify]
         public string HexColor2
         {
             get
@@ -397,6 +399,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
+        [DoNotNotify]
         public string HexColor3
         {
             get
@@ -408,6 +411,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
+        [DoNotNotify]
         public CharacterAlignmentDAO Alignment
         {
             get
@@ -419,6 +423,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
+        [DoNotNotify]
         public CharacterGuildDAO Guild
         {
             get

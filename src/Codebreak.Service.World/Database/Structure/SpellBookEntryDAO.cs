@@ -64,6 +64,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public SpellTemplate Template
         {
             get
@@ -78,6 +79,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public SpellLevel SpellLevel
         {
             get

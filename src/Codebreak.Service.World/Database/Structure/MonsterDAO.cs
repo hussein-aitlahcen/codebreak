@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Database;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
+        [DoNotNotify]
         public int MinKamas
         {
             get
@@ -77,6 +80,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
+        [DoNotNotify]
         public int MaxKamas
         {
             get
@@ -91,6 +96,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
+        [Write(false)]
+        [DoNotNotify]
         public IEnumerable<MonsterGradeDAO> Grades
         {
             get
@@ -102,6 +109,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
+        [DoNotNotify]
         public IEnumerable<DropTemplateDAO> Drops
         {
             get

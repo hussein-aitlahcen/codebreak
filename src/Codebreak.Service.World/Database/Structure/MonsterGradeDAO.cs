@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Entity;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,6 +129,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
+        [Write(false)]
+        [DoNotNotify]
         public MonsterDAO Template
         {
             get

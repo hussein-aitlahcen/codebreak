@@ -2,6 +2,7 @@
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Network;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -105,6 +106,7 @@ namespace Codebreak.Service.World.Database.Structure
         private List<int> m_fightTeam0Cells, m_fightTeam1Cells;
 
         [Write(false)]
+        [DoNotNotify]
         public List<int> FightTeam0Cells
         {
             get
@@ -125,6 +127,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
+        [DoNotNotify]
         public List<int> FightTeam1Cells
         {
             get

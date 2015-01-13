@@ -110,6 +110,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         /// <returns></returns>
         [Write(false)]
+        [DoNotNotify]
         public GuildStatistics Statistics
         {
             get

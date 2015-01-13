@@ -107,6 +107,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public ItemTemplateDAO Template
         {
             get
@@ -126,6 +127,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public GenericStats Statistics
         {
             get
@@ -151,6 +153,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         /// <returns></returns>
         [Write(false)]
+        [DoNotNotify]
         public ItemSlotEnum Slot
         {
             get
@@ -164,6 +167,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         /// <returns></returns>        
         [Write(false)]
+        [DoNotNotify]
         public bool IsEquiped
         {
             get

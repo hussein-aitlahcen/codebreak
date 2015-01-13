@@ -327,12 +327,19 @@ namespace Codebreak.Service.World.Game.Map
         {
             m_movementInitialized = true;
             foreach (var entity in m_entityById.Values.Where(entry => entry.CanBeMoved()))
+                InitEntityMovement(entity);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        private void InitEntityMovement(EntityBase entity)
+        {
+            entity.AddTimer(Util.Next(1000, 10000), () =>
             {
-                entity.AddTimer(Util.Next(1000, 10000), () =>
-                    {
-                        entity.AddTimer(Util.Next(15000, 25000), () => MoveEntity(entity));
-                    }, true);
-            }
+                entity.AddTimer(Util.Next(15000, 25000), () => MoveEntity(entity));
+            }, true);
         }
 
         /// <summary>
@@ -340,30 +347,30 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public void MoveEntity(EntityBase entity)
         {
-            // Move only if there is a player on the map
-            if (m_playerCount > 0)
-            {
-                var cellId = entity.LastCellId;
-                if (cellId < 1)
-                    cellId = GetNearestMovementCell(entity.CellId);
+            // Move only if there is a player on the map, else it is useless
+            if (m_playerCount == 0)
+                return;
 
-                if (entity.LastCellId == 0)
-                    entity.LastCellId = entity.CellId;
-                else
-                    entity.LastCellId = 0;
+            var cellId = entity.LastCellId;
+            if (cellId < 1)
+                cellId = GetNearestMovementCell(entity.CellId);
 
-                if (cellId < 1)
-                    return;
+            if (entity.LastCellId == 0)
+                entity.LastCellId = entity.CellId;
+            else
+                entity.LastCellId = 0;
 
-                AddLinkedMessages
-                (
-                    () => Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false)),
-                    () =>
-                    {
-                        entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT);
-                    }
-                );
-            }
+            if (cellId < 1)
+                return;
+
+            AddLinkedMessages
+            (
+                () => Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false)),
+                () =>
+                {
+                    entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT);
+                }
+            );            
         }
 
         /// <summary>
@@ -496,10 +503,7 @@ namespace Codebreak.Service.World.Game.Map
                     }
                     else if(entity.CanBeMoved() && m_movementInitialized)
                     {
-                        entity.AddTimer(Util.Next(1000, 10000), () =>
-                        {
-                            entity.AddTimer(Util.Next(15000, 25000), () => MoveEntity(entity));
-                        }, true);
+                        InitEntityMovement(entity);
                     }
                 }
             });

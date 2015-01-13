@@ -6,6 +6,7 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Database.Repository;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -468,6 +469,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public ItemSetDAO Set
         {
             get
@@ -490,6 +492,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         /// <returns></returns>
         [Write(false)]
+        [DoNotNotify]
         public string RangeType
         {
             get
@@ -521,6 +524,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public List<Tuple<EffectEnum, int, int>> GenericEffects
         {
             get
@@ -535,6 +539,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
+        [DoNotNotify]
         public List<Tuple<EffectEnum, int, int>> WeaponEffects
         {
             get
@@ -567,7 +572,7 @@ namespace Codebreak.Service.World.Database.Structure
                         else
                             m_effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
                     }
-                    catch(Exception ex)
+                    catch
                     {
                         Logger.Info("Error while parsing item template effect. Id=" + Id + " Effect=" + effect);
                     }

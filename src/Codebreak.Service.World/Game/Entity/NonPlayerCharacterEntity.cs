@@ -182,7 +182,6 @@ namespace Codebreak.Service.World.Game.Entity
         private NpcInstanceDAO m_npcRecord;
         private NpcQuestionDAO m_initialQuestion;
         private StringBuilder m_cachedShopListInformations;
-        private string m_chatName;
         private int m_beginTradeSpeakIndex, m_buyTradeSpeakIndex, m_leaveTradeSpealIndex;
 
         /// <summary>

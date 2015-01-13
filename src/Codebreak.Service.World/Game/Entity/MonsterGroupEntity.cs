@@ -185,17 +185,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             return true;
         }
-
-        public override void StartAction(Action.GameActionTypeEnum actionType)
-        {
-            switch(actionType)
-            {
-                case GameActionTypeEnum.MAP:
-                    break;
-            }
-            base.StartAction(actionType);
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

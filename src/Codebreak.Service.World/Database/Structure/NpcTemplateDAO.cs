@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using PropertyChanged;
 
 namespace Codebreak.Service.World.Database.Structure
 {
@@ -254,6 +255,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         private string m_chatName;
+        [Write(false)]
+        [DoNotNotify]
         public string ChatName
         {
             get
@@ -278,6 +281,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         /// <returns></returns>
         [Write(false)]
+        [DoNotNotify]
         public List<RewardEntry> Rewards
         {
             get
@@ -301,6 +305,8 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         /// <returns></returns>
+        [Write(false)]
+        [DoNotNotify]
         public List<ItemTemplateDAO> ShopList
         {
             get
