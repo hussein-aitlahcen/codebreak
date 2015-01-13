@@ -159,19 +159,7 @@ namespace Codebreak.Service.World.Game.Map
                 return m_subArea;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<long, EntityBase> m_entityById;
-        private Dictionary<string, EntityBase> m_entityByName;
-        private Dictionary<int, MapCell> m_cellById;
-        private List<MapCell> m_cells;
-        private SubAreaInstance m_subArea;
-        private long m_nextMonsterId;
-        private bool m_movementInitialized;
-        private int m_playerCount;
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -238,7 +226,20 @@ namespace Codebreak.Service.World.Game.Map
                 return freeCell.Id;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<long, EntityBase> m_entityById;
+        private Dictionary<string, EntityBase> m_entityByName;
+        private Dictionary<int, MapCell> m_cellById;
+        private List<MapCell> m_cells;
+        private SubAreaInstance m_subArea;
+        private long m_nextMonsterId;
+        private bool m_movementInitialized;
+        private bool m_subInstance;
+        private int m_playerCount;
+
         /// <summary>
         /// 
         /// </summary>
@@ -251,8 +252,9 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="data"></param>
         /// <param name="dataKey"></param>
         /// <param name="createTime"></param>
-        public MapInstance(int subAreaId, int id, int x, int y, int width, int height, string data, string dataKey, string createTime, List<int> f0teamCells, List<int> f1teamCells)
+        public MapInstance(int subAreaId, int id, int x, int y, int width, int height, string data, string dataKey, string createTime, List<int> f0teamCells, List<int> f1teamCells, bool subInstance = false)
         {
+            m_subInstance = subInstance;
             m_movementInitialized = false;
             m_cells = new List<MapCell>();
             m_cellById = new Dictionary<int, MapCell>();
@@ -273,6 +275,9 @@ namespace Codebreak.Service.World.Game.Map
             FightTeam1Cells = f1teamCells;
             FightManager = new FightManager(this);
 
+            SubArea.AddUpdatable(this);
+            SubArea.SafeAddHandler(base.Dispatch);
+
             Initialize();
         }
         
@@ -282,7 +287,6 @@ namespace Codebreak.Service.World.Game.Map
         private void Initialize()
         {
             var triggers = MapTriggerRepository.Instance.GetTriggers(Id);
-
             for (int i = 0; i < Data.Length; i += 10)
             {
                 string currentCell = Data.Substring(i, 10);
@@ -314,10 +318,23 @@ namespace Codebreak.Service.World.Game.Map
                 }
                 m_cellById.Add(id, cell);
                 m_cells.Add(cell);
+            }            
 
-            }
-            
             Pathmaker = new Pathmaker(this);
+            int nextNpcId = 1;
+            foreach(var npc in NpcManager.Instance.GetByMapId(Id))
+            {
+                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MapInstance Clone()
+        {
+            return new MapInstance(SubAreaId, Id, X, Y, Width, Height, Data, DataKey, CreateTime, FightTeam0Cells, FightTeam1Cells, true);
         }
 
         /// <summary>
@@ -465,8 +482,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public void SpawnMonsters(int cellId)
         {
-            var monsters = new MonsterGroupEntity(m_nextMonsterId--, Id, cellId);
-            monsters.StartAction(GameActionTypeEnum.MAP);
+            SpawnEntity(new MonsterGroupEntity(m_nextMonsterId--, Id, cellId));            
         }
 
         /// <summary>
@@ -483,6 +499,9 @@ namespace Codebreak.Service.World.Game.Map
 
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
                     base.AddUpdatable(entity);
+
+                    if (m_subInstance)
+                        entity.SetMap(this);
 
                     if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                     {
@@ -519,15 +538,21 @@ namespace Codebreak.Service.World.Game.Map
             {
                 m_entityById.Remove(entity.Id);
 
+                base.RemoveUpdatable(entity);
+                base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, entity));
+
                 if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
                     base.RemoveHandler(entity.Dispatch);
                     m_entityByName.Remove(entity.Name.ToLower());
                     m_playerCount--;
-                }
 
-                base.RemoveUpdatable(entity);
-                base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, entity));
+                    // Multiple instance destroying
+                    if(m_playerCount == 0 && m_subInstance)
+                    {
+                        base.AddMessage(() => Dispose());
+                    }
+                }
             }
         }
 
@@ -622,6 +647,30 @@ namespace Codebreak.Service.World.Game.Map
             }
 
             entity.CellId = cellId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public new void Dispose()
+        {
+            SubArea.RemoveUpdatable(this);
+            SubArea.RemoveHandler(base.Dispatch);
+            
+            m_entityById.Clear();
+            m_entityById = null;
+
+            m_entityByName.Clear();
+            m_entityByName = null;
+
+            m_cells.Clear();
+            m_cells = null;
+
+            m_subArea = null;
+
+            Pathmaker = null;
+
+            base.Dispose();
         }
     }    
 }

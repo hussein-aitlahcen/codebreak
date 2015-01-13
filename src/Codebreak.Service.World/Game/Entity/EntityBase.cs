@@ -368,6 +368,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="map"></param>
+        public void SetMap(MapInstance map)
+        {
+            m_map = map;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="channelType"></param>
         /// <param name="channel"></param>
         public void SetChatChannel(ChatChannelEnum channelType, Func<Action<string>> channel)
@@ -522,7 +531,6 @@ namespace Codebreak.Service.World.Game.Entity
         public virtual void Move(MovementPath path)
         {
             CurrentAction = new GameMapMovementAction(this, path);
-
             StartAction(GameActionTypeEnum.MAP_MOVEMENT);
         }
 
@@ -534,7 +542,6 @@ namespace Codebreak.Service.World.Game.Entity
         public virtual void Teleport(int nextMap, int nextCell)
         {
             CurrentAction = new GameMapTeleportAction(this, nextMap, nextCell);
-
             StartAction(GameActionTypeEnum.MAP_TELEPORT);
         }                    
 
@@ -563,8 +570,7 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.MAP_TELEPORT:
                     StopAction(GameActionTypeEnum.MAP);
                     StopAction(GameActionTypeEnum.MAP_TELEPORT);
-                    if(Map != null)
-                        Map.AddUpdatable(this);
+                    WorldService.Instance.AddUpdatable(this);
                     break;
             }
         }

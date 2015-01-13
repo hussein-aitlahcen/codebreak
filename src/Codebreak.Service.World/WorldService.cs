@@ -97,8 +97,8 @@ namespace Codebreak.Service.World
             ClientManager.Instance.Initialize();
             SpellManager.Instance.Initialize();
             AreaManager.Instance.Initialize();
-            MapManager.Instance.Initialize();
             NpcManager.Instance.Initialize();
+            MapManager.Instance.Initialize();
             AuctionHouseManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             EntityManager.Instance.Initialize();

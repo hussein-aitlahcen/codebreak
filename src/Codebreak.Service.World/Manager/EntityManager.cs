@@ -22,9 +22,7 @@ namespace Codebreak.Service.World.Manager
         private Dictionary<long, CharacterEntity> m_characterByAccount;
         private Dictionary<string, CharacterEntity> m_characterByPseudo;
         private Dictionary<string, CharacterEntity> m_characterByName;
-
-        private Dictionary<long, NonPlayerCharacterEntity> m_npcById;
-
+        
         private Dictionary<long, TaxCollectorEntity> m_taxCollectorById;
 
         /// <summary>
@@ -49,9 +47,7 @@ namespace Codebreak.Service.World.Manager
             m_characterByAccount = new Dictionary<long, CharacterEntity>();
             m_characterByName = new Dictionary<string, CharacterEntity>();
             m_characterByPseudo = new Dictionary<string, CharacterEntity>();
-
-            m_npcById = new Dictionary<long, NonPlayerCharacterEntity>();
-
+            
             m_taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
         }
 
@@ -64,21 +60,7 @@ namespace Codebreak.Service.World.Manager
                 if(character.Merchant)                
                     EntityManager.Instance.CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="npcDAO"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public NonPlayerCharacterEntity CreateNpc(NpcInstanceDAO npcDAO)
-        {
-            var npc = new NonPlayerCharacterEntity(npcDAO, npcDAO.Id);
-            npc.StartAction(GameActionTypeEnum.MAP);
-            m_npcById.Add(npc.Id, npc);
-            return npc;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -310,18 +292,6 @@ namespace Codebreak.Service.World.Manager
             if (m_merchantByName.ContainsKey(name))
                 return m_merchantByName[name];
             return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public NonPlayerCharacterEntity GetNpcById(long id)
-        {
-            if (m_npcById.ContainsKey(id))
-                return m_npcById[id];
-            return null;
-        }      
+        }    
     }
 }
