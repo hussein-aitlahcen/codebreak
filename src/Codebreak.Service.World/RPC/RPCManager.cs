@@ -139,7 +139,7 @@ namespace Codebreak.Service.World.RPC
         /// <param name="state"></param>
         public void UpdateState(GameStateEnum state)
         {
-            Send(new GameStateUpdateMessage(state));
+            Send(new StateUpdateMessage(state));
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Codebreak.Service.World.RPC
         /// <param name="id"></param>
         public void AccountDisconnected(long id)
         {
-            Send(new GameAccountDisconnected(id));
+            Send(new AccountDisconnected(id));
         }
 
         /// <summary>
@@ -159,13 +159,17 @@ namespace Codebreak.Service.World.RPC
         {
             switch(message.Id)
             {
-                case (int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIALRESULT:
+                case (int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIAL_RESULT:
                     if(((AuthentificationResult)message).Result == AuthResultEnum.SUCCESS)
                     {
                         AuthState = AuthStateEnum.SUCCESS;
                         Logger.Info("RPCManager authentification success.");
-                        Send(new GameIdUpdateMessage(WorldConfig.GAME_ID));
-                        Send(new GameStateUpdateMessage(GameStateEnum.ONLINE));
+                        Send(new IdUpdateMessage(WorldConfig.GAME_ID));
+                        Send(new StateUpdateMessage(GameStateEnum.ONLINE));
+                        WorldService.Instance.AddMessage(() => 
+                            {
+                                Send(new AccountConnectedList(ClientManager.Instance.ConnectedAccounts));
+                            });
                     }
                     else
                     {
@@ -174,7 +178,7 @@ namespace Codebreak.Service.World.RPC
                     }
                     break;
 
-                case (int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET:
+                case (int)MessageIdEnum.AUTH_TO_WORLD_GAME_TICKET:
                     var ticketMessage = (GameTicketMessage)message;
                     ClientManager.Instance.AddTicket
                         (

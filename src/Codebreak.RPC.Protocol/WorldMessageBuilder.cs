@@ -12,8 +12,8 @@ namespace Codebreak.RPC.Protocol
         /// </summary>
         public WorldMessageBuilder()
         {
-            base.Register<AuthentificationResult>((int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIALRESULT);
-            base.Register<GameTicketMessage>((int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET);
+            base.Register<AuthentificationResult>((int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIAL_RESULT);
+            base.Register<GameTicketMessage>((int)MessageIdEnum.AUTH_TO_WORLD_GAME_TICKET);
         }
     }
 }

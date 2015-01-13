@@ -14,7 +14,7 @@ namespace Codebreak.RPC.Protocol
         {
             get 
             {
-                return (int)MessageIdEnum.AUTH_TO_WORLD_GAMETICKET;
+                return (int)MessageIdEnum.AUTH_TO_WORLD_GAME_TICKET;
             }
         }
 

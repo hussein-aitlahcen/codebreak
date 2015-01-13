@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameAccountDisconnected : RPCMessageBase
+    public sealed class StateUpdateMessage : RPCMessageBase
     {
         /// <summary>
         /// 
@@ -14,32 +14,32 @@ namespace Codebreak.RPC.Protocol
         {
             get 
             { 
-                return (int)MessageIdEnum.WORLD_TO_AUTH_GAMEACCOUNTDISCONNECTED;
+                return (int)MessageIdEnum.WORLD_TO_AUTH_STATE_UPDATE; 
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public long AccountId
+        public GameStateEnum State
         {
             get;
             private set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="accountId"></param>
-        public GameAccountDisconnected(long accountId)
+        /// <param name="state"></param>
+        public StateUpdateMessage(GameStateEnum state)
         {
-            AccountId = accountId;
+            State = state;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public GameAccountDisconnected()
+        public StateUpdateMessage()
         {
         }
 
@@ -48,7 +48,7 @@ namespace Codebreak.RPC.Protocol
         /// </summary>
         public override void Deserialize()
         {
-            AccountId = base.ReadLong();
+            State = (GameStateEnum)base.ReadInt();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Codebreak.RPC.Protocol
         /// </summary>
         public override void Serialize()
         {
-            base.WriteLong(AccountId);
+            base.WriteInt((int)State);
         }
     }
 }

@@ -37,6 +37,17 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<long> ConnectedAccounts
+        {
+            get
+            {
+                return m_clientByAccount.Keys;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ClientManager()
         {
             m_accountByTicket = new Dictionary<string, AccountTicket>();

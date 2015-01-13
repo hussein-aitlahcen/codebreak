@@ -40,11 +40,9 @@ namespace Codebreak.RPC.Service
         /// <returns></returns>
         public RPCMessageBase BuildMessage(int messageId, byte[] data)
         {
-            if(!m_messageById.ContainsKey(messageId))
-            {
+            if(!m_messageById.ContainsKey(messageId))            
                 throw new NotImplementedException(string.Format("RPCMessageBuilder::BuildMessage unknow messageId : {0}", messageId));
-            }
-
+            
             var message = m_messageById[messageId]();
             message.SetData(data);
             message.Deserialize();

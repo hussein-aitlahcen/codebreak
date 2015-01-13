@@ -14,7 +14,7 @@ namespace Codebreak.RPC.Protocol
         {
             get 
             { 
-                return (int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIALRESULT;
+                return (int)MessageIdEnum.AUTH_TO_WORLD_CREDENTIAL_RESULT;
             }
         }
 

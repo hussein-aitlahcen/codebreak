@@ -13,9 +13,10 @@ namespace Codebreak.RPC.Protocol
         public AuthMessageBuilder()
         {
             base.Register<AuthentificationMessage>((int)MessageIdEnum.WORLD_TO_AUTH_CREDENTIAL);
-            base.Register<GameIdUpdateMessage>((int)MessageIdEnum.WORLD_TO_AUTH_GAMEIDUPDATE);
-            base.Register<GameStateUpdateMessage>((int)MessageIdEnum.WORLD_TO_AUTH_GAMESTATEUPDATE);
-            base.Register<GameAccountDisconnected>((int)MessageIdEnum.WORLD_TO_AUTH_GAMEACCOUNTDISCONNECTED);
+            base.Register<IdUpdateMessage>((int)MessageIdEnum.WORLD_TO_AUTH_ID_UPDATE);
+            base.Register<StateUpdateMessage>((int)MessageIdEnum.WORLD_TO_AUTH_STATE_UPDATE);
+            base.Register<AccountDisconnected>((int)MessageIdEnum.WORLD_TO_AUTH_ACCOUNT_DISCONNECTED);
+            base.Register<AccountConnectedList>((int)MessageIdEnum.WORLD_TO_AUTH_ACCOUNT_CONNECTED_LIST);
         }
     }
 }

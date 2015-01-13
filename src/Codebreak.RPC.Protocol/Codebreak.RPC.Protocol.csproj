@@ -45,15 +45,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountConnectedList.cs" />
     <Compile Include="AuthentificationMessage.cs" />
     <Compile Include="AuthentificationResult.cs" />
     <Compile Include="AuthMessageBuilder.cs" />
     <Compile Include="AuthResultEnum.cs" />
     <Compile Include="AuthStateEnum.cs" />
-    <Compile Include="GameAccountDisconnected.cs" />
-    <Compile Include="GameIdUpdateMessage.cs" />
+    <Compile Include="AccountDisconnected.cs" />
+    <Compile Include="IdUpdateMessage.cs" />
     <Compile Include="GameStateEnum.cs" />
-    <Compile Include="GameStateUpdateMessage.cs" />
+    <Compile Include="StateUpdateMessage.cs" />
     <Compile Include="GameTicketMessage.cs" />
     <Compile Include="MessageIdEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

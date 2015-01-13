@@ -27,9 +27,10 @@ namespace Codebreak.Service.Auth.RPC
         public AuthRPCService()
         {
             base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_CREDENTIAL, HandleAuthentification);
-            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_GAMESTATEUPDATE,  HandleGameStateUpdate);
-            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_GAMEIDUPDATE, HandleGameIdUpdate);
-            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_GAMEACCOUNTDISCONNECTED, HandleGameAccountDisconnected);
+            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_STATE_UPDATE,  HandleGameStateUpdate);
+            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_ID_UPDATE, HandleGameIdUpdate);
+            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_ACCOUNT_DISCONNECTED, HandleGameAccountDisconnected);
+            base.RegisterHandler((int)MessageIdEnum.WORLD_TO_AUTH_ACCOUNT_CONNECTED_LIST, HandleAccountConnectedLists);
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace Codebreak.Service.Auth.RPC
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;
 
-            var gameIdUpdateMessage = (GameIdUpdateMessage)message;
+            var gameIdUpdateMessage = (IdUpdateMessage)message;
 
             AuthService.Instance.RegisterWorld(gameIdUpdateMessage.GameId, client);
 
@@ -126,7 +127,7 @@ namespace Codebreak.Service.Auth.RPC
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;
 
-            var state = ((GameStateUpdateMessage)message).State;
+            var state = ((StateUpdateMessage)message).State;
 
             Logger.Info(string.Format("AuthServiceRPC [{0}][{1}] GameState updated to {2}", client.Ip, client.GameId, state));
 
@@ -145,11 +146,28 @@ namespace Codebreak.Service.Auth.RPC
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;
 
-            var accountId = ((GameAccountDisconnected)message).AccountId;
+            var accountId = ((AccountDisconnected)message).AccountId;
             
             Logger.Info(string.Format("AuthServiceRPC [{0}][{1}] GameAccount disconnected accountId={2}", client.Ip, client.GameId, accountId));
 
             AuthService.Instance.AddMessage(() => AuthService.Instance.GameAccountDisconnect(accountId));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        private void HandleAccountConnectedLists(AuthRPCServiceClient client, RPCMessageBase message)
+        {
+            if (client.AuthState != AuthStateEnum.SUCCESS)
+                return;
+
+            var connectedList = (AccountConnectedList)message;
+
+            Logger.Info(string.Format("AuthServiceRPC [{0}][{1}] GameAccount connected list, playerCount={2}", client.Ip, client.GameId, connectedList.ConnectedAccounts.Count));
+
+            AuthService.Instance.AddMessage(() => AuthService.Instance.GameAccountConnected(connectedList.ConnectedAccounts));
         }
     }
 }

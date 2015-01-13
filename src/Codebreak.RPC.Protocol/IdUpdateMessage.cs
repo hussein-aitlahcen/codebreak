@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameIdUpdateMessage : RPCMessageBase
+    public sealed class IdUpdateMessage : RPCMessageBase
     {
         /// <summary>
         /// 
@@ -14,7 +14,7 @@ namespace Codebreak.RPC.Protocol
         {
             get 
             {
-                return (int)MessageIdEnum.WORLD_TO_AUTH_GAMEIDUPDATE;
+                return (int)MessageIdEnum.WORLD_TO_AUTH_ID_UPDATE;
             }
         }
 
@@ -31,7 +31,7 @@ namespace Codebreak.RPC.Protocol
         /// 
         /// </summary>
         /// <param name="gameId"></param>
-        public GameIdUpdateMessage(int gameId)
+        public IdUpdateMessage(int gameId)
         {
             GameId = gameId;
         }
@@ -39,7 +39,7 @@ namespace Codebreak.RPC.Protocol
         /// <summary>
         /// 
         /// </summary>
-        public GameIdUpdateMessage()
+        public IdUpdateMessage()
         {
         }
 

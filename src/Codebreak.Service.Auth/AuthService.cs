@@ -181,6 +181,15 @@ namespace Codebreak.Service.Auth
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="accountId"></param>
+        public void GameAccountConnected(List<long> accounts)
+        {
+            m_clientConnected.AddRange(accounts);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="client"></param>
         public void ClientDisconnected(AuthClient client)
         {
