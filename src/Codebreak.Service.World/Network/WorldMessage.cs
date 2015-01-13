@@ -116,6 +116,8 @@ namespace Codebreak.Service.World.Network
         ERROR_WORLD_SAVING = 164,
         ERROR_WORLD_SAVING_FINISHED = 165,
 
+        ERROR_MAX_INVOCATION_REACHED = 203,
+
         ERROR_PLAYER_AWAY_NOT_INVITABLE = 209,
 
         ERROR_SERVER_BETA = 225,
