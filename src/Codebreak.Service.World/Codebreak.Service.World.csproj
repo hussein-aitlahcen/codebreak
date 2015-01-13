@@ -351,10 +351,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Codebreak.DofusProtocol\Codebreak.DofusProtocol.csproj">
-      <Project>{88B9B04C-EFCB-43EB-891A-002DD5E00B37}</Project>
-      <Name>Codebreak.DofusProtocol</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Codebreak.Framework\Codebreak.Framework.csproj">
       <Project>{F1D9CE36-7F30-43C2-9027-AF08A539C525}</Project>
       <Name>Codebreak.Framework</Name>
