@@ -11,9 +11,9 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class FightTurnProcessor : IDisposable
     {
-        private List<FighterBase> _fighterTurns = new List<FighterBase>();
-        private FighterBase _currentFighter;
-        private int _currentIndex;
+        private List<FighterBase> m_fighterTurns = new List<FighterBase>();
+        private FighterBase m_currentFighter;
+        private int m_currentIndex;
 
         /// <summary>
         /// 
@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             get
             {
-                return _fighterTurns;
+                return m_fighterTurns;
             }
         }
 
@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void SummonFighter(FighterBase fighter)
         {
-            _fighterTurns.Insert(_fighterTurns.IndexOf(fighter.Invocator) + 1, fighter);
+            m_fighterTurns.Insert(m_fighterTurns.IndexOf(fighter.Invocator) + 1, fighter);
         }
 
         /// <summary>
@@ -41,10 +41,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void RemoveFighter(FighterBase fighter)
         {
-            if (_fighterTurns.Contains(fighter))
-                _fighterTurns.Remove(fighter);
-            if (_currentFighter == fighter)
-                _currentIndex--;
+            if (m_fighterTurns.Contains(fighter))
+                m_fighterTurns.Remove(fighter);
+            if (m_currentFighter == fighter)
+                m_currentIndex--;
         }
 
         /// <summary>
@@ -69,25 +69,25 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if (OppositeFighter.Initiative > fighter.Initiative)
                     {
-                        _fighterTurns.Add(OppositeFighter);
-                        _fighterTurns.Add(fighter);
+                        m_fighterTurns.Add(OppositeFighter);
+                        m_fighterTurns.Add(fighter);
                     }
                     else
                     {
-                        _fighterTurns.Add(fighter);
-                        _fighterTurns.Add(OppositeFighter);
+                        m_fighterTurns.Add(fighter);
+                        m_fighterTurns.Add(OppositeFighter);
                     }
                 }
                 else
                 {
-                    _fighterTurns.Add(fighter);
+                    m_fighterTurns.Add(fighter);
                 }
             }
 
             foreach (var Fighter in team2)
             {
-                if (!_fighterTurns.Contains(Fighter))
-                    _fighterTurns.Add(Fighter);
+                if (!m_fighterTurns.Contains(Fighter))
+                    m_fighterTurns.Add(Fighter);
             }
         }
 
@@ -101,20 +101,20 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 do
                 {
-                    if (_currentFighter == null || _currentIndex >= _fighterTurns.Count - 1)
+                    if (m_currentFighter == null || m_currentIndex >= m_fighterTurns.Count - 1)
                     {
-                        _currentFighter = _fighterTurns[0];
-                        _currentIndex = 0;
+                        m_currentFighter = m_fighterTurns[0];
+                        m_currentIndex = 0;
                     }
                     else
                     {
-                        _currentIndex++;
-                        _currentFighter = _fighterTurns[_currentIndex];
+                        m_currentIndex++;
+                        m_currentFighter = m_fighterTurns[m_currentIndex];
                     }
                 }
-                while (!_currentFighter.CanBeginTurn);
+                while (!m_currentFighter.CanBeginTurn);
 
-                return _currentFighter;
+                return m_currentFighter;
             }
         }
 
@@ -123,9 +123,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void Dispose()
         {
-            _fighterTurns.Clear();
-            _fighterTurns = null;
-            _currentFighter = null;
+            m_fighterTurns.Clear();
+            m_fighterTurns = null;
+            m_currentFighter = null;
         }
     }
 }

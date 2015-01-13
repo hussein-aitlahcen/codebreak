@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -115,6 +116,17 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int AgeBonus
+        {
+            get
+            {
+                return (int)((UpdateTime / 1000) / WorldConfig.PVM_MONSTER_STAR_TIME);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private StringBuilder m_serializedMapInformations;
 
         /// <summary>
@@ -158,6 +170,16 @@ namespace Codebreak.Service.World.Game.Entity
             return true;
         }
 
+        public override void StartAction(Action.GameActionTypeEnum actionType)
+        {
+            switch(actionType)
+            {
+                case GameActionTypeEnum.MAP:
+                    break;
+            }
+            base.StartAction(actionType);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -172,12 +194,11 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case OperatorEnum.OPERATOR_ADD:
-                case OperatorEnum.OPERATOR_REFRESH:         
-           
+                case OperatorEnum.OPERATOR_REFRESH: 
                     // cell/orientation/bonus may change
                     message.Append(CellId).Append(";");
                     message.Append(Orientation).Append(';');
-                    message.Append('0').Append(';');
+                    message.Append(AgeBonus).Append(';');
                     if (m_serializedMapInformations == null)
                     {
                         string mobIds = string.Join(",", m_monsters.Select(monster => monster.Grade.MonsterId.ToString()));

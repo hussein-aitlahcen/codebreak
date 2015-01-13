@@ -37,7 +37,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             var nearestEnnemis = Pathfinding.GetEnnemiesNear(fighter.Fight, fighter.Team, fighter.Cell.Id);
             if(nearestEnnemis.Count() == 0)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }

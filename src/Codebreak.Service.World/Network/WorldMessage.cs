@@ -87,9 +87,11 @@ namespace Codebreak.Service.World.Network
         INFO_FIGHT_TOGGLE_HELP = 103,
         INFO_FIGHT_UNTOGGLE_HELP = 104,
         INFO_FIGHT_DISCONNECT_TURN_REMAIN = 162,
+        INFO_FIGHT_CHALLENGE_FAILED_DUE_TO = 188,
+
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
-
+        
         INFO_CONTRACT_FAILED = 179,
         
         INFO_AUCTION_TOO_MANY_ITEMS = 59,

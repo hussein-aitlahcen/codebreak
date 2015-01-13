@@ -37,7 +37,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             var nearestFighters = Pathfinding.GetFightersNear(fighter.Fight, fighter.Cell.Id);
             if(nearestFighters.Where(f => f.Team == fighter.Team).Count() == 0)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }

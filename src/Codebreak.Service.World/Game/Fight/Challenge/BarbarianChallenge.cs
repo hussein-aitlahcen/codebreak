@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="castInfos"></param>
         public override void CheckSpell(FighterBase fighter, Effect.CastInfos castInfos)
         {
-            base.OnFailed();
+            base.OnFailed(fighter.Name);
         }
     }
 }

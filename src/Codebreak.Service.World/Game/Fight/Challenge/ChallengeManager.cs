@@ -37,36 +37,44 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        private List<Func<ChallengeBase>> _challengeGenerator;
+        private List<Func<ChallengeBase>> m_challengeGenerator;
         
         /// <summary>
         /// 
         /// </summary>
         public ChallengeManager()
         {
-            _challengeGenerator = new List<Func<ChallengeBase>>();
-            _challengeGenerator.Add(() => new ZombieChallenge());
-            _challengeGenerator.Add(() => new AnachoriteChallenge());
-            _challengeGenerator.Add(() => new AbnegationChallenge());
-            _challengeGenerator.Add(() => new BarbarianChallenge());
-            _challengeGenerator.Add(() => new CirculateChallenge());
-            _challengeGenerator.Add(() => new TightsChallenge());
-            _challengeGenerator.Add(() => new AppointedVoluntaryChallenge());
-            _challengeGenerator.Add(() => new BoldChallenge());
-            _challengeGenerator.Add(() => new StatueChallenge());
-            _challengeGenerator.Add(() => new ReprieveChallenge());
-            _challengeGenerator.Add(() => new SightLostChallenge());
-            _challengeGenerator.Add(() => new SurvivorChallenge());
-            _challengeGenerator.Add(() => new PetulantChallenge());
+            m_challengeGenerator = new List<Func<ChallengeBase>>();
+            m_challengeGenerator.Add(() => new ZombieChallenge());
+            m_challengeGenerator.Add(() => new AnachoriteChallenge());
+            m_challengeGenerator.Add(() => new AbnegationChallenge());
+            m_challengeGenerator.Add(() => new BarbarianChallenge());
+            m_challengeGenerator.Add(() => new CirculateChallenge());
+            m_challengeGenerator.Add(() => new TightsChallenge());
+            m_challengeGenerator.Add(() => new AppointedVoluntaryChallenge());
+            m_challengeGenerator.Add(() => new BoldChallenge());
+            m_challengeGenerator.Add(() => new StatueChallenge());
+            m_challengeGenerator.Add(() => new ReprieveChallenge());
+            m_challengeGenerator.Add(() => new SightLostChallenge());
+            m_challengeGenerator.Add(() => new SurvivorChallenge());
+            m_challengeGenerator.Add(() => new PetulantChallenge());
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public ChallengeBase Generate()
+        public List<ChallengeBase> Generate(int length)
         {
-            return _challengeGenerator[Util.Next(0, _challengeGenerator.Count)]();
+            List<ChallengeBase> challenges = new List<ChallengeBase>();
+            while (challenges.Count < length)
+            {
+                var challenge = m_challengeGenerator[Util.Next(0, m_challengeGenerator.Count)]();
+                if (challenges.Any(chall => chall.Id == challenge.Id))
+                    continue;
+                challenges.Add(challenge);
+            }
+            return challenges;
         }
     }
 }

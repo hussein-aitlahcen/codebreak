@@ -31,8 +31,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void AppearForAll()
         {
+            m_fight.CachedBuffer = true;
             m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, Cell.Id, Length, Color));
             m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
+            m_fight.CachedBuffer = false;
         }
 
         /// <summary>
@@ -48,8 +50,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void DisappearForAll()
         {
+            m_fight.CachedBuffer = true;
             m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, Cell.Id, Length, Color));
             m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
+            m_fight.CachedBuffer = false;
         }
     }
 }

@@ -32,8 +32,10 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Hide = false;
 
+            m_fight.CachedBuffer = true;
             m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, Cell.Id, Length, Color));
             m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id, ";Haaaaaaaaz3005;"));
+            m_fight.CachedBuffer = false;
         }
 
         /// <summary>
@@ -42,8 +44,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="dispatcher"></param>
         public override void Appear(MessageDispatcher dispatcher)
         {
+            dispatcher.CachedBuffer = true;
             dispatcher.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_ADD, Cell.Id, Length, Color));
             dispatcher.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id, ";Haaaaaaaaz3005;"));
+            dispatcher.CachedBuffer = false;
         }
 
         /// <summary>
@@ -53,13 +57,17 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (Hide)
             {
+                m_caster.Team.CachedBuffer = true;
                 m_caster.Team.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, Cell.Id, Length, Color));
                 m_caster.Team.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
+                m_caster.Team.CachedBuffer = false;
             }
             else
             {
+                m_fight.CachedBuffer = true;
                 m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE(OperatorEnum.OPERATOR_REMOVE, Cell.Id, Length, Color));
                 m_fight.Dispatch(WorldMessage.GAME_DATA_ZONE_CREATE(Cell.Id));
+                m_fight.CachedBuffer = false;
             }
         }
     }

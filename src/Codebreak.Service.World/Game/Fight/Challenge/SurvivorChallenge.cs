@@ -35,7 +35,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         {
             if(fighter.Team.AliveFighters.Count() != fighter.Team.Fighters.Count)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }

@@ -38,11 +38,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="beginCell"></param>
         /// <param name="endCell"></param>
         /// <param name="length"></param>
-        public override void CheckMovement(int beginCell, int endCell, int length)
+        public override void CheckMovement(FighterBase fighter, int beginCell, int endCell, int length)
         {
             if(length != 1 || _hasMoved)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
             else
             {
@@ -57,7 +57,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public override void EndTurn(FighterBase fighter)
         {
             if (!_hasMoved)
-                OnFailed();
+                OnFailed(fighter.Name);
             _hasMoved = false;
         }
     }

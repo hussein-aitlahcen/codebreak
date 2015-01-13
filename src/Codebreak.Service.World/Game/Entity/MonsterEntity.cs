@@ -113,7 +113,7 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -148,7 +148,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             message.Append(Cell.Id).Append(';');
             message.Append(Orientation).Append(';');
-            message.Append('0').Append(';');
+            message.Append("0").Append(';');
             message.Append(Id).Append(';');
             message.Append(Name).Append(';');
             message.Append((int)EntityTypeEnum.TYPE_MONSTER_FIGHTER).Append(';');

@@ -2415,7 +2415,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
 
-                CurrentFighter.Team.CheckMovement(fighter.Cell.Id, movementPath.EndCell, movementPath.MovementLength);
+                CurrentFighter.Team.CheckMovement(fighter, fighter.Cell.Id, movementPath.EndCell, movementPath.MovementLength);
 
                 fighter.Move(movementPath);
             });

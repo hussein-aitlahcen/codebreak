@@ -151,9 +151,9 @@ namespace Codebreak.Service.World
         /// <param name="wisdom"></param>
         /// <param name="ageBonus"></param>
         /// <returns></returns>
-        public static long CalculPVMExperienceTaxCollector(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int ageBonus = 0)
+        public static long CalculPVMExperienceTaxCollector(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
         {
-            return (long)(CalculPVMExperience(monsters, droppers, level, wisdom, ageBonus) * WorldConfig.TAXCOLLECTOR_XP_RATIO);
+            return (long)(CalculPVMExperience(monsters, droppers, level, wisdom, challengeBonus, ageBonus) * WorldConfig.TAXCOLLECTOR_XP_RATIO);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Codebreak.Service.World
         /// <param name="wisdom"></param>
         /// <param name="ageBonus"></param>
         /// <returns></returns>
-        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int ageBonus = 0)
+        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
         {
             var monstersExperience = monsters.Sum(monster => monster.Grade.Experience);
             var monstersTotalLevel = monsters.Sum(monster => monster.Grade.Level);
@@ -193,7 +193,7 @@ namespace Codebreak.Service.World
             var f = Math.Truncate(b / 100 * d);
             var g = Math.Truncate(c / 100 * e);
             var h = wisdom;
-            var i = Math.Max(1, ageBonus / 100.0);
+            var i = Math.Max(1, ageBonus / 100.0) + challengeBonus;
             var j = Math.Truncate((g * (100 + h) / 100.0) * i);
             var k = WorldConfig.RATE_XP;
 

@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public override void EndTurn(FighterBase fighter)
         {
             if (fighter.Cell.Id != _cellId)
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
         }
     }
 }

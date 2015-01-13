@@ -139,7 +139,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="beginCell"></param>
         /// <param name="endCell"></param>
         /// <param name="length"></param>
-        public virtual void CheckMovement(int beginCell, int endCell, int length)
+        public virtual void CheckMovement(FighterBase fighter, int beginCell, int endCell, int length)
         {
         }
 
@@ -178,13 +178,17 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnFailed()
+        public virtual void OnFailed(string name = "")
         {
             if(!Success && !Failed)
             {
                 Success = false;
                 Failed = true;
+                base.CachedBuffer = true;
                 base.Dispatch(WorldMessage.FIGHT_CHALLENGE_FAILED(Id));
+                if(name != "")                
+                    base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_CHALLENGE_FAILED_DUE_TO, name));                
+                base.CachedBuffer = false;
             }
         }
 

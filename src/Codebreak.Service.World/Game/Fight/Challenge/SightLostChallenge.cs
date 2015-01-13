@@ -39,7 +39,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
                 castInfos.Target != null &&
                 castInfos.Target.Team != fighter.Team)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }

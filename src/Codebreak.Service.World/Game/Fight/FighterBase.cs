@@ -499,7 +499,9 @@ namespace Codebreak.Service.World.Game.Fight
                         case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
                             if (Type == EntityTypeEnum.TYPE_CHARACTER)
-                                Life = 1; // 
+                                Life = 1;
+                            else
+                                Life = MaxLife;
                             break;
                     }
                 }

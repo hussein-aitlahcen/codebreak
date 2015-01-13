@@ -242,6 +242,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<ChallengeBase> SucceededChallenges
+        {
+            get
+            {
+                return m_challenges.Where(challenge => challenge.Success);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<FightOptionTypeEnum, bool> m_blockedOption;
         private List<FighterBase> m_fighters;
         private List<FightCell> m_places;
@@ -402,8 +413,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void BeginTurn(FighterBase fighter)
         {
-            foreach (var challenge in m_challenges)
-                challenge.BeginTurn(fighter);
+            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                foreach (var challenge in m_challenges)
+                    challenge.BeginTurn(fighter);
         }
 
         /// <summary>
@@ -413,8 +425,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="castInfos"></param>
         public void CheckSpell(FighterBase fighter, CastInfos castInfos)
         {
-            foreach (var challenge in m_challenges)
-                challenge.CheckSpell(fighter, castInfos);
+            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                foreach (var challenge in m_challenges)
+                    challenge.CheckSpell(fighter, castInfos);
         }
 
         /// <summary>
@@ -422,10 +435,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="movementLength"></param>
-        public void CheckMovement(int beginCell, int endCell, int movementLength)
+        public void CheckMovement(FighterBase fighter, int beginCell, int endCell, int movementLength)
         {
-            foreach (var challenge in m_challenges)
-                challenge.CheckMovement(beginCell, endCell, movementLength);
+            if(fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                foreach (var challenge in m_challenges)
+                    challenge.CheckMovement(fighter, beginCell, endCell, movementLength);
         }
 
         /// <summary>
@@ -435,8 +449,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="weapon"></param>
         public void CheckWeapon(FighterBase fighter, ItemTemplateDAO weapon)
         {
-            foreach (var challenge in m_challenges)
-                challenge.CheckWeapon(fighter, weapon);
+            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                foreach (var challenge in m_challenges)
+                    challenge.CheckWeapon(fighter, weapon);
         }
 
         /// <summary>
@@ -445,8 +460,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void CheckDeath(FighterBase fighter)
         {
-            foreach (var challenge in m_challenges)
-                challenge.CheckDeath(fighter);
+            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                foreach (var challenge in m_challenges)
+                    challenge.CheckDeath(fighter);
         }
 
         /// <summary>
@@ -455,8 +471,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void EndTurn(FighterBase fighter)
         {
-            foreach (var challenge in m_challenges)
-                challenge.EndTurn(fighter);
+            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                foreach (var challenge in m_challenges)
+                    challenge.EndTurn(fighter);
         }
 
         /// <summary>
@@ -465,7 +482,7 @@ namespace Codebreak.Service.World.Game.Fight
         public void FightEnd()
         {
             foreach (var challenge in m_challenges)
-                if (!challenge.Success && !challenge.Failed)
+                if (!challenge.Success && !challenge.Failed && HasSomeoneAlive)
                     challenge.OnSuccess();
         }
 

@@ -74,7 +74,9 @@ namespace Codebreak.Service.World
             PVT_START_TIMEOUT = 60000,
             PVT_TURN_TIME = 30000;
 
-        public const int            
+        public const int           
+            PVM_MONSTER_STAR_TIME = 60,
+            PVM_CHALLENGE_COUNT = 3,
             PVM_START_TIMEOUT = 60000,
             PVM_TURN_TIME = 30000;
 

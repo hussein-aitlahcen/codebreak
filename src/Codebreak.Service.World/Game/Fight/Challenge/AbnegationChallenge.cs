@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Codebreak.Service.World.Game.Fight.Effect;
+using Codebreak.Service.World.Game.Spell;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,11 +34,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="castInfos"></param>
-        public override void CheckSpell(FighterBase fighter, Effect.CastInfos castInfos)
+        public override void CheckSpell(FighterBase fighter, CastInfos castInfos)
         {
-            if(castInfos.EffectType == Spell.EffectEnum.AddLife && castInfos.Target != null && castInfos.Target.Team == fighter.Team)
+            if(castInfos.EffectType == EffectEnum.AddLife && castInfos.Target != null && castInfos.Target.Team == fighter.Team)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }

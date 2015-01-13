@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         {
             if(fighter.Team.Fighters.Count == 1)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             var aroundFighters = Pathfinding.GetFightersNear(fighter.Fight, fighter.Cell.Id);
             if(aroundFighters.Where(f => f.Team == fighter.Team).Count() > 0)
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }

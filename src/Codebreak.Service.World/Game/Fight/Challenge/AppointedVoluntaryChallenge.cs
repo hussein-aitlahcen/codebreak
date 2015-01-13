@@ -18,7 +18,6 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public AppointedVoluntaryChallenge()
             : base(ChallengeTypeEnum.APPOINTED_VOLUNTARY)
         {
-
             BasicDropBonus = 10;
             BasicXpBonus = 10;
 
@@ -35,7 +34,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="fighter"></param>
         public override void BeginTurn(FighterBase fighter)
         {
-            if(TargetId == 0)
+            if(TargetId == 0 && fighter.Team.OpponentTeam.HasSomeoneAlive)
             {
                 var randomIndex = Util.Next(0, fighter.Team.OpponentTeam.AliveFighters.Count());
                 var target = fighter.Team.OpponentTeam.AliveFighters.ElementAt(randomIndex);
@@ -57,7 +56,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             }
             else
             {
-                base.OnFailed();
+                base.OnFailed(fighter.Name);
             }
         }
     }
