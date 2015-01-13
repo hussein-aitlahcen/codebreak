@@ -570,6 +570,7 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.MAP_TELEPORT:
                     StopAction(GameActionTypeEnum.MAP);
                     StopAction(GameActionTypeEnum.MAP_TELEPORT);
+                    // Switch back to world context
                     WorldService.Instance.AddUpdatable(this);
                     break;
             }
