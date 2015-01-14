@@ -440,9 +440,9 @@ namespace Codebreak.Service.World.Network
         /// 
         /// </summary>
         /// <returns></returns>
-        public static string ACCOUNT_RIGHTS(int rights)
+        public static string ACCOUNT_RESTRICTIONS(int restrictions)
         {
-            return "AR" + Util.EncodeBase36(rights);
+            return "AR" + Util.EncodeBase36(restrictions);
         }
 
         /// <summary>

@@ -955,7 +955,7 @@ namespace Codebreak.Service.World.Game.Entity
                 base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
             }
 
-            base.SafeDispatch(WorldMessage.ACCOUNT_RIGHTS(Restriction));
+            base.SafeDispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
         }
 
         /// <summary>
@@ -971,6 +971,7 @@ namespace Codebreak.Service.World.Game.Entity
             RefreshOnMap();
 
             base.CachedBuffer = true;
+            base.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_JUST_REBORN));
             base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
             base.CachedBuffer = false;
@@ -1764,6 +1765,7 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.FIGHT:
+                    StopEmote();
                     FrameManager.RemoveFrame(MapFrame.Instance);
                     if (Fight.Map.Id != MapId)
                     {
@@ -1772,7 +1774,6 @@ namespace Codebreak.Service.World.Game.Entity
                         FrameManager.AddFrame(GameInformationFrame.Instance);
                     }
                     FrameManager.AddFrame(FightPlacementFrame.Instance);
-                    StopRegeneration();
                     break;
             }
         }

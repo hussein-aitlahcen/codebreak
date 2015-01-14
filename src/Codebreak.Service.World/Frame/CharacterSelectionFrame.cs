@@ -124,7 +124,7 @@ namespace Codebreak.Service.World.Frame
                     client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
                 client.CurrentCharacter.Dispatch(WorldMessage.EMOTES_LIST(client.CurrentCharacter.EmoteCapacity));
                 client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
-                client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
+                client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(client.CurrentCharacter.Restriction));
                 client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
                 client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
                 client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
@@ -435,7 +435,7 @@ namespace Codebreak.Service.World.Frame
                         client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
                     client.CurrentCharacter.Dispatch(WorldMessage.EMOTES_LIST(client.CurrentCharacter.EmoteCapacity));
                     client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
-                    client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RIGHTS(client.CurrentCharacter.Restriction));
+                    client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(client.CurrentCharacter.Restriction));
                     client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
                     if (client.CurrentCharacter.GuildMember != null)
                         client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.GuildMember.Guild, client.CurrentCharacter.GuildMember.Power));
