@@ -1730,7 +1730,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 case GameActionTypeEnum.MAP_TELEPORT:
                     StopEmote(); 
-                    Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
+                    base.Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
                     break;
 
                 case GameActionTypeEnum.MAP:
@@ -1832,7 +1832,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 case GameActionTypeEnum.MAP_TELEPORT:
                     FrameManager.AddFrame(GameInformationFrame.Instance);
-                    Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
+                    base.Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
 
                 case GameActionTypeEnum.WAYPOINT:
@@ -2014,7 +2014,7 @@ namespace Codebreak.Service.World.Game.Entity
             message.Append(Level).Append(';');
             message.Append(Initiative).Append(';');
             message.Append(Prospection).Append(';');
-            message.Append(0); // TODO : What is that shit ?
+            message.Append(0); // 'Side' Wtf ?
         }
 
         /// <summary>
@@ -2036,7 +2036,7 @@ namespace Codebreak.Service.World.Game.Entity
             }
             else
             {
-                message.Append("?;");
+                message.Append("?;"); // fight state
                 message.Append(Name).Append(';'); // name
                 message.Append("?;"); // level
                 message.Append("-1;"); // align
@@ -2068,7 +2068,7 @@ namespace Codebreak.Service.World.Game.Entity
             }
             else
             {
-                message.Append("?;");
+                message.Append("?;"); // fight state
                 message.Append(Name).Append(';'); // name
                 message.Append("?;"); // level
                 message.Append("-1;"); // align

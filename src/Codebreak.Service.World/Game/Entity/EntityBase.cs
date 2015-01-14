@@ -536,8 +536,8 @@ namespace Codebreak.Service.World.Game.Entity
         {
             CurrentAction = new GameMapTeleportAction(this, nextMap, nextCell);
             StartAction(GameActionTypeEnum.MAP_TELEPORT);
-        }                    
-
+        }
+        
         /// <summary>
         /// 
         /// </summary>
