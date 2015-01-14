@@ -1725,12 +1725,16 @@ namespace Codebreak.Service.World.Game.Fight
             if(spellLevel.InLine && !Pathfinding.InLine(Map, cellId, castCell))            
                 return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
 
-            if(spellLevel.Effects.Any(effect => effect.TypeEnum == EffectEnum.Invocation))
+            if (spellLevel.Effects != null)
             {
-                var invocationCount = fighter.Team.AliveFighters.Count(f => f.Invocator == fighter);
-                if(invocationCount >= fighter.Statistics.GetTotal(EffectEnum.AddInvocationMax))
+                if (spellLevel.Effects.Any(effect => effect.TypeEnum == EffectEnum.Invocation))
                 {
-                    return FightSpellLaunchResultEnum.RESULT_ERROR;
+                    var invocationCount = fighter.Team.AliveFighters.Count(f => f.Invocator == fighter);
+                    if (invocationCount >= fighter.Statistics.GetTotal(EffectEnum.AddInvocationMax))
+                    {
+                        fighter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_INVOCATION_REACHED, fighter.Statistics.GetTotal(EffectEnum.AddInvocationMax)));
+                        return FightSpellLaunchResultEnum.RESULT_ERROR;
+                    }
                 }
             }
 

@@ -2,6 +2,7 @@
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Auction;
 using Codebreak.Service.World.Game.Exchange;
+using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -140,10 +141,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public AuctionHouseInstance AuctionHouse
         {
-            get
-            {
-                return m_auctionInstance;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -178,7 +177,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private AuctionHouseInstance m_auctionInstance;
         private NpcInstanceDAO m_npcRecord;
         private NpcQuestionDAO m_initialQuestion;
         private StringBuilder m_cachedShopListInformations;
@@ -203,6 +201,8 @@ namespace Codebreak.Service.World.Game.Entity
 
             ShopItems = new List<ItemTemplateDAO>();
             ShopItems.AddRange(npcDAO.Template.ShopList);
+
+            AuctionHouse = AuctionHouseManager.Instance.GetByNpcId(m_npcRecord.Id);
         }
 
         /// <summary>
@@ -213,16 +213,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             return AuctionHouse == null && m_npcRecord.Template.GfxID <= 121;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="instance"></param>
-        public void SetAuctionHouse(AuctionHouseInstance instance)
-        {
-            m_auctionInstance = instance;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

@@ -12,6 +12,11 @@ namespace Codebreak.Service.World
     /// </summary>
     public static class WorldConfig
     {
+        public static int[] MULTIPLE_INSTANCE_MAP_ID = 
+        {
+            7411,
+        };
+
         public static string[] NPC_BEGIN_TRADE_SPEAK = 
         {
             "Encore un client, que désirez vous {0} ?",

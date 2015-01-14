@@ -17,14 +17,16 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, AuctionHouseInstance> m_auctionHouses;
+        private Dictionary<int, AuctionHouseInstance> m_auctionHousesById;
+        private Dictionary<int, AuctionHouseInstance> m_auctionHouseByNpcId;
 
         /// <summary>
         /// 
         /// </summary>
         public AuctionHouseManager()
         {
-            m_auctionHouses = new Dictionary<int, AuctionHouseInstance>();       
+            m_auctionHousesById = new Dictionary<int, AuctionHouseInstance>();
+            m_auctionHouseByNpcId = new Dictionary<int, AuctionHouseInstance>();
         }
 
         /// <summary>
@@ -35,15 +37,27 @@ namespace Codebreak.Service.World.Manager
             foreach (var auctionHouseDao in AuctionHouseRepository.Instance.GetAll())
             {
                 var auctionHouse = new AuctionHouseInstance(auctionHouseDao);
-                m_auctionHouses.Add(auctionHouseDao.Id, auctionHouse);
-                EntityManager.Instance.GetNpcById(auctionHouseDao.NpcId).SetAuctionHouse(auctionHouse);
+                m_auctionHousesById.Add(auctionHouseDao.Id, auctionHouse);
+                m_auctionHouseByNpcId.Add(auctionHouseDao.NpcId, auctionHouse);
             }
 
             foreach (var auctionHouseAllowedTypeDao in AuctionHouseAllowedTypeRepository.Instance.GetAll())
-                m_auctionHouses[auctionHouseAllowedTypeDao.AuctionHouseId].AddAllowedType(auctionHouseAllowedTypeDao.TemplateId);
+                m_auctionHousesById[auctionHouseAllowedTypeDao.AuctionHouseId].AddAllowedType(auctionHouseAllowedTypeDao.TemplateId);
 
             foreach (var auctionHouseEntry in AuctionHouseEntryRepository.Instance.GetAll())
-                m_auctionHouses[auctionHouseEntry.AuctionHouseId].Add(new AuctionEntry(auctionHouseEntry));     
+                m_auctionHousesById[auctionHouseEntry.AuctionHouseId].Add(new AuctionEntry(auctionHouseEntry));     
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="npcId"></param>
+        /// <returns></returns>
+        public AuctionHouseInstance GetByNpcId(int npcId)
+        {
+            if (m_auctionHouseByNpcId.ContainsKey(npcId))
+                return m_auctionHouseByNpcId[npcId];
+            return null;
         }
     }
 }

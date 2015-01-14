@@ -84,10 +84,6 @@ namespace Codebreak.Service.World.Game.Spell
                 if(spellBookEntry != null)
                     m_spellById.Add(spellId, spellBookEntry);
             }
-            else
-            {
-                m_spellById[spellId].Level = level;
-            }
         }
 
         /// <summary>

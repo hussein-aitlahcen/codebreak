@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Frame
 
                     WorldService.Instance.RemoveUpdatable(character);
 
-                    character.StartAction(Game.Action.GameActionTypeEnum.MAP);
+                    character.StartAction(GameActionTypeEnum.MAP);
                 });
         }
     }

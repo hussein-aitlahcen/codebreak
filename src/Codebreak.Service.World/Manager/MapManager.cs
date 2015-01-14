@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Map;
@@ -29,15 +30,8 @@ namespace Codebreak.Service.World.Manager
         public void Initialize()
         {
             foreach(var mapDAO in MapRepository.Instance.GetAll())
-            {
-                var instance = new MapInstance(mapDAO.SubAreaId, mapDAO.Id, mapDAO.X, mapDAO.Y, mapDAO.Width, mapDAO.Height, mapDAO.Data, mapDAO.DataKey, mapDAO.CreateTime, mapDAO.FightTeam0Cells, mapDAO.FightTeam1Cells);
-
-                instance.SubArea.AddUpdatable(instance);
-                instance.SubArea.SafeAddHandler(instance.Dispatch);
-
-                m_mapById.Add(instance.Id, instance);
-            }
-
+                m_mapById.Add(mapDAO.Id, new MapInstance(mapDAO.SubAreaId, mapDAO.Id, mapDAO.X, mapDAO.Y, mapDAO.Width, mapDAO.Height, mapDAO.Data, mapDAO.DataKey, mapDAO.CreateTime, mapDAO.FightTeam0Cells, mapDAO.FightTeam1Cells));
+            
             Logger.Info("MapManager : " + m_mapById.Count + " MapInstance loaded.");
         }
 
@@ -49,7 +43,10 @@ namespace Codebreak.Service.World.Manager
         public MapInstance GetById(int id)
         {
             if (m_mapById.ContainsKey(id))
-                return m_mapById[id];
+                if (WorldConfig.MULTIPLE_INSTANCE_MAP_ID.Contains(id))
+                    return m_mapById[id].Clone();
+                else
+                    return m_mapById[id];
             return null;
         }
     }
