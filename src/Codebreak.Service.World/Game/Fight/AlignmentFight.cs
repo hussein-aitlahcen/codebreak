@@ -231,7 +231,6 @@ namespace Codebreak.Service.World.Game.Fight
                 }
 
                 Result.AddResult(player, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
-                player.OnLoseFight();          
             }
         }
 

@@ -418,6 +418,12 @@ namespace Codebreak.Service.World.Game.Entity
         {
             switch(actionType)
             {
+                case GameActionTypeEnum.FIGHT_AGGRESSION:
+                    return ((CurrentAction == null || CurrentAction.IsFinished)
+                        || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT)
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_ASSAULT)
+                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ASSAULT);
+
                 case GameActionTypeEnum.SKILL_USE:
                     return ((CurrentAction == null || CurrentAction.IsFinished) 
                         || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT)

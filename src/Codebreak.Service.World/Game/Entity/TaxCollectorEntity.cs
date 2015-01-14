@@ -233,22 +233,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="actionType"></param>
-        /// <param name="args"></param>
-        public override void StopAction(GameActionTypeEnum actionType, params object[] args)
-        {
-            switch(actionType)
-            {
-                case GameActionTypeEnum.MAP:
-
-                    break;
-            }
-            base.StopAction(actionType, args);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public override bool CanBeMoved()
         {

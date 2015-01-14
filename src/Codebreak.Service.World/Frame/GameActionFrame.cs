@@ -247,7 +247,13 @@ namespace Codebreak.Service.World.Frame
             }
 
             var victim = (CharacterEntity)distantEntity;
-            if (!victim.CanGameAction(GameActionTypeEnum.FIGHT) && !victim.HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ASSAULT))            
+            if (!victim.CanGameAction(GameActionTypeEnum.FIGHT_AGGRESSION))
+            {
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            if (!victim.CanGameAction(GameActionTypeEnum.FIGHT))
                 victim.AbortAction(victim.CurrentAction.Type);
 
             // Active l'alignement de force s'il ne l'est pas.

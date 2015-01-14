@@ -200,13 +200,6 @@ namespace Codebreak.Service.World.Game.Fight
                 InitLoots();
                 InitDistribution();        
             }
-            else // Monsters win
-            {
-                foreach (var player in m_losersFighter.OfType<CharacterEntity>())
-                {
-                    player.OnLoseFight();     
-                }
-            }
         }
 
 

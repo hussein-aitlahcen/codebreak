@@ -168,7 +168,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            foreach (var fighter in m_winnersTeam.Fighters)
+            foreach (var fighter in m_winnersFighter)
             {
                 Result.AddResult(fighter, FightEndTypeEnum.END_WINNER);
             }
@@ -176,7 +176,6 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var player in m_losersFighter.OfType<CharacterEntity>())
             {
                 Result.AddResult(player);
-                player.OnLoseFight();
             }
         }
 

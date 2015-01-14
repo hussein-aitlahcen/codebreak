@@ -976,7 +976,8 @@ namespace Codebreak.Service.World.Game.Entity
         {
             SkinBase = WorldConfig.GHOST_SKIN_ID;
             CheckRestrictions();
-            RefreshOnMap();
+            if (!DisableAlignment())
+                RefreshOnMap();
 
             base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
         }
@@ -997,7 +998,7 @@ namespace Codebreak.Service.World.Game.Entity
                 CellId = SavedCellId;
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1011,18 +1012,58 @@ namespace Codebreak.Service.World.Game.Entity
             Energy -= energyLost;
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ENERGY_LOST, energyLost));
 
-            if(Energy == 0)
+            if (Energy == 0)
             {
                 SkinBase = (BreedId * 10) + 3;
                 CheckRestrictions();
                 base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
-            else if(Energy < 1000)
+            else if (Energy < 1000)
             {
                 base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_ENERGY_LOW, Energy));
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="win"></param>
+        public override void EndFight(bool win = false)
+        {
+            if (!IsSpectating)
+            {
+                if (IsFighterDead)
+                {
+                    switch (Fight.Type)
+                    {
+                        // On rend la vie aux joueurs en pvp
+                        case FightTypeEnum.TYPE_CHALLENGE:
+                            Life = 1;
+                            break;
+
+                        case FightTypeEnum.TYPE_AGGRESSION:
+                        case FightTypeEnum.TYPE_PVM:
+                        case FightTypeEnum.TYPE_PVT:
+                            Life = 1;
+                            break;
+                    }
+                }
+                if(!win)
+                {
+                    switch (Fight.Type)
+                    {
+                        case FightTypeEnum.TYPE_AGGRESSION:
+                        case FightTypeEnum.TYPE_PVM:
+                        case FightTypeEnum.TYPE_PVT:
+                            OnLoseFight();
+                            break;
+                    }
+                }
+            }
+
+            base.EndFight(win);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1092,6 +1133,7 @@ namespace Codebreak.Service.World.Game.Entity
                         case FightTypeEnum.TYPE_AGGRESSION:
                         case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
+                            Life = 1;
                             OnLoseFight();
                             break;
                     }
@@ -1302,24 +1344,27 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void DisableAlignment()
+        public bool DisableAlignment(bool force = false)
         {
             if (!AlignmentEnabled)
             {
                 Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
+                return false;
             }
             
             if(Dishonour > 0)
             {
                 Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
+                return false;
             }
 
             AlignmentEnabled = false;
-            SubstractHonour((Honour / 100) * 5);
+            if(!force)
+                SubstractHonour((Honour / 100) * 5);
             base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
+
+            return true;
         }
 
         /// <summary>
