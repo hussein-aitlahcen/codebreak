@@ -210,6 +210,8 @@ namespace Codebreak.Service.World.Game.Job
         SKILL_VIDER = 133,
         SKILL_REF_COFFREMAISON = 185,
         SKILL_REF_MAISON = 186,
+
+        SKILL_USE_PHOENIX = 300,
     }
 
     /// <summary>

@@ -43,6 +43,7 @@ namespace Codebreak.Service.World.Manager
         {
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ZAAP, (map, cellId) => new Waypoint(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POUBELLE, (map, cellId) => new TrashCan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PHOENIX, (map, cellId) => new Pheonix(map, cellId));
 
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
             AddInteractiveGfx(7003, InteractiveObjectIdEnum.INTERACTIVE_SCIE);
@@ -71,7 +72,7 @@ namespace Codebreak.Service.World.Manager
             AddInteractiveGfx(7502, InteractiveObjectIdEnum.INTERACTIVE_NOYER);
             AddInteractiveGfx(7506, InteractiveObjectIdEnum.INTERACTIVE_MERISIER);
             AddInteractiveGfx(7525, InteractiveObjectIdEnum.INTERACTIVE_PIERRE_DE_KOBALTE);
-            AddInteractiveGfx(7511, InteractiveObjectIdEnum.INTERACTIVE_BLE_);
+            AddInteractiveGfx(7511, InteractiveObjectIdEnum.INTERACTIVE_BLE);
             AddInteractiveGfx(7512, InteractiveObjectIdEnum.INTERACTIVE_HOUBLON);
             AddInteractiveGfx(7005, InteractiveObjectIdEnum.INTERACTIVE_MEULE);
             AddInteractiveGfx(7513, InteractiveObjectIdEnum.INTERACTIVE_LIN);
@@ -234,6 +235,8 @@ namespace Codebreak.Service.World.Manager
             AddInteractiveGfx(1862, InteractiveObjectIdEnum.INTERACTIVE_STATUE_DE_CLASSE);
             AddInteractiveGfx(1845, InteractiveObjectIdEnum.INTERACTIVE_STATUE_DE_CLASSE);
             AddInteractiveGfx(2319, InteractiveObjectIdEnum.INTERACTIVE_STATUE_DE_CLASSE);
+
+            AddInteractiveGfx(4638, InteractiveObjectIdEnum.INTERACTIVE_PHOENIX);
         }
 
         /// <summary>

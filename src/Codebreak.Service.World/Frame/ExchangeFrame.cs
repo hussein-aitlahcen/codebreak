@@ -119,6 +119,12 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
+                    if(character.HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_BE_MERCHANT))
+                    {
+                        character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                        return;
+                    }
+
                     character.Inventory.SubKamas(character.MerchantTaxe);
                     character.Merchant = true;
                     character.ServerKick("Merchant mode");

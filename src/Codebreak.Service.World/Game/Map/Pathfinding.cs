@@ -9,6 +9,8 @@ using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Interactive.Type;
+using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Job;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -250,26 +252,32 @@ namespace Codebreak.Service.World.Game.Map
         #endregion
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MovementPath
     {
-        private StringBuilder serializedPath = new StringBuilder();
-        private bool serialized = false;
-
-        public override string ToString()
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<int> TransitCells
         {
-            if (!serialized)
-            {
-                for (int i = 0; i < TransitCells.Count; i++)
-                {
-                    serializedPath.Append(Pathfinding.GetDirectionChar(Directions[i]));
-                    serializedPath.Append(Util.CellToChar(TransitCells[i]));
-                }
-                serialized = true;
-            }
-
-            return serializedPath.ToString();
+            get;
+            private set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<int> Directions
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int BeginCell
         {
             get
@@ -278,12 +286,18 @@ namespace Codebreak.Service.World.Game.Map
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int MovementLength
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double MovementTime
         {
             get
@@ -292,6 +306,9 @@ namespace Codebreak.Service.World.Game.Map
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int LastStep
         {
             get
@@ -300,6 +317,9 @@ namespace Codebreak.Service.World.Game.Map
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int EndCell
         {
             get
@@ -308,44 +328,87 @@ namespace Codebreak.Service.World.Game.Map
             }
         }
 
-        public List<int> TransitCells = new List<int>();
-        public List<int> Directions = new List<int>();
-
+        /// <summary>
+        /// 
+        /// </summary>
+        private StringBuilder m_serializedPath;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public MovementPath()
+        {
+            TransitCells = new List<int>();
+            Directions = new List<int>();
+        }
+                   
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Cell"></param>
+        /// <param name="Direction"></param>
         public void AddCell(int Cell, int Direction)
         {
             TransitCells.Add(Cell);
             Directions.Add(Direction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Cell"></param>
+        /// <returns></returns>
         public int GetDirection(int Cell)
         {
             return Directions[TransitCells.Count == 1 ? 0 : TransitCells.IndexOf(Cell) + 1];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Clean()
         {
-            var transitCells = new List<int>();
-            var directions = new List<int>();
+            var realTransitCells = new List<int>();
+            var realDirections = new List<int>();
 
-            for (int i = 0; i < Directions.Count; i++)
+            for (int i = 0; i < Directions.Count - 1; i++)
             {
                 if (i == Directions.Count - 1)
                 {
-                    TransitCells.Add(TransitCells[i]);
-                    directions.Add(Directions[i]);
+                    realTransitCells.Add(TransitCells[i]);
+                    realDirections.Add(Directions[i]);
                 }
                 else
                 {
-                    if (this.Directions[i] != Directions[i + 1])
+                    if (Directions[i] != Directions[i + 1])
                     {
-                        TransitCells.Add(TransitCells[i]);
-                        directions.Add(Directions[i]);
+                        realTransitCells.Add(TransitCells[i]);
+                        realDirections.Add(Directions[i]);
                     }
                 }
             }
 
-            TransitCells = transitCells;
-            Directions = directions;
+            TransitCells = realTransitCells;
+            Directions = realDirections;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (m_serializedPath == null)
+            {
+                m_serializedPath = new StringBuilder();
+                //Clean();
+                for (int i = 0; i < TransitCells.Count; i++)
+                {
+                    m_serializedPath.Append(Pathfinding.GetDirectionChar(Directions[i]));
+                    m_serializedPath.Append(Util.CellToChar(TransitCells[i]));
+                }
+            }
+            return m_serializedPath.ToString();
         }
     }
 
@@ -722,7 +785,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="currentCell"></param>
         /// <param name="encodedPath"></param>
         /// <returns></returns>
-        public static MovementPath IsValidPath(MapInstance map, int currentCell, string encodedPath)
+        public static MovementPath IsValidPath(EntityBase entity, MapInstance map, int currentCell, string encodedPath)
         {
             var decodedPath = DecodePath(map, currentCell, encodedPath);
             if(decodedPath.TransitCells.Count == 0)
@@ -741,11 +804,23 @@ namespace Codebreak.Service.World.Game.Map
                 if (length == -1)
                     return null;
                 else if (length == -2)
-                    break;
+                    break;                
                 index++;
             }
             while (transitCell != decodedPath.LastStep);
-            
+
+            if(entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+            {
+                var mapCell = map.GetCell(decodedPath.EndCell);
+                if(mapCell != null && mapCell.InteractiveObject != null && mapCell.InteractiveObject is Pheonix)
+                {
+                    var character = (CharacterEntity)entity;
+                    character.AutomaticSkillId = (int)SkillIdEnum.SKILL_USE_PHOENIX;
+                    character.AutomaticSkillCellId = decodedPath.EndCell;
+                    character.AutomaticSkillMapId = map.Id;
+                }
+            }
+
             return finalPath;
         }
 

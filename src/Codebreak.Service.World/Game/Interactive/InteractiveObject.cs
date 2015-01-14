@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Game.Interactive
         INTERACTIVE_EPEAUTRE = 64,
         INTERACTIVE_SCIE = 2,
         INTERACTIVE_IF = 28,
-        INTERACTIVE_BLE_ = 38,
+        INTERACTIVE_BLE = 38,
         INTERACTIVE_KALIPTUS = 121,
         INTERACTIVE_ENCLUME = 57,
         INTERACTIVE_ENCLOS = 120,
@@ -124,6 +124,7 @@ namespace Codebreak.Service.World.Game.Interactive
         INTERACTIVE_TREMBLE = 133,
         INTERACTIVE_BAMBOU_SACRE_ = 110,        
         INTERACTIVE_MORTIER_ET_PILON = 69,
+        INTERACTIVE_PHOENIX = 200,
     }
 
     /// <summary>

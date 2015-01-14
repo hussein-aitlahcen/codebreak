@@ -62,7 +62,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     if (stringPath == string.Empty)
                         return AIActionResult.FAILURE;
 
-                    var path = Fighter.Fight.Map.DecodeMovement(Fighter.Cell.Id, stringPath);
+                    var path = Fighter.Fight.Map.DecodeMovement(Fighter, Fighter.Cell.Id, stringPath);
                     if (path == null)
                         return AIActionResult.FAILURE;
 

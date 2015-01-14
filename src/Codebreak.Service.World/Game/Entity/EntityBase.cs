@@ -340,29 +340,7 @@ namespace Codebreak.Service.World.Game.Entity
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => null);
             m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => base.Dispatch);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => base.Dispatch);
-            
-            if (HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
-            {
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_OBJECT, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_ASSAULT, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK, false);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_DUNGEON_MONSTERS_WHEN_MUTANT, false);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_MONSTERS_ANYWHERE_WHEN_MUTANT, false);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_BE_MERCHANT, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_PRISM, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR, true);
-                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);
-                
-                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ASSAULT, true);
-                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ATTACK, true);
-                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE, true);
-                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
-                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_SWITCH_TOCREATURE, true);                
-            }
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => base.Dispatch);            
         }
 
         /// <summary>
@@ -443,6 +421,7 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.SKILL_USE:
                     return ((CurrentAction == null || CurrentAction.IsFinished) 
                         || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT)
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
                     
                 case GameActionTypeEnum.FIGHT_JOIN:
@@ -486,6 +465,14 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.MAP_TELEPORT:
                     return (CurrentAction == null || CurrentAction.IsFinished)
                         && HasGameAction(GameActionTypeEnum.MAP);
+
+                case GameActionTypeEnum.NPC_DIALOG:
+                    return (CurrentAction == null || CurrentAction.IsFinished)
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_SPEAK_NPC);
+
+                case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
+                    return (CurrentAction == null || CurrentAction.IsFinished)
+                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR);
             }
 
             return CurrentAction == null || CurrentAction.IsFinished;

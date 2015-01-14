@@ -199,41 +199,39 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void ApplyEndCalculation()
         {
-            foreach (var character in m_winnersTeam.Fighters.OfType<CharacterEntity>())
+            foreach (var player in m_winnersTeam.Fighters.OfType<CharacterEntity>())
             {
                 var honour = 0;
                 var dishonour = 0;
-                if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                if (player.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                 {
-                    if (!IsNeutralAgression || character.Team.Alignment == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                    if (!IsNeutralAgression || player.Team.Alignment == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                     {
-                        honour = Util.CalculWinHonor(character.Level, m_winnersLevel, m_losersLevel);
-                        character.SubstractDishonour(1);
+                        honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
+                        player.SubstractDishonour(1);
                     }
                     else
                         dishonour = 1;
-                    character.AddHonour(honour);
-                    character.AddDishonour(dishonour);
+                    player.AddHonour(honour);
+                    player.AddDishonour(dishonour);
                 }
 
-                Result.AddResult(character, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
+                Result.AddResult(player, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
             }
 
-            foreach (var character in m_losersTeam.Fighters.OfType<CharacterEntity>())
+            foreach (var player in m_losersTeam.Fighters.OfType<CharacterEntity>())
             {
                 var honour = 0;
                 var dishonour = 0; 
-                if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                if (player.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                 {
-                    if (!IsNeutralAgression || character.Team.Alignment != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
-                        honour = Util.CalculWinHonor(character.Level, m_winnersLevel, m_losersLevel);
-                    character.SubstractHonour(honour);
+                    if (!IsNeutralAgression || player.Team.Alignment != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                        honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
+                    player.SubstractHonour(honour);
                 }
-                Result.AddResult(character, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
 
-                character.MapId = character.SavedMapId;
-                character.CellId = character.SavedCellId;
-                character.Life = 1;
+                Result.AddResult(player, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
+                player.OnLoseFight();          
             }
         }
 

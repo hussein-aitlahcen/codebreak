@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Game.Map
     /// <summary>
     /// 
     /// </summary>
-    public sealed class MapInstance : MessageDispatcher, IMovementHandler
+    public sealed class MapInstance : MessageDispatcher, IMovementHandler, IDisposable
     {
         private static string HASH_CELL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
 
@@ -450,10 +450,8 @@ namespace Codebreak.Service.World.Game.Map
         public bool IsWalkable(int cellId)
         {
             MapCell cell = GetCell(cellId);
-            if (cell != null)
-            {
-                return cell.Walkable;
-            }
+            if (cell != null)            
+                return cell.Walkable;            
             return false;
         }
 
@@ -500,7 +498,7 @@ namespace Codebreak.Service.World.Game.Map
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
                     base.AddUpdatable(entity);
 
-                    if (m_subInstance)
+                    if (m_subInstance) // For npc etc
                         entity.SetMap(this);
 
                     if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
@@ -550,7 +548,7 @@ namespace Codebreak.Service.World.Game.Map
                     // Multiple instance destroying
                     if(m_playerCount == 0 && m_subInstance)
                     {
-                        base.AddMessage(() => Dispose());
+                        MapManager.Instance.ReleaseInstance(this);
                     }
                 }
             }
@@ -583,9 +581,9 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="cellId"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public MovementPath DecodeMovement(int cellId, string path)
+        public MovementPath DecodeMovement(EntityBase entity, int cellId, string path)
         {
-            return Pathfinding.IsValidPath(this, cellId, path);
+            return Pathfinding.IsValidPath(entity, this, cellId, path);
         }
 
         /// <summary>
@@ -598,9 +596,9 @@ namespace Codebreak.Service.World.Game.Map
         {
             AddMessage(() =>
                 {
-                    var path = DecodeMovement(cellId, movementPath);
-                    if (path != null)                    
-                        entity.Move(path);                    
+                    var path = DecodeMovement(entity, cellId, movementPath);
+                    if (path != null)
+                        entity.Move(path);
                 });
         }
 
@@ -627,23 +625,24 @@ namespace Codebreak.Service.World.Game.Map
                         entity.Teleport(cell.NextMap, cell.NextCell);
                         return;
                     }
-                }                
-                foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
-                {                    
-                    if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
+
+                    foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
                     {
-                        if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
+                        if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
                         {
-                            entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
-                        }
-                        else
-                        {
-                            monsterGroup.StopAction(GameActionTypeEnum.MAP);
-                            FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
-                            return;
+                            if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
+                            {
+                                entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
+                            }
+                            else
+                            {
+                                monsterGroup.StopAction(GameActionTypeEnum.MAP);
+                                FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
+                                return;
+                            }
                         }
                     }
-                }
+                }     
             }
 
             entity.CellId = cellId;

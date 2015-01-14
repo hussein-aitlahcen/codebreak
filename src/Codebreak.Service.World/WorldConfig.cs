@@ -60,6 +60,8 @@ namespace Codebreak.Service.World
 
         public const int LIVING_CHEST_ID = 285;
 
+        public const int GHOST_SKIN_ID = 8004;
+
         public const int MAX_MERCHANT_PER_MAP = 5;
 
         public const int MAX_ENNEMIES = 100;

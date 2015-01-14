@@ -15,6 +15,7 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         private Dictionary<int, MapInstance> m_mapById;
+        private Dictionary<int, ObjectPool<MapInstance>> m_multyInstanceById;
         
         /// <summary>
         /// 
@@ -22,6 +23,7 @@ namespace Codebreak.Service.World.Manager
         public MapManager()
         {
             m_mapById = new Dictionary<int, MapInstance>();
+            m_multyInstanceById = new Dictionary<int, ObjectPool<MapInstance>>();
         }
 
         /// <summary>
@@ -29,11 +31,17 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            foreach(var mapDAO in MapRepository.Instance.GetAll())
-                m_mapById.Add(mapDAO.Id, new MapInstance(mapDAO.SubAreaId, mapDAO.Id, mapDAO.X, mapDAO.Y, mapDAO.Width, mapDAO.Height, mapDAO.Data, mapDAO.DataKey, mapDAO.CreateTime, mapDAO.FightTeam0Cells, mapDAO.FightTeam1Cells));
-            
+            foreach (var mapDAO in MapRepository.Instance.GetAll())
+            {
+                var map = new MapInstance(mapDAO.SubAreaId, mapDAO.Id, mapDAO.X, mapDAO.Y, mapDAO.Width, mapDAO.Height, mapDAO.Data, mapDAO.DataKey, mapDAO.CreateTime, mapDAO.FightTeam0Cells, mapDAO.FightTeam1Cells);
+                m_mapById.Add(map.Id, map);
+                if(WorldConfig.MULTIPLE_INSTANCE_MAP_ID.Contains(map.Id))
+                    m_multyInstanceById.Add(mapDAO.Id, new ObjectPool<MapInstance>(map.Clone));
+            }
             Logger.Info("MapManager : " + m_mapById.Count + " MapInstance loaded.");
         }
+        
+
 
         /// <summary>
         /// 
@@ -44,10 +52,19 @@ namespace Codebreak.Service.World.Manager
         {
             if (m_mapById.ContainsKey(id))
                 if (WorldConfig.MULTIPLE_INSTANCE_MAP_ID.Contains(id))
-                    return m_mapById[id].Clone();
+                    return m_multyInstanceById[id].Pop();
                 else
                     return m_mapById[id];
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instance"></param>
+        public void ReleaseInstance(MapInstance instance)
+        {
+            m_multyInstanceById[instance.Id].Push(instance);
         }
     }
 }

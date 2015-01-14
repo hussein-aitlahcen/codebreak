@@ -524,7 +524,6 @@ namespace Codebreak.Service.World.Game.Guild
                         AddMessage(() =>
                         {
                             member.TaxCollectorJoinedId = taxCollectorId;
-
                             m_taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DEFENDER_JOIN(taxCollectorId, member));
                         });
                     });

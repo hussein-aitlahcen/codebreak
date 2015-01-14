@@ -204,9 +204,7 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 foreach (var player in m_losersFighter.OfType<CharacterEntity>())
                 {
-                    player.MapId = player.SavedMapId;
-                    player.CellId = player.SavedCellId;
-                    player.Life = 1;
+                    player.OnLoseFight();     
                 }
             }
         }

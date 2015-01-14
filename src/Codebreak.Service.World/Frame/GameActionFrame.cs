@@ -247,7 +247,7 @@ namespace Codebreak.Service.World.Frame
             }
 
             var victim = (CharacterEntity)distantEntity;
-            if (!victim.CanGameAction(GameActionTypeEnum.FIGHT))            
+            if (!victim.CanGameAction(GameActionTypeEnum.FIGHT) && !victim.HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ASSAULT))            
                 victim.AbortAction(victim.CurrentAction.Type);
 
             // Active l'alignement de force s'il ne l'est pas.
@@ -475,14 +475,7 @@ namespace Codebreak.Service.World.Frame
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-
-            if (character.HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
-            {
-                Logger.Debug("GameActionFrame::MapMovement Tombestone entity trying to move : " + character.Name);
-                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
-                return;
-            }
-            
+                        
             switch(character.MovementHandler.FieldType)
             {
                 case FieldTypeEnum.TYPE_MAP:

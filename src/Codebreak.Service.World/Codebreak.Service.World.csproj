@@ -128,6 +128,7 @@
     <Compile Include="Database\Structure\SuperAreaDAO.cs" />
     <Compile Include="Database\Structure\TaxCollectorDAO.cs" />
     <Compile Include="Database\WorldDbMgr.cs" />
+    <Compile Include="Frame\GameTombestoneFrame.cs" />
     <Compile Include="Frame\NpcDialogFrame.cs" />
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
     <Compile Include="Game\Guild\GuildStatistics.cs" />
     <Compile Include="Game\Interactive\InteractiveObject.cs" />
+    <Compile Include="Game\Interactive\Type\Pheonix.cs" />
     <Compile Include="Game\Interactive\Type\TrashCan.cs" />
     <Compile Include="Game\Interactive\Type\Waypoint.cs" />
     <Compile Include="Game\Job\JobBook.cs" />

@@ -813,6 +813,55 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int AutomaticSkillId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int AutomaticSkillCellId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int AutomaticSkillMapId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsGhost
+        {
+            get
+            {
+                return SkinBase == WorldConfig.GHOST_SKIN_ID;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsTombestone
+        {
+            get
+            {
+                return SkinBase == (BreedId * 10) + 3;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected string m_guildDisplayInfos;
         protected long m_lastRegenTime;
         protected double m_regenTimer;
@@ -861,6 +910,117 @@ namespace Codebreak.Service.World.Game.Entity
 
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
+
+            CheckRestrictions();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CheckRestrictions()
+        {
+            if (IsTombestone)
+            {
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_OBJECT, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_ASSAULT, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK, false);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_DUNGEON_MONSTERS_WHEN_MUTANT, false);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_MONSTERS_ANYWHERE_WHEN_MUTANT, false);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_BE_MERCHANT, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_PRISM, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR, true);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);
+
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ASSAULT, true);
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ATTACK, true);
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE, true);
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_SWITCH_TOCREATURE, true);
+            }
+            else if(IsGhost)
+            {
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, false);
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_SLOWED, true);
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_FORCEWALK, true);
+
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, false);
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, true);
+            }
+
+            base.Dispatch(WorldMessage.ACCOUNT_RIGHTS(Restriction));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Reborn()
+        {            
+            SkinBase = (BreedId * 10) + Sex;
+            Energy = 1000;
+            Restriction = (int)PlayerRestrictionEnum.RESTRICTION_NEW_CHARACTER;
+            EntityRestriction = 0;
+
+            RefreshOnMap();
+
+            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_JUST_REBORN));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void FreeSoul()
+        {
+            SkinBase = WorldConfig.GHOST_SKIN_ID;
+            CheckRestrictions();
+            RefreshOnMap();
+
+            base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnLoseFight()
+        {
+            Life = 1;
+
+            LoseEnergy();
+
+            if (Energy > 0)
+            {
+                // get back home if u still have energy babe
+                MapId = SavedMapId;
+                CellId = SavedCellId;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public void LoseEnergy()
+        {
+            var energyLost = Math.Min(Energy, Level * 10);
+            if (energyLost < 1)
+                return;
+
+            Energy -= energyLost;
+            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ENERGY_LOST, energyLost));
+
+            if(Energy == 0)
+            {
+                SkinBase = (BreedId * 10) + 3;
+                CheckRestrictions();
+                base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
+            }
+            else if(Energy < 1000)
+            {
+                base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_ENERGY_LOW, Energy));
+            }
         }
 
         /// <summary>
@@ -932,9 +1092,7 @@ namespace Codebreak.Service.World.Game.Entity
                         case FightTypeEnum.TYPE_AGGRESSION:
                         case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
-                            MapId = SavedMapId;
-                            CellId = SavedCellId;
-                            Life = 1;
+                            OnLoseFight();
                             break;
                     }
                 }
@@ -951,6 +1109,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="emoteId"></param>
         public override void EmoteUse(int emoteId, int timeout = 360000)
         {
+            if (IsTombestone || IsGhost)
+                return;
+
             if (m_lastEmoteId == 1)            
                 StopRegeneration();            
             else if(emoteId == 1)
@@ -1494,7 +1655,18 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 case GameActionTypeEnum.MAP_MOVEMENT:
                     if(m_lastEmoteId == 1)                    
-                        EmoteUse(1);                    
+                        EmoteUse(1);
+                    if (AutomaticSkillId != -1 && HasGameAction(GameActionTypeEnum.MAP))
+                    {
+                        var movement = CurrentAction as GameMapMovementAction;
+                        movement.SkillId = AutomaticSkillId;
+                        movement.SkillCellId = AutomaticSkillCellId;
+                        movement.SkillMapId = AutomaticSkillMapId;
+
+                        AutomaticSkillId = -1;
+                        AutomaticSkillCellId = -1;
+                        AutomaticSkillMapId = -1;
+                    }
                     break;
 
                 case GameActionTypeEnum.MAP_TELEPORT:
@@ -1504,13 +1676,12 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.MAP:
-                    if (!HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))
-                    {
-                        FrameManager.AddFrame(MapFrame.Instance);
-                        FrameManager.AddFrame(InventoryFrame.Instance);
-                        FrameManager.AddFrame(ExchangeFrame.Instance);
-                        FrameManager.AddFrame(GameActionFrame.Instance);
-                    }
+                    if (HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))                    
+                        FrameManager.AddFrame(GameTombestoneFrame.Instance);                    
+                    FrameManager.AddFrame(MapFrame.Instance);
+                    FrameManager.AddFrame(InventoryFrame.Instance);
+                    FrameManager.AddFrame(ExchangeFrame.Instance);
+                    FrameManager.AddFrame(GameActionFrame.Instance);
                     break;
 
                 case GameActionTypeEnum.WAYPOINT:

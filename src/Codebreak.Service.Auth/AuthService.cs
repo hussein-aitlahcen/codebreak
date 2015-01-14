@@ -132,7 +132,7 @@ namespace Codebreak.Service.Auth
         /// <param name="message"></param>
         public void SendToAll(string message)
         {
-            base.SendToAll(Encoding.Default.GetBytes(message + (char)0x00));
+            base.SendToAll(Encoding.UTF8.GetBytes(message + (char)0x00));
         }
 
         #endregion
@@ -231,7 +231,7 @@ namespace Codebreak.Service.Auth
         /// <param name="client"></param>
         public void RegisterWorld(int worldId, AuthRPCServiceClient client)
         {
-            Instance.AddMessage(() =>
+            AddMessage(() =>
             {
                 if (!m_worldById.ContainsKey(worldId))
                     m_worldById.Add(worldId, client);
@@ -246,7 +246,7 @@ namespace Codebreak.Service.Auth
         /// <param name="worldId"></param>
         public void DeleteWorld(int worldId)
         {
-            Instance.AddMessage(() =>
+            AddMessage(() =>
             {
                 if (m_worldById.ContainsKey(worldId))
                     m_worldById.Remove(worldId);

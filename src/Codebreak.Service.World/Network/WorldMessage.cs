@@ -59,6 +59,9 @@ namespace Codebreak.Service.World.Network
         INFO_WAYPOINT_SAVED = 6,
         INFO_WAYPOINT_REGISTERED = 24,
 
+        INFO_JUST_REBORN = 33,
+        INFO_ENERGY_LOST = 34,
+
         INFO_KAMAS_WON = 45,
         INFO_KAMAS_LOST = 46,
 
@@ -148,7 +151,15 @@ namespace Codebreak.Service.World.Network
     /// </summary>
     public enum GameMessageEnum
     {
-        MESSAGE_FREE_SOUL = 12,
+        MESSAGE_MUCH_SPAM = 0,
+        MESSAGE_MUCH_INACTIVE = 1,
+        MESSAGE_BANK_KAMAS_NEEDED = 10,
+        MESSAGE_ENERGY_LOW = 11,
+        MESSAGE_TOMBESTONE = 12,
+        MESSAGE_MAINTENANCE = 13,
+        MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX = 15,
+        MESSAGE_MAINTENANCE_SOON = 3,
+        MESSAGE_CONNECTION_CLOSED_DUE_TO_MAINTENANCE = 4,
         MESSAGE_KICKED = 18,
     }
     
