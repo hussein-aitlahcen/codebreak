@@ -1,5 +1,6 @@
 ﻿using System;
 using Codebreak.Framework.Database;
+using PropertyChanged;
 
 namespace Codebreak.Service.Auth.Database.Structure
 {
@@ -7,6 +8,7 @@ namespace Codebreak.Service.Auth.Database.Structure
     /// 
     /// </summary>
     [Table("account")]
+    [ImplementPropertyChanged]
     public sealed class AccountDAO : DataAccessObject<AccountDAO>
     {
         /// <summary>

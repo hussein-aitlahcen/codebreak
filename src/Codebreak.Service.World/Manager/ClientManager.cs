@@ -80,9 +80,9 @@ namespace Codebreak.Service.World.Manager
                 Id = accountId,
                 Pseudo = pseudo,
                 Name = name,
-                RemainingSubscription = new DateTime(remainingSub),
+                RemainingSubscription = DateTime.FromBinary(remainingSub),
                 Power = power,
-                LastConnectionTime = new DateTime(lastConnection),
+                LastConnectionTime = DateTime.FromBinary(lastConnection),
                 LastConnectionIP = lastIp,
                 Ticket = ticket, 
                 Time = WorldService.Instance.LastUpdate

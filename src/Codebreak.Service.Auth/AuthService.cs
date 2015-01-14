@@ -58,7 +58,17 @@ namespace Codebreak.Service.Auth
             AuthDbMgr.Instance.Initialize();
             AuthRPCService.Instance.Start();
 
+            base.AddTimer(60000, PersistDatabase);
+
             base.Start(AuthServiceIP, AuthServicePort);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void PersistDatabase()
+        {
+            AuthDbMgr.Instance.UpdateAll();
         }
 
         #region Network
