@@ -67,7 +67,7 @@ namespace Codebreak.Service.World
         public const int MAX_ENNEMIES = 100;
         public const int MAX_FRIENDS = 100;
 
-        public const double REGEN_TIMER_SIT = 500;
+        public const double REGEN_TIMER_SIT = 300;
         public const double REGEN_TIMER = 1500;
 
         public const int PVT_TELEPORT_DEFENDERS_TIMEOUT = 45000;

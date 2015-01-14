@@ -940,6 +940,8 @@ namespace Codebreak.Service.World.Game.Entity
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE, true);
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_SWITCH_TOCREATURE, true);
+
+                base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
             else if(IsGhost)
             {
@@ -949,9 +951,11 @@ namespace Codebreak.Service.World.Game.Entity
 
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, false);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, true);
+
+                base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
             }
 
-            base.Dispatch(WorldMessage.ACCOUNT_RIGHTS(Restriction));
+            base.SafeDispatch(WorldMessage.ACCOUNT_RIGHTS(Restriction));
         }
 
         /// <summary>
@@ -966,7 +970,10 @@ namespace Codebreak.Service.World.Game.Entity
 
             RefreshOnMap();
 
+            base.CachedBuffer = true;
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_JUST_REBORN));
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            base.CachedBuffer = false;
         }
 
         /// <summary>
@@ -978,8 +985,6 @@ namespace Codebreak.Service.World.Game.Entity
             CheckRestrictions();
             if (!DisableAlignment())
                 RefreshOnMap();
-
-            base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
         }
 
         /// <summary>
@@ -1016,7 +1021,6 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 SkinBase = (BreedId * 10) + 3;
                 CheckRestrictions();
-                base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
             else if (Energy < 1000)
             {
@@ -1156,13 +1160,23 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (m_lastEmoteId == 1)            
                 StopRegeneration();            
-            else if(emoteId == 1)
+            else if (emoteId == 1)
                 StartRegeneration(WorldConfig.REGEN_TIMER_SIT);
 
             timeout = emoteId == m_lastEmoteId ? 0 : timeout;
             m_lastEmoteId = emoteId == m_lastEmoteId ? 0 : emoteId;
 
             base.EmoteUse(m_lastEmoteId, timeout);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StopEmote()
+        {
+            if(m_lastEmoteId == 1)            
+                StopRegeneration();            
+            m_lastEmoteId = 0;
         }
 
         /// <summary>
@@ -1699,8 +1713,7 @@ namespace Codebreak.Service.World.Game.Entity
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP_MOVEMENT:
-                    if(m_lastEmoteId == 1)                    
-                        EmoteUse(1);
+                    StopEmote();
                     if (AutomaticSkillId != -1 && HasGameAction(GameActionTypeEnum.MAP))
                     {
                         var movement = CurrentAction as GameMapMovementAction;
@@ -1715,9 +1728,8 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.MAP_TELEPORT:
+                    StopEmote(); 
                     Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
-                    if(m_lastEmoteId == 1)                    
-                        EmoteUse(1);    
                     break;
 
                 case GameActionTypeEnum.MAP:
