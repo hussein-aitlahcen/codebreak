@@ -14,7 +14,6 @@ namespace Codebreak.Service.World
     {
         public static int[] MULTIPLE_INSTANCE_MAP_ID = 
         {
-            7411,
         };
 
         public static string[] NPC_BEGIN_TRADE_SPEAK = 
@@ -36,7 +35,7 @@ namespace Codebreak.Service.World
         };
 
         public const int INACTIVITY_CHECK_INTERVAL = MAX_AWAY_TIME * 2;
-        public const int MAX_AWAY_TIME = 1 * 60 * 1000; // 1 mint afk or kicked
+        public const int MAX_AWAY_TIME = 2 * 60 * 1000; // 2 mint afk or kicked
 
         public const int RPC_ACCOUNT_TICKET_CHECK_INTERVAL = 1000;
         public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000;

@@ -103,6 +103,15 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Capabilities
+        {
+            get;
+            set;
+        }
+
         private List<int> m_fightTeam0Cells, m_fightTeam1Cells;
 
         [Write(false)]
