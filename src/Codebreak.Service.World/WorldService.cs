@@ -96,10 +96,10 @@ namespace Codebreak.Service.World
             JobManager.Instance.Initialize();
             ClientManager.Instance.Initialize();
             SpellManager.Instance.Initialize();
+            AuctionHouseManager.Instance.Initialize();
             AreaManager.Instance.Initialize();
             NpcManager.Instance.Initialize();
             MapManager.Instance.Initialize();
-            AuctionHouseManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             EntityManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
