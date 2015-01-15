@@ -917,6 +917,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public void SendAccountStats()
+        {
+            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void CheckRestrictions()
         {
             if (IsTombestone)
@@ -943,7 +951,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
-            else if(IsGhost)
+            else if (IsGhost)
             {
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, false);
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_SLOWED, true);

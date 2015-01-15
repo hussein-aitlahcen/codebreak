@@ -35,6 +35,9 @@ namespace Codebreak.Service.World
             "A bientôt, sachez que je suis toujours ouvert.",
         };
 
+        public const int INACTIVITY_CHECK_INTERVAL = MAX_AWAY_TIME * 2;
+        public const int MAX_AWAY_TIME = 1 * 60 * 1000; // 1 mint afk or kicked
+
         public const int RPC_ACCOUNT_TICKET_CHECK_INTERVAL = 1000;
         public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000;
 

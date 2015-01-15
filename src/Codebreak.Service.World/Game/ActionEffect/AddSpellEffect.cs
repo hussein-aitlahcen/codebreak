@@ -37,6 +37,12 @@ namespace Codebreak.Service.World.Game.ActionEffect
         {
             var spellId = int.Parse(parameters["spellId"]);
 
+            if (character.Spells.HasSpell(spellId))
+            {
+                character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_UNABLE_LEARN_SPELL, spellId));
+                return false;
+            }
+
             character.Spells.AddSpell(spellId);
             character.Dispatch(WorldMessage.SPELLS_LIST(character.Spells));
 

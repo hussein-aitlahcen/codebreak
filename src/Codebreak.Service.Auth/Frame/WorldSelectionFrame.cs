@@ -60,29 +60,32 @@ namespace Codebreak.Service.Auth.Frames
         {
             var worldId = int.Parse(message.Substring(2));
 
-            var world = AuthService.Instance.GetById(worldId);
-
-            if(world == null || world.GameState != GameStateEnum.ONLINE)
-            {
-                client.Send(AuthMessage.WORLD_SELECTION_FAILED());
-                return;
-            }
-
-            client.FrameManager.RemoveFrame(WorldSelectionFrame.Instance);
-
-            var ticket = Util.GenerateString(10);
-
-            client.Ticket = ticket;
-                        
-            world.Send(new GameTicketMessage(client.Account.Id, client.Account.Name, client.Account.Pseudo, client.Account.Power, client.Account.RemainingSubscription.ToBinary(), client.Account.LastConnectionDate.ToBinary(), client.Account.LastConnectionIP, ticket));
-            
-            client.Account.LastConnectionDate = DateTime.Now;
-            client.Account.LastConnectionIP = client.Ip;
-
             AuthService.Instance.AddMessage(() =>
-            {
-                client.Send(AuthMessage.WORLD_SELECTION_SUCCESS(world.Ip, WorldGamePort, client.Ticket));
-            });
+                {
+                    var world = AuthService.Instance.GetById(worldId);
+
+                    if (world == null || world.GameState != GameStateEnum.ONLINE)
+                    {
+                        client.Send(AuthMessage.WORLD_SELECTION_FAILED());
+                        return;
+                    }
+
+                    client.FrameManager.RemoveFrame(WorldSelectionFrame.Instance);
+
+                    var ticket = Util.GenerateString(10);
+
+                    client.Ticket = ticket;
+
+                    world.Send(new GameTicketMessage(client.Account.Id, client.Account.Name, client.Account.Pseudo, client.Account.Power, client.Account.RemainingSubscription.ToBinary(), client.Account.LastConnectionDate.ToBinary(), client.Account.LastConnectionIP, ticket));
+
+                    client.Account.LastConnectionDate = DateTime.Now;
+                    client.Account.LastConnectionIP = client.Ip;
+
+                    AuthService.Instance.AddMessage(() =>
+                    {
+                        client.Send(AuthMessage.WORLD_SELECTION_SUCCESS(world.Ip, WorldGamePort, client.Ticket));
+                    });
+                });
         }
     }
 }

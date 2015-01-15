@@ -545,6 +545,9 @@ namespace Codebreak.Service.World.Game.Spell
         AddCaractPoint = 612,
         AddSpellPoint = 613,
 
+        /* Gateaux */
+        AddEnergy = 139,
+
         InvocationInformations = 628,
 
         SoulStoneStats = 705,

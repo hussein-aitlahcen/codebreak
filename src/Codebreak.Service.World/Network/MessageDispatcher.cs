@@ -55,8 +55,9 @@ namespace Codebreak.Service.World.Network
         {
             if (m_buffer != null)
                 m_buffer.Clear();
-            OnMessage = null;
             m_buffer = null;
+            OnMessage = null;
+
             base.Dispose();
         }
 

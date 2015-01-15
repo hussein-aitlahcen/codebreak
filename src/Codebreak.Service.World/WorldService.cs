@@ -90,7 +90,7 @@ namespace Codebreak.Service.World
             base.AddUpdatable(Dispatcher = new MessageDispatcher());
             base.AddUpdatable(RPCManager.Instance);
             base.AddTimer(WorldSaveInternal, SaveWorld);
-
+            
             WorldDbMgr.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();
             JobManager.Instance.Initialize();
@@ -103,7 +103,7 @@ namespace Codebreak.Service.World
             GuildManager.Instance.Initialize();
             EntityManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
-                        
+            
             base.Start(WorldServiceIP, WorldServicePort);
         }
 

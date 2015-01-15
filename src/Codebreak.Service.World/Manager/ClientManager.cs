@@ -60,6 +60,7 @@ namespace Codebreak.Service.World.Manager
         public void Initialize()
         {
             WorldService.Instance.AddTimer(WorldConfig.RPC_ACCOUNT_TICKET_CHECK_INTERVAL, Update);
+            WorldService.Instance.AddTimer(WorldConfig.INACTIVITY_CHECK_INTERVAL, CheckInactivity);
         }
 
         /// <summary>
@@ -157,6 +158,24 @@ namespace Codebreak.Service.World.Manager
                         m_accountByTicket.Remove(value.Ticket);
                         RPCManager.Instance.AccountDisconnected(value.Id);
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void CheckInactivity()
+        {
+            foreach (var client in m_clientByAccount.Values)
+            {
+                if (Environment.TickCount - client.LastPacketTime > WorldConfig.MAX_AWAY_TIME)
+                {
+                    WorldService.Instance.AddMessage(() =>
+                        {
+                            client.Send(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_ON_DISCONNECT, GameMessageEnum.MESSAGE_MUCH_INACTIVE));
+                            client.Disconnect();
+                        });
                 }
             }
         }

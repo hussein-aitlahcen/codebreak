@@ -48,9 +48,11 @@ namespace Codebreak.Service.World.Game.ActionEffect
                 return false;
             }
 
+            character.CachedBuffer = true;
             character.Inventory.SubKamas(taxe);
             character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_KAMAS_LOST, taxe));
             character.ExchangeStorage(character.Bank);
+            character.CachedBuffer = false;
 
             return true;
         }

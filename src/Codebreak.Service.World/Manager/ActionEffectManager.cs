@@ -35,9 +35,15 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.OpenBank, OpenBankEffect.Instance);
             m_effectById.Add(EffectEnum.AddStatistic, AddStatsEffect.Instance);
 
+            m_effectById.Add(EffectEnum.TeleportSavedZaap, RecallEffect.Instance);
+
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
 
+            m_effectById.Add(EffectEnum.AddEnergy, AddEnergyEffect.Instance);
+            m_effectById.Add(EffectEnum.AddExperience, AddExperienceEffect.Instance);
+
             m_effectById.Add(EffectEnum.AddSpell, AddSpellEffect.Instance);
+            m_effectById.Add(EffectEnum.AddSpellPoint, AddSpellpointEffect.Instance);
 
             m_effectById.Add(EffectEnum.AddCaractVitality, AddStatsEffect.Instance);
             m_effectById.Add(EffectEnum.AddCaractWisdom, AddStatsEffect.Instance);
@@ -56,7 +62,6 @@ namespace Codebreak.Service.World.Manager
             m_effectByType = new Dictionary<ItemTypeEnum, List<IActionEffect>>();
             m_effectByType.Add(ItemTypeEnum.TYPE_FEE_ARTIFICE, new List<IActionEffect>()
             {
-
             });
         }
 
@@ -83,8 +88,8 @@ namespace Codebreak.Service.World.Manager
                 character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_CONDITIONS_UNSATISFIED));
                 return;
             }
-
-            item = character.Inventory.RemoveItem(itemId);
+            
+            bool used = false;
 
             if (item.StringEffects != string.Empty)
             {
@@ -92,7 +97,7 @@ namespace Codebreak.Service.World.Manager
                 {
                     if (m_effectById.ContainsKey(effect.Key))
                     {
-                        m_effectById[effect.Key].ProcessItem(character, item, effect.Value, targetId, targetCell);
+                        used = used || m_effectById[effect.Key].ProcessItem(character, item, effect.Value, targetId, targetCell);
                     }
                 }
             }
@@ -102,10 +107,13 @@ namespace Codebreak.Service.World.Manager
                 {
                     foreach(var effect in m_effectByType[(ItemTypeEnum)item.Template.Type])
                     {
-                        effect.ProcessItem(character, item, null, targetId, targetCell);
+                        used = used || effect.ProcessItem(character, item, null, targetId, targetCell);
                     }
                 }
             }
+
+            if (used)
+                character.Inventory.RemoveItem(itemId);
         }
 
         /// <summary>

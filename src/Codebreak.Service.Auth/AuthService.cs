@@ -58,7 +58,7 @@ namespace Codebreak.Service.Auth
             AuthDbMgr.Instance.Initialize();
             AuthRPCService.Instance.Start();
 
-            base.AddTimer(60000, PersistDatabase);
+            base.AddTimer(60000, UpdateAuth);
 
             base.Start(AuthServiceIP, AuthServicePort);
         }
@@ -66,7 +66,7 @@ namespace Codebreak.Service.Auth
         /// <summary>
         /// 
         /// </summary>
-        public void PersistDatabase()
+        public void UpdateAuth()
         {
             AuthDbMgr.Instance.UpdateAll();
         }
@@ -127,12 +127,9 @@ namespace Codebreak.Service.Auth
         {
             foreach (var message in client.Receive(buffer, offset, count))
             {
-                AddMessage(() =>
-                    {       
-                        Logger.Debug("Client : " + message);
+                Logger.Debug("Client : " + message);
 
-                        client.FrameManager.ProcessMessage(message);
-                    });
+                client.FrameManager.ProcessMessage(message);
             }
         }
 

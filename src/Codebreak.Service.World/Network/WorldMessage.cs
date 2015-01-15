@@ -56,8 +56,13 @@ namespace Codebreak.Service.World.Network
 
         INFO_CARACTERISTIC_UPGRADED = 15,
 
+        INFO_EXPERIENCE_GAINED = 8,
+        INFO_ENERGY_RECOVERED = 7,
+
         INFO_WAYPOINT_SAVED = 6,
         INFO_WAYPOINT_REGISTERED = 24,
+
+        INFO_SPELLPOINT_GAINED = 16,
 
         INFO_JUST_REBORN = 33,
         INFO_ENERGY_LOST = 34,
@@ -104,6 +109,8 @@ namespace Codebreak.Service.World.Network
         INFO_AUCTION_BANK_CREDITED = 65,
         INFO_AUCTION_EXPIRED = 67,
         INFO_AUCTION_LOT_BOUGHT = 68,
+
+        ERROR_UNABLE_LEARN_SPELL = 7,
 
         ERROR_CONDITIONS_UNSATISFIED = 19,
 
@@ -188,6 +195,39 @@ namespace Codebreak.Service.World.Network
     /// </summary>
     public static class WorldMessage
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string IM_INFO_MESSAGE(InformationEnum info, params object[] args)
+        {
+            return INFORMATION_MESSAGE(InformationTypeEnum.INFO, info, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string IM_ERROR_MESSAGE(InformationEnum info, params object[] args)
+        {
+            return INFORMATION_MESSAGE(InformationTypeEnum.ERROR, info, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string IM_PVP_MESSAGE(InformationEnum info, params object[] args)
+        {
+            return INFORMATION_MESSAGE(InformationTypeEnum.PVP, info, args);
+        }
+
         /// <summary>
         /// 
         /// </summary>

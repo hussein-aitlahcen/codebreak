@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Manager
             {
                 var instance = new SuperAreaInstance(superAreaDAO);
                 WorldService.Instance.AddUpdatable(instance);
-                WorldService.Instance.Dispatcher.SafeAddHandler(instance.Dispatch);
+                WorldService.Instance.Dispatcher.AddHandler(instance.SafeDispatch);
 
                 m_superAreaById.Add(superAreaDAO.Id, instance);
             }

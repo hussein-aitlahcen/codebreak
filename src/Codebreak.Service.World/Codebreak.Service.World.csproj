@@ -133,13 +133,17 @@
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
+    <Compile Include="Game\ActionEffect\AddEnergyEffect.cs" />
+    <Compile Include="Game\ActionEffect\AddExperienceEffect.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
     <Compile Include="Game\ActionEffect\AddSpellEffect.cs" />
+    <Compile Include="Game\ActionEffect\AddSpellpointEffect.cs" />
     <Compile Include="Game\ActionEffect\AddStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\DialogLeaveEffect.cs" />
     <Compile Include="Game\ActionEffect\DialogReplyEffect.cs" />
     <Compile Include="Game\ActionEffect\OpenBankEffect.cs" />
+    <Compile Include="Game\ActionEffect\RecallEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
     <Compile Include="Game\Action\GameAuctionHouseActionBase.cs" />

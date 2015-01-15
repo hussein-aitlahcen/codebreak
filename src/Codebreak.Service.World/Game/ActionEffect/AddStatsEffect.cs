@@ -84,7 +84,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
             character.Statistics.AddBase(addEffect, value);
 
             character.CachedBuffer = true;
-            character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+            character.SendAccountStats();
             character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_CARACTERISTIC_UPGRADED, value));
             character.CachedBuffer = false;
 

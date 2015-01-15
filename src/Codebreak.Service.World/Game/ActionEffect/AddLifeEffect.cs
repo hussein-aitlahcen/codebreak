@@ -60,10 +60,10 @@ namespace Codebreak.Service.World.Game.ActionEffect
             var heal = int.Parse(parameters["life"]);
             if (character.Life + heal > character.MaxLife)
                 heal = character.MaxLife - character.Life;
-            character.Life += heal;
 
-            character.CachedBuffer = true;
-            character.Dispatch(WorldMessage.ACCOUNT_STATS(character));
+            character.CachedBuffer = true; 
+            character.Life += heal;
+            character.SendAccountStats();
             character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_LIFE_RECOVERED, heal));
             character.CachedBuffer = false;
 
