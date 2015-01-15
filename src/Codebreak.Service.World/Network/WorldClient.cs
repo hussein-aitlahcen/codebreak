@@ -32,6 +32,15 @@ namespace Codebreak.Service.World.Network
             get;
             set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Cypher
+        {
+            get;
+            set;
+        }
         
         /// <summary>
         /// 
@@ -62,6 +71,22 @@ namespace Codebreak.Service.World.Network
                     m_currentCharacter.KickEvent += base.Disconnect;
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public override void Send(string message)
+        {
+            if (Cypher)
+            {
+                StringBuilder realMessage = new StringBuilder();
+                foreach (var packet in message.Split(new char[] { (char)0x00 }))                
+                    realMessage.Append(Util.PrepareData(packet)).Append((char)0x00);                
+                message = realMessage.ToString();
+            }
+            base.Send(message);
         }
     }
 }

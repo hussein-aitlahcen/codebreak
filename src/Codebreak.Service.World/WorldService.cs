@@ -153,12 +153,18 @@ namespace Codebreak.Service.World
             foreach (var message in client.Receive(buffer, offset, count))
             {
                 Logger.Debug("Client : " + message);
-                
+
+                var realMsg = message;
+                if (client.Cypher)
+                    realMsg = Util.UnprepareData(realMsg);
+
+                Logger.Debug("Client : " + realMsg);
+
                 if (client.CurrentCharacter != null)
                 {
                     if (client.CurrentCharacter.FrameManager != null)
                     {
-                        if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
+                        if (!client.CurrentCharacter.FrameManager.ProcessMessage(realMsg))
                         {
                             client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                         }
@@ -166,7 +172,7 @@ namespace Codebreak.Service.World
                 }
                 else
                 {
-                    if (!client.FrameManager.ProcessMessage(message))
+                    if (!client.FrameManager.ProcessMessage(realMsg))
                     {
                         client.Send(WorldMessage.BASIC_NO_OPERATION());
                     }

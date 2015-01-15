@@ -281,7 +281,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ACCOUNT_TICKET_SUCCESS()
         {
-            return "ATK0";
+            return "ATK" + Util.CRYPT_KEY_INDEX + Util.CRYPT_KEY;
         }
 
         /// <summary>
