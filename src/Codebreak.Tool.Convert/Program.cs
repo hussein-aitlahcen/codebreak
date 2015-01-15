@@ -29,6 +29,8 @@ namespace Codebreak.Tool.Convert
             Regex expression = new Regex(REGEX_QUERY, RegexOptions.None);
             var inputFiles = Directory.GetFiles(INPUT_FOLDER, "*.sql");
 
+            Console.WriteLine(inputFiles.Length + " file(s) loaded.");
+
             StringBuilder outputBuilder = new StringBuilder();
 
             foreach(var file in inputFiles)
