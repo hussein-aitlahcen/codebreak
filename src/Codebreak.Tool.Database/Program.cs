@@ -27,7 +27,7 @@ namespace Codebreak.Tool.Database
             Processor.Start();
 
             var configManager = new ConfigurationManager();
-            configManager.RegisterAttributes(Assembly.GetAssembly(typeof(Program)));
+            configManager.RegisterAttributes();
             configManager.Add(new JsonConfigurationProvider(CONFIG_PATH), true);
             configManager.Load();
 

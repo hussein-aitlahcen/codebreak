@@ -1,4 +1,5 @@
-﻿using Codebreak.Framework.Generic;
+﻿using Codebreak.Framework.Configuration;
+using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
@@ -19,11 +20,9 @@ namespace Codebreak.Tool.Database
     /// </summary>
     public partial class MainForm : Form
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        private BasicTaskProcessor m_processor;
-
+        [Configurable("DbConnection")]
+        public static string DbConnection = "Server=localhost;Database=codebreak_world;Uid=root;Pwd=;";
+        
         /// <summary>
         /// 
         /// </summary>
@@ -62,7 +61,7 @@ namespace Codebreak.Tool.Database
         {
             Disable();
 
-            WorldDbMgr.Instance.Initialize();
+            WorldDbMgr.Instance.Initialize(DbConnection);
 
             LoadNpcTemplates();
 

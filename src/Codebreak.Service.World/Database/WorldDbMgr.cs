@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Database
         [Configurable("DbConnection")]
 		public static string DbConnection = "Server=localhost;Database=codebreak_world;Uid=root;Pwd=;";
 
-        public void Initialize()
+        public void Initialize(string dbConnection = "")
         {
             base.AddRepository(ExperienceTemplateRepository.Instance);
             base.AddRepository(SubAreaRepository.Instance);
@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(MonstersRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
 
-            base.LoadAll(DbConnection);
+            base.LoadAll(string.IsNullOrWhiteSpace(dbConnection) ? DbConnection : dbConnection);
         }
     }
 }

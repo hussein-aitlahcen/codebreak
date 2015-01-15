@@ -118,8 +118,7 @@ namespace Codebreak.Framework.Configuration
 
             if (final == null)
                 throw new InvalidOperationException("no commitable provider available");
-
-
+            
             final.Commit();
         }
 
