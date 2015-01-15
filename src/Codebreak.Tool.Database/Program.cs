@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Configuration;
 using Codebreak.Framework.Configuration.Providers;
+using Codebreak.Framework.Generic;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Codebreak.Tool.Database
     static class Program
     {
         static string CONFIG_PATH = "./config.json";
+        public static BasicTaskProcessor Processor = new BasicTaskProcessor("Processor");
 
         /// <summary>
         /// Point d'entrée principal de l'application.
@@ -21,6 +23,8 @@ namespace Codebreak.Tool.Database
         static void Main()
         {
             XmlConfigurator.Configure();
+
+            Processor.Start();
 
             var configManager = new ConfigurationManager();
             configManager.RegisterAttributes(Assembly.GetAssembly(typeof(Program)));

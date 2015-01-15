@@ -81,7 +81,7 @@ namespace Codebreak.Service.World.Database.Structure
         public long RequiredKamas
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -99,23 +99,30 @@ namespace Codebreak.Service.World.Database.Structure
         public long RewardedKamas
         {
             get;
-            private set;
+            set;
         }
         
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dataString"></param>
-        public RewardEntry(string dataString)
-        { 
+        public RewardEntry()
+        {
             RequiredItems = new List<ItemEntry>();
             RewardedItems = new List<ItemEntry>();
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataString"></param>
+        public RewardEntry(string dataString)
+            : this()
+        { 
             var data = dataString.Split(';');
             var requiredData = data[0];
             var rewardedData = data[1];
 
-            foreach(var required in requiredData.Split(','))
+            foreach (var required in requiredData.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var subData = required.Split(':');
                 var type = subData[0];
@@ -134,7 +141,7 @@ namespace Codebreak.Service.World.Database.Structure
                 }
             }
 
-            foreach (var reward in rewardedData.Split(','))
+            foreach (var reward in rewardedData.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var subData = reward.Split(':');
                 var type = subData[0];
@@ -152,6 +159,33 @@ namespace Codebreak.Service.World.Database.Structure
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string Serialize()
+        {
+            StringBuilder serialized = new StringBuilder();
+            List<string> data = new List<string>();
+
+            if (RequiredKamas > 0)
+                data.Add("kamas:0:" + RequiredKamas);
+            foreach(var entry in RequiredItems)
+                data.Add("item:" + entry.TemplateId + ":" + entry.Quantity);
+
+            serialized.Append(string.Join(",", data)).Append(';');
+
+            data.Clear();
+            if (RewardedKamas > 0)
+                data.Add("kamas:0:" + RewardedKamas);
+            foreach (var entry in RewardedItems)
+                data.Add("item:" + entry.TemplateId + ":" + entry.Quantity);
+
+            serialized.Append(string.Join(",", data));
+
+            return serialized.ToString();
         }
 
         /// <summary>

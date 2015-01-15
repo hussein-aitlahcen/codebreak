@@ -111,6 +111,11 @@
             // numericUpDownSearchNpcTemplateId
             // 
             this.numericUpDownSearchNpcTemplateId.Location = new System.Drawing.Point(162, 8);
+            this.numericUpDownSearchNpcTemplateId.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numericUpDownSearchNpcTemplateId.Name = "numericUpDownSearchNpcTemplateId";
             this.numericUpDownSearchNpcTemplateId.Size = new System.Drawing.Size(67, 20);
             this.numericUpDownSearchNpcTemplateId.TabIndex = 6;
@@ -192,12 +197,12 @@
             this.contextMenuStripNpcTemplate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editerToolStripMenuItemNpcTemplate});
             this.contextMenuStripNpcTemplate.Name = "contextMenuStripNpcTemplate";
-            this.contextMenuStripNpcTemplate.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripNpcTemplate.Size = new System.Drawing.Size(105, 26);
             // 
             // editerToolStripMenuItemNpcTemplate
             // 
             this.editerToolStripMenuItemNpcTemplate.Name = "editerToolStripMenuItemNpcTemplate";
-            this.editerToolStripMenuItemNpcTemplate.Size = new System.Drawing.Size(152, 22);
+            this.editerToolStripMenuItemNpcTemplate.Size = new System.Drawing.Size(104, 22);
             this.editerToolStripMenuItemNpcTemplate.Text = "Editer";
             this.editerToolStripMenuItemNpcTemplate.Click += new System.EventHandler(this.editerToolStripMenuItemNpcTemplate_Click);
             // 

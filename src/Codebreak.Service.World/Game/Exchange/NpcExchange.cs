@@ -119,7 +119,9 @@ namespace Codebreak.Service.World.Game.Exchange
                 if (invItem == null)
                     return 0;
                 m_templateQuantity[invItem.TemplateId] -= quantity;
-
+                if (m_templateQuantity[invItem.TemplateId] == 0)
+                    m_templateQuantity.Remove(invItem.TemplateId);
+                                
                 CheckRewards();
 
                 return removed;
@@ -147,6 +149,8 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         private void CheckRewards()
         {
+            Character.CachedBuffer = true;
+
             if(m_reward != null)
                 foreach(var item in m_reward.RewardedItems)            
                     Character.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, item.TemplateId.ToString()));
@@ -155,15 +159,15 @@ namespace Codebreak.Service.World.Game.Exchange
 
             Character.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, "0"));
 
-            m_reward = Npc.Rewards.Find(entry => entry.Match(m_templateQuantity, base.m_exchangedKamas[Character.Id]));
+            m_reward = (m_templateQuantity.Count > 0 || m_exchangedKamas[Character.Id] > 0) ? Npc.Rewards.Find(entry => entry.Match(m_templateQuantity, m_exchangedKamas[Character.Id])) : null;
             if (m_reward != null)
             {
                 foreach (var item in m_reward.RewardedItems)
-                {
                     Character.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.TemplateId + "|" + item.Quantity + '|' + item.TemplateId + '|' + item.Template.Effects));   
-                }
                 Character.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(ExchangeMoveEnum.MOVE_GOLD, OperatorEnum.OPERATOR_ADD, m_reward.RewardedKamas.ToString()));
             }
+
+            Character.CachedBuffer = false;
         }
     }
 }

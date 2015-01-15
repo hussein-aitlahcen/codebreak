@@ -76,6 +76,14 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        public bool Save()
+        {
+            return SqlManager.Instance.Update<T>((T)this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void OnBeforeUpdate()
         {
         }

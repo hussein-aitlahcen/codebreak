@@ -39,9 +39,6 @@ namespace Codebreak.Tool.Database
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
-            m_processor = new BasicTaskProcessor("MainForm_Action");
-            m_processor.Start();
-
             tabControl1.Enabled = false;
         }
 
@@ -52,18 +49,10 @@ namespace Codebreak.Tool.Database
         /// <param name="e"></param>
         private void chargerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClearViews();
             tabControl1.Enabled = true;
             chargerToolStripMenuItem.Enabled = false;
-            m_processor.AddMessage(() => LoadDatabase());
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private void ClearViews()
-        {
-            ClearNpcTemplates();
+            Program.Processor.AddMessage(() => LoadDatabase());
         }
 
         /// <summary>
@@ -118,6 +107,7 @@ namespace Codebreak.Tool.Database
         /// </summary>
         private void LoadNpcTemplates()
         {
+            ClearNpcTemplates();
             InitProgressbar(NpcTemplateRepository.Instance.GetAll().Count());
             foreach(var npcTemplate in NpcTemplateRepository.Instance.GetAll())
             {
@@ -140,7 +130,10 @@ namespace Codebreak.Tool.Database
                         npcTemplate.Name,
                         npcTemplate.Sell,
                         npcTemplate.Exchange
-                    }));
+                    })
+                    {
+                        Tag = npcTemplate
+                    });
                 });
         }
 
@@ -176,9 +169,7 @@ namespace Codebreak.Tool.Database
         private void btnSearchNpcTemplate_Click(object sender, EventArgs e)
         {
             Disable();
-
-            ClearNpcTemplates();
-
+            
             var id = (int)numericUpDownSearchNpcTemplateId.Value;
             var name = txtBoxSearchNpcTemplateName.Text.ToLower();
 
@@ -188,6 +179,7 @@ namespace Codebreak.Tool.Database
             }
             else
             {
+                ClearNpcTemplates();
                 foreach (var npcTemplate in NpcTemplateRepository.Instance.GetAll())
                 {
                     if ((id == 0 ? false : npcTemplate.Id == id) || (string.IsNullOrWhiteSpace(name) ? false : npcTemplate.Name.ToLower().Contains(name)))
@@ -207,7 +199,8 @@ namespace Codebreak.Tool.Database
         /// <param name="e"></param>
         private void editerToolStripMenuItemNpcTemplate_Click(object sender, EventArgs e)
         {
-
+            new NpcTemplateEdition(listViewNpcTemplate.SelectedItems[0].Tag as NpcTemplateDAO).ShowDialog();
+            LoadNpcTemplates();
         }
     }
 }
