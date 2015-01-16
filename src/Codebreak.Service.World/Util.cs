@@ -4,20 +4,115 @@ using System.Collections.Generic;
 using Codebreak.Framework.Utils;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Entity;
+using System.Text;
 
 namespace Codebreak.Service.World
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Util
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static List<char> HASH = new List<char>() {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
                 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private static char[] CHAR_LIST = new char[] 
                                          {
                                              '0', '1','2','3','4','5','6','7','8','9',
                                              'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
                                          };
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private static FastRandom Random = new FastRandom();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string[] HEX_CHARS = new string[] 
+        {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
+        public static string CRYPT_KEY = "qs56d48rez98r";
+        public static string CRYPT_KEY_ID = "1";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string CheckSum(string message)
+        {
+            var loc3 = 0;
+            for (int i = 0; i < message.Length; i++)            
+                loc3 += message[i] % 16;            
+            return HEX_CHARS[loc3 % 16];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string PrepareData(string message)
+        {
+            var chekSum = CheckSum(message);
+            return CRYPT_KEY_ID + chekSum + Cypher(message, CRYPT_KEY, Convert.ToInt16(chekSum) * 2);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="hex"></param>
+        /// <param name="serial"></param>
+        /// <returns></returns>
+        public static string Cypher(string message, string key, int serial)
+        {
+            var loc5 = new StringBuilder();
+            var loc6 = key.Length;
+            return "";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string preEscape(string message)
+        {
+            var loc3 = new StringBuilder();
+            for(int i = 0; i < message.Length; i++)
+            {
+                var currentChar = message[i];
+                if(currentChar < 32 || (currentChar > 127 || currentChar == '%' || currentChar == '+'))
+                    loc3.Append(currentChar); // url encode   
+            }
+            return loc3.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string Decypher(int key, string message)
+        {
+            return "";
+        }
 
         /// <summary>
         /// 

@@ -279,9 +279,9 @@ namespace Codebreak.Service.World.Network
         /// 
         /// </summary>
         /// <returns></returns>
-        public static string ACCOUNT_TICKET_SUCCESS()
+        public static string ACCOUNT_TICKET_SUCCESS(int key = 0)
         {
-            return "ATK0";
+            return "ATK" + Convert.ToInt16(key);
         }
 
         /// <summary>
