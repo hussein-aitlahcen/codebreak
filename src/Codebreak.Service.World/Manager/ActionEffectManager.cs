@@ -97,7 +97,7 @@ namespace Codebreak.Service.World.Manager
                 {
                     if (m_effectById.ContainsKey(effect.Key))
                     {
-                        used = used || m_effectById[effect.Key].ProcessItem(character, item, effect.Value, targetId, targetCell);
+                        used = m_effectById[effect.Key].ProcessItem(character, item, effect.Value, targetId, targetCell) || used;
                     }
                 }
             }
@@ -107,7 +107,7 @@ namespace Codebreak.Service.World.Manager
                 {
                     foreach(var effect in m_effectByType[(ItemTypeEnum)item.Template.Type])
                     {
-                        used = used || effect.ProcessItem(character, item, null, targetId, targetCell);
+                        used = effect.ProcessItem(character, item, null, targetId, targetCell) || used;
                     }
                 }
             }

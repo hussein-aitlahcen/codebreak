@@ -100,7 +100,7 @@ namespace Codebreak.Framework.Network
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public void Send(string message)
+        public virtual void Send(string message)
         {
             message = message + (char)0x00; // delimiter
 
