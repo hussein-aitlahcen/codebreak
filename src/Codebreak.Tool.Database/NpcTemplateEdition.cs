@@ -44,6 +44,8 @@ namespace Codebreak.Tool.Database
             foreach (var item in m_npcTemplate.ShopList)
                 AddToSell(item);
             ReloadRewards();
+
+            comboBoxAddItemTemplate.DataSource = ItemTemplateRepository.Instance.GetAll().OrderBy(item => item.Name).ToList();
         }
 
         /// <summary>
@@ -120,7 +122,7 @@ namespace Codebreak.Tool.Database
         /// <param name="e"></param>
         private void btnAddToSell_Click(object sender, EventArgs e)
         {
-            var itemTemplate = ItemTemplateRepository.Instance.GetById((int)numericUpDown1.Value);
+            var itemTemplate = (ItemTemplateDAO)comboBoxAddItemTemplate.SelectedValue;
             if (itemTemplate == null)
             {
                 MessageBox.Show("Item inéxistant.");
@@ -144,32 +146,12 @@ namespace Codebreak.Tool.Database
         private void btnSaveSellList_Click(object sender, EventArgs e)
         {
             m_npcTemplate.Sell = string.Join(",", m_npcTemplate.ShopList.Select(item => item.Id));
-            if(!m_npcTemplate.Save())
+            if(!m_npcTemplate.Update())
             {
                 MessageBox.Show("Impossible de sauvegarder.");
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-             var itemTemplate = ItemTemplateRepository.Instance.GetById((int)numericUpDown1.Value);
-            if (itemTemplate == null)
-            {
-                toolStripStatusLabelCurrentItemName.Text = "Item inéxistant";
-                toolStripStatusLabelCurrentItemName.ForeColor = Color.Red;
-            }
-            else
-            {
-                toolStripStatusLabelCurrentItemName.Text = itemTemplate.Name;
-                toolStripStatusLabelCurrentItemName.ForeColor = Color.DarkGreen;
-            }
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -184,30 +166,6 @@ namespace Codebreak.Tool.Database
                     var template = item.Tag as ItemTemplateDAO;
                     m_npcTemplate.ShopList.Remove(template);
                     listViewSellList.Items.Remove(item);
-                }
-            }
-        }
-
-     
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
-        {
-            if (comboBox1.SelectedText == "item")
-            {
-                var itemTemplate = ItemTemplateRepository.Instance.GetById((int)numericUpDown2.Value);
-                if (itemTemplate == null)
-                {
-                    toolStripStatusLabelCurrentItemName.Text = "Item inéxistant";
-                    toolStripStatusLabelCurrentItemName.ForeColor = Color.Red;
-                }
-                else
-                {
-                    toolStripStatusLabelCurrentItemName.Text = itemTemplate.Name;
-                    toolStripStatusLabelCurrentItemName.ForeColor = Color.DarkGreen;
                 }
             }
         }
@@ -282,7 +240,7 @@ namespace Codebreak.Tool.Database
         private void btnSaveRewards_Click(object sender, EventArgs e)
         {
             m_npcTemplate.Exchange = string.Join("|", m_npcTemplate.Rewards.Select(reward => reward.Serialize()));
-            if (!m_npcTemplate.Save())
+            if (!m_npcTemplate.Update())
             {
                 MessageBox.Show("Impossible de sauvegarder.");
             }

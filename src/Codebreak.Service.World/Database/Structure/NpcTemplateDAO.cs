@@ -361,5 +361,14 @@ namespace Codebreak.Service.World.Database.Structure
                 return m_templatesToSell;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Id + " ( " + Name + " ) ";
+        }
     }
 }

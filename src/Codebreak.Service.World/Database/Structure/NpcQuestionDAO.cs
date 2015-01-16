@@ -62,5 +62,14 @@ namespace Codebreak.Service.World.Database.Structure
                 return m_responses;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Id + " ( " + Params + " - " + Responses + " )"; 
+        }
     }
 }

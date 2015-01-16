@@ -157,5 +157,14 @@ namespace Codebreak.Service.World.Database.Structure
                 return m_fightTeam1Cells;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Id + " ( " + X + ", " + Y +  ", " + SubAreaId + " )";
+        }
     }
 }

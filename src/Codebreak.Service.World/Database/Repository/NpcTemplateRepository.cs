@@ -49,7 +49,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public NpcTemplateDAO GetTemplate(int id)
+        public NpcTemplateDAO GetById(int id)
         {
             if (m_templateById.ContainsKey(id))
                 return m_templateById[id];

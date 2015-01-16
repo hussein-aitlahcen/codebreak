@@ -64,6 +64,45 @@ namespace Codebreak.Tool.Database
             WorldDbMgr.Instance.Initialize(DbConnection);
 
             LoadNpcTemplates();
+            SafeExecute(() =>
+            {
+                ColumnNpcInstanceId.ValueType = typeof(int);
+
+                ColumnNpcInstanceCellId.ValueType = typeof(int);
+
+                ColumnNpcInstanceOrientation.ValueType = typeof(int);
+
+                ColumnNpcInstanceMapId.ValueType = typeof(MapTemplateDAO);
+                ColumnNpcInstanceMapId.ValueMember = "This";
+                ColumnNpcInstanceMapId.DisplayMember = "DisplayMember";
+                ColumnNpcInstanceMapId.DataSource = MapRepository.Instance.GetAll().OrderBy(map => map.Id).ToList();
+
+                ColumnNpcInstanceTemplateId.ValueType = typeof(NpcTemplateDAO);
+                ColumnNpcInstanceTemplateId.ValueMember = "This";
+                ColumnNpcInstanceTemplateId.DisplayMember = "DisplayMember";
+                ColumnNpcInstanceTemplateId.DataSource = NpcTemplateRepository.Instance.GetAll().OrderBy(template => template.Name).ToList();
+
+                ColumnNpcInstanceQuestionId.ValueType = typeof(NpcQuestionDAO);
+                ColumnNpcInstanceQuestionId.ValueMember = "This";
+                ColumnNpcInstanceQuestionId.DisplayMember = "DisplayMember";
+                ColumnNpcInstanceQuestionId.DataSource = NpcQuestionRepository.Instance.GetAll();
+
+                foreach(var npcInstance in NpcInstanceRepository.Instance.GetAll())
+                {
+                    var row = new DataGridViewRow()
+                    {
+                        Tag = npcInstance
+                    };
+                    row.CreateCells(dataGridViewNpcInstance,
+                        npcInstance.Id,
+                        npcInstance.Map,
+                        npcInstance.Template,
+                        npcInstance.CellId,
+                        npcInstance.Orientation,
+                        npcInstance.Question);
+                    dataGridViewNpcInstance.Rows.Add(row);
+                }
+            });
 
             Enable();
         }
@@ -106,6 +145,8 @@ namespace Codebreak.Tool.Database
         /// </summary>
         private void LoadNpcTemplates()
         {
+            SafeExecute(() => { toolStripStatusLabelState.Text = "Chargement NpcTemplate ..."; toolStripStatusLabelState.ForeColor = Color.Blue; });
+
             ClearNpcTemplates();
             InitProgressbar(NpcTemplateRepository.Instance.GetAll().Count());
             foreach(var npcTemplate in NpcTemplateRepository.Instance.GetAll())
@@ -113,6 +154,8 @@ namespace Codebreak.Tool.Database
                 AddNpcTemplate(npcTemplate);
                 UpdateProgressbar();
             }
+
+            SafeExecute(() => { toolStripStatusLabelState.Text = "Chargé"; toolStripStatusLabelState.ForeColor = Color.DarkGreen; });
         }
 
         /// <summary>
@@ -200,6 +243,76 @@ namespace Codebreak.Tool.Database
         {
             new NpcTemplateEdition(listViewNpcTemplate.SelectedItems[0].Tag as NpcTemplateDAO).ShowDialog();
             LoadNpcTemplates();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewNpcInstance_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewNpcInstance_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewNpcInstance_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1)
+            {
+                var row = dataGridViewNpcInstance.Rows[e.RowIndex];
+                var column = row.Cells[e.ColumnIndex];
+                var value = column.Value;
+                var npcInstance = row.Tag as NpcInstanceDAO;
+
+                switch(column.OwningColumn.HeaderText)
+                {
+                    case "Id":
+                        break;
+
+                    case "MapId":
+                        var map = value as MapTemplateDAO;
+                        npcInstance.MapId = map.Id;
+                        break;
+
+                    case "Template":
+                        var template = value as NpcTemplateDAO;
+                        npcInstance.TemplateId = template.Id;
+                        break;
+
+                    case "CellId":
+                        npcInstance.CellId = (int)value;
+                        break;
+
+                    case "Ortientation":
+                        npcInstance.Orientation = (int)value;
+                        break;
+
+                    case "Question":
+                        var question = value as NpcQuestionDAO;
+                        npcInstance.QuestionId = question.Id;
+                        break;
+                }
+
+                if(!npcInstance.Update())
+                {
+                    MessageBox.Show("Impossible de sauvegarder");
+                }
+            }
         }
     }
 }

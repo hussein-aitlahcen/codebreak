@@ -76,9 +76,50 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        public bool Save()
+        public bool Update()
         {
             return SqlManager.Instance.Update<T>((T)this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Delete()
+        {
+            return SqlManager.Instance.Remove<T>((T)this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Insert()
+        {
+            return SqlManager.Instance.Insert((T)this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public T This
+        {
+            get
+            {
+                return (T)this;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public string DisplayMember
+        {
+            get
+            {
+                return ToString();
+            }
         }
 
         /// <summary>

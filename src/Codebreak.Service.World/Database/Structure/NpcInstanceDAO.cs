@@ -56,9 +56,49 @@ namespace Codebreak.Service.World.Database.Structure
         {
             get
             {
-                if (m_template == null)
-                    m_template = NpcTemplateRepository.Instance.GetTemplate(TemplateId);
+                if (m_template == null || m_template.Id != TemplateId)
+                    m_template = NpcTemplateRepository.Instance.GetById(TemplateId);
                 return m_template;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private MapTemplateDAO m_map;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        [DoNotNotify]
+        public MapTemplateDAO Map
+        {
+            get
+            {
+                if (m_map == null || m_map.Id != MapId)
+                    m_map = MapRepository.Instance.GetById(MapId);
+                return m_map;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private NpcQuestionDAO m_question;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        [DoNotNotify]
+        public NpcQuestionDAO Question
+        {
+            get
+            {
+                if (m_question == null || m_question.Id != QuestionId)
+                    m_question = NpcQuestionRepository.Instance.GetById(QuestionId);
+                return m_question;
             }
         }
     }

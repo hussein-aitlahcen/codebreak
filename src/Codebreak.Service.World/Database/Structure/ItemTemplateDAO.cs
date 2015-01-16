@@ -612,5 +612,14 @@ namespace Codebreak.Service.World.Database.Structure
         {
             return InventoryItemDAO.Create(Id, quantity, GenerateStats(maxJet));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Id + " ( " + Name + " ) ";
+        }
     }
 }
