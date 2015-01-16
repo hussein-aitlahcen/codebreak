@@ -90,7 +90,8 @@ namespace Codebreak.Service.World
             base.AddUpdatable(Dispatcher = new MessageDispatcher());
             base.AddUpdatable(RPCManager.Instance);
             base.AddTimer(WorldSaveInternal, SaveWorld);
-            
+
+            Util.GenerateNetworkKey();            
             WorldDbMgr.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();
             JobManager.Instance.Initialize();

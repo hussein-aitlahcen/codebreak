@@ -49,7 +49,7 @@ namespace Codebreak.Service.World
         /// <summary>
         /// 
         /// </summary>
-        public static string CRYPT_KEY = GenerateNetworkKey();
+        public static string CRYPT_KEY = string.Empty;
         
         /// <summary>
         /// 
@@ -111,7 +111,7 @@ namespace Codebreak.Service.World
         public static string UnprepareData(string message)
         {
             var checkSum = message[1];
-            var decrypted = Decypher(message.Substring(2), CRYPT_KEY_PREPARED, int.Parse(checkSum.ToString(), NumberStyles.HexNumber) * 2);
+            var decrypted = HttpUtility.UrlDecode(Decypher(message.Substring(2), CRYPT_KEY_PREPARED, int.Parse(checkSum.ToString(), NumberStyles.HexNumber) * 2));
             if(CheckSum(decrypted) != checkSum)            
                 return message;            
             return decrypted;
@@ -127,8 +127,8 @@ namespace Codebreak.Service.World
             do
             {
                 CRYPT_KEY = InternalGenerateNetworkKey();
-            } while (CheckSum(CRYPT_KEY.Substring(0, CRYPT_KEY.Length - 1)) != CRYPT_KEY[CRYPT_KEY.Length - 1] ||
-                CheckSum(CRYPT_KEY.Substring(1, CRYPT_KEY.Length - 2)) != CRYPT_KEY[0]);
+            } while ((CRYPT_KEY.Length % 2) != 0 || (CheckSum(CRYPT_KEY.Substring(0, CRYPT_KEY.Length - 1)) != CRYPT_KEY[CRYPT_KEY.Length - 1] ||
+                CheckSum(CRYPT_KEY.Substring(1, CRYPT_KEY.Length - 2)) != CRYPT_KEY[0]));
 
             var prepared = new StringBuilder();
             for (int i = 0; i < CRYPT_KEY.Length; i += 2)
@@ -148,7 +148,7 @@ namespace Codebreak.Service.World
         public static string InternalGenerateNetworkKey()
         {
             var _loc2 = new StringBuilder();
-            var _loc3 = Math.Round(Random.NextDouble() * 20) + 10;            
+            var _loc3 = 10;            
             for(int i = 0;i < _loc3; i++)            
                 _loc2.Append(GetRandomChar());            
             var _loc5 = CheckSum(_loc2.ToString()) + _loc2.ToString();
@@ -190,11 +190,7 @@ namespace Codebreak.Service.World
             var loc7 = 0;
             for (int i = 0; i < message.Length; i += 2)
             {
-                var hex = int.Parse(message.Substring(i, 2), NumberStyles.HexNumber);
-                var keyChar = key[(loc7 + serial) % length];
-                var calcul = (char)(hex ^ keyChar);
-                loc7++;
-                result.Append(calcul);
+                result.Append((char)(int.Parse(message.Substring(i, 2), NumberStyles.HexNumber) ^ key[(loc7++ + serial) % length]));
             }
             return result.ToString();
         }
@@ -214,10 +210,24 @@ namespace Codebreak.Service.World
             message = PreEscape(message);
 
             for (int i = 0; i < message.Length; i++)            
-                result.Append((message[i] ^ key[(i + serial) % length]).ToString("x"));
+                result.Append(D2h(message[i] ^ key[(i + serial) % length]));
+
             
             return result.ToString();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string D2h(int value)
+        {
+            if (value > 255)
+                value = 255;
+            return HEX_CHARS[(int)Math.Floor(value / 16.0)] + "" + HEX_CHARS[value % 16];
+        }
+
         
         /// <summary>
         /// 
