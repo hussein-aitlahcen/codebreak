@@ -1,4 +1,6 @@
-﻿using Codebreak.Service.World.Game.Entity;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -22,9 +24,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public override bool ProcessItem(CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericStats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.VariableEffect effect, long targetId, int targetCell)
         {
-            return Process(character, new Dictionary<string, string>() { { "spellId", effect.Items.ToString() } });
+            return Process(character, new Dictionary<string, string>() { { "spellId", effect.RandomJet.ToString() } });
         }
 
         /// <summary>

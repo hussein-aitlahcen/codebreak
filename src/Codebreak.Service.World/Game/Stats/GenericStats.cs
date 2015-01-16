@@ -160,7 +160,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        public sealed class WeaponEffect
+        public sealed class VariableEffect
         {
             /// <summary>
             /// 
@@ -173,7 +173,7 @@ namespace Codebreak.Service.World.Game.Stats
             /// <summary>
             /// 
             /// </summary>
-            public WeaponEffect()
+            public VariableEffect()
             {
             }
 
@@ -183,7 +183,7 @@ namespace Codebreak.Service.World.Game.Stats
             /// <param name="min"></param>
             /// <param name="max"></param>
             /// <param name="args"></param>
-            public WeaponEffect(int effectId, int min, int max, string args)
+            public VariableEffect(int effectId, int min, int max, string args)
             {
                 EffectId = effectId;
                 Min = min;
@@ -203,13 +203,25 @@ namespace Codebreak.Service.World.Game.Stats
                 serializedStats.Append("0d0+0");
                 return serializedStats.ToString();
             }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [ProtoIgnore]
+            public int RandomJet
+            {
+                get
+                {
+                    return Util.NextJet(Min, Max);
+                }
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
         private Dictionary<EffectEnum, GenericEffect> m_genericEffects = new Dictionary<EffectEnum, GenericEffect>();
-        private List<WeaponEffect> m_weaponEffects = new List<WeaponEffect>();
+        private List<VariableEffect> m_variableEffects = new List<VariableEffect>();
         private Dictionary<EffectEnum, string> m_specialEffects = new Dictionary<EffectEnum, string>();
 
         /// <summary>
@@ -349,9 +361,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<WeaponEffect> GetWeaponEffects()
+        public List<VariableEffect> GetVariableEffects()
         {
-            return m_weaponEffects;
+            return m_variableEffects;
         }
 
         /// <summary>
@@ -468,9 +480,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         /// <param name="EffectType"></param>
         /// <returns></returns>
-        public IEnumerable<WeaponEffect> GetWeaponEffect(EffectEnum EffectType)
+        public IEnumerable<VariableEffect> GetVariableEffect(EffectEnum EffectType)
         {
-            return m_weaponEffects.Where(effect => effect.EffectId == (int)EffectType);
+            return m_variableEffects.Where(effect => effect.EffectId == (int)EffectType);
         }
 
         /// <summary>
@@ -548,9 +560,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="effectType"></param>
         /// <param name="minJet"></param>
         /// <param name="maxJet"></param>
-        public void AddWeaponEffect(EffectEnum effectType, int minJet, int maxJet, string args)
+        public void AddVariableEffect(EffectEnum effectType, int minJet, int maxJet, string args)
         {
-            m_weaponEffects.Add(new WeaponEffect((int)effectType, minJet, maxJet, args));
+            m_variableEffects.Add(new VariableEffect((int)effectType, minJet, maxJet, args));
         }
 
         /// <summary>
@@ -566,9 +578,26 @@ namespace Codebreak.Service.World.Game.Stats
         /// <summary>
         /// 
         /// </summary>
+        [ProtoIgnore]
+        private string m_serialized;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string ToItemStats()
         {
-            return string.Join(",", (m_weaponEffects.Count > 0 ? m_weaponEffects.Select(x => x.ToString()) + (m_genericEffects.Count > 0 ? "," : "") : "") +  string.Join(",", m_genericEffects.Select(x => x.Value.ToItemString())));
+            if(m_serialized == null)
+            {
+                var serialized = new StringBuilder();
+                serialized.Append(string.Join(",", m_variableEffects));
+                if(m_genericEffects.Count > 0)
+                {
+                    serialized.Append(',');
+                    serialized.Append(string.Join(",", m_genericEffects.Select(x => x.Value.ToItemString())));
+                }
+                m_serialized = serialized.ToString();
+            }
+            return m_serialized;
         }
 
         /// <summary>
@@ -610,8 +639,8 @@ namespace Codebreak.Service.World.Game.Stats
             m_specialEffects.Clear();
             m_specialEffects = null;
 
-            m_weaponEffects.Clear();
-            m_weaponEffects = null;
+            m_variableEffects.Clear();
+            m_variableEffects = null;
         }
 
         /// <summary>

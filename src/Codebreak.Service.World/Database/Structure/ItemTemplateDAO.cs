@@ -589,14 +589,21 @@ namespace Codebreak.Service.World.Database.Structure
             var generatedStats = new GenericStats();                        
             foreach(var weaponEffect in WeaponEffects)
             {
-                generatedStats.AddWeaponEffect(weaponEffect.Item1, weaponEffect.Item2, weaponEffect.Item3, weaponEffect.Item2 + ";" + weaponEffect.Item3 + ";-1;-1;0;0d0+0");
+                generatedStats.AddVariableEffect(weaponEffect.Item1, weaponEffect.Item2, weaponEffect.Item3, weaponEffect.Item2 + ";" + weaponEffect.Item3 + ";-1;-1;0;0d0+0");
             }
             foreach (var effect in GenericEffects)
             {
-                if (effect.Item3 > effect.Item2)
-                    generatedStats.AddItem(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                if (Usable)
+                {
+                    generatedStats.AddVariableEffect(effect.Item1, effect.Item2, effect.Item3, "");
+                }
                 else
-                    generatedStats.AddItem(effect.Item1, effect.Item2);
+                {
+                    if (effect.Item3 > effect.Item2)
+                        generatedStats.AddItem(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                    else
+                        generatedStats.AddItem(effect.Item1, effect.Item2);
+                }
             }
             return generatedStats;
         }

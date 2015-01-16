@@ -93,11 +93,11 @@ namespace Codebreak.Service.World.Manager
 
             if (item.StringEffects != string.Empty)
             {
-                foreach (var effect in item.Statistics.GetEffects())
+                foreach (var effect in item.Statistics.GetVariableEffects())
                 {
-                    if (m_effectById.ContainsKey(effect.Key))
+                    if (m_effectById.ContainsKey((EffectEnum)effect.EffectId))
                     {
-                        used = m_effectById[effect.Key].ProcessItem(character, item, effect.Value, targetId, targetCell) || used;
+                        used = m_effectById[(EffectEnum)effect.EffectId].ProcessItem(character, item, effect, targetId, targetCell) || used;
                     }
                 }
             }

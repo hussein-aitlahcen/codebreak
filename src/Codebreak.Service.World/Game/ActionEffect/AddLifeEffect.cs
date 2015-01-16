@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetCell"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public override bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.VariableEffect effect, long targetId, int targetCell)
         {            
             if(targetId != -1)
             {
@@ -47,7 +47,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
                     break;
             }
 
-            return Process(character, new Dictionary<string, string>() { { "life", effect.Items.ToString() } });
+            return Process(character, new Dictionary<string, string>() { { "life", effect.RandomJet.ToString() } });
         }
 
         /// <summary>
