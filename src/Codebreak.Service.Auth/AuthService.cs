@@ -9,6 +9,7 @@ using Codebreak.Service.Auth.Frames;
 using Codebreak.Service.Auth.Network;
 using Codebreak.Service.Auth.RPC;
 using System;
+using Codebreak.Framework.Util;
 
 namespace Codebreak.Service.Auth
 {
@@ -55,6 +56,7 @@ namespace Codebreak.Service.Auth
             ConfigurationManager.Add(new JsonConfigurationProvider(configPath), true);
             ConfigurationManager.Load();
 
+            Crypt.GenerateNetworkKey();
             AuthDbMgr.Instance.Initialize();
             AuthRPCService.Instance.Start();
 

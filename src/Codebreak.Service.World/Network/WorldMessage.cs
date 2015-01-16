@@ -13,6 +13,7 @@ using System.Drawing;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Auction;
 using Codebreak.Service.World.Manager;
+using Codebreak.Framework.Util;
 
 namespace Codebreak.Service.World.Network
 {
@@ -281,7 +282,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ACCOUNT_TICKET_SUCCESS()
         {
-            return "ATK" + Util.CRYPT_KEY_INDEX + Util.CRYPT_KEY;
+            return "ATK" + Crypt.CRYPT_KEY_INDEX + Crypt.CRYPT_KEY;
         }
 
         /// <summary>

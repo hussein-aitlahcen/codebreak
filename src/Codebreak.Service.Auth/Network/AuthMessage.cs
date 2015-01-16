@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using Codebreak.RPC.Protocol;
 using Codebreak.Service.Auth.RPC;
+using Codebreak.Framework.Util;
 
 namespace Codebreak.Service.Auth.Network
 {
@@ -22,6 +23,15 @@ namespace Codebreak.Service.Auth.Network
         public static string HELLO_CONNECT(string key)
         {
             return "HC" + key;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string ACCOUNT_KEY()
+        {
+            return "AK" + Crypt.CRYPT_KEY_INDEX + Crypt.CRYPT_KEY;
         }
 
         /// <summary>

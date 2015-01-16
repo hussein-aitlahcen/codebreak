@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -101,6 +102,7 @@
     <Compile Include="Network\TcpClientBase.cs" />
     <Compile Include="Network\TcpServerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\Crypt.cs" />
     <Compile Include="Util\FastRandom.cs" />
     <Compile Include="Network\LinuxTcpServerBase.cs" />
   </ItemGroup>

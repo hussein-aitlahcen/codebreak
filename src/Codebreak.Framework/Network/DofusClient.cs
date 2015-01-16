@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.IO;
+using Codebreak.Framework.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,15 @@ namespace Codebreak.Framework.Network
         /// 
         /// </summary>
         public long LastPacketTime
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Cypher
         {
             get;
             set;
@@ -84,7 +94,10 @@ namespace Codebreak.Framework.Network
                         LastPacketTime = Environment.TickCount;
                     }
 
-                    yield return Encoding.UTF8.GetString(m_messageQueue.ReadBytes(m_messageQueue.Count));
+                    if (Cypher)
+                        yield return Crypt.UnprepareData(Encoding.UTF8.GetString(m_messageQueue.ReadBytes(m_messageQueue.Count)));
+                    else
+                        yield return Encoding.UTF8.GetString(m_messageQueue.ReadBytes(m_messageQueue.Count));
                 }
                 else
                 {
@@ -102,11 +115,17 @@ namespace Codebreak.Framework.Network
         /// <param name="message"></param>
         public virtual void Send(string message)
         {
-            message = message + (char)0x00; // delimiter
-
+            if (Cypher)
+            {
+                StringBuilder realMessage = new StringBuilder();
+                foreach (var packet in message.Split(new char[] { (char)0x00 }))
+                    realMessage.Append(Crypt.PrepareData(packet)).Append((char)0x00);
+                message = realMessage.ToString();
+            }
+            
             Logger.Debug("Server : " + message);
 
-            base.Send(Encoding.UTF8.GetBytes(message));
+            base.Send(Encoding.UTF8.GetBytes(message + (char)0x00));
         }
     }
 }

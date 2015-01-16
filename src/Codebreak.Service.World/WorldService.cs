@@ -20,6 +20,7 @@ using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Job;
 using System.Collections.Generic;
+using Codebreak.Framework.Util;
 
 namespace Codebreak.Service.World
 {
@@ -91,7 +92,7 @@ namespace Codebreak.Service.World
             base.AddUpdatable(RPCManager.Instance);
             base.AddTimer(WorldSaveInternal, SaveWorld);
 
-            Util.GenerateNetworkKey();            
+            Crypt.GenerateNetworkKey();            
             WorldDbMgr.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();
             JobManager.Instance.Initialize();
@@ -154,18 +155,12 @@ namespace Codebreak.Service.World
             foreach (var message in client.Receive(buffer, offset, count))
             {
                 Logger.Debug("Client : " + message);
-
-                var realMsg = message;
-                if (client.Cypher)
-                    realMsg = Util.UnprepareData(realMsg);
-
-                Logger.Debug("Client : " + realMsg);
-
+                
                 if (client.CurrentCharacter != null)
                 {
                     if (client.CurrentCharacter.FrameManager != null)
                     {
-                        if (!client.CurrentCharacter.FrameManager.ProcessMessage(realMsg))
+                        if (!client.CurrentCharacter.FrameManager.ProcessMessage(message))
                         {
                             client.CurrentCharacter.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                         }
@@ -173,7 +168,7 @@ namespace Codebreak.Service.World
                 }
                 else
                 {
-                    if (!client.FrameManager.ProcessMessage(realMsg))
+                    if (!client.FrameManager.ProcessMessage(message))
                     {
                         client.Send(WorldMessage.BASIC_NO_OPERATION());
                     }

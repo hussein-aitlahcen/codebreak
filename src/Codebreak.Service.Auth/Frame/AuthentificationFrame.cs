@@ -17,6 +17,8 @@ namespace Codebreak.Service.Auth.Frames
         /// <returns></returns>
         public override Action<AuthClient, string> GetHandler(string message)
         {
+            if (message.StartsWith("Ak"))
+                return HandleKey;
             if(message != "Af")
                 return HandleAuthentification;
             return null;
@@ -27,12 +29,21 @@ namespace Codebreak.Service.Auth.Frames
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleAuthentification(AuthClient client, string message)
+        private void HandleKey(AuthClient client, string message)
         {
             client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
+            client.FrameManager.AddFrame(WorldSelectionFrame.Instance);
+            client.Cypher = true;
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        private void HandleAuthentification(AuthClient client, string message)
+        {
             var credentials = message.Split('#');
-
             if(credentials.Length != 2)
             {
                 client.Send(AuthMessage.AUTH_FAILED_CREDENTIALS());
@@ -61,18 +72,18 @@ namespace Codebreak.Service.Auth.Frames
                 return;
             }
 
-            if(account.Banned)
+            if (account.Banned)
             {
                 client.Send(AuthMessage.AUTH_FAILED_BANNED());
                 return;
             }
 
-            if(AuthService.Instance.IsConnected(account.Id))
+            if (AuthService.Instance.IsConnected(account.Id))
             {
                 client.Send(AuthMessage.AUTH_FAILED_ALREADY_CONNECTED());
                 return;
             }
-                        
+
             AuthService.Instance.AddMessage(() =>
                 {
                     client.Account = account;
@@ -86,8 +97,7 @@ namespace Codebreak.Service.Auth.Frames
 
                     client.Send(AuthMessage.ACCOUNT_RIGHT(client.Account.Power));
                     client.Send(AuthMessage.ACCOUNT_SECRET_ANSWER());
-
-                    client.FrameManager.AddFrame(WorldSelectionFrame.Instance);
+                    client.Send(AuthMessage.ACCOUNT_KEY());
                 });
         }
     }
