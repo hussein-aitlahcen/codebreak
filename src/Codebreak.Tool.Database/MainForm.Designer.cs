@@ -48,17 +48,28 @@
             this.editerToolStripMenuItemNpcTemplate = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewNpcInstance = new System.Windows.Forms.DataGridView();
-            this.contextMenuStripNpcInstance = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabelState = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.ColumnNpcInstanceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnNpcInstanceMapId = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnNpcInstanceTemplateId = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnNpcInstanceCellId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnNpcInstanceOrientation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnNpcInstanceQuestionId = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.contextMenuStripNpcInstance = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelState = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.btnAddNpcInstance = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxAddNpcInstanceMap = new System.Windows.Forms.ComboBox();
+            this.comboBoxAddNpcInstanceTemplate = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownAddNpcInstanceCellId = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDownAddNpcInstanceOrientation = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.comboBoxAddNpcInstanceQuestion = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.TabNpcTemplate.SuspendLayout();
@@ -68,6 +79,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNpcInstance)).BeginInit();
             this.contextMenuStripNpcInstance.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddNpcInstanceCellId)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddNpcInstanceOrientation)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -224,6 +237,17 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.comboBoxAddNpcInstanceQuestion);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.numericUpDownAddNpcInstanceOrientation);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.numericUpDownAddNpcInstanceCellId);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.comboBoxAddNpcInstanceTemplate);
+            this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.comboBoxAddNpcInstanceMap);
+            this.tabPage2.Controls.Add(this.label3);
+            this.tabPage2.Controls.Add(this.btnAddNpcInstance);
             this.tabPage2.Controls.Add(this.dataGridViewNpcInstance);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -235,6 +259,7 @@
             // 
             // dataGridViewNpcInstance
             // 
+            this.dataGridViewNpcInstance.AllowUserToAddRows = false;
             this.dataGridViewNpcInstance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewNpcInstance.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnNpcInstanceId,
@@ -243,13 +268,50 @@
             this.ColumnNpcInstanceCellId,
             this.ColumnNpcInstanceOrientation,
             this.ColumnNpcInstanceQuestionId});
-            this.dataGridViewNpcInstance.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewNpcInstance.Location = new System.Drawing.Point(0, 32);
             this.dataGridViewNpcInstance.Name = "dataGridViewNpcInstance";
-            this.dataGridViewNpcInstance.Size = new System.Drawing.Size(1094, 463);
+            this.dataGridViewNpcInstance.Size = new System.Drawing.Size(1094, 431);
             this.dataGridViewNpcInstance.TabIndex = 28;
             this.dataGridViewNpcInstance.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewNpcInstance_CellValueChanged);
-            this.dataGridViewNpcInstance.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridViewNpcInstance_RowsAdded);
-            this.dataGridViewNpcInstance.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridViewNpcInstance_RowsRemoved);
+            this.dataGridViewNpcInstance.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridViewNpcInstance_UserDeletedRow);
+            // 
+            // ColumnNpcInstanceId
+            // 
+            this.ColumnNpcInstanceId.HeaderText = "Id";
+            this.ColumnNpcInstanceId.Name = "ColumnNpcInstanceId";
+            this.ColumnNpcInstanceId.ReadOnly = true;
+            // 
+            // ColumnNpcInstanceMapId
+            // 
+            this.ColumnNpcInstanceMapId.HeaderText = "Map";
+            this.ColumnNpcInstanceMapId.Name = "ColumnNpcInstanceMapId";
+            this.ColumnNpcInstanceMapId.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnNpcInstanceMapId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.ColumnNpcInstanceMapId.Width = 150;
+            // 
+            // ColumnNpcInstanceTemplateId
+            // 
+            this.ColumnNpcInstanceTemplateId.HeaderText = "Template";
+            this.ColumnNpcInstanceTemplateId.Name = "ColumnNpcInstanceTemplateId";
+            this.ColumnNpcInstanceTemplateId.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnNpcInstanceTemplateId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.ColumnNpcInstanceTemplateId.Width = 200;
+            // 
+            // ColumnNpcInstanceCellId
+            // 
+            this.ColumnNpcInstanceCellId.HeaderText = "CellId";
+            this.ColumnNpcInstanceCellId.Name = "ColumnNpcInstanceCellId";
+            // 
+            // ColumnNpcInstanceOrientation
+            // 
+            this.ColumnNpcInstanceOrientation.HeaderText = "Orientation";
+            this.ColumnNpcInstanceOrientation.Name = "ColumnNpcInstanceOrientation";
+            // 
+            // ColumnNpcInstanceQuestionId
+            // 
+            this.ColumnNpcInstanceQuestionId.HeaderText = "Question";
+            this.ColumnNpcInstanceQuestionId.Name = "ColumnNpcInstanceQuestionId";
+            this.ColumnNpcInstanceQuestionId.Width = 250;
             // 
             // contextMenuStripNpcInstance
             // 
@@ -287,43 +349,111 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(700, 16);
             // 
-            // ColumnNpcInstanceId
+            // btnAddNpcInstance
             // 
-            this.ColumnNpcInstanceId.HeaderText = "Id";
-            this.ColumnNpcInstanceId.Name = "ColumnNpcInstanceId";
-            this.ColumnNpcInstanceId.ReadOnly = true;
+            this.btnAddNpcInstance.Location = new System.Drawing.Point(6, 3);
+            this.btnAddNpcInstance.Name = "btnAddNpcInstance";
+            this.btnAddNpcInstance.Size = new System.Drawing.Size(75, 23);
+            this.btnAddNpcInstance.TabIndex = 29;
+            this.btnAddNpcInstance.Text = "Ajouter";
+            this.btnAddNpcInstance.UseVisualStyleBackColor = true;
+            this.btnAddNpcInstance.Click += new System.EventHandler(this.btnAddNpcInstance_Click);
             // 
-            // ColumnNpcInstanceMapId
+            // label3
             // 
-            this.ColumnNpcInstanceMapId.HeaderText = "MapId";
-            this.ColumnNpcInstanceMapId.Name = "ColumnNpcInstanceMapId";
-            this.ColumnNpcInstanceMapId.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColumnNpcInstanceMapId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColumnNpcInstanceMapId.Width = 150;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(87, 8);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "Map :";
             // 
-            // ColumnNpcInstanceTemplateId
+            // comboBoxAddNpcInstanceMap
             // 
-            this.ColumnNpcInstanceTemplateId.HeaderText = "Template";
-            this.ColumnNpcInstanceTemplateId.Name = "ColumnNpcInstanceTemplateId";
-            this.ColumnNpcInstanceTemplateId.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColumnNpcInstanceTemplateId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColumnNpcInstanceTemplateId.Width = 200;
+            this.comboBoxAddNpcInstanceMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAddNpcInstanceMap.FormattingEnabled = true;
+            this.comboBoxAddNpcInstanceMap.Location = new System.Drawing.Point(127, 5);
+            this.comboBoxAddNpcInstanceMap.Name = "comboBoxAddNpcInstanceMap";
+            this.comboBoxAddNpcInstanceMap.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxAddNpcInstanceMap.TabIndex = 31;
             // 
-            // ColumnNpcInstanceCellId
+            // comboBoxAddNpcInstanceTemplate
             // 
-            this.ColumnNpcInstanceCellId.HeaderText = "CellId";
-            this.ColumnNpcInstanceCellId.Name = "ColumnNpcInstanceCellId";
+            this.comboBoxAddNpcInstanceTemplate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAddNpcInstanceTemplate.FormattingEnabled = true;
+            this.comboBoxAddNpcInstanceTemplate.Location = new System.Drawing.Point(314, 5);
+            this.comboBoxAddNpcInstanceTemplate.Name = "comboBoxAddNpcInstanceTemplate";
+            this.comboBoxAddNpcInstanceTemplate.Size = new System.Drawing.Size(170, 21);
+            this.comboBoxAddNpcInstanceTemplate.TabIndex = 33;
             // 
-            // ColumnNpcInstanceOrientation
+            // label4
             // 
-            this.ColumnNpcInstanceOrientation.HeaderText = "Orientation";
-            this.ColumnNpcInstanceOrientation.Name = "ColumnNpcInstanceOrientation";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(251, 8);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 32;
+            this.label4.Text = "Template :";
             // 
-            // ColumnNpcInstanceQuestionId
+            // label5
             // 
-            this.ColumnNpcInstanceQuestionId.HeaderText = "Question";
-            this.ColumnNpcInstanceQuestionId.Name = "ColumnNpcInstanceQuestionId";
-            this.ColumnNpcInstanceQuestionId.Width = 250;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(490, 8);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(39, 13);
+            this.label5.TabIndex = 34;
+            this.label5.Text = "CellId :";
+            // 
+            // numericUpDownAddNpcInstanceCellId
+            // 
+            this.numericUpDownAddNpcInstanceCellId.Location = new System.Drawing.Point(535, 5);
+            this.numericUpDownAddNpcInstanceCellId.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownAddNpcInstanceCellId.Name = "numericUpDownAddNpcInstanceCellId";
+            this.numericUpDownAddNpcInstanceCellId.Size = new System.Drawing.Size(49, 20);
+            this.numericUpDownAddNpcInstanceCellId.TabIndex = 35;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(590, 7);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(64, 13);
+            this.label6.TabIndex = 36;
+            this.label6.Text = "Orientation :";
+            // 
+            // numericUpDownAddNpcInstanceOrientation
+            // 
+            this.numericUpDownAddNpcInstanceOrientation.Location = new System.Drawing.Point(660, 5);
+            this.numericUpDownAddNpcInstanceOrientation.Maximum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.numericUpDownAddNpcInstanceOrientation.Name = "numericUpDownAddNpcInstanceOrientation";
+            this.numericUpDownAddNpcInstanceOrientation.Size = new System.Drawing.Size(31, 20);
+            this.numericUpDownAddNpcInstanceOrientation.TabIndex = 37;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(697, 8);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 13);
+            this.label7.TabIndex = 38;
+            this.label7.Text = "Question :";
+            // 
+            // comboBoxAddNpcInstanceQuestion
+            // 
+            this.comboBoxAddNpcInstanceQuestion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAddNpcInstanceQuestion.FormattingEnabled = true;
+            this.comboBoxAddNpcInstanceQuestion.Location = new System.Drawing.Point(758, 5);
+            this.comboBoxAddNpcInstanceQuestion.Name = "comboBoxAddNpcInstanceQuestion";
+            this.comboBoxAddNpcInstanceQuestion.Size = new System.Drawing.Size(330, 21);
+            this.comboBoxAddNpcInstanceQuestion.TabIndex = 39;
             // 
             // MainForm
             // 
@@ -348,10 +478,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSearchNpcTemplateId)).EndInit();
             this.contextMenuStripNpcTemplate.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNpcInstance)).EndInit();
             this.contextMenuStripNpcInstance.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddNpcInstanceCellId)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddNpcInstanceOrientation)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -389,6 +522,17 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnNpcInstanceCellId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnNpcInstanceOrientation;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColumnNpcInstanceQuestionId;
+        private System.Windows.Forms.ComboBox comboBoxAddNpcInstanceQuestion;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericUpDownAddNpcInstanceOrientation;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDownAddNpcInstanceCellId;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox comboBoxAddNpcInstanceTemplate;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBoxAddNpcInstanceMap;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnAddNpcInstance;
     }
 }
 

@@ -66,6 +66,10 @@ namespace Codebreak.Tool.Database
             LoadNpcTemplates();
             SafeExecute(() =>
             {
+                comboBoxAddNpcInstanceMap.DataSource = MapRepository.Instance.GetAll().OrderBy(map => map.Id).ToList();
+                comboBoxAddNpcInstanceTemplate.DataSource = NpcTemplateRepository.Instance.GetAll().OrderBy(template => template.Name).ToList();
+                comboBoxAddNpcInstanceQuestion.DataSource = NpcQuestionRepository.Instance.GetAll();
+
                 ColumnNpcInstanceId.ValueType = typeof(int);
 
                 ColumnNpcInstanceCellId.ValueType = typeof(int);
@@ -87,7 +91,7 @@ namespace Codebreak.Tool.Database
                 ColumnNpcInstanceQuestionId.DisplayMember = "DisplayMember";
                 ColumnNpcInstanceQuestionId.DataSource = NpcQuestionRepository.Instance.GetAll();
 
-                foreach(var npcInstance in NpcInstanceRepository.Instance.GetAll())
+                foreach (var npcInstance in NpcInstanceRepository.Instance.GetAll())
                 {
                     var row = new DataGridViewRow()
                     {
@@ -244,26 +248,7 @@ namespace Codebreak.Tool.Database
             new NpcTemplateEdition(listViewNpcTemplate.SelectedItems[0].Tag as NpcTemplateDAO).ShowDialog();
             LoadNpcTemplates();
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridViewNpcInstance_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridViewNpcInstance_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
-
-        }
 
         /// <summary>
         /// 
@@ -313,6 +298,62 @@ namespace Codebreak.Tool.Database
                     MessageBox.Show("Impossible de sauvegarder");
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewNpcInstance_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            var npcInstance = e.Row.Tag as NpcInstanceDAO;
+            if (!npcInstance.Delete())
+            {
+                MessageBox.Show("Impossible de supprimer l'instance, problème de base de donnée.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAddNpcInstance_Click(object sender, EventArgs e)
+        {
+            var mapId = ((MapTemplateDAO)comboBoxAddNpcInstanceMap.SelectedValue).Id;
+            var templateId = ((NpcTemplateDAO)comboBoxAddNpcInstanceTemplate.SelectedValue).Id;
+            var questionId = ((NpcQuestionDAO)comboBoxAddNpcInstanceQuestion.SelectedValue).Id;
+            var cellId = (int)numericUpDownAddNpcInstanceCellId.Value;
+            var orientation = (int)numericUpDownAddNpcInstanceOrientation.Value;
+
+            var npcInstance = new NpcInstanceDAO()
+            {
+                TemplateId = templateId,
+                MapId = mapId,
+                CellId = cellId,
+                Orientation = orientation,
+                QuestionId = questionId,
+            };
+
+            if(!npcInstance.Insert())
+            {
+                MessageBox.Show("Impossible d'ajouter l'instance, problème lors de la sauvegarde en base de donnée.");
+                return;
+            }
+
+            var row = new DataGridViewRow()
+            {
+                Tag = npcInstance
+            };
+            row.CreateCells(dataGridViewNpcInstance,
+                npcInstance.Id,
+                npcInstance.Map,
+                npcInstance.Template,
+                npcInstance.CellId,
+                npcInstance.Orientation,
+                npcInstance.Question);
+            dataGridViewNpcInstance.Rows.Insert(0, row);
         }
     }
 }
