@@ -195,7 +195,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public static bool IsEquipedSlot(ItemSlotEnum slot)
         {
-            return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_SHIELD;
+            return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_BOOST;
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="quantity"></param>
         /// <param name="statistics"></param>
         /// <returns></returns>
-        public static InventoryItemDAO Create(int templateId, long quantity, GenericStats statistics)
+        public static InventoryItemDAO Create(int templateId, long quantity, GenericStats statistics, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
         {
             var instance = new InventoryItemDAO();
             instance.OwnerId = -1;
@@ -270,7 +270,7 @@ namespace Codebreak.Service.World.Database.Structure
             instance.m_statistics = statistics;
             instance.Effects = statistics.Serialize();
             instance.StringEffects = statistics.ToItemStats();
-            instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
+            instance.SlotId = (int)slot;
             instance.IsDirty = false;
 
             if (InventoryItemRepository.Instance.Insert(instance))

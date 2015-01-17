@@ -761,7 +761,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void MemberBoss(CharacterEntity character)
         {
-            var member = new GuildMember(this, character.DatabaseRecord);
+            var member = new GuildMember(this, character.DatabaseRecord);            
             member.GuildId = Id;
             member.SetBoss();
             member.CharacterConnected(character);

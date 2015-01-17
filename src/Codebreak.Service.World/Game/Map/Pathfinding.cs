@@ -366,42 +366,12 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public void Clean()
-        {
-            var realTransitCells = new List<int>();
-            var realDirections = new List<int>();
-
-            for (int i = 0; i < Directions.Count - 1; i++)
-            {
-                if (i == Directions.Count - 1)
-                {
-                    realTransitCells.Add(TransitCells[i]);
-                    realDirections.Add(Directions[i]);
-                }
-                else
-                {
-                    if (Directions[i] != Directions[i + 1])
-                    {
-                        realTransitCells.Add(TransitCells[i]);
-                        realDirections.Add(Directions[i]);
-                    }
-                }
-            }
-
-            TransitCells = realTransitCells;
-            Directions = realDirections;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             if (m_serializedPath == null)
             {
                 m_serializedPath = new StringBuilder();
-                //Clean();
                 for (int i = 0; i < TransitCells.Count; i++)
                 {
                     m_serializedPath.Append(Pathfinding.GetDirectionChar(Directions[i]));

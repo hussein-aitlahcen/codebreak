@@ -153,36 +153,24 @@ namespace Codebreak.Service.World.Database.Structure
         SLOT_DOFUS_5 = 13,
         SLOT_DOFUS_6 = 14,
         SLOT_SHIELD = 15,
-        SLOT_ITEMBAR_1 = 23,
-        SLOT_ITEMBAR_2 = 24,
-        SLOT_ITEMBAR_3 = 25,
-        SLOT_ITEMBAR_4 = 26,
-        SLOT_ITEMBAR_5 = 27,
-        SLOT_ITEMBAR_6 = 28,
-        SLOT_ITEMBAR_7 = 29,
-        SLOT_ITEMBAR_8 = 30,
-        SLOT_ITEMBAR_9 = 31,
-        SLOT_ITEMBAR_10 = 32,
-        SLOT_ITEMBAR_11 = 33,
-        SLOT_ITEMBAR_12 = 34,
-        SLOT_ITEMBAR_13 = 35,
-        SLOT_ITEMBAR_14 = 36, 
-        SLOT_ITEMBAR_15 = 37,
-        SLOT_ITEMBAR_16 = 38,
-        SLOT_ITEMBAR_17 = 39,
-        SLOT_ITEMBAR_18 = 40,
-        SLOT_ITEMBAR_19 = 41,
-        SLOT_ITEMBAR_20 = 42,
-        SLOT_ITEMBAR_21 = 43,
-        SLOT_ITEMBAR_22 = 44,
-        SLOT_ITEMBAR_23 = 45,
-        SLOT_ITEMBAR_24 = 46,
-        SLOT_ITEMBAR_25 = 47,
-        SLOT_ITEMBAR_26 = 48,
-        SLOT_ITEMBAR_27 = 49,
+        SLOT_BOOST = 21,
+        SLOT_ITEMBAR_1 = 35,
+        SLOT_ITEMBAR_2 = 36, 
+        SLOT_ITEMBAR_3 = 37,
+        SLOT_ITEMBAR_4 = 38,
+        SLOT_ITEMBAR_5 = 39,
+        SLOT_ITEMBAR_6 = 40,
+        SLOT_ITEMBAR_7 = 41,
+        SLOT_ITEMBAR_8 = 42,
+        SLOT_ITEMBAR_9 = 43,
+        SLOT_ITEMBAR_10 = 44,
+        SLOT_ITEMBAR_11 = 45,
+        SLOT_ITEMBAR_12 = 46,
+        SLOT_ITEMBAR_13 = 47,
+        SLOT_ITEMBAR_14 = 48,
         SLOT_EQUIPPED = SLOT_AMULET | SLOT_WEAPON | SLOT_LEFT_RING | SLOT_BELT | SLOT_RIGHT_RING | SLOT_BOOTS | SLOT_HAT
         | SLOT_CAPE | SLOT_PET | SLOT_DOFUS_1 | SLOT_DOFUS_2 | SLOT_DOFUS_3 | SLOT_DOFUS_4 | SLOT_DOFUS_5 | SLOT_DOFUS_6
-        | SLOT_SHIELD,
+        | SLOT_SHIELD | SLOT_BOOST,
     }
 
     /// <summary>
@@ -240,6 +228,9 @@ namespace Codebreak.Service.World.Database.Structure
         {
             switch (type)
             {
+                case ItemTypeEnum.TYPE_BOOST_FOOD:
+                    return ItemSlotEnum.SLOT_BOOST;
+
                 case ItemTypeEnum.TYPE_AMULETTE:
                     return ItemSlotEnum.SLOT_AMULET;
 
@@ -484,7 +475,6 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         private List<Tuple<EffectEnum, int, int>> m_effects;
-        private List<Tuple<EffectEnum, int, int>> m_weaponEffects;
         private string m_rangeType;
 
         /// <summary>
@@ -538,25 +528,9 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        [Write(false)]
-        [DoNotNotify]
-        public List<Tuple<EffectEnum, int, int>> WeaponEffects
-        {
-            get
-            {
-                if (m_weaponEffects == null)
-                    Initialize();
-                return m_weaponEffects;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         private void Initialize()
         {
             m_effects = new List<Tuple<EffectEnum, int, int>>();
-            m_weaponEffects = new List<Tuple<EffectEnum, int, int>>();
             if (Effects != "")
             {
                 foreach (var effect in Effects.Split(','))
@@ -566,11 +540,8 @@ namespace Codebreak.Service.World.Database.Structure
                         var effectDatas = effect.Split('#');
                         var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
                         var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
-                        var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);
-                        if (ItemTemplateDAO.IsWeaponEffect(effectType))
-                            m_weaponEffects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
-                        else
-                            m_effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
+                        var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);                        
+                        m_effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
                     }
                     catch
                     {
@@ -586,23 +557,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public GenericStats GenerateStats(bool max = false)
         {
-            var generatedStats = new GenericStats();                        
-            foreach(var weaponEffect in WeaponEffects)
-            {
-                generatedStats.AddVariableEffect(weaponEffect.Item1, weaponEffect.Item2, weaponEffect.Item3, weaponEffect.Item2 + ";" + weaponEffect.Item3 + ";-1;-1;0;0d0+0");
-            }
+            var generatedStats = new GenericStats();
             foreach (var effect in GenericEffects)
             {
-                if (Usable)
+                if (Usable || IsWeaponEffect(effect.Item1))
                 {
-                    generatedStats.AddVariableEffect(effect.Item1, effect.Item2, effect.Item3, "");
+                    generatedStats.AddEffect(effect.Item1, effect.Item2, effect.Item3, "");
                 }
                 else
                 {
                     if (effect.Item3 > effect.Item2)
-                        generatedStats.AddItem(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                        generatedStats.AddEffect(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
                     else
-                        generatedStats.AddItem(effect.Item1, effect.Item2);
+                        generatedStats.AddEffect(effect.Item1, effect.Item2);
                 }
             }
             return generatedStats;
@@ -617,7 +584,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public InventoryItemDAO Create(long quantity = 1, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY, bool maxJet = false)
         {
-            return InventoryItemDAO.Create(Id, quantity, GenerateStats(maxJet));
+            return InventoryItemDAO.Create(Id, quantity, GenerateStats(maxJet), slot);
         }
 
         /// <summary>

@@ -12,6 +12,13 @@ namespace Codebreak.Service.World
     /// </summary>
     public static class WorldConfig
     {
+        public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int,int>()
+        {
+            { 8950, 8943 } // Shigekax orange
+        };
+
+        public const bool NETWORK_CRYPT = false;
+
         public static int[] MULTIPLE_INSTANCE_MAP_ID = 
         {
         };

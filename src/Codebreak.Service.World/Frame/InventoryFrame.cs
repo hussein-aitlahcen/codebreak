@@ -148,7 +148,29 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void ObjectDelete(CharacterEntity character, string message)
         {
-           
+            var data = message.Substring(2).Split('|');
+
+            long itemId = -1;
+            if (!long.TryParse(data[0], out itemId))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+            
+            int quantity = 1;
+            if (data.Length > 1)
+            {
+                if (!int.TryParse(data[1], out quantity))
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+            }
+
+            character.AddMessage(() =>
+                {
+                    character.Inventory.RemoveItem(itemId, quantity);
+                });
         }
     }
 }

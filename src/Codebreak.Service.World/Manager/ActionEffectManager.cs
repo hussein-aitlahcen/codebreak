@@ -39,6 +39,10 @@ namespace Codebreak.Service.World.Manager
 
             m_effectById.Add(EffectEnum.AddLife, AddLifeEffect.Instance);
 
+            m_effectById.Add(EffectEnum.AddKamas, AddKamasEffect.Instance);
+
+            m_effectById.Add(EffectEnum.AddBoost, AddBoostEffect.Instance);
+
             m_effectById.Add(EffectEnum.AddEnergy, AddEnergyEffect.Instance);
             m_effectById.Add(EffectEnum.AddExperience, AddExperienceEffect.Instance);
 
@@ -76,9 +80,9 @@ namespace Codebreak.Service.World.Manager
             if(item == null)            
                 return;
 
-            if (!item.Template.Usable && !item.Template.Targetable && targetId != -1 && targetCell != -1)
+            if (!item.Template.Usable && !item.Template.Buff && !item.Template.Targetable && targetId != -1 && targetCell != -1)
             {
-                Logger.Debug("ActionEffectManager::Apply non usable/targetable item name=" + character.Name);                
+                Logger.Debug("ActionEffectManager::Apply non usable/buff/targetable item=" + item.Template.Name + " character=" + character.Name);                
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -93,11 +97,11 @@ namespace Codebreak.Service.World.Manager
 
             if (item.StringEffects != string.Empty)
             {
-                foreach (var effect in item.Statistics.GetVariableEffects())
+                foreach (var effect in item.Statistics.Effects.Values)
                 {
-                    if (m_effectById.ContainsKey((EffectEnum)effect.EffectId))
+                    if (m_effectById.ContainsKey(effect.EffectType))
                     {
-                        used = m_effectById[(EffectEnum)effect.EffectId].ProcessItem(character, item, effect, targetId, targetCell) || used;
+                        used = m_effectById[effect.EffectType].ProcessItem(character, item, effect, targetId, targetCell) || used;
                     }
                 }
             }

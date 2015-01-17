@@ -15,6 +15,7 @@ using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Fight.Challenges;
 using Codebreak.Service.World.Game.Fight.AI;
+using Codebreak.Service.World.Game.Stats;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -1650,7 +1651,15 @@ namespace Codebreak.Service.World.Game.Fight
                 case FightLoopStateEnum.STATE_WAIT_AI:
                     if (CurrentFighter is AIFighter)
                     {
-                        ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                        try
+                        {
+                            ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.Error(ex.ToString());
+                            CurrentFighter.TurnPass = true;
+                        }
                     }
                     LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
                     break;
@@ -1893,8 +1902,8 @@ namespace Codebreak.Service.World.Game.Fight
                     if(criticalHit)                   
                         base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
 
-                    var effects = weaponTemplate.WeaponEffects;
-                    var targetLists = new List<Tuple<Tuple<EffectEnum, int, int>, List<FighterBase>>>();
+                    var effects = weapon.Statistics.WeaponEffects;
+                    var targetLists = new List<Tuple<GenericEffect, List<FighterBase>>>();
 
                     foreach (var effect in effects)
                     {
@@ -1913,7 +1922,7 @@ namespace Codebreak.Service.World.Game.Fight
                                 }
                             }
                         }
-                        targetLists.Add(Tuple.Create(effect, targetList));
+                        targetLists.Add(Tuple.Create(effect.Value, targetList));
                     }
 
                     LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
@@ -1934,11 +1943,11 @@ namespace Codebreak.Service.World.Game.Fight
                             {
                                 AddProcessingTarget(
                                         new CastInfos(
-                                                        targetsByEffect.Item1.Item1,
+                                                        targetsByEffect.Item1.EffectType,
                                                         -1,
                                                         cellId,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item2,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item3 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item3,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Min + weaponTemplate.CSBonus : targetsByEffect.Item1.Min,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Max + weaponTemplate.CSBonus : targetsByEffect.Item1.Max,
                                                         -1,
                                                         -1,
                                                         0,
@@ -1955,11 +1964,11 @@ namespace Codebreak.Service.World.Game.Fight
                                 foreach (var target in targetsByEffect.Item2)
                                 {
                                     AddProcessingTarget(new CastInfos(
-                                                        targetsByEffect.Item1.Item1,
+                                                        targetsByEffect.Item1.EffectType,
                                                         -1,
                                                         cellId,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item2,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item3 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item3,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Min + weaponTemplate.CSBonus : targetsByEffect.Item1.Min,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Max + weaponTemplate.CSBonus : targetsByEffect.Item1.Max,
                                                         -1,
                                                         -1,
                                                         0,
@@ -2251,8 +2260,6 @@ namespace Codebreak.Service.World.Game.Fight
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
                 spectator.EndFight();            
-            
-            Map.FightManager.Remove(this);
         }
         
         /// <summary>
@@ -2260,6 +2267,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void FightEnded()
         {
+            Map.FightManager.Remove(this);
+
             Dispose();
         }
 
@@ -2273,15 +2282,31 @@ namespace Codebreak.Service.World.Game.Fight
 
             Cells.Clear();
             Cells = null;
-            Team0.Dispose();
-            Team1.Dispose();
-            SpectatorTeam.Dispose();
+
+            SpectatorTeam = null;
+            Team0 = null;
+            Team1 = null;
+
             CurrentFighter = null;
-            CurrentProcessingFighter = null;
+            CurrentProcessingFighter = null;            
             CurrentSubAction = null;
+
             TurnProcessor.Dispose();
             TurnProcessor = null;
+
+            Result.Dispose();
+            Result = null;
+
             Map = null;
+
+            m_activableObjects.Clear();
+            m_activableObjects = null;
+            m_losersFighter = null;
+            m_winnersFighter = null;
+            m_winnersTeam = null;
+            m_losersTeam = null;
+            m_processingTargets.Clear();
+            m_processingTargets = null;
 
             base.Dispose();
         }

@@ -134,8 +134,10 @@
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
+    <Compile Include="Game\ActionEffect\AddBoostEffect.cs" />
     <Compile Include="Game\ActionEffect\AddEnergyEffect.cs" />
     <Compile Include="Game\ActionEffect\AddExperienceEffect.cs" />
+    <Compile Include="Game\ActionEffect\AddKamasEffect.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
     <Compile Include="Game\ActionEffect\AddSpellEffect.cs" />
     <Compile Include="Game\ActionEffect\AddSpellpointEffect.cs" />
@@ -312,6 +314,7 @@
     <Compile Include="Game\Spell\SpellEffect.cs" />
     <Compile Include="Game\Spell\SpellLevel.cs" />
     <Compile Include="Game\Spell\SpellTemplate.cs" />
+    <Compile Include="Game\Stats\GenericEffect.cs" />
     <Compile Include="Game\Stats\GenericStats.cs" />
     <Compile Include="Frame\AuthentificationFrame.cs" />
     <Compile Include="Frame\BasicFrame.cs" />

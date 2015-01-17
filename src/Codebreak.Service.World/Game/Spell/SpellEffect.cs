@@ -548,6 +548,12 @@ namespace Codebreak.Service.World.Game.Spell
         /* Gateaux */
         AddEnergy = 139,
 
+        /* Bourses */
+        AddKamas = 194,
+
+        /* Bonbons boosts combats */
+        AddBoost = 811,
+
         InvocationInformations = 628,
 
         SoulStoneStats = 705,
