@@ -345,7 +345,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="taxCollector"></param>
         public void RemoveTaxCollector(TaxCollectorEntity taxCollector)
         {
-            TaxCollectorRepository.Instance.Delete(taxCollector.DatabaseRecord);
+            TaxCollectorRepository.Instance.Removed(taxCollector.DatabaseRecord);
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, taxCollector.Id);
             EntityManager.Instance.RemoveTaxCollector(taxCollector);
             m_taxCollectors.Remove(taxCollector);

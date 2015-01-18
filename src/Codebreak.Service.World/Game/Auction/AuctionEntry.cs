@@ -136,7 +136,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// </summary>
         public void Remove()
         {
-            AuctionHouseEntryRepository.Instance.Delete(m_databaseRecord);
+            AuctionHouseEntryRepository.Instance.Removed(m_databaseRecord);
         }
 
         /// <summary>
