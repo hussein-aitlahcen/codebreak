@@ -50,7 +50,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (CastInfos.EffectType != EffectEnum.ReflectSpell)
                 Target.Fight.Dispatch(WorldMessage.GAME_ACTION(CastInfos.EffectType, Target.Id, Target.Id + "," + showValue + "," + Duration));
 
-            Target.Statistics.AddBoost(CastInfos.EffectType, CastInfos.Value1);
+            Target.Statistics.AddDon(CastInfos.EffectType, CastInfos.Value1);
 
             return base.ApplyEffect(ref damageValue, damageInfos);
         }

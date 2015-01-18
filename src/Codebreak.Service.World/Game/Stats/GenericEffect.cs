@@ -42,8 +42,9 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         public int Id;
-        public int Min;
-        public int Max;
+        public int Value1;
+        public int Value2;
+        public int Value3;
         public string Args;
 
         public int Base;
@@ -59,7 +60,7 @@ namespace Codebreak.Service.World.Game.Stats
         {
             get
             {
-                return Util.NextJet(Min, Max);
+                return Util.NextJet(Value1, Value2);
             }
         }
 
@@ -84,14 +85,15 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
+        /// <param name="value1"></param>
+        /// <param name="value2"></param>
         /// <param name="args"></param>
-        public GenericEffect(EffectEnum id, int min, int max, string args = "0")
+        public GenericEffect(EffectEnum id, int value1, int value2, int value3, string args)
         {
             Id = (int)id;
-            Min = min;
-            Max = max;
+            Value1 = value1;
+            Value2 = value2;
+            Value3 = value3;
             Args = args;
         }
 
@@ -109,9 +111,9 @@ namespace Codebreak.Service.World.Game.Stats
         public void Merge(GenericEffect effect)
         {
             Base += effect.Base;
-            Items += effect.RandomJet;
-            Dons += effect.Dons;
             Boosts += effect.Boosts;
+            Dons += effect.Dons;
+            Items += effect.Items;
         }
 
         /// <summary>
@@ -121,9 +123,61 @@ namespace Codebreak.Service.World.Game.Stats
         public void UnMerge(GenericEffect effect)
         {
             Base -= effect.Base;
-            Items -= effect.RandomJet;
-            Dons -= effect.Dons;
             Boosts -= effect.Boosts;
+            Dons -= effect.Dons;
+            Items -= effect.Items;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="effect"></param>
+        public void Merge(StatsType type, GenericEffect effect)
+        {
+            switch(type)
+            {
+                case StatsType.TYPE_BASE:
+                    Base += effect.Value1;
+                    break;
+
+                case StatsType.TYPE_BOOST:
+                    Boosts += effect.Value1;
+                    break;
+
+                case StatsType.TYPE_DON:
+                    Dons += effect.Value1;
+                    break;
+
+                case StatsType.TYPE_ITEM:
+                    Items += effect.Value1;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="effect"></param>
+        public void UnMerge(StatsType type, GenericEffect effect)
+        {
+            switch (type)
+            {
+                case StatsType.TYPE_BASE:
+                    Base -= effect.Value1;
+                    break;
+
+                case StatsType.TYPE_BOOST:
+                    Boosts -= effect.Value1;
+                    break;
+
+                case StatsType.TYPE_DON:
+                    Dons -= effect.Value1;
+                    break;
+
+                case StatsType.TYPE_ITEM:
+                    Items -= effect.Value1;
+                    break;
+            }
         }
 
         /// <summary>
@@ -142,10 +196,10 @@ namespace Codebreak.Service.World.Game.Stats
         public string ToItemString()
         {
             return Id.ToString("x") + '#'
-                + Min.ToString("x") + '#'
-                + Max.ToString("x") + '#'
-                + Args + '#'
-                + "0d0+0";
+                + Value1.ToString("x") + '#'
+                + Value2.ToString("x") + '#'
+                + Value3.ToString("x") + '#'
+                + Args;
         }
     }
 }

@@ -14,6 +14,18 @@ namespace Codebreak.Service.World.Game.Stats
     /// <summary>
     /// 
     /// </summary>
+    [Flags]
+    public enum StatsType
+    {
+        TYPE_BASE,
+        TYPE_BOOST,
+        TYPE_ITEM,
+        TYPE_DON,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
     public sealed class GenericStats : IDisposable
     {
@@ -800,14 +812,14 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
+        /// <param name="value1"></param>
+        /// <param name="value2"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public void AddEffect(EffectEnum id, int min, int max = 0, string args = "0")
+        public void AddEffect(EffectEnum id, int value1, int value2 = 0, int value3 = 0, string args = "0")
         {
             if (!m_effects.ContainsKey(id))
-                m_effects.Add((EffectEnum)id, new GenericEffect(id, min, max, args));
+                m_effects.Add((EffectEnum)id, new GenericEffect(id, value1, value2, value3, args));
         }
 
         /// <summary>
@@ -833,31 +845,7 @@ namespace Codebreak.Service.World.Game.Stats
                 m_effects.Add(id, new GenericEffect(id));
             m_effects[id].Base += value;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="Value"></param>
-        public void AddBoost(EffectEnum effectType, int value)
-        {
-            if (!m_effects.ContainsKey(effectType))
-                m_effects.Add(effectType, new GenericEffect(effectType));
-            m_effects[effectType].Boosts += value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="effectType"></param>
-        /// <param name="value"></param>
-        public void AddItem(EffectEnum effectType, int value)
-        {
-            if (!m_effects.ContainsKey(effectType))
-                m_effects.Add(effectType, new GenericEffect(effectType));
-            m_effects[effectType].Items += value;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -868,6 +856,34 @@ namespace Codebreak.Service.World.Game.Stats
             if (!m_effects.ContainsKey(effectType))
                 m_effects.Add(effectType, new GenericEffect(effectType));
             m_effects[effectType].Dons += Value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Stats"></param>
+        public void Merge(StatsType type, GenericStats Stats)
+        {
+            foreach (var effect in Stats.Effects)
+            {
+                if (!m_effects.ContainsKey(effect.Key))
+                    m_effects.Add(effect.Key, new GenericEffect(effect.Key));
+                m_effects[effect.Key].Merge(type, effect.Value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Stats"></param>
+        public void UnMerge(StatsType type, GenericStats Stats)
+        {
+            foreach (var effect in Stats.Effects)
+            {
+                if (!m_effects.ContainsKey(effect.Key))
+                    m_effects.Add(effect.Key, new GenericEffect(effect.Key));
+                m_effects[effect.Key].UnMerge(type, effect.Value);
+            }
         }
 
         /// <summary>
@@ -901,10 +917,18 @@ namespace Codebreak.Service.World.Game.Stats
         /// <summary>
         /// 
         /// </summary>
-        public void ClearBoosts()
+        public void ClearDons()
         {
             foreach (var effect in m_effects)
-                effect.Value.Boosts = 0;
+                effect.Value.Dons = 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StatisticsChanged()
+        {
+            m_serialized = null;
         }
 
         /// <summary>

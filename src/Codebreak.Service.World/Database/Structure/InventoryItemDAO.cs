@@ -145,7 +145,9 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="value"></param>
         public void SaveStats()
         {
+            Statistics.StatisticsChanged();
             Effects = Statistics.Serialize();
+            StringEffects = Statistics.ToItemStats();
         }
 
         /// <summary>
@@ -197,7 +199,7 @@ namespace Codebreak.Service.World.Database.Structure
         {
             return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_BOOST;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>

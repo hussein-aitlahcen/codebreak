@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Game.Stats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +47,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
             var item = template.Create(1, Database.Structure.ItemSlotEnum.SLOT_BOOST);
 
             character.CachedBuffer = true;
-            character.Statistics.Merge(item.Statistics);
+            character.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
             character.Inventory.AddItem(item);
+            character.SendAccountStats();
             character.CachedBuffer = false;
 
             return true;

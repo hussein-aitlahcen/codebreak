@@ -562,14 +562,15 @@ namespace Codebreak.Service.World.Database.Structure
             {
                 if (Usable || IsWeaponEffect(effect.Item1))
                 {
-                    generatedStats.AddEffect(effect.Item1, effect.Item2, effect.Item3, "");
+                    generatedStats.AddEffect(effect.Item1, effect.Item2, effect.Item3);
+                }
+                else if (effect.Item1 == EffectEnum.AddBoost)
+                {
+                    generatedStats.AddEffect(effect.Item1, 0, 0, effect.Item2);
                 }
                 else
                 {
-                    if (effect.Item3 > effect.Item2)
-                        generatedStats.AddEffect(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
-                    else
-                        generatedStats.AddEffect(effect.Item1, effect.Item2);
+                    generatedStats.AddEffect(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
                 }
             }
             return generatedStats;

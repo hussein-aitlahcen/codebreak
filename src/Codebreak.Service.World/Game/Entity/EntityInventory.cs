@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,10 @@ namespace Codebreak.Service.World.Game.Entity
                 if (item.IsEquiped)
                 {
                     AddSet(item);
-                    Entity.Statistics.Merge(item.Statistics);
+                    if(item.Slot == ItemSlotEnum.SLOT_BOOST)
+                        Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
+                    else
+                        Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
                 }
             }
         }
@@ -114,12 +118,15 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (item.IsEquiped && !InventoryItemDAO.IsEquipedSlot(slot))
             {
+                if (item.Slot == ItemSlotEnum.SLOT_BOOST)
+                    Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
+                else
+                    Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
                 item.SlotId = (int)slot;
                 m_entityLookRefresh = true;
                 bool merged = AddItem(MoveQuantity(item, 1));
 
                 RemoveSet(item);
-                Entity.Statistics.UnMerge(item.Statistics);
 
                 // send new stats
                 if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
@@ -130,10 +137,8 @@ namespace Codebreak.Service.World.Game.Entity
                     if (!merged)
                         base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, item.SlotId));
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
-                    if (item.Template.SetId != 0)
-                    {
-                        base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));
-                    }
+                    if (item.Template.SetId != 0)                    
+                        base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));                    
                     base.CachedBuffer = false;
                 }
                 return;
@@ -183,7 +188,10 @@ namespace Codebreak.Service.World.Game.Entity
                 AddItem(newItem, false);
 
                 AddSet(newItem);
-                Entity.Statistics.Merge(newItem.Statistics);
+                if (item.Slot == ItemSlotEnum.SLOT_BOOST)
+                    Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
+                else
+                    Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
 
                 // send new stats
                 if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
@@ -236,11 +244,11 @@ namespace Codebreak.Service.World.Game.Entity
                 m_equippedSets.Add(set.Id, 0);
             var count = ++m_equippedSets[set.Id];
 
-            if (count > 2)            
-                Entity.Statistics.UnMerge(set.GetStats(count - 1));
+            if (count > 2)
+                Entity.Statistics.UnMerge(Stats.StatsType.TYPE_ITEM, set.GetStats(count - 1));
 
             if(count > 1)
-                Entity.Statistics.Merge(set.GetStats(count));            
+                Entity.Statistics.Merge(Stats.StatsType.TYPE_ITEM, set.GetStats(count));            
         }
 
         /// <summary>
@@ -256,10 +264,10 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (count > 0)
             {
-                Entity.Statistics.Merge(set.GetStats(count));
+                Entity.Statistics.Merge(Stats.StatsType.TYPE_ITEM, set.GetStats(count));
                 if (count > 1)
                 {
-                    Entity.Statistics.UnMerge(set.GetStats(count + 1));
+                    Entity.Statistics.UnMerge(Stats.StatsType.TYPE_ITEM, set.GetStats(count + 1));
                 }
             }
         }

@@ -562,6 +562,9 @@ namespace Codebreak.Service.World.Game.Spell
         SoulCaptureBonus = 750,
         MountExpBonus = 751,
 
+        RenameGuild = 725,
+
+
         LastEat = 808,
 
         AlignmentId = 960,
@@ -577,8 +580,9 @@ namespace Codebreak.Service.World.Game.Spell
         LivingXp = 974,
 
         CanBeExchange = 983,
-
-        MountOwner = 995,
+        MadeBy = 988,
+        Owner = 987,
+        MountOwner = 996,
         Name = 997,
 
         /* ACTION SPECIALES BDD SCRIPT */

@@ -117,7 +117,7 @@ namespace Codebreak.Service.World.Database.Repository
             instance.Quantity = quantity;
             instance.Effects = statistics.Serialize();
             instance.StringEffects = statistics.ToItemStats();
-            instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
+            instance.SlotId = (int)slot;
 
             base.Created(instance);
 
