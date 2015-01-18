@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Framework.Generic;
 
 namespace Codebreak.Service.World.Game.Entity
 {    
@@ -313,6 +314,15 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get;
             protected set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public UpdatableTimer MovementTimer
+        {
+            get;
+            set;
         }
 
         /// <summary>

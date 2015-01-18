@@ -13,6 +13,7 @@ using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Job;
 using Codebreak.Framework.Utils;
 using Codebreak.Service.World.Game.Condition;
+using Codebreak.Framework.Generic;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -342,7 +343,9 @@ namespace Codebreak.Service.World.Game.Map
         {
             entity.AddTimer(Util.Next(1000, 10000), () =>
             {
-                entity.AddTimer(Util.Next(15000, 25000), () => MoveEntity(entity));
+                var timer = new UpdatableTimer(Util.Next(15000, 25000), () => MoveEntity(entity));
+                entity.MovementTimer = timer;
+                entity.AddTimer(timer);
             }, true);
         }
 
@@ -351,6 +354,12 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public void MoveEntity(EntityBase entity)
         {
+            if(!entity.HasGameAction(GameActionTypeEnum.MAP))
+            {
+                entity.RemoveTimer(entity.MovementTimer);
+                return;
+            }
+
             // Move only if there is a player on the map, else it is useless
             if (m_playerCount == 0)
                 return;

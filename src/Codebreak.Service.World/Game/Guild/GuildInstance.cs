@@ -609,7 +609,8 @@ namespace Codebreak.Service.World.Game.Guild
                             TaxCollectorRepository.Instance.Created(taxCollectorDAO);
 
                             foreach (var spell in Statistics.Spells.GetSpells())
-                                SpellBookEntryDAO.Create((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, taxCollectorDAO.Id, spell.SpellId, spell.Level, 25);
+                                if(spell.Level > 0)
+                                    SpellBookEntryDAO.Create((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, taxCollectorDAO.Id, spell.SpellId, spell.Level, 25);
 
                             var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
 
