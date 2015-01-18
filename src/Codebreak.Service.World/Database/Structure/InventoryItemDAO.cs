@@ -240,42 +240,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public InventoryItemDAO Clone(int quantity)
         {
-            var instance = new InventoryItemDAO();
-            instance.OwnerId = -1;
-            instance.TemplateId = TemplateId;
-            instance.Quantity = quantity;
-            instance.Effects = Statistics.Serialize();
-            instance.StringEffects = Statistics.ToItemStats();
-            instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
-            instance.IsDirty = false;
-
-            if (InventoryItemRepository.Instance.Insert(instance))
-                return instance;
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="templateId"></param>
-        /// <param name="quantity"></param>
-        /// <param name="statistics"></param>
-        /// <returns></returns>
-        public static InventoryItemDAO Create(int templateId, long quantity, GenericStats statistics, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
-        {
-            var instance = new InventoryItemDAO();
-            instance.OwnerId = -1;
-            instance.TemplateId = templateId;
-            instance.Quantity = (int)quantity;
-            instance.m_statistics = statistics;
-            instance.Effects = statistics.Serialize();
-            instance.StringEffects = statistics.ToItemStats();
-            instance.SlotId = (int)slot;
-            instance.IsDirty = false;
-
-            if (InventoryItemRepository.Instance.Insert(instance))
-                return instance;
-            return null;
+            return InventoryItemRepository.Instance.Create(TemplateId, -1, quantity, Statistics);
         }
     }
 }

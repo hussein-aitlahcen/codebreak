@@ -14,8 +14,36 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class CharacterRepository : Repository<CharacterRepository, CharacterDAO>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public long NextCharacterId
+        {
+            get
+            {
+                lock (m_syncLock)
+                    return m_nextCharacterId++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private long m_nextCharacterId;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<long, CharacterDAO> m_characterById;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<string, CharacterDAO> m_characterByName;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<long, List<CharacterDAO>> m_charactersByAccount;
 
         /// <summary>
@@ -75,9 +103,13 @@ namespace Codebreak.Service.World.Database.Repository
         {
             m_characterById.Add(character.Id, character);
             m_characterByName.Add(character.Name.ToLower(), character);
+
             if (!m_charactersByAccount.ContainsKey(character.AccountId))
                 m_charactersByAccount.Add(character.AccountId, new List<CharacterDAO>());
             m_charactersByAccount[character.AccountId].Add(character);
+
+            if (character.Id >= m_nextCharacterId)
+                m_nextCharacterId = character.Id + 1;
         }
 
         /// <summary>

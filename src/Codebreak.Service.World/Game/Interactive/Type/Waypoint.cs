@@ -38,7 +38,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         {
             if (!character.Waypoints.Any(waypoint => waypoint.MapId == Map.Id))
             {
-                CharacterWaypointDAO.Create(character.Id, Map.Id);
+                CharacterWaypointRepository.Instance.Create(character.Id, Map.Id);
                 character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_WAYPOINT_REGISTERED));
             }
 

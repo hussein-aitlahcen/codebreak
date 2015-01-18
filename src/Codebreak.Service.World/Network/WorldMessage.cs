@@ -783,7 +783,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string SERVER_INFO_MESSAGE(string message)
         {
-            return SERVER_MESSAGE(Color.Green, message);
+            return IM_INFO_MESSAGE(InformationEnum.INFO_SERVER_MESSAGE, message);
         }
 
         /// <summary>

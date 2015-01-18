@@ -41,7 +41,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {            
-            foreach(var guild in GuildRepository.Instance.GetAll())
+            foreach(var guild in GuildRepository.Instance.All)
             {
                 AddInstance(new GuildInstance(guild));
             }
@@ -90,27 +90,11 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public bool Create(CharacterEntity character, string name, int backgroundId, int backgroundColor, int symbolId, int symbolColor)
         {
-            var record = new GuildDAO()
-            {
-                Name = name,
-                BackgroundId = backgroundId,
-                BackgroundColor = backgroundColor,
-                SymbolId = symbolId,
-                SymbolColor = symbolColor,
-                Level = 1,
-                BoostPoint = 0,
-                Experience = 0,
-            };
-
-            var stats = GuildStatistics.Create(record);
-
-            record.Stats = stats.Serialize();
-
-            if (!GuildRepository.Instance.Insert(record))            
-                return false;
+            var record = GuildRepository.Instance.Create(name, backgroundId, backgroundColor, symbolId, symbolColor);
 
             var instance = new GuildInstance(record);
             instance.MemberBoss(character);
+
             AddInstance(new GuildInstance(record));
 
             return true;

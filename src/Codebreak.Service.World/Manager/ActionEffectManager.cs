@@ -30,10 +30,12 @@ namespace Codebreak.Service.World.Manager
         {
             m_effectById = new Dictionary<EffectEnum, IActionEffect>();
 
-            m_effectById.Add(EffectEnum.DialogLeave, DialogLeaveEffect.Instance);
-            m_effectById.Add(EffectEnum.DialogReply, DialogReplyEffect.Instance);
-            m_effectById.Add(EffectEnum.OpenBank, OpenBankEffect.Instance);
-            m_effectById.Add(EffectEnum.AddStatistic, AddStatsEffect.Instance);
+            m_effectById.Add(EffectEnum.BddDialogLeave, DialogLeaveEffect.Instance);
+            m_effectById.Add(EffectEnum.BddDialogReply, DialogReplyEffect.Instance);
+            m_effectById.Add(EffectEnum.BddOpenBank, OpenBankEffect.Instance);
+            m_effectById.Add(EffectEnum.BddAddStatistic, AddStatsEffect.Instance);
+            m_effectById.Add(EffectEnum.BddAddItem, AddItemEffect.Instance);
+            m_effectById.Add(EffectEnum.BddTeleport, TeleportEffect.Instance);
 
             m_effectById.Add(EffectEnum.TeleportSavedZaap, RecallEffect.Instance);
 

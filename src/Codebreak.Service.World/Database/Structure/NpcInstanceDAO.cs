@@ -77,7 +77,7 @@ namespace Codebreak.Service.World.Database.Structure
             get
             {
                 if (m_map == null || m_map.Id != MapId)
-                    m_map = MapRepository.Instance.GetById(MapId);
+                    m_map = MapTemplateRepository.Instance.GetById(MapId);
                 return m_map;
             }
         }

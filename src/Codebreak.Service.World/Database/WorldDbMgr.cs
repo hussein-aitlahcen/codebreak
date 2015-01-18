@@ -20,8 +20,8 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(ItemTemplateRepository.Instance);
             base.AddRepository(InventoryItemRepository.Instance);
             base.AddRepository(SpellBookEntryRepository.Instance);
-            base.AddRepository(TaxCollectorRepository.Instance);
             base.AddRepository(GuildRepository.Instance);
+            base.AddRepository(TaxCollectorRepository.Instance);
             base.AddRepository(CharacterWaypointRepository.Instance);
             base.AddRepository(CharacterGuildRepository.Instance);
             base.AddRepository(CharacterAlignmentRepository.Instance);
@@ -29,7 +29,7 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(SocialRelationRepository.Instance);
             base.AddRepository(BankRepository.Instance);
             base.AddRepository(MapTriggerRepository.Instance);
-            base.AddRepository(MapRepository.Instance);
+            base.AddRepository(MapTemplateRepository.Instance);
             base.AddRepository(NpcTemplateRepository.Instance);
             base.AddRepository(NpcInstanceRepository.Instance);
             base.AddRepository(NpcQuestionRepository.Instance);

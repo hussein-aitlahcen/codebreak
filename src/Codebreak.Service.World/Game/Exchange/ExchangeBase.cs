@@ -114,7 +114,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="id"></param>
         /// <param name="quantity"></param>
-        public virtual void BuyItem(EntityBase actor, long id, long quantity)
+        public virtual void BuyItem(EntityBase actor, long id, int quantity)
         {
         }
 

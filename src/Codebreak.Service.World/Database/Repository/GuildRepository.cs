@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Guild;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,32 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class GuildRepository : Repository<GuildRepository, GuildDAO>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public long NextGuildId
+        {
+            get
+            {
+                lock (m_syncLock)
+                    return m_nextGuildId++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private long m_nextGuildId;
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<long, GuildDAO> m_guildById;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<string, GuildDAO> m_guildByName;
 
         /// <summary>
@@ -58,6 +84,9 @@ namespace Codebreak.Service.World.Database.Repository
         {
             m_guildById.Add(guild.Id, guild);
             m_guildByName.Add(guild.Name.ToLower(), guild);
+
+            if (guild.Id >= m_nextGuildId)
+                m_nextGuildId = guild.Id + 1;
         }
 
         /// <summary>
@@ -68,6 +97,39 @@ namespace Codebreak.Service.World.Database.Repository
         {
             m_guildById.Remove(guild.Id);
             m_guildByName.Remove(guild.Name.ToLower());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="backgroundId"></param>
+        /// <param name="backgroundColor"></param>
+        /// <param name="symbolId"></param>
+        /// <param name="symbolColor"></param>
+        /// <returns></returns>
+        public GuildDAO Create(string name, int backgroundId, int backgroundColor, int symbolId, int symbolColor)
+        {
+            var instance = new GuildDAO()
+            {
+                Id = NextGuildId,
+                Name = name,
+                BackgroundId = backgroundId,
+                BackgroundColor = backgroundColor,
+                SymbolId = symbolId,
+                SymbolColor = symbolColor,
+                Level = 1,
+                BoostPoint = 0,
+                Experience = 0,
+            };
+
+            var stats = GuildStatistics.Create(instance);
+
+            instance.Stats = stats.Serialize();
+
+            base.Created(instance);
+
+            return instance;
         }
     }
 }

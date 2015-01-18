@@ -1,4 +1,6 @@
-﻿using Codebreak.Service.World.Game.Interactive;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Interactive;
 using Codebreak.Service.World.Manager;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,6 @@ namespace Codebreak.Service.World.Game.Map
         public bool Walkable;
         public bool LineOfSight;
         public int InteractiveObjectId;
-        public int NextMap;
-        public int NextCell;
 
         /// <summary>
         /// 
@@ -32,15 +32,23 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        public MapTriggerDAO Trigger
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <param name="nextMap"></param>
         /// <param name="nextCell"></param>
-        public MapCell(MapInstance map, int id, byte[] data, int nextMap = 0, int nextCell = 0)
+        public MapCell(MapInstance map, int id, byte[] data, MapTriggerDAO trigger = null)
         {
             Id = id;
-            NextMap = nextMap;
-            NextCell = nextCell;
+            Trigger = trigger;
             Walkable = ((data[2] & 56) >> 3) > 0;
             if (!Walkable && ((data[2] & 56) >> 3) != 0)
             {
@@ -55,6 +63,26 @@ namespace Codebreak.Service.World.Game.Map
                     InteractiveObject = InteractiveObjectManager.Instance.Generate(InteractiveObjectId, map, Id);
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public bool SatisfyConditions(CharacterEntity character)
+        {
+            return Trigger.SatisfyConditions(character);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public void ApplyActions(CharacterEntity character)
+        {
+            foreach (var action in Trigger.ActionsList)
+                ActionEffectManager.Instance.ApplyEffect(character, action.Key, action.Value);
         }
     }
 }

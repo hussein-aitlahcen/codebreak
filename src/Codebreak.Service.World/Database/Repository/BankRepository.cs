@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Database.Repository
             if (m_bankByAccountId.ContainsKey(accountId))
                 return m_bankByAccountId[accountId];
             var bank = new BankDAO() { Id = accountId };
-            base.InsertWithKey(bank);
+            base.Created(bank);
             return bank;
         }
     }

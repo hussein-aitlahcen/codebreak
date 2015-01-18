@@ -30,8 +30,23 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        void UpdateAll();
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
         void UpdateAll(MySqlConnection connection, MySqlTransaction transaction);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        void DeleteAll(MySqlConnection connection, MySqlTransaction transaction);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        void InsertAll(MySqlConnection connection, MySqlTransaction transaction);
     }
 
     /// <summary>
@@ -68,6 +83,97 @@ namespace Codebreak.Framework.Database
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TDataObject> All
+        {
+            get
+            {
+                lock (m_syncLock)
+                    return m_dataObjects.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<TDataObject> UpdateObjects
+        {
+            get
+            {
+                var objects = new List<TDataObject>();
+                lock (m_syncLock)
+                {
+                    foreach (var obj in m_dataObjects)
+                    {
+                        if (obj.IsDirty && !obj.IsNew && !obj.IsDeleted)
+                        {
+                            obj.OnBeforeUpdate();
+                            obj.IsDirty = false;
+                            objects.Add(obj);
+                        }
+                    }
+                }
+                return objects;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<TDataObject> InsertObjects
+        {
+            get
+            {
+                var objects = new List<TDataObject>();
+                lock (m_syncLock)
+                {
+                    foreach (var obj in m_dataObjects)
+                    {
+                        if (obj.IsNew && !obj.IsDeleted)
+                        {                            
+                            obj.OnBeforeInsert();
+                            obj.IsNew = false;
+                            obj.IsDirty = false;
+                            objects.Add(obj);
+                        }
+                    }
+                }
+                return objects;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<TDataObject> DeleteObjects
+        {
+            get
+            {
+                var objects = new List<TDataObject>();
+                lock (m_syncLock)
+                {
+                    foreach (var obj in m_dataObjects)
+                    {
+                        if (obj.IsDeleted && !obj.IsNew)
+                        {
+                            obj.OnBeforeDelete();
+                            obj.IsDeleted = false;
+                            obj.IsDirty = false;
+                            objects.Add(obj);
+                        }
+                    }
+                }
+                return objects;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -82,14 +188,9 @@ namespace Codebreak.Framework.Database
         public virtual void Initialize()
         {
             IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName);
-
-            lock (m_syncLock)
-            {
-                m_dataObjects.AddRange(objects);
-                foreach (var obj in m_dataObjects)
-                        OnObjectAdded(obj);
-            }
-
+            m_dataObjects.AddRange(objects);
+            foreach (var obj in m_dataObjects)
+                OnObjectAdded(obj);
             DataAccessObject<TDataObject>.IsRunning = true;
         }
 
@@ -127,38 +228,40 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        public virtual bool Update(TDataObject obj)
-        {
-            return SqlManager.Instance.Update<TDataObject>(obj);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="objects"></param>
-        public virtual void Update(IEnumerable<TDataObject> objects)
-        {
-            if(objects.Count() > 0)
-                SqlManager.Instance.Update<TDataObject>(objects);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="objects"></param>
         public virtual void Update(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
         {
             if (objects.Count() > 0)
                 SqlManager.Instance.Update<TDataObject>(connection, transaction, objects);
+        }  
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual void Delete(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
+        {
+            if (objects.Count() > 0)
+                SqlManager.Instance.Delete<TDataObject>(connection, transaction, objects);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public virtual bool Remove(TDataObject obj)
+        public virtual void Insert(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
         {
-            var result = SqlManager.Instance.Remove<TDataObject>(obj);
+            if (objects.Count() > 0)
+                SqlManager.Instance.InsertWithKey<TDataObject>(connection, transaction, objects);
+        }     
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Delete(TDataObject obj)
+        {
+            var result = SqlManager.Instance.Delete<TDataObject>(obj);
             if (result)
             {
                 lock (m_syncLock)
@@ -174,21 +277,45 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         /// <returns></returns>
-        public virtual bool Remove(IEnumerable<TDataObject> objects)
+        public virtual void Removed(IEnumerable<TDataObject> objects)
         {
-            var result = SqlManager.Instance.Remove<TDataObject>(objects);
-            if (result)
-            {
-                lock (m_syncLock)
+            lock (m_syncLock)
+                foreach (TDataObject obj in objects)
                 {
-                    foreach (var obj in objects)
-                    {
+                    if (obj.IsNew)
                         m_dataObjects.Remove(obj);
-                        OnObjectRemoved(obj);
-                    }
+                    OnObjectRemoved(obj);
+                    obj.IsDeleted = true;
                 }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual void Removed(TDataObject obj)
+        {
+            lock (m_syncLock)
+            {
+                if (obj.IsNew)
+                    m_dataObjects.Remove(obj);
+                OnObjectRemoved(obj);
+                obj.IsDeleted = true;
             }
-            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual void Created(TDataObject obj)
+        {
+            lock (m_syncLock)
+            {
+                m_dataObjects.Add(obj);
+                OnObjectAdded(obj);
+                obj.IsNew = true;
+            }
         }
 
         /// <summary>
@@ -197,24 +324,6 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Insert(TDataObject obj)
         {
-            var result = SqlManager.Instance.Insert<TDataObject>(obj);
-            if (result)
-            {
-                lock (m_syncLock)
-                {
-                    m_dataObjects.Add(obj);
-                    OnObjectAdded(obj);
-                }
-            }
-            return result;            
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool InsertWithKey(TDataObject obj)
-        {
             var result = SqlManager.Instance.InsertWithKey<TDataObject>(obj);
             if (result)
             {
@@ -222,44 +331,6 @@ namespace Codebreak.Framework.Database
                 {
                     m_dataObjects.Add(obj);
                     OnObjectAdded(obj);
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool InsertWithKey(IEnumerable<TDataObject> objects)
-        {
-            var result = SqlManager.Instance.InsertWithKey<TDataObject>(objects);
-            if (result)
-            {
-                lock (m_syncLock)
-                {
-                    m_dataObjects.AddRange(objects);
-                    foreach (var obj in objects)
-                        OnObjectAdded(obj);
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool Insert(IEnumerable<TDataObject> objects)
-        {
-            var result = SqlManager.Instance.Insert<TDataObject>(objects);
-            if (result)
-            {
-                lock (m_syncLock)
-                {
-                    m_dataObjects.AddRange(objects);
-                    foreach (var obj in objects)
-                        OnObjectAdded(obj);
                 }
             }
             return result;
@@ -286,53 +357,35 @@ namespace Codebreak.Framework.Database
             lock (m_syncLock)
                 return m_dataObjects.FindAll(match);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<TDataObject> GetAll()
-        {
-            lock (m_syncLock)
-                return m_dataObjects.ToArray();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void UpdateAll()
-        {          
-            Update(GetDirtyObjects().ToList());            
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
         public virtual void UpdateAll(MySqlConnection connection, MySqlTransaction transaction)
         {
-            Update(connection, transaction,GetDirtyObjects().ToList());
+            Update(connection, transaction, UpdateObjects);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        private IEnumerable<TDataObject> GetDirtyObjects()
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public virtual void DeleteAll(MySqlConnection connection, MySqlTransaction transaction)
         {
-            lock (m_syncLock)
-            {
-                foreach (var obj in m_dataObjects)
-                {
-                    if (obj.IsDirty)
-                    {
-                        obj.OnBeforeUpdate();
-                        obj.IsDirty = false;
-                        yield return obj;
-                    }
-                }
-            }
+            Delete(connection, transaction, DeleteObjects);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public virtual void InsertAll(MySqlConnection connection, MySqlTransaction transaction)
+        {
+            Insert(connection, transaction, InsertObjects);
+        }
+       
         /// <summary>
         /// 
         /// </summary>

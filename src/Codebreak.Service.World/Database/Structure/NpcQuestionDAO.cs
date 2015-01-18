@@ -53,7 +53,7 @@ namespace Codebreak.Service.World.Database.Structure
                     m_responses = new List<NpcResponseDAO>();
                     if (Responses != string.Empty)
                     {
-                        foreach (var response in Responses.Split(';'))
+                        foreach (var response in Responses.Split(','))
                         {
                             m_responses.Add(NpcResponseRepository.Instance.GetById(int.Parse(response)));
                         }

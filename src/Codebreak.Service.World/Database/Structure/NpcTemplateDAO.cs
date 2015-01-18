@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Database.Structure
             /// <summary>
             /// 
             /// </summary>
-            public long Quantity
+            public int Quantity
             {
                 get;
                 private set;
@@ -59,7 +59,7 @@ namespace Codebreak.Service.World.Database.Structure
             /// 
             /// </summary>
             /// <param name="stringData"></param>
-            public ItemEntry(int templateId, long quantity)
+            public ItemEntry(int templateId, int quantity)
             {
                 TemplateId = templateId;
                 Quantity = quantity;
@@ -127,7 +127,7 @@ namespace Codebreak.Service.World.Database.Structure
                 var subData = required.Split(':');
                 var type = subData[0];
                 var id = int.Parse(subData[1]);
-                var quantity = long.Parse(subData[2]);
+                var quantity = int.Parse(subData[2]);
 
                 switch(type)
                 {
@@ -146,7 +146,7 @@ namespace Codebreak.Service.World.Database.Structure
                 var subData = reward.Split(':');
                 var type = subData[0];
                 var id = int.Parse(subData[1]);
-                var quantity = long.Parse(subData[2]);
+                var quantity = int.Parse(subData[2]);
 
                 switch (type)
                 {

@@ -410,6 +410,9 @@ namespace Codebreak.Service.World.Database.Structure
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Write(false)]
         [DoNotNotify]
         public CharacterAlignmentDAO Alignment
@@ -422,6 +425,9 @@ namespace Codebreak.Service.World.Database.Structure
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Write(false)]
         [DoNotNotify]
         public CharacterGuildDAO Guild
@@ -434,6 +440,10 @@ namespace Codebreak.Service.World.Database.Structure
             }
         }
            
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void SerializeAs_ActorLookMessage(StringBuilder message)
         {
             var items = new List<InventoryItemDAO>(InventoryItemRepository.Instance.GetByOwner((int)EntityTypeEnum.TYPE_CHARACTER, Id));

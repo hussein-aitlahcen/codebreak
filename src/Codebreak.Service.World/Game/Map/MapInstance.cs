@@ -12,6 +12,7 @@ using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Job;
 using Codebreak.Framework.Utils;
+using Codebreak.Service.World.Game.Condition;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -200,7 +201,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             get
             {
-                var actionCell = m_cells.Find(cell => cell.NextMap != 0);
+                var actionCell = m_cells.Find(cell => cell.Trigger != null);
                 if (actionCell != null)
                     return actionCell.Id;
                 actionCell = m_cells.Find(cell => cell.Walkable);
@@ -297,20 +298,8 @@ namespace Codebreak.Service.World.Game.Map
                 {
                     cellData[j] = (byte)HASH_CELL.IndexOf(currentCell[j]);
                 }
-
-                var nextMap = 0;
-                var nextCell = 0;
-                if (triggers != null)
-                {
-                    var trigger = triggers.Find(trig => trig.CellId == id);
-                    if (trigger != null)
-                    {
-                        nextMap = trigger.NewMap;
-                        nextCell = trigger.NewCell;
-                    }
-                }
-
-                var cell = new MapCell(this, id, cellData, nextMap, nextCell);
+                
+                var cell = new MapCell(this, id, cellData, triggers.Find(trigger => trigger.CellId == id));
                 if(cell.InteractiveObject != null)
                 {
                     base.AddUpdatable(cell.InteractiveObject);
@@ -322,10 +311,8 @@ namespace Codebreak.Service.World.Game.Map
 
             Pathmaker = new Pathmaker(this);
             int nextNpcId = 1;
-            foreach(var npc in NpcManager.Instance.GetByMapId(Id))
-            {
-                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));
-            }
+            foreach(var npc in NpcManager.Instance.GetByMapId(Id))            
+                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));            
         }
 
         /// <summary>
@@ -617,12 +604,20 @@ namespace Codebreak.Service.World.Game.Map
 
             if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
             {
+                var character = (CharacterEntity)entity;
                 var cell = GetCell(cellId);
                 if (cell != null)
                 {
-                    if (cell.NextMap != 0 && cell.NextCell != 0)
+                    if (cell.Trigger != null)
                     {
-                        entity.Teleport(cell.NextMap, cell.NextCell);
+                        if(!cell.SatisfyConditions(character))
+                        {
+                            entity.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CONDITIONS_UNSATISFIED));
+                            return;
+                        }
+
+                        entity.CellId = cellId;
+                        cell.ApplyActions(character);
                         return;
                     }
 

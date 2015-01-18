@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Database.Structure;
+﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Exchange;
@@ -424,7 +425,7 @@ namespace Codebreak.Service.World.Game.Auction
             newItem.OwnerType = (int)EntityTypeEnum.TYPE_AUCTION_HOUSE;
             newItem.OwnerId = Id;
 
-            var record = AuctionHouseEntryDAO.Create(newItem.Id, Id, character.Id, price, Timeout);
+            var record = AuctionHouseEntryRepository.Instance.Create(newItem.Id, Id, character.Id, price, Timeout);
             if (record == null)
             {
                 character.Inventory.AddItem(newItem);

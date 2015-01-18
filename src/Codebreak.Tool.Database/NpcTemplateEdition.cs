@@ -45,7 +45,7 @@ namespace Codebreak.Tool.Database
                 AddToSell(item);
             ReloadRewards();
 
-            comboBoxAddItemTemplate.DataSource = ItemTemplateRepository.Instance.GetAll().OrderBy(item => item.Name).ToList();
+            comboBoxAddItemTemplate.DataSource = ItemTemplateRepository.Instance.All.OrderBy(item => item.Name).ToList();
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Codebreak.Tool.Database
                         return;
                     }
 
-                    list.Add(new RewardEntry.ItemEntry(itemTemplate.Id, (long)numericUpDown3.Value));
+                    list.Add(new RewardEntry.ItemEntry(itemTemplate.Id, (int)numericUpDown3.Value));
                     break;
                     
                 case "entry":

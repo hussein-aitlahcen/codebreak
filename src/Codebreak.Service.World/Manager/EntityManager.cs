@@ -56,7 +56,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            foreach(var character in CharacterRepository.Instance.GetAll())            
+            foreach(var character in CharacterRepository.Instance.All)            
                 if(character.Merchant)                
                     EntityManager.Instance.CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
         }

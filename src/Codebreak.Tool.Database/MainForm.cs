@@ -66,9 +66,9 @@ namespace Codebreak.Tool.Database
             LoadNpcTemplates();
             SafeExecute(() =>
             {
-                comboBoxAddNpcInstanceMap.DataSource = MapRepository.Instance.GetAll().OrderBy(map => map.Id).ToList();
-                comboBoxAddNpcInstanceTemplate.DataSource = NpcTemplateRepository.Instance.GetAll().OrderBy(template => template.Name).ToList();
-                comboBoxAddNpcInstanceQuestion.DataSource = NpcQuestionRepository.Instance.GetAll();
+                comboBoxAddNpcInstanceMap.DataSource = MapTemplateRepository.Instance.All.OrderBy(map => map.Id).ToList();
+                comboBoxAddNpcInstanceTemplate.DataSource = NpcTemplateRepository.Instance.All.OrderBy(template => template.Name).ToList();
+                comboBoxAddNpcInstanceQuestion.DataSource = NpcQuestionRepository.Instance.All;
 
                 ColumnNpcInstanceId.ValueType = typeof(int);
 
@@ -79,19 +79,19 @@ namespace Codebreak.Tool.Database
                 ColumnNpcInstanceMapId.ValueType = typeof(MapTemplateDAO);
                 ColumnNpcInstanceMapId.ValueMember = "This";
                 ColumnNpcInstanceMapId.DisplayMember = "DisplayMember";
-                ColumnNpcInstanceMapId.DataSource = MapRepository.Instance.GetAll().OrderBy(map => map.Id).ToList();
+                ColumnNpcInstanceMapId.DataSource = MapTemplateRepository.Instance.All.OrderBy(map => map.Id).ToList();
 
                 ColumnNpcInstanceTemplateId.ValueType = typeof(NpcTemplateDAO);
                 ColumnNpcInstanceTemplateId.ValueMember = "This";
                 ColumnNpcInstanceTemplateId.DisplayMember = "DisplayMember";
-                ColumnNpcInstanceTemplateId.DataSource = NpcTemplateRepository.Instance.GetAll().OrderBy(template => template.Name).ToList();
+                ColumnNpcInstanceTemplateId.DataSource = NpcTemplateRepository.Instance.All.OrderBy(template => template.Name).ToList();
 
                 ColumnNpcInstanceQuestionId.ValueType = typeof(NpcQuestionDAO);
                 ColumnNpcInstanceQuestionId.ValueMember = "This";
                 ColumnNpcInstanceQuestionId.DisplayMember = "DisplayMember";
-                ColumnNpcInstanceQuestionId.DataSource = NpcQuestionRepository.Instance.GetAll();
+                ColumnNpcInstanceQuestionId.DataSource = NpcQuestionRepository.Instance.All;
 
-                foreach (var npcInstance in NpcInstanceRepository.Instance.GetAll())
+                foreach (var npcInstance in NpcInstanceRepository.Instance.All)
                 {
                     var row = new DataGridViewRow()
                     {
@@ -152,8 +152,8 @@ namespace Codebreak.Tool.Database
             SafeExecute(() => { toolStripStatusLabelState.Text = "Chargement NpcTemplate ..."; toolStripStatusLabelState.ForeColor = Color.Blue; });
 
             ClearNpcTemplates();
-            InitProgressbar(NpcTemplateRepository.Instance.GetAll().Count());
-            foreach(var npcTemplate in NpcTemplateRepository.Instance.GetAll())
+            InitProgressbar(NpcTemplateRepository.Instance.All.Count());
+            foreach(var npcTemplate in NpcTemplateRepository.Instance.All)
             {
                 AddNpcTemplate(npcTemplate);
                 UpdateProgressbar();
@@ -226,7 +226,7 @@ namespace Codebreak.Tool.Database
             else
             {
                 ClearNpcTemplates();
-                foreach (var npcTemplate in NpcTemplateRepository.Instance.GetAll())
+                foreach (var npcTemplate in NpcTemplateRepository.Instance.All)
                 {
                     if ((id == 0 ? false : npcTemplate.Id == id) || (string.IsNullOrWhiteSpace(name) ? false : npcTemplate.Name.ToLower().Contains(name)))
                     {

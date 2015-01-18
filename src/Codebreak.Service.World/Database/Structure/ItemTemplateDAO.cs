@@ -582,9 +582,9 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="slot"></param>
         /// <param name="maxJet"></param>
         /// <returns></returns>
-        public InventoryItemDAO Create(long quantity = 1, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY, bool maxJet = false)
+        public InventoryItemDAO Create(int quantity = 1, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY, bool maxJet = false)
         {
-            return InventoryItemDAO.Create(Id, quantity, GenerateStats(maxJet), slot);
+            return InventoryItemRepository.Instance.Create(Id, -1, quantity, GenerateStats(maxJet), slot);
         }
 
         /// <summary>

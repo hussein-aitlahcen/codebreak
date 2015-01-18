@@ -92,9 +92,9 @@ namespace Codebreak.Service.World.Game.Action
             if (stopCell == Entity.Id)
                 stopCell = Entity.CellId;
 
-            Entity.MovementHandler.MovementFinish(Entity, Path, stopCell);
-
             base.Abort(args);
+
+            Entity.MovementHandler.MovementFinish(Entity, Path, stopCell);
         }
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="args"></param>
         public override void Stop(params object[] args)
         {
-            Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
-
             base.Stop(args);
+
+            Entity.MovementHandler.MovementFinish(Entity, Path, Path.EndCell);
 
             if (SkillId != -1 && Entity.MapId == SkillMapId)            
                 Entity.Map.InteractiveExecute((CharacterEntity)Entity, SkillCellId, SkillId);

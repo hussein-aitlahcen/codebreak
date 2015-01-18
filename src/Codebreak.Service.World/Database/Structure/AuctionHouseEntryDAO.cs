@@ -60,29 +60,6 @@ namespace Codebreak.Service.World.Database.Structure
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="itemId"></param>
-        /// <param name="houseId"></param>
-        /// <param name="ownerId"></param>
-        /// <param name="price"></param>
-        /// <returns></returns>
-        public static AuctionHouseEntryDAO Create(long itemId, int houseId, long ownerId, long price, long time)
-        {
-            var entry = new AuctionHouseEntryDAO()
-            {
-                ItemId = itemId,
-                AuctionHouseId = houseId,
-                OwnerId = ownerId,
-                Price = price,
-                ExpireDate = DateTime.Now.AddHours((double)time),
-            };
-            if (!AuctionHouseEntryRepository.Instance.InsertWithKey(entry))
-                return null;
-            return entry;
-        }
+        }        
     }
 }

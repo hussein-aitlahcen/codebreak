@@ -48,8 +48,8 @@ namespace Codebreak.Service.World
         public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000;
 
         public const int WORLD_SAVE_INTERVAL = 60 * 1000;
-        public const int WORLD_MAP_START = 7411;
-        public const int WORLD_CELL_START = 265;
+        public const int WORLD_MAP_START = 9;
+        public const int WORLD_CELL_START = 239;
 
         public const int CHARACTER_CREATION_LEVEL = 1;
         public const int CHARACTER_CREATION_VITALITY = 0;

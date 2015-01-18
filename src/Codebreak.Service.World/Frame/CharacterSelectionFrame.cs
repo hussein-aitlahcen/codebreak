@@ -206,6 +206,8 @@ namespace Codebreak.Service.World.Frame
 
                     var character = new CharacterDAO()
                     {
+                        Id = CharacterRepository.Instance.NextCharacterId,
+
                         // global
                         AccountId = client.Account.Id,
                         Name = name,
@@ -278,11 +280,7 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
-            if (!CharacterRepository.Instance.Insert(record))
-            {
-                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                return;
-            }
+            CharacterRepository.Instance.Insert(record);
 
             client.Characters.Add(record);
 
@@ -332,7 +330,7 @@ namespace Codebreak.Service.World.Frame
         /// <param name="character"></param>
         private void CharacterDeletionExecute(WorldClient client, CharacterDAO character)
         {
-            if (!CharacterRepository.Instance.Remove(character))
+            if (!CharacterRepository.Instance.Delete(character))
             {
                 client.Send(WorldMessage.CHARACTER_DELETION_ERROR());
                 return;

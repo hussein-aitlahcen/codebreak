@@ -13,5 +13,31 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class TaxCollectorRepository : Repository<TaxCollectorRepository, TaxCollectorDAO>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public long NextTaxCollectorId
+        {
+            get
+            {
+                lock (m_syncLock)
+                    return m_nextTaxCollectorId++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private long m_nextTaxCollectorId;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        public override void OnObjectAdded(TaxCollectorDAO obj)
+        {
+            if (obj.Id >= m_nextTaxCollectorId)
+                m_nextTaxCollectorId = obj.Id + 1;
+        }
     }
 }

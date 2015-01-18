@@ -50,6 +50,28 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
+        [DoNotNotify]
+        public bool IsNew
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        [DoNotNotify]
+        public bool IsDeleted
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         static DataAccessObject()
         {
             IsRunning = false;
@@ -61,6 +83,7 @@ namespace Codebreak.Framework.Database
         public DataAccessObject()
         {
             IsDirty = false;
+            IsNew = false;
         }
 
         /// <summary>
@@ -86,7 +109,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public bool Delete()
         {
-            return SqlManager.Instance.Remove<T>((T)this);
+            return SqlManager.Instance.Delete<T>((T)this);
         }
 
         /// <summary>
@@ -126,6 +149,20 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         public virtual void OnBeforeUpdate()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnBeforeInsert()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnBeforeDelete()
         {
         }
     }
