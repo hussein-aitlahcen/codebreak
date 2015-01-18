@@ -570,7 +570,10 @@ namespace Codebreak.Service.World.Database.Structure
                 }
                 else
                 {
-                    generatedStats.AddEffect(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                    if(effect.Item3 > effect.Item2)
+                        generatedStats.AddEffect(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
+                    else
+                        generatedStats.AddEffect(effect.Item1, effect.Item2);
                 }
             }
             return generatedStats;
