@@ -78,13 +78,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
                 case ItemTypeEnum.TYPE_BOOST_FOOD:
                     slot = ItemSlotEnum.SLOT_BOOST_FOOD;
                     break;
-
-                case ItemTypeEnum.TYPE_AMULETTE:
-                    slot = ItemSlotEnum.SLOT_AMULET;
-                    break;
             }
 
-            if(character.Inventory.Items.Any(entry => entry.Slot == slot))
+            if(character.Inventory.Items.Any(entry => entry.Slot == slot || entry.TemplateId == itemId))
             {
                 character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CONDITIONS_UNSATISFIED));
                 return false;
