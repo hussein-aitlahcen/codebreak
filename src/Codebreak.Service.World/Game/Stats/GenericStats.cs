@@ -835,6 +835,16 @@ namespace Codebreak.Service.World.Game.Stats
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool HasEffect(EffectEnum id)
+        {
+            return m_effects.ContainsKey(id);
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="EffectType"></param>

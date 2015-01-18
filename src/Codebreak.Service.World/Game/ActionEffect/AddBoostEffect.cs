@@ -1,5 +1,7 @@
 ﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Stats;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +30,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
             if (!WorldConfig.BOOST_ITEMS.ContainsKey(item.TemplateId))
                 return false;
 
-            return Process(character, new Dictionary<string, string>() { { "item", WorldConfig.BOOST_ITEMS[item.TemplateId].ToString() } });
+            return Process(character, new Dictionary<string, string>() { { "itemId", WorldConfig.BOOST_ITEMS[item.TemplateId].ToString() } });
         }
 
         /// <summary>
@@ -39,12 +41,56 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool Process(Entity.CharacterEntity character, Dictionary<string, string> parameters)
         {
-            var itemId = int.Parse(parameters["item"]);
+            var itemId = int.Parse(parameters["itemId"]);
             var template = ItemTemplateRepository.Instance.GetById(itemId);
             if (template == null)
                 return false;
 
-            var item = template.Create(1, Database.Structure.ItemSlotEnum.SLOT_BOOST);
+            ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY;
+            switch ((ItemTypeEnum)template.Type)
+            {
+                case ItemTypeEnum.TYPE_TRANSFORM:
+                    slot = ItemSlotEnum.SLOT_BOOST_MUTATION;
+                    break;
+
+                case ItemTypeEnum.TYPE_PERSO_SUIVEUR:
+                    slot = ItemSlotEnum.SLOT_BOOST_FOLLOWER;
+                    break;
+
+                case ItemTypeEnum.TYPE_BENEDICTION:
+                    if (character.Inventory.Items.Any(entry => entry.Slot == ItemSlotEnum.SLOT_BOOST_BENEDICTION))                    
+                        slot = ItemSlotEnum.SLOT_BOOST_BENEDICTION_1;                    
+                    else                    
+                        slot = ItemSlotEnum.SLOT_BOOST_BENEDICTION;                    
+                    break;
+
+                case ItemTypeEnum.TYPE_MALEDICTION:
+                    if (character.Inventory.Items.Any(entry => entry.Slot == ItemSlotEnum.SLOT_BOOST_MALEDICTION))
+                        slot = ItemSlotEnum.SLOT_BOOST_MALEDICTION_1;   
+                    else
+                        slot = ItemSlotEnum.SLOT_BOOST_MALEDICTION;
+                    break;
+
+                case ItemTypeEnum.TYPE_RP_BUFF:
+                    slot = ItemSlotEnum.SLOT_BOOST_ROLEPLAY_BUFF;
+                    break;
+
+                case ItemTypeEnum.TYPE_BOOST_FOOD:
+                    slot = ItemSlotEnum.SLOT_BOOST_FOOD;
+                    break;
+
+                case ItemTypeEnum.TYPE_AMULETTE:
+                    slot = ItemSlotEnum.SLOT_AMULET;
+                    break;
+            }
+
+            if(character.Inventory.Items.Any(entry => entry.Slot == slot))
+            {
+                character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CONDITIONS_UNSATISFIED));
+                return false;
+            }
+
+            var item = template.Create(1, slot);
 
             character.CachedBuffer = true;
             character.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);

@@ -1074,16 +1074,17 @@ namespace Codebreak.Service.World.Game.Entity
                 }
 
                 base.CachedBuffer = true;
-                var items = Inventory.Items.FindAll(item => item.Slot == ItemSlotEnum.SLOT_BOOST);
+                var items = Inventory.Items.FindAll(item => (item.Slot & ItemSlotEnum.SLOT_BOOST) == item.Slot);
                 foreach(var item in items)
                 {
-                    var effect = item.Statistics.GetEffect(EffectEnum.AddBoost); //
-                    effect.Value3--;
-
-                    item.SaveStats();
-
-                    if (effect.Value3 <= 0)
-                        Inventory.RemoveItem(item.Id);
+                    if (item.Statistics.HasEffect(EffectEnum.AddBoost))
+                    {
+                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost); 
+                        effect.Value3--;
+                        item.SaveStats();
+                        if (effect.Value3 <= 0)
+                            Inventory.RemoveItem(item.Id);
+                    }
                 }
                 if (items.Count > 0)
                 {

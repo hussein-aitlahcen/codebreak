@@ -77,7 +77,7 @@ namespace Codebreak.Service.World.Game.Entity
                 if (item.IsEquiped)
                 {
                     AddSet(item);
-                    if(item.Slot == ItemSlotEnum.SLOT_BOOST)
+                    if ((item.Slot & ItemSlotEnum.SLOT_BOOST) == item.Slot)
                         Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
                     else
                         Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
@@ -118,7 +118,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (item.IsEquiped && !InventoryItemDAO.IsEquipedSlot(slot))
             {
-                if (item.Slot == ItemSlotEnum.SLOT_BOOST)
+                if ((item.Slot & ItemSlotEnum.SLOT_BOOST) == slot)
                     Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
                 else
                     Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
@@ -188,7 +188,7 @@ namespace Codebreak.Service.World.Game.Entity
                 AddItem(newItem, false);
 
                 AddSet(newItem);
-                if (item.Slot == ItemSlotEnum.SLOT_BOOST)
+                if ((item.Slot & ItemSlotEnum.SLOT_BOOST) == slot)
                     Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
                 else
                     Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);

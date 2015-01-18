@@ -197,7 +197,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public static bool IsEquipedSlot(ItemSlotEnum slot)
         {
-            return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_BOOST;
+            return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_BOOST_FOOD;
         }
         
         /// <summary>

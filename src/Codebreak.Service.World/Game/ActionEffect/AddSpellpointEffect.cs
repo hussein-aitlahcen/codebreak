@@ -25,7 +25,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericEffect effect, long targetId, int targetCell)
         {
-            return Process(character, new Dictionary<string, string>() { { "value", effect.RandomJet.ToString() } });
+            return Process(character, new Dictionary<string, string>() { { "spellpoint", effect.RandomJet.ToString() } });
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            var value = int.Parse(parameters["value"]);
+            var value = int.Parse(parameters["spellpoint"]);
 
             character.CachedBuffer = true;
             character.SpellPoint += value;
