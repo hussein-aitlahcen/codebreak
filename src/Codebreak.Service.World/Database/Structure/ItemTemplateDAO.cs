@@ -134,6 +134,7 @@ namespace Codebreak.Service.World.Database.Structure
     /// <summary>
     /// 
     /// </summary>
+    [Flags]
     public enum ItemSlotEnum
     {
         SLOT_INVENTORY = -1,
@@ -179,13 +180,13 @@ namespace Codebreak.Service.World.Database.Structure
         SLOT_ITEMBAR_13 = 47,
         SLOT_ITEMBAR_14 = 48,
 
-        SLOT_BOOST = SLOT_BOOST_FOOD | SLOT_BOOST_BENEDICTION |SLOT_BOOST_BENEDICTION_1 | SLOT_BOOST_MALEDICTION 
-        | SLOT_BOOST_MALEDICTION_1 | SLOT_BOOST_MUTATION | SLOT_BOOST_FOLLOWER | SLOT_BOOST_ROLEPLAY_BUFF,
+        //SLOT_BOOST = SLOT_BOOST_FOOD | SLOT_BOOST_BENEDICTION |SLOT_BOOST_BENEDICTION_1 | SLOT_BOOST_MALEDICTION 
+        //| SLOT_BOOST_MALEDICTION_1 | SLOT_BOOST_MUTATION | SLOT_BOOST_FOLLOWER | SLOT_BOOST_ROLEPLAY_BUFF,
 
-        SLOT_EQUIPPED = SLOT_AMULET | SLOT_WEAPON | SLOT_LEFT_RING | SLOT_BELT | SLOT_RIGHT_RING | SLOT_BOOTS | SLOT_HAT
-        | SLOT_CAPE | SLOT_PET | SLOT_DOFUS_1 | SLOT_DOFUS_2 | SLOT_DOFUS_3 | SLOT_DOFUS_4 | SLOT_DOFUS_5 | SLOT_DOFUS_6
-        | SLOT_SHIELD | SLOT_BOOST_FOOD | SLOT_BOOST_BENEDICTION |SLOT_BOOST_BENEDICTION_1 | SLOT_BOOST_MALEDICTION 
-        | SLOT_BOOST_MALEDICTION_1 | SLOT_BOOST_MUTATION | SLOT_BOOST_FOLLOWER | SLOT_BOOST_ROLEPLAY_BUFF,
+        //SLOT_EQUIPPED = SLOT_AMULET | SLOT_WEAPON | SLOT_LEFT_RING | SLOT_BELT | SLOT_RIGHT_RING | SLOT_BOOTS | SLOT_HAT
+        //| SLOT_CAPE | SLOT_PET | SLOT_DOFUS_1 | SLOT_DOFUS_2 | SLOT_DOFUS_3 | SLOT_DOFUS_4 | SLOT_DOFUS_5 | SLOT_DOFUS_6
+        //| SLOT_SHIELD | SLOT_BOOST_FOOD | SLOT_BOOST_BENEDICTION |SLOT_BOOST_BENEDICTION_1 | SLOT_BOOST_MALEDICTION 
+        //| SLOT_BOOST_MALEDICTION_1 | SLOT_BOOST_MUTATION | SLOT_BOOST_FOLLOWER | SLOT_BOOST_ROLEPLAY_BUFF,
     }
 
     /// <summary>
@@ -228,7 +229,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public static bool CanPlaceInSlot(ItemTypeEnum type, ItemSlotEnum slot)
         {
-            if ((slot & ItemSlotEnum.SLOT_EQUIPPED) != slot)
+            if (slot < ItemSlotEnum.SLOT_AMULET || slot > ItemSlotEnum.SLOT_BOOST_FOLLOWER)
                 return false;
 
             return ((GetSlotByType(type) | ItemSlotEnum.SLOT_INVENTORY) & slot) == slot;

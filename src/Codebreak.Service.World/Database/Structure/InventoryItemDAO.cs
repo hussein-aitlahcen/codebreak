@@ -181,6 +181,20 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>        
+        [Write(false)]
+        [DoNotNotify]
+        public bool IsBoostEquiped
+        {
+            get
+            {
+                return IsBoostSlot(Slot);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
         public bool SatisfyConditions(CharacterEntity character)
@@ -197,7 +211,17 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public static bool IsEquipedSlot(ItemSlotEnum slot)
         {
-            return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_BOOST_FOOD;
+            return slot >= ItemSlotEnum.SLOT_AMULET && slot <= ItemSlotEnum.SLOT_BOOST_FOLLOWER;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public static bool IsBoostSlot(ItemSlotEnum slot)
+        {
+            return slot >= ItemSlotEnum.SLOT_BOOST_MUTATION && slot <= ItemSlotEnum.SLOT_BOOST_FOLLOWER;
         }
         
         /// <summary>

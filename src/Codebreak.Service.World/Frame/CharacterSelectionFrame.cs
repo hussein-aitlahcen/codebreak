@@ -139,71 +139,71 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void HandleCharacterCreate(WorldClient client, string message)
         {
+            if (client.Characters == null)
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            var infos = message.Substring(2).Split('|');
+            if (infos.Length < 6)
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            var name = infos[0];
+
+            byte breed = 0;
+            if (!byte.TryParse(infos[1], out breed))
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            bool sex = infos[2] == "1";
+
+            var color1 = -1;
+            if (!int.TryParse(infos[3], out color1))
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            var color2 = -1;
+            if (!int.TryParse(infos[4], out color2))
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            var color3 = -1;
+            if (!int.TryParse(infos[5], out color3))
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            if (client.Characters.Count > 4)
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR_FULL());
+                return;
+            }
+
+            if (!Enum.IsDefined(typeof(CharacterBreedEnum), breed))
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
+            if (color1 < -1 || color2 < -1 || color3 < -1)
+            {
+                client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
+                return;
+            }
+
             WorldService.Instance.AddMessage(() =>
-                {
-                    if (client.Characters == null)
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    var infos = message.Substring(2).Split('|');
-                    if(infos.Length < 6)
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    var name = infos[0];
-
-                    byte breed = 0;
-                    if(!byte.TryParse(infos[1], out breed))
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    bool sex = infos[2] == "1";
-
-                    var color1 = -1;
-                    if (!int.TryParse(infos[3], out color1))
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    var color2 = -1;
-                    if (!int.TryParse(infos[4], out color2))
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    var color3 = -1;
-                    if (!int.TryParse(infos[5], out color3))
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    if (client.Characters.Count > 4)
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR_FULL());
-                        return;
-                    }
-
-                    if (!Enum.IsDefined(typeof(CharacterBreedEnum), breed))
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
-                    if (color1 < -1 || color2 < -1 || color3 < -1)
-                    {
-                        client.Send(WorldMessage.CHARACTER_CREATION_ERROR());
-                        return;
-                    }
-
+                {     
                     var character = new CharacterDAO()
                     {
                         Id = CharacterRepository.Instance.NextCharacterId,
@@ -298,28 +298,25 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void HandleCharacterDelete(WorldClient client, string message)
         {
+            if (client.Characters == null)
+            {
+                client.Send(WorldMessage.CHARACTER_DELETION_ERROR());
+                return;
+            }
+
+            var deletionData = message.Substring(2).Split('|');
+            var characterId = long.Parse(deletionData[0]);
+            var character = client.Characters.Find(entry => entry.Id == characterId);
+
+            if (character == null)
+            {
+                client.Send(WorldMessage.CHARACTER_DELETION_ERROR());
+                return;
+            }
+
             WorldService.Instance.AddMessage(() =>
                 {
-                    if (client.Characters == null)
-                    {
-                        client.Send(WorldMessage.CHARACTER_DELETION_ERROR());
-                        return;
-                    }
-
-                    var deletionData = message.Substring(2).Split('|');
-                    var characterId = long.Parse(deletionData[0]);
-                    var character = client.Characters.Find(entry => entry.Id == characterId);
-
-                    if (character == null)
-                    {
-                        client.Send(WorldMessage.CHARACTER_DELETION_ERROR());
-                        return;
-                    }
-
-                    WorldService.Instance.AddMessage(() =>
-                        {
-                            CharacterDeletionExecute(client, character);
-                        });
+                    CharacterDeletionExecute(client, character);
                 });
         }
 
@@ -341,10 +338,7 @@ namespace Codebreak.Service.World.Frame
 
             client.Characters.Remove(character);
 
-            WorldService.Instance.AddMessage(() =>
-                {
-                    client.Send(WorldMessage.CHARACTER_LIST(client.Characters));
-                });
+            client.Send(WorldMessage.CHARACTER_LIST(client.Characters));
         }
 
         /// <summary>
@@ -372,34 +366,31 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void HandleCharacterSelect(WorldClient client, string message)
         {
+            if (client.Characters == null)
+            {
+                return;
+            }
+
+            var characterId = long.Parse(message.Substring(2));
+            var character = client.Characters.Find(entry => entry.Id == characterId);
+
+            // unknow id
+            if (character == null)
+            {
+                client.Send(WorldMessage.CHARACTER_SELECTION_ERROR());
+                return;
+            }
+
+            // dead ?
+            if (character.Dead)
+            {
+                client.Send(WorldMessage.CHARACTER_SELECTION_ERROR());
+                return;
+            }
+
             WorldService.Instance.AddMessage(() =>
                 {
-                    if (client.Characters == null)
-                    {
-                        return;
-                    }
-
-                    var characterId = long.Parse(message.Substring(2));
-                    var character = client.Characters.Find(entry => entry.Id == characterId);
-
-                    // unknow id
-                    if (character == null)
-                    {
-                        client.Send(WorldMessage.CHARACTER_SELECTION_ERROR());
-                        return;
-                    }
-
-                    // dead ?
-                    if (character.Dead)
-                    {
-                        client.Send(WorldMessage.CHARACTER_SELECTION_ERROR());
-                        return;
-                    }
-
-                    WorldService.Instance.AddMessage(() =>
-                        {
-                            CharacterSelectExecute(client, character);
-                        });
+                    CharacterSelectExecute(client, character);
                 });
         }
 

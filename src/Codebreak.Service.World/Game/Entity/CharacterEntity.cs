@@ -1074,7 +1074,7 @@ namespace Codebreak.Service.World.Game.Entity
                 }
 
                 base.CachedBuffer = true;
-                var items = Inventory.Items.FindAll(item => (item.Slot & ItemSlotEnum.SLOT_BOOST) == item.Slot);
+                var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
                 foreach(var item in items)
                 {
                     if (item.Statistics.HasEffect(EffectEnum.AddBoost))
