@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Database.Structure
         BREED_ENIRIPSA = 7,
         BREED_IOP = 8,
         BREED_CRA = 9,
-        BREED_SADIDA = 10,
+        BREED_SADIDAS = 10,
         BREED_SACRIEUR = 11,
         BREED_PANDAWA = 12,
     }
@@ -364,6 +364,15 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         public int EmoteCapacity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int DeathType
         {
             get;
             set;

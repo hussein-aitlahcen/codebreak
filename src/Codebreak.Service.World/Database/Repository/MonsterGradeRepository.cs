@@ -16,9 +16,34 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
+        private Dictionary<int, MonsterGradeDAO> m_gradeById;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MonsterGradeRepository()
+        {
+            m_gradeById = new Dictionary<int, MonsterGradeDAO>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MonsterGradeDAO GetById(int id)
+        {
+            return m_gradeById[id];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="grade"></param>
         public override void OnObjectAdded(MonsterGradeDAO grade)
         {
+            m_gradeById.Add(grade.Id, grade);
+
             MonsterRepository.Instance.GetById(grade.MonsterId).AddGrade(grade);
         }
 

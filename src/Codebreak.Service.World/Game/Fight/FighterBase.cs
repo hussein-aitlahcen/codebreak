@@ -492,19 +492,10 @@ namespace Codebreak.Service.World.Game.Fight
 
                 Statistics.ClearDons();
             }
-            else
-            {
-                Fight.SpectatorTeam.RemoveSpectator((CharacterEntity)this);
-                Fight.SpectatorTeam.RemoveUpdatable(this);
-                Fight.SpectatorTeam.RemoveHandler(Dispatch);
-            }
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => null);
             StopAction(GameActionTypeEnum.FIGHT);
-            
-            if (IsDisconnected)
-                EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
-            
+                        
             if (SpellManager != null)
             {
                 SpellManager.Dispose();

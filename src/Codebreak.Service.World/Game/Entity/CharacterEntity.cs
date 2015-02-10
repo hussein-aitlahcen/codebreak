@@ -52,6 +52,15 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
+    public enum DeathTypeEnum
+    {
+        TYPE_NORMAL = 1,
+        TYPE_HEROIC = 2,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class CharacterEntity : FighterBase, IDisposable
     {
         /// <summary>
@@ -558,6 +567,36 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int DeathCount
+        {
+            get
+            {
+                return DatabaseRecord.DeathCount;
+            }
+            set
+            {
+                DatabaseRecord.DeathCount = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int MaxLevel
+        {
+            get
+            {
+                return DatabaseRecord.MaxLevel;
+            }
+            set
+            {
+                DatabaseRecord.MaxLevel = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public CharacterDAO DatabaseRecord
         {
             get;
@@ -862,6 +901,21 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public DeathTypeEnum DeathType
+        {
+            get
+            {
+                return (DeathTypeEnum)DatabaseRecord.DeathType;
+            }
+            set
+            {
+                DatabaseRecord.DeathType = (int)value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected string m_guildDisplayInfos;
         protected long m_lastRegenTime;
         protected double m_regenTimer;
@@ -929,7 +983,6 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (IsTombestone)
             {
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_OBJECT, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, true);
@@ -942,12 +995,8 @@ namespace Codebreak.Service.World.Game.Entity
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_PRISM, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);
-
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ASSAULT, true);
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_ATTACK, true);
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE, true);
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_SWITCH_TOCREATURE, true);
+                
+                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, true);
 
                 base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
@@ -990,29 +1039,52 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void FreeSoul()
         {
-            SkinBase = WorldConfig.GHOST_SKIN_ID;
-            CheckRestrictions();
-            if (!DisableAlignment())
-                RefreshOnMap();
+            switch(DeathType)
+            {
+                case DeathTypeEnum.TYPE_NORMAL:
+                    SkinBase = WorldConfig.GHOST_SKIN_ID;
+                    CheckRestrictions();
+                    if (!DisableAlignment())
+                        RefreshOnMap();
+                    break;
+
+                case DeathTypeEnum.TYPE_HEROIC:
+                    Dead = true;
+                    DeathCount++;
+                    if(Level > MaxLevel)
+                        MaxLevel = Level;
+                    base.Dispatch(WorldMessage.GAME_OVER());
+                    break;
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void OnLoseFight()
+        public void OnLoseFight(DeathTypeEnum type)
         {
+            DeathType = type;            
             Life = 1;
 
-            LoseEnergy();
-
-            if (Energy > 0)
+            switch(type)
             {
-                // get back home if u still have energy babe
-                MapId = SavedMapId;
-                CellId = SavedCellId;
+                case DeathTypeEnum.TYPE_HEROIC:
+                    Energy = 1;
+                    LoseEnergy();
+                    break;
+
+                case DeathTypeEnum.TYPE_NORMAL:
+                    LoseEnergy();
+                    if (Energy > 0)
+                    {
+                        // get back home if u still have energy babe
+                        MapId = SavedMapId;
+                        CellId = SavedCellId;
+                    }
+                    break;
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1049,11 +1121,7 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     switch (Fight.Type)
                     {
-                        // On rend la vie aux joueurs en pvp
                         case FightTypeEnum.TYPE_CHALLENGE:
-                            Life = 1;
-                            break;
-
                         case FightTypeEnum.TYPE_AGGRESSION:
                         case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
@@ -1061,25 +1129,29 @@ namespace Codebreak.Service.World.Game.Entity
                             break;
                     }
                 }
-                if(!win)
+
+                if (!win)
                 {
                     switch (Fight.Type)
                     {
                         case FightTypeEnum.TYPE_AGGRESSION:
-                        case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
-                            OnLoseFight();
+                            OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
+                            break;
+
+                        case FightTypeEnum.TYPE_PVM:
+                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
                             break;
                     }
                 }
 
                 base.CachedBuffer = true;
                 var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
-                foreach(var item in items)
+                foreach (var item in items)
                 {
                     if (item.Statistics.HasEffect(EffectEnum.AddBoost))
                     {
-                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost); 
+                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
                         effect.Value3--;
                         item.SaveStats();
                         if (effect.Value3 <= 0)
@@ -1093,6 +1165,15 @@ namespace Codebreak.Service.World.Game.Entity
                 }
                 base.CachedBuffer = false;
             }
+            else
+            {
+                Fight.SpectatorTeam.RemoveSpectator(this);
+                Fight.SpectatorTeam.RemoveUpdatable(this);
+                Fight.SpectatorTeam.RemoveHandler(Dispatch);
+            }
+            
+            if (IsDisconnected)
+                EntityManager.Instance.RemoveCharacter(this);
 
             base.EndFight(win);
         }
@@ -1164,10 +1245,12 @@ namespace Codebreak.Service.World.Game.Entity
                     switch (Fight.Type)
                     {
                         case FightTypeEnum.TYPE_AGGRESSION:
-                        case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_PVT:
-                            Life = 1;
-                            OnLoseFight();
+                            OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
+                            break;
+
+                        case FightTypeEnum.TYPE_PVM:
+                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
                             break;
                     }
                 }
@@ -1762,12 +1845,17 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.MAP:
+                    if(Map == null)
+                    {
+                        MapId = SavedMapId;
+                        CellId = SavedCellId;
+                    }
                     if (HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE))                    
-                        FrameManager.AddFrame(GameTombestoneFrame.Instance);                    
+                        FrameManager.AddFrame(GameTombestoneFrame.Instance);
                     FrameManager.AddFrame(MapFrame.Instance);
                     FrameManager.AddFrame(InventoryFrame.Instance);
                     FrameManager.AddFrame(ExchangeFrame.Instance);
-                    FrameManager.AddFrame(GameActionFrame.Instance);
+                    FrameManager.AddFrame(GameActionFrame.Instance);                    
                     break;
 
                 case GameActionTypeEnum.WAYPOINT:

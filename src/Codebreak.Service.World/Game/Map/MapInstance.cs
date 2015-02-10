@@ -14,6 +14,8 @@ using Codebreak.Service.World.Game.Job;
 using Codebreak.Framework.Utils;
 using Codebreak.Service.World.Game.Condition;
 using Codebreak.Framework.Generic;
+using Codebreak.Service.World.Game.Spawn;
+using Codebreak.Service.World.Database.Structure;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -222,10 +224,21 @@ namespace Codebreak.Service.World.Game.Map
                 MapCell freeCell = null;
                 do
                 {
-                    freeCell = m_cells[Util.Next(70, m_cells.Count - 100)];
+                    freeCell = m_cells[Util.Next(0, m_cells.Count - 100)];
                 }
                 while (freeCell == null || !freeCell.Walkable);
                 return freeCell.Id;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int PlayerCount
+        {
+            get
+            {
+                return m_playerCount;
             }
         }
 
@@ -241,6 +254,9 @@ namespace Codebreak.Service.World.Game.Map
         private bool m_movementInitialized;
         private bool m_subInstance;
         private int m_playerCount;
+        private SpawnQueue m_spawnQueue;
+        private List<MonsterGradeDAO> m_monsters;
+        private int m_spawnCounter;
 
         /// <summary>
         /// 
@@ -256,14 +272,6 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="createTime"></param>
         public MapInstance(int subAreaId, int id, int x, int y, int width, int height, string data, string dataKey, string createTime, List<int> f0teamCells, List<int> f1teamCells, bool subInstance = false)
         {
-            m_subInstance = subInstance;
-            m_movementInitialized = false;
-            m_cells = new List<MapCell>();
-            m_cellById = new Dictionary<int, MapCell>();
-            m_entityById = new Dictionary<long, EntityBase>();
-            m_entityByName = new Dictionary<string, EntityBase>();
-            m_nextMonsterId = -1;
-
             Id = id;
             SubAreaId = subAreaId;
             X = x;
@@ -275,11 +283,19 @@ namespace Codebreak.Service.World.Game.Map
             CreateTime = createTime;
             FightTeam0Cells = f0teamCells;
             FightTeam1Cells = f1teamCells;
-            FightManager = new FightManager(this);
 
+            m_subInstance = subInstance;
+            m_movementInitialized = false;
+            m_cells = new List<MapCell>();
+            m_cellById = new Dictionary<int, MapCell>();
+            m_entityById = new Dictionary<long, EntityBase>();
+            m_entityByName = new Dictionary<string, EntityBase>();
+            m_nextMonsterId = -1;
+
+            FightManager = new FightManager(this);
             SubArea.AddUpdatable(this);
             SubArea.SafeAddHandler(base.Dispatch);
-
+            SpawnManager.Instance.RegisterMap(this);
             Initialize();
         }
         
@@ -313,7 +329,7 @@ namespace Codebreak.Service.World.Game.Map
             Pathmaker = new Pathmaker(this);
             int nextNpcId = 1;
             foreach(var npc in NpcManager.Instance.GetByMapId(Id))            
-                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));            
+                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));
         }
 
         /// <summary>
@@ -328,8 +344,23 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="spawnQueue"></param>
+        public void SetSpawnQueue(SpawnQueue spawnQueue)
+        {
+            m_spawnQueue = spawnQueue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private void InitEntitiesMovements()
         {
+            m_monsters = new List<MonsterGradeDAO>(MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_MAP, Id).Select(spawn => spawn.Grade));
+            m_spawnCounter = m_monsters.Count > 0 ? WorldConfig.SPAWN_MAX_GROUP_PER_MAP : 0;    
+
+            while (m_spawnCounter > 0)
+                SpawnMonsters();
+
             m_movementInitialized = true;
             foreach (var entity in m_entityById.Values.Where(entry => entry.CanBeMoved()))
                 InitEntityMovement(entity);
@@ -379,10 +410,7 @@ namespace Codebreak.Service.World.Game.Map
             AddLinkedMessages
             (
                 () => Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false)),
-                () =>
-                {
-                    entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT);
-                }
+                () => entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT)                
             );            
         }
 
@@ -468,17 +496,20 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public void SpawnMonsters()
         {
-            SpawnMonsters(RandomFreeCell);
+            if (m_monsters.Count() > 0 && FightTeam1Cells.Count > 0)            
+                SpawnEntity(new MonsterGroupEntity(m_nextMonsterId--, Id, RandomFreeCell, m_monsters, FightTeam1Cells.Count));            
+            m_spawnCounter--;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void SpawnMonsters(int cellId)
+        public void SpawnMonsters(IEnumerable<MonsterGradeDAO> monsters)
         {
-            SpawnEntity(new MonsterGroupEntity(m_nextMonsterId--, Id, cellId));            
+            if(monsters.Count() > 0)
+                SpawnEntity(new MonsterGroupEntity(m_nextMonsterId--, Id, RandomFreeCell, monsters, FightTeam1Cells.Count));    
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -541,7 +572,7 @@ namespace Codebreak.Service.World.Game.Map
                     m_entityByName.Remove(entity.Name.ToLower());
                     m_playerCount--;
 
-                    // Multiple instance destroying
+                    // Multiple instance released
                     if(m_playerCount == 0 && m_subInstance)
                     {
                         MapManager.Instance.ReleaseInstance(this);
@@ -630,19 +661,22 @@ namespace Codebreak.Service.World.Game.Map
                         return;
                     }
 
-                    foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
+                    if (character.CanGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
+                        foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
                         {
-                            if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
+                            if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
                             {
-                                entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
-                            }
-                            else
-                            {
-                                monsterGroup.StopAction(GameActionTypeEnum.MAP);
-                                FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
-                                return;
+                                if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
+                                {
+                                    entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
+                                }
+                                else
+                                {
+                                    monsterGroup.StopAction(GameActionTypeEnum.MAP);
+                                    FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
+                                    return;
+                                }
                             }
                         }
                     }

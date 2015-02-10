@@ -56,6 +56,20 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="query"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public int ExecuteQuery(string query, object param = null)
+        {
+            using (var connection = CreateConnection())
+            {
+                return connection.ExecuteQuery(query, param);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dataObject"></param>
         public bool Insert<T>(T dataObject) where T : DataAccessObject<T>, new()

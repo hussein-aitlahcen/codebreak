@@ -8,6 +8,7 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Database.Repository;
 
 namespace Codebreak.Service.World.Game.Area
 {
@@ -25,6 +26,35 @@ namespace Codebreak.Service.World.Game.Area
         /// 
         /// </summary>
         private AreaInstance m_area;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private IEnumerable<MonsterSpawnDAO> m_spawns;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<MonsterSpawnDAO> Spawns
+        {
+            get
+            {
+                if (m_spawns == null)
+                    m_spawns = MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_SUBAREA, m_subAreaRecord.Id);
+                return m_spawns;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Id
+        {
+            get
+            {
+                return m_subAreaRecord.Id;
+            }
+        }
 
         /// <summary>
         /// 

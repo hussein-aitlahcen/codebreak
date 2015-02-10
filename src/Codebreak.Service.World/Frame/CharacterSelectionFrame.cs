@@ -7,6 +7,7 @@ using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
 using System.Collections.Generic;
 using Codebreak.Service.World.Network;
+using Codebreak.Framework.Database;
 
 namespace Codebreak.Service.World.Frame
 {
@@ -237,8 +238,8 @@ namespace Codebreak.Service.World.Frame
                         Energy = WorldConfig.CHARACTER_CREATION_ENERGY,
 
                         // position
-                        MapId = WorldConfig.WORLD_MAP_START,
-                        CellId = WorldConfig.WORLD_CELL_START,
+                        MapId = WorldConfig.GetStartMap((CharacterBreedEnum)breed),
+                        CellId = WorldConfig.GetStartCell((CharacterBreedEnum)breed),
 
                         // restricts
                         Restriction = (int)PlayerRestrictionEnum.RESTRICTION_NEW_CHARACTER,
@@ -255,8 +256,8 @@ namespace Codebreak.Service.World.Frame
                         TitleId = 0,
                         TitleParams = "",
                         Merchant = false,
-                        SavedMapId = WorldConfig.WORLD_MAP_START,
-                        SavedCellId = WorldConfig.WORLD_CELL_START,
+                        SavedMapId = WorldConfig.GetStartMap((CharacterBreedEnum)breed),
+                        SavedCellId = WorldConfig.GetStartCell((CharacterBreedEnum)breed),
                         Kamas = 0,
                     };
 
@@ -357,6 +358,75 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         private void HandleCharacterReset(WorldClient client, string message)
         {
+            if (client.Characters == null)
+            {
+                client.Send(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            var characterId = long.Parse(message.Substring(2));
+            var character = client.Characters.Find(entry => entry.Id == characterId);
+
+            // unknow id
+            if (character == null)
+            {
+                client.Send(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            // dead ?
+            if (!character.Dead)
+            {
+                client.Send(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+
+            character.Experience = 0;
+            character.Level = WorldConfig.CHARACTER_CREATION_LEVEL;
+
+            // stats
+            character.Ap = WorldConfig.CHARACTER_CREATION_AP;
+            character.Mp = WorldConfig.CHARACTER_CREATION_MP;
+            character.Chance = WorldConfig.CHARACTER_CREATION_CHANCE;
+            character.Intelligence = WorldConfig.CHARACTER_CREATION_INTELLIGENCE;
+            character.Agility = WorldConfig.CHARACTER_CREATION_AGILITY;
+            character.Strength = WorldConfig.CHARACTER_CREATION_STRENGTH;
+            character.Vitality = WorldConfig.CHARACTER_CREATION_VITALITY;
+            character.Wisdom = WorldConfig.CHARACTER_CREATION_WISDOM;
+            character.CaracPoint = WorldConfig.CHARACTER_CREATION_CARACPOINT;
+            character.SpellPoint = WorldConfig.CHARACTER_CREATION_SPELLPOINT;
+
+            // emotes
+            character.EmoteCapacity = WorldConfig.CHARACTER_CREATION_EMOTE_CAPACITY;
+
+            // life status
+            character.Life = WorldConfig.CHARACTER_CREATION_LIFE;
+            character.Dead = false;
+            character.Energy = WorldConfig.CHARACTER_CREATION_ENERGY;
+
+            // position
+            character.MapId = WorldConfig.GetStartMap((CharacterBreedEnum)character.Breed);
+            character.CellId = WorldConfig.GetStartCell((CharacterBreedEnum)character.Breed);
+
+            // restricts
+            character.Restriction = (int)PlayerRestrictionEnum.RESTRICTION_NEW_CHARACTER;
+
+            character.Skin = character.Breed * 10 + (character.Sex ? 1 : 0);
+            character.SkinSize = 100;
+
+            character.TitleId = 0;
+            character.TitleParams = "";
+            character.Merchant = false;
+            character.SavedMapId = character.MapId;
+            character.SavedCellId = character.CellId;
+            character.Kamas = 0;
+            
+            WorldService.Instance.AddMessage(() =>
+            {
+                SpellBookEntryRepository.Instance.RemoveAll(0, character.Id);
+                SqlManager.Instance.ExecuteQuery("CALL character_generate_spells(" + character.Id + ", " + character.Breed + ");");
+                client.Send(WorldMessage.CHARACTER_LIST(client.Characters));
+            });
         }
 
         /// <summary>

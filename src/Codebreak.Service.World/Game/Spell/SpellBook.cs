@@ -529,7 +529,7 @@ namespace Codebreak.Service.World.Game.Spell
                         this.AddSpell(1909);//Invocation de Dopeul Cra
                     break;
 
-                case CharacterBreedEnum.BREED_SADIDA:
+                case CharacterBreedEnum.BREED_SADIDAS:
                     if (level == 3)
                         this.AddSpell(198);//Sacrifice Poupesque
                     if (level == 6)

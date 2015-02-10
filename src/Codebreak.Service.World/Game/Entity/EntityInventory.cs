@@ -84,7 +84,31 @@ namespace Codebreak.Service.World.Game.Entity
                 }
             }
         }
-               
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public override IEnumerable<InventoryItemDAO> RemoveItems()
+        {
+            foreach (var item in Items.ToArray())
+            {
+                if (item.IsEquiped)
+                    if (item.IsBoostEquiped)
+                        Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
+                    else
+                        Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
+
+                item.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
+
+                yield return base.RemoveItem(item.Id, item.Quantity);
+            }
+
+            m_entityLookRefresh = true;
+        }    
+ 
         /// <summary>
         /// 
         /// </summary>
@@ -118,7 +142,11 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (item.IsEquiped && !InventoryItemDAO.IsEquipedSlot(slot))
             {
-                Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
+                if (item.IsBoostEquiped)
+                    Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
+                else
+                    Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
+
                 item.SlotId = (int)slot;
                 m_entityLookRefresh = true;
                 bool merged = AddItem(MoveQuantity(item, 1));
@@ -185,7 +213,11 @@ namespace Codebreak.Service.World.Game.Entity
                 AddItem(newItem, false);
 
                 AddSet(newItem);
-                Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
+
+                if (item.IsBoostEquiped)
+                    Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
+                else
+                    Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
 
                 // send new stats
                 if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
@@ -237,12 +269,12 @@ namespace Codebreak.Service.World.Game.Entity
             if (!m_equippedSets.ContainsKey(set.Id))
                 m_equippedSets.Add(set.Id, 0);
             var count = ++m_equippedSets[set.Id];
-
-            if (count > 2)
+            
+            if (count > 0)
+            {
                 Entity.Statistics.UnMerge(Stats.StatsType.TYPE_ITEM, set.GetStats(count - 1));
-
-            if(count > 1)
-                Entity.Statistics.Merge(Stats.StatsType.TYPE_ITEM, set.GetStats(count));            
+                Entity.Statistics.Merge(Stats.StatsType.TYPE_ITEM, set.GetStats(count));
+            }
         }
 
         /// <summary>
@@ -259,10 +291,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (count > 0)
             {
                 Entity.Statistics.Merge(Stats.StatsType.TYPE_ITEM, set.GetStats(count));
-                if (count > 1)
-                {
-                    Entity.Statistics.UnMerge(Stats.StatsType.TYPE_ITEM, set.GetStats(count + 1));
-                }
+                Entity.Statistics.UnMerge(Stats.StatsType.TYPE_ITEM, set.GetStats(count + 1));
             }
         }
 

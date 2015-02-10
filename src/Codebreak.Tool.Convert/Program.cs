@@ -23,8 +23,19 @@ namespace Codebreak.Tool.Convert
         private static string OUTPUT_TRIGGER_FOLDER = "./trigger/output/";
         private static string OUTPUT_TRIGGER_FILE = OUTPUT_TRIGGER_FOLDER + "result.sql";
         private static string REAL_TRIGGER_QUERY = "insert into maptrigger values ('{0}', '{1}', '', '2005:mapId={2},cellId={3}');";
-        private static string REGEX_TRIGGER_QUERY = @"VALUES\((?<MapId>[0-9]*), (?<CellId>[0-9]*).*'(?<NextMapId>[0-9]*),(?<NextCellId>[0-9]*)'";
-        
+        private static string REGEX_TRIGGER_QUERY = @"VALUES \('(?<MapId>[0-9]*)', '(?<CellId>[0-9]*)'.*'(?<NextMapId>[0-9]*),(?<NextCellId>[0-9]*)'";
+
+        private static string INPUT_JSON_FOLDER = "./json/input/";
+        private static string OUTPUT_JSON_FOLDER = "./json/output/";
+        private static string OUTPUT_JSON_FILE = OUTPUT_JSON_FOLDER + "result.sql";
+        private static string REAL_JSON_QUERY = "insert into monstersuperrace values ('{0}', '{1}');";
+        private static string REGEX_JSON_QUERY = @".*\[(?<RaceId>[0-9]*)].*""(?<Name>.*)"".*""(?<SuperRaceId>[0-9]*)""";
+
+        private static string INPUT_MONSTER_FOLDER = "./monsters/input/";
+        private static string OUTPUT_MONSTER_FOLDER = "./monsters/output/";
+        private static string OUTPUT_MONSTER_FILE = OUTPUT_MONSTER_FOLDER + "result.sql";
+        private static string REAL_MONSTER_QUERY = "insert into monsterspawn select 3, {0}, (select id from monstergrade where monsterid = {1} and level = {2} limit 1);";
+        private static string REGEX_MONSTER_QUERY = @"'(?<MapId>[0-9]*)'.*'\|(?<Monsters>[^']*)";
 
         /// <summary>
         /// 
@@ -34,8 +45,114 @@ namespace Codebreak.Tool.Convert
         {
             ProcessMaps();
             ProcessTriggers();
+            ProcessJsons();
+            ProcessMonsters();
 
             Console.Read();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static void ProcessMonsters()
+        {
+            Console.WriteLine("Loading monsters ...");
+
+            if (!Directory.Exists(INPUT_MONSTER_FOLDER))
+                Directory.CreateDirectory(INPUT_MONSTER_FOLDER);
+
+            if (!Directory.Exists(OUTPUT_MONSTER_FOLDER))
+                Directory.CreateDirectory(OUTPUT_MONSTER_FOLDER);
+
+            Regex expression = new Regex(REGEX_MONSTER_QUERY, RegexOptions.None);
+            var inputFiles = Directory.GetFiles(INPUT_MONSTER_FOLDER, "*.sql");
+
+            Console.WriteLine(inputFiles.Length + " file(s) loaded.");
+
+            StringBuilder outputBuilder = new StringBuilder();
+
+            foreach (var file in inputFiles)
+            {
+                foreach (var line in File.ReadAllLines(file))
+                {
+                    foreach (Match match in expression.Matches(line))
+                    {
+                        if (match.Success)
+                        {
+                            Console.WriteLine("Processing monster ...");
+
+                            var monsters = match.Groups["Monsters"].Value.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var monster in monsters)
+                            {
+                                var monsterId = monster.Split(',')[0];
+                                var monsterLevel = monster.Split(',')[1];
+                                outputBuilder.AppendLine(string.Format
+                                (
+                                    REAL_MONSTER_QUERY,
+                                    match.Groups["MapId"],
+                                    monsterId,
+                                    monsterLevel
+                                ));
+                            }
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Saving monsters ...");
+
+            File.WriteAllText(OUTPUT_MONSTER_FILE, outputBuilder.ToString());
+
+            Console.WriteLine("Monsters done.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static void ProcessJsons()
+        {
+            Console.WriteLine("Loading triggers ...");
+
+            if (!Directory.Exists(INPUT_JSON_FOLDER))
+                Directory.CreateDirectory(INPUT_JSON_FOLDER);
+
+            if (!Directory.Exists(OUTPUT_JSON_FOLDER))
+                Directory.CreateDirectory(OUTPUT_JSON_FOLDER);
+
+            Regex expression = new Regex(REGEX_JSON_QUERY, RegexOptions.None);
+            var inputFiles = Directory.GetFiles(INPUT_JSON_FOLDER, "*.txt");
+
+            Console.WriteLine(inputFiles.Length + " file(s) loaded.");
+
+            StringBuilder outputBuilder = new StringBuilder();
+
+            foreach (var file in inputFiles)
+            {
+                foreach (var line in File.ReadAllLines(file))
+                {
+                    foreach (Match match in expression.Matches(line))
+                    {
+                        if (match.Success)
+                        {
+                            Console.WriteLine("Processing json ...");
+
+                            outputBuilder.AppendLine(string.Format
+                            (
+                                REAL_JSON_QUERY,
+                                match.Groups["RaceId"],
+                                match.Groups["Name"],
+                                match.Groups["SuperRaceId"]
+                            ));
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Saving jsons ...");
+
+            File.WriteAllText(OUTPUT_JSON_FILE, outputBuilder.ToString());
+
+            Console.WriteLine("Jsons done.");
         }
 
         /// <summary>

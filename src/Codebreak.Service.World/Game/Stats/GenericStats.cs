@@ -151,7 +151,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 2;
                             return 3;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 50)
                                 return 1;
                             if (value < 250)
@@ -247,7 +247,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 4;
                             return 5;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 100)
                                 return 1;
                             if (value < 200)
@@ -371,7 +371,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 4;
                             return 5;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 20)
                                 return 1;
                             if (value < 40)
@@ -493,7 +493,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 4;
                             return 5;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 100)
                                 return 1;
                             if (value < 200)
@@ -860,12 +860,12 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         /// <param name="EffectType"></param>
-        /// <param name="Value"></param>
-        public void AddDon(EffectEnum effectType, int Value)
+        /// <param name="value"></param>
+        public void AddDon(EffectEnum effectType, int value)
         {
             if (!m_effects.ContainsKey(effectType))
                 m_effects.Add(effectType, new GenericEffect(effectType));
-            m_effects[effectType].Dons += Value;
+            m_effects[effectType].Dons += value;
         }
 
         /// <summary>

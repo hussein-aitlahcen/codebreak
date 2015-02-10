@@ -61,7 +61,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <returns></returns>
         public override FightActionResultEnum RemoveEffect()
         {
-            Target.Statistics.GetEffect(CastInfos.EffectType).Boosts -= CastInfos.Value1;
+            Target.Statistics.GetEffect(CastInfos.EffectType).Dons -= CastInfos.Value1;
 
             return base.RemoveEffect();
         }

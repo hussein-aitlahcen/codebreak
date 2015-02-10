@@ -282,8 +282,8 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ACCOUNT_TICKET_SUCCESS()
         {
-            if(WorldConfig.NETWORK_CRYPT)
-                return "ATK" + Crypt.CRYPT_KEY_INDEX + Crypt.CRYPT_KEY;
+            //if(WorldConfig.NETWORK_CRYPT)
+                //return "ATK" + Crypt.CRYPT_KEY_INDEX + Crypt.CRYPT_KEY;
             return "ATK0";
         }
 

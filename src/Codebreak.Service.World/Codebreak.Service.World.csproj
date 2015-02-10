@@ -118,6 +118,9 @@
     <Compile Include="Database\Structure\MapTriggerDAO.cs" />
     <Compile Include="Database\Structure\MonsterDAO.cs" />
     <Compile Include="Database\Structure\MonsterGradeDAO.cs" />
+    <Compile Include="Database\Structure\MonsterRaceDAO.cs" />
+    <Compile Include="Database\Structure\MonsterSpawnDAO.cs" />
+    <Compile Include="Database\Structure\MonsterSuperRaceDAO.cs" />
     <Compile Include="Database\Structure\NpcInstanceDAO.cs" />
     <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
     <Compile Include="Database\Structure\NpcResponseDAO.cs" />
@@ -311,6 +314,7 @@
     <Compile Include="Game\Map\MapInstance.cs" />
     <Compile Include="Game\Map\Pathfinding.cs" />
     <Compile Include="Game\Party\PartyInstance.cs" />
+    <Compile Include="Game\Spawn\SpawnQueue.cs" />
     <Compile Include="Game\Spell\SpellBook.cs" />
     <Compile Include="Game\Spell\SpellBookFactory.cs" />
     <Compile Include="Game\Spell\SpellEffect.cs" />
@@ -346,6 +350,7 @@
     <Compile Include="Manager\NpcManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
+    <Compile Include="Manager\SpawnManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />
     <Compile Include="Manager\WaypointManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />

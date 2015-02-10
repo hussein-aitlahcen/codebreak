@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Network;
 using System;
@@ -142,27 +143,41 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="id"></param>
-        public MonsterGroupEntity(long id, int mapId, int cellId)
+        public MonsterGroupEntity(long id, int mapId, int cellId, IEnumerable<MonsterGradeDAO> monsters, int maxSize = 6)
             : base(EntityTypeEnum.TYPE_MONSTER_GROUP, id)
         {
             m_monsters = new List<MonsterEntity>();
+
             long monsterId = -1;
-            while(m_monsters.Count < 5)
+            var size = 1;
+            var rand = Util.Next(0, 100);
+            if (rand < 10) // 10%
+                size = 1;
+            else if (rand < 25)
+                size = 2;
+            else if (rand < 50)
+                size = 3;
+            else if (rand < 75)
+                size = 4;
+            else if (rand < 90)
+                size = 5;
+            else
+                size = 6;
+
+            if (size > maxSize)
+                size = maxSize;
+
+            if (monsters.Count() > 0)
             {
-                var random = Util.Next(0, 2000);
-                var template = MonsterRepository.Instance.GetById(random);
-                if (template != null)
-                {
-                    if(template.Grades.Count() > 0)
-                    {                        
-                        m_monsters.Add(new MonsterEntity(monsterId--, template.Grades.Last()));
-                    }
-                }
+                while (m_monsters.Count < size)
+                    m_monsters.Add(new MonsterEntity(monsterId--, monsters.ElementAt(Util.Next(0, monsters.Count()))));
+                AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             }
 
-            AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             MapId = mapId;
             CellId = cellId;
+
+            Inventory = new EntityInventory(this, (int)EntityTypeEnum.TYPE_MONSTER_GROUP, Id);
 
             base.AddTimer(m_ageTimer = new UpdatableTimer(1000 * WorldConfig.PVM_STAR_BONUS_PERCENT_SECONDS, UpdateAge));
         }

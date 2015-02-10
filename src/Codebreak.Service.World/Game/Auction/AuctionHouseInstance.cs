@@ -243,7 +243,7 @@ namespace Codebreak.Service.World.Game.Auction
                     break;
 
                 case AuctionBuyResultEnum.SUCCES:
-                    m_auctionsByAccount[auction.Owner.AccountId].Remove(auction);
+                    m_auctionsByAccount[auction.OwnerId].Remove(auction);
                     if (!CheckEmptyCategory(category))
                     {
                         SendCategoriesByTemplate(character, category.TemplateId);
@@ -255,12 +255,14 @@ namespace Codebreak.Service.World.Game.Auction
 
                     WorldService.Instance.AddMessage(() =>
                     {
-                        var seller = EntityManager.Instance.GetCharacterByAccount(auction.Owner.AccountId);
+                        auction.OwnerBank.AddKamas(price);
+
+                        // check if player online and notify
+                        var seller = EntityManager.Instance.GetCharacterByAccount(auction.OwnerId);
                         if (seller != null)
                         {
                             seller.AddMessage(() =>
                             {
-                                seller.Bank.AddKamas(price);
                                 seller.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_AUCTION_BANK_CREDITED, price, auction.Item.TemplateId));
                                 if (seller.HasGameAction(GameActionTypeEnum.EXCHANGE))
                                 {
@@ -274,10 +276,6 @@ namespace Codebreak.Service.World.Game.Auction
                                     }
                                 }
                             });
-                        }
-                        else
-                        {
-                            BankManager.Instance.GetBankByAccountId(auction.Owner.AccountId).AddKamas(price);
                         }
                     });
                     break;
@@ -425,7 +423,7 @@ namespace Codebreak.Service.World.Game.Auction
             newItem.OwnerType = (int)EntityTypeEnum.TYPE_AUCTION_HOUSE;
             newItem.OwnerId = Id;
 
-            var record = AuctionHouseEntryRepository.Instance.Create(newItem.Id, Id, character.Id, price, Timeout);
+            var record = AuctionHouseEntryRepository.Instance.Create(newItem.Id, Id, character.AccountId, price, Timeout);
             if (record == null)
             {
                 character.Inventory.AddItem(newItem);
@@ -477,9 +475,9 @@ namespace Codebreak.Service.World.Game.Auction
                 category.Add(entry);
             }
 
-            if (!m_auctionsByAccount.ContainsKey(entry.Owner.AccountId))
-                m_auctionsByAccount.Add(entry.Owner.AccountId, new List<AuctionEntry>());
-            m_auctionsByAccount[entry.Owner.AccountId].Add(entry);
+            if (!m_auctionsByAccount.ContainsKey(entry.OwnerId))
+                m_auctionsByAccount.Add(entry.OwnerId, new List<AuctionEntry>());
+            m_auctionsByAccount[entry.OwnerId].Add(entry);
             
             UpdateMiddlePrice(category.TemplateId);
         }
@@ -490,10 +488,9 @@ namespace Codebreak.Service.World.Game.Auction
         /// <param name="character"></param>
         public void SendAuctionOwnerList(CharacterEntity character)
         {
-            if (m_auctionsByAccount.ContainsKey(character.AccountId))
-                character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(m_auctionsByAccount[character.AccountId]));
-            else
-                character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(new List<AuctionEntry>()));
+            if (!m_auctionsByAccount.ContainsKey(character.AccountId))
+                m_auctionsByAccount.Add(character.AccountId, new List<AuctionEntry>());
+            character.Dispatch(WorldMessage.AUCTION_HOUSE_AUCTION_OWNER_LIST(m_auctionsByAccount[character.AccountId]));
         }
 
         /// <summary>

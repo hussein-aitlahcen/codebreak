@@ -33,6 +33,14 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
+        public TaxCollectorRepository()
+        {
+            m_nextTaxCollectorId = 1000;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="obj"></param>
         public override void OnObjectAdded(TaxCollectorDAO obj)
         {

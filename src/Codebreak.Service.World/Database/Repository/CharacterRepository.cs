@@ -54,6 +54,7 @@ namespace Codebreak.Service.World.Database.Repository
             m_characterById = new Dictionary<long, CharacterDAO>();
             m_characterByName = new Dictionary<string, CharacterDAO>();
             m_charactersByAccount = new Dictionary<long, List<CharacterDAO>>();
+            m_nextCharacterId = 10000;
         }
 
         /// <summary>

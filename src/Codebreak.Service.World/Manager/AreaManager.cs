@@ -18,6 +18,39 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<SuperAreaInstance> SuperAreas
+        {
+            get
+            {
+                return m_superAreaById.Values;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<AreaInstance> Areas
+        {
+            get
+            {
+                return m_areaById.Values;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<SubAreaInstance> SubAreas
+        {
+            get
+            {
+                return m_subAreaById.Values;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public AreaManager()
         {
             m_superAreaById = new Dictionary<int, SuperAreaInstance>();

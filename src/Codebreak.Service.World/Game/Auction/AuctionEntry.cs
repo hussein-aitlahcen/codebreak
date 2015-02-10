@@ -1,6 +1,8 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,12 +98,12 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        public CharacterDAO Owner
+        public BankInventory OwnerBank
         {
             get
             {
                 if (m_owner == null)
-                    m_owner = CharacterRepository.Instance.GetById(OwnerId);
+                    m_owner = BankManager.Instance.GetBankByAccountId(OwnerId);
                 return m_owner;
             }
         }
@@ -119,7 +121,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        private CharacterDAO m_owner;
+        private BankInventory m_owner;
 
         /// <summary>
         /// 
