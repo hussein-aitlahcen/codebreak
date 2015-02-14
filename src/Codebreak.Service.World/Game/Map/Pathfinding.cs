@@ -11,6 +11,7 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Interactive.Type;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Job;
+using log4net;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -401,6 +402,8 @@ namespace Codebreak.Service.World.Game.Map
     /// </summary>
     public static class Pathfinding
     {
+        private static ILog Logger = LogManager.GetLogger(typeof(Pathfinding));
+
         public static double[] RUN_SPEEDS = { 1.700000E-001, 1.500000E-001, 1.500000E-001, 1.500000E-001, 1.700000E-001, 1.500000E-001, 1.500000E-001, 1.500000E-001 };
         public static double[] WALK_SPEEDS = { 7.000000E-002, 6.000000E-002, 6.000000E-002, 6.000000E-002, 7.000000E-002, 6.000000E-002, 6.000000E-002, 6.000000E-002 };
         public static double[] MOUNT_SPEEDS = { 2.300000E-001, 2.000000E-001, 2.000000E-001, 2.000000E-001, 2.300000E-001, 2.000000E-001, 2.000000E-001, 2.000000E-001 };
@@ -503,7 +506,18 @@ namespace Codebreak.Service.World.Game.Map
         public static Point GetPoint(MapInstance map, int cell)
         {
             if (CellPoints.ContainsKey(map.Cells.Count))
-                return CellPoints[map.Cells.Count][cell];
+            {
+                if (!CellPoints[map.Cells.Count].ContainsKey(cell))
+                {
+                    Logger.Info("Pathfinding::GetPoint unknow cell : cellId=" + cell + " cellCount=" + map.Cells.Count);
+                    return new Point(_GetX(map.Width, cell), _GetY(map.Width, cell));
+   
+                }
+                else
+                {
+                    return CellPoints[map.Cells.Count][cell];
+                }
+            }
 
             Pathfinding.GenerateGrid(map.Width, map.Cells.Count);
 

@@ -2511,6 +2511,8 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ITEM_SET(ItemSetDAO set, IEnumerable<InventoryItemDAO> items)
         {
+            if (set == null)
+                return "";
             var message = new StringBuilder("OS+").Append(set.Id).Append('|');
             message.Append(String.Join(";", items.Select(item => item.TemplateId))).Append('|');
             message.Append(set.GetStats(items.Count()).ToItemStats());
