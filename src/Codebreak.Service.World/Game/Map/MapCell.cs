@@ -16,9 +16,19 @@ namespace Codebreak.Service.World.Game.Map
     public sealed class MapCell
     {
         public int Id;
-        public bool Walkable;
+
+        public bool Walkable
+        {
+            get
+            {
+                return m_walkable && (InteractiveObjectId == 0 || (InteractiveObject != null && InteractiveObject.CanWalkThrough));
+            }
+        }
+        
         public bool LineOfSight;
         public int InteractiveObjectId;
+
+        private bool m_walkable;
 
         /// <summary>
         /// 
@@ -49,19 +59,15 @@ namespace Codebreak.Service.World.Game.Map
         {
             Id = id;
             Trigger = trigger;
-            Walkable = ((data[2] & 56) >> 3) > 0;
-            if (!Walkable && ((data[2] & 56) >> 3) != 0)
-            {
-                return;
-            }
+            m_walkable = ((data[2] & 56) >> 3) > 0;
+            if (!m_walkable && ((data[2] & 56) >> 3) != 0)            
+                return;            
             LineOfSight = (data[0] & 1) == 1;
             if ((data[7] & 2) >> 1 == 1)
             {
                 InteractiveObjectId = ((data[0] & 2) << 12) + ((data[1] & 1) << 12) + (data[8] << 6) + data[9];
-                if (InteractiveObjectManager.Instance.Exists(InteractiveObjectId))
-                {
-                    InteractiveObject = InteractiveObjectManager.Instance.Generate(InteractiveObjectId, map, Id);
-                }
+                if (InteractiveObjectManager.Instance.Exists(InteractiveObjectId))                
+                    InteractiveObject = InteractiveObjectManager.Instance.Generate(InteractiveObjectId, map, Id);                
             }
         }
 

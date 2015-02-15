@@ -156,16 +156,11 @@ namespace Codebreak.Service.Auth
         /// <summary>
         /// 
         /// </summary>
-        private List<long> m_clientConnected = new List<long>();
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
         public bool IsConnected(long accountId)
         {
-            return m_clientByAccount.ContainsKey(accountId) || m_clientConnected.Contains(accountId);
+            return m_clientByAccount.ContainsKey(accountId) || m_worldById.Values.Any(world => world.Players.Contains(accountId));
         }
 
         /// <summary>
@@ -175,27 +170,8 @@ namespace Codebreak.Service.Auth
         public void ClientAuthentified(AuthClient client)
         {
             m_clientByAccount.Add(client.Account.Id, client);
-            m_clientConnected.Add(client.Account.Id);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="accountId"></param>
-        public void GameAccountDisconnect(long accountId)
-        {
-            m_clientConnected.Remove(accountId);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="accountId"></param>
-        public void GameAccountConnected(List<long> accounts)
-        {
-            m_clientConnected.AddRange(accounts);
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -203,13 +179,7 @@ namespace Codebreak.Service.Auth
         public void ClientDisconnected(AuthClient client)
         {
             if (client.Account != null)
-            {
-                if (client.Ticket == null)
-                {
-                    m_clientConnected.Remove(client.Account.Id);
-                }
-                m_clientByAccount.Remove(client.Account.Id);
-            }
+                m_clientByAccount.Remove(client.Account.Id);            
         }
 
         #endregion

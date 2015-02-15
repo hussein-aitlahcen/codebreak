@@ -1734,6 +1734,9 @@ namespace Codebreak.Service.World.Game.Fight
             if(spellLevel.InLine && !Pathfinding.InLine(Map, cellId, castCell))            
                 return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
 
+            if (!Pathfinding.CheckView(this, cellId, castCell))
+                return FightSpellLaunchResultEnum.RESULT_NO_LOS;
+
             if (spellLevel.Effects != null)
             {
                 if (spellLevel.Effects.Any(effect => effect.TypeEnum == EffectEnum.Invocation))
@@ -2034,9 +2037,10 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
-                if (CanLaunchSpell(fighter, spellLevel, spellId, fighter.Cell.Id, castCellId) != FightSpellLaunchResultEnum.RESULT_OK)
+                var launchResult = CanLaunchSpell(fighter, spellLevel, spellId, fighter.Cell.Id, castCellId);
+                if (launchResult != FightSpellLaunchResultEnum.RESULT_OK)
                 {
-                    Logger.Debug("Fight::TryLaunchSpell unable to launch spell : " + fighter.Name);
+                    Logger.Debug("Fight::TryLaunchSpell unable to launch spell : " + fighter.Name + " reason=" + launchResult);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }

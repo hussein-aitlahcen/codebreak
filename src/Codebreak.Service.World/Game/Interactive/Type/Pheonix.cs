@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <param name="map"></param>
         /// <param name="cellId"></param>
         public Pheonix(MapInstance map, int cellId) 
-            : base(map, cellId, false)
+            : base(map, cellId)
         {
         }
 

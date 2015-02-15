@@ -474,8 +474,8 @@ namespace Codebreak.Service.World.Game.Map
         public bool IsWalkable(int cellId)
         {
             MapCell cell = GetCell(cellId);
-            if (cell != null)            
-                return cell.Walkable;            
+            if (cell != null)
+                return cell.Walkable;
             return false;
         }
 
