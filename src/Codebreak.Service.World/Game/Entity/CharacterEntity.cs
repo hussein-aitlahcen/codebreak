@@ -1555,6 +1555,40 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public void Disconnected()
+        {
+            if (base.HasGameAction(GameActionTypeEnum.FIGHT))
+            {
+                if (CurrentAction != null)
+                    AbortAction(CurrentAction.Type);
+                AbortAction(GameActionTypeEnum.FIGHT);
+                return;
+            }
+
+            StopRegeneration();
+
+            if (CurrentAction != null)
+                AbortAction(base.CurrentAction.Type, base.Id);
+            if (HasGameAction(GameActionTypeEnum.MAP))
+                AbortAction(GameActionTypeEnum.MAP);
+            if (GuildMember != null)
+                GuildMember.CharacterDisconnected();
+
+            Dispose();
+
+            if (Merchant)
+            {
+                WorldService.Instance.AddMessage(() =>
+                {
+                    var merchant = EntityManager.Instance.CreateMerchant(DatabaseRecord);
+                    merchant.StartAction(GameActionTypeEnum.MAP);
+                });
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public bool HasSkill(SkillIdEnum id)
@@ -2189,7 +2223,7 @@ namespace Codebreak.Service.World.Game.Entity
                 message.Append("?;"); // level
                 message.Append("-1;"); // align
             }
-            if (GuildMember != null)
+            if (GuildMember != null && GuildMember.Guild != null)
                 message.Append(GuildMember.Guild.Name).Append(';');
             else
                 message.Append(';');
@@ -2202,8 +2236,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override void Dispose()
         {
-            StopRegeneration();
-
             GuildMember = null;
             Alignment = null;
 

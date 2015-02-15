@@ -473,7 +473,7 @@ namespace Codebreak.Service.World.Game.Fight
                 Life = 1;
 
             if(Fight.State == FightStateEnum.STATE_PLACEMENT)
-                SetCell(team.FreePlace);
+                SetCell(Team.FreePlace);
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Team.Dispatch);
             StartAction(GameActionTypeEnum.FIGHT);

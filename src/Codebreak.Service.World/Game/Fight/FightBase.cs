@@ -834,7 +834,7 @@ namespace Codebreak.Service.World.Game.Fight
             get
             {
                 if (CurrentFighter != null)
-                    if(CurrentFighter.CurrentAction != null)
+                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is GameFightActionBase)
                         return (GameFightActionBase)CurrentFighter.CurrentAction;
                 return null;
             }
@@ -1470,7 +1470,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public FighterBase GetFighterOnCell(int cellId)
         {
-            return AliveFighters.FirstOrDefault(fighter => fighter.Cell.Id == cellId);
+            return AliveFighters.FirstOrDefault(fighter => fighter.Cell != null && fighter.Cell.Id == cellId);
         }
 
         /// <summary>

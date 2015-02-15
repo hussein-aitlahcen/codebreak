@@ -136,33 +136,9 @@ namespace Codebreak.Service.World.Manager
                 
             character.AddMessage(() =>
             {
-                if (character.HasGameAction(GameActionTypeEnum.FIGHT))
-                {
-                    if (character.CurrentAction != null)
-                        character.AbortAction(character.CurrentAction.Type);
-                    character.AbortAction(GameActionTypeEnum.FIGHT);
-                    return;
-                }
-
-                if (character.CurrentAction != null)
-                    character.AbortAction(character.CurrentAction.Type, character.Id);
-                if (character.HasGameAction(GameActionTypeEnum.MAP))
-                    character.AbortAction(GameActionTypeEnum.MAP);
-                if (character.GuildMember != null)
-                    character.GuildMember.CharacterDisconnected();
-
                 RemoveCharacter(character);
 
-                character.Dispose();
-
-                if (character.Merchant)
-                {
-                    WorldService.Instance.AddMessage(() =>
-                    {
-                        var merchant = CreateMerchant(character.DatabaseRecord);
-                        merchant.StartAction(GameActionTypeEnum.MAP);
-                    });
-                }
+                character.Disconnected();
             });
         }
 
