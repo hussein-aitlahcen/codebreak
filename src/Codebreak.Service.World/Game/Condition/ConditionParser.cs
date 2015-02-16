@@ -20,14 +20,14 @@ namespace Codebreak.Service.World.Game.Condition
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<string, Func<CharacterEntity, bool>> m_compiledExpressions;
+        private Dictionary<string, Func<ConditionScope, bool>> m_compiledExpressions;
 
         /// <summary>
         /// 
         /// </summary>
         public ConditionParser()
         {
-            m_compiledExpressions = new Dictionary<string, Func<CharacterEntity, bool>>();
+            m_compiledExpressions = new Dictionary<string, Func<ConditionScope, bool>>();
         }
         
         /// <summary>
@@ -38,9 +38,10 @@ namespace Codebreak.Service.World.Game.Condition
         /// <returns></returns>
         public bool Check(string conditions, CharacterEntity character)
         {
-            if (conditions == string.Empty)
+            if (string.IsNullOrWhiteSpace(conditions))
                 return true;
-            Func<CharacterEntity, bool> method;
+
+            Func<ConditionScope, bool> method;
             lock(m_compiledExpressions)
             {
                 if (m_compiledExpressions.ContainsKey(conditions))
@@ -96,13 +97,25 @@ namespace Codebreak.Service.World.Game.Condition
                     realConditions.Replace("MiS", "character.Id");
                     realConditions.Replace("BI", "0"); // ?
 
-                    var registry = new TypeRegistry();
-                    registry.RegisterSymbol("character", character);
-                    method = new CompiledExpression<bool>(realConditions.ToString()) { TypeRegistry = registry }.ScopeCompile<CharacterEntity>();                 
+                    method = new CompiledExpression<bool>(realConditions.ToString()).ScopeCompile<ConditionScope>();                 
                     m_compiledExpressions.Add(conditions, method);
                 }
             }
-            return method(character);
+            return method(new ConditionScope(character));
+        }
+
+        private class ConditionScope
+        {
+            public CharacterEntity character
+            {
+                get;
+                private set;
+            }
+
+            public ConditionScope(CharacterEntity ch)
+            {
+                character = ch;
+            }
         }
     }
 }
