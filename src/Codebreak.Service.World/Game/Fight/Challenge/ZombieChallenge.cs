@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        private bool _hasMoved = false;
+        private bool m_hasMoved = false;
 
         /// <summary>
         /// 
@@ -40,14 +40,10 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="length"></param>
         public override void CheckMovement(FighterBase fighter, int beginCell, int endCell, int length)
         {
-            if(length != 1 || _hasMoved)
-            {
-                base.OnFailed(fighter.Name);
-            }
-            else
-            {
-                _hasMoved = true;
-            }
+            if(length != 1 || m_hasMoved)            
+                base.OnFailed(fighter.Name);            
+            else            
+                m_hasMoved = true;            
         }
 
         /// <summary>
@@ -56,9 +52,9 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="fighter"></param>
         public override void EndTurn(FighterBase fighter)
         {
-            if (!_hasMoved)
+            if (!m_hasMoved)
                 OnFailed(fighter.Name);
-            _hasMoved = false;
+            m_hasMoved = false;
         }
     }
 }

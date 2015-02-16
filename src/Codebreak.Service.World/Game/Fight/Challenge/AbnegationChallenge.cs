@@ -36,10 +36,8 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="castInfos"></param>
         public override void CheckSpell(FighterBase fighter, CastInfos castInfos)
         {
-            if(castInfos.EffectType == EffectEnum.AddLife && castInfos.Target != null && castInfos.Target.Team == fighter.Team)
-            {
-                base.OnFailed(fighter.Name);
-            }
+            if(castInfos.EffectType == EffectEnum.AddLife && castInfos.Target != null && castInfos.Target.Team == fighter.Team)            
+                base.OnFailed(fighter.Name);            
         }
     }
 }

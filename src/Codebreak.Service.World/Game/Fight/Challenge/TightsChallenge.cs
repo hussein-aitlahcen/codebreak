@@ -35,10 +35,8 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public override void EndTurn(FighterBase fighter)
         {
             var nearestFighters = Pathfinding.GetFightersNear(fighter.Fight, fighter.Cell.Id);
-            if(nearestFighters.Where(f => f.Team == fighter.Team).Count() == 0)
-            {
-                base.OnFailed(fighter.Name);
-            }
+            if(nearestFighters.Where(f => f.Team == fighter.Team).Count() == 0)            
+                base.OnFailed(fighter.Name);            
         }
     }
 }

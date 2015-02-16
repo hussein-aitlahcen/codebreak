@@ -33,10 +33,8 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="fighter"></param>
         public override void EndTurn(FighterBase fighter)
         {
-            if(fighter.Team.AliveFighters.Count() != fighter.Team.Fighters.Count)
-            {
-                base.OnFailed(fighter.Name);
-            }
+            if(fighter.Team.AliveFighters.Count() != fighter.Team.Fighters.Count)            
+                base.OnFailed(fighter.Name);            
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
     /// </summary>
     public sealed class StatueChallenge : ChallengeBase
     {
-        private int _cellId;
+        private int m_cellId;
 
         /// <summary>
         /// 
@@ -35,7 +35,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="fighter"></param>
         public override void BeginTurn(FighterBase fighter)
         {
-            _cellId = fighter.Cell.Id;
+            m_cellId = fighter.Cell.Id;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="fighter"></param>
         public override void EndTurn(FighterBase fighter)
         {
-            if (fighter.Cell.Id != _cellId)
+            if (fighter.Cell.Id != m_cellId)
                 base.OnFailed(fighter.Name);
         }
     }

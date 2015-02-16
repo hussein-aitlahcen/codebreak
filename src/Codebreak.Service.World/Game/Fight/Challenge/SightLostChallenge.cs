@@ -37,10 +37,8 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             if((castInfos.EffectType == Spell.EffectEnum.SubPO ||
                 castInfos.EffectType == Spell.EffectEnum.POSteal) &&
                 castInfos.Target != null &&
-                castInfos.Target.Team != fighter.Team)
-            {
-                base.OnFailed(fighter.Name);
-            }
+                castInfos.Target.Team != fighter.Team)            
+                base.OnFailed(fighter.Name);            
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             }
             else
             {
-                base.OnFailed(fighter.Name);
+                base.OnFailed();
             }
         }
     }
