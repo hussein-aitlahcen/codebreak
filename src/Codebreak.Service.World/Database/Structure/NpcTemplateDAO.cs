@@ -196,7 +196,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public bool Match(Dictionary<int, long> templates, long kamas)
         {
-            return RequiredKamas == kamas && templates.All(template => RequiredItems.Any(required => required.TemplateId == template.Key && required.Quantity == template.Value));
+            return RequiredKamas == kamas && RequiredItems.All(required => templates.Any(template => required.TemplateId == template.Key && required.Quantity == template.Value));
         }
     }
 
