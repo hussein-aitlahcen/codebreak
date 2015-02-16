@@ -101,6 +101,7 @@ namespace Codebreak.Service.World
             AuctionHouseManager.Instance.Initialize();
             AreaManager.Instance.Initialize();
             NpcManager.Instance.Initialize();
+            SpawnManager.Instance.Initialize();
             MapManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             EntityManager.Instance.Initialize();

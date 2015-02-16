@@ -26,7 +26,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public abstract bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericStats.VariableEffect effect, long targetId, int targetCell);
+        public abstract bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericEffect effect, long targetId, int targetCell);
 
         /// <summary>
         /// 

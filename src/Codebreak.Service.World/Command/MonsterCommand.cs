@@ -65,7 +65,7 @@ namespace Codebreak.Service.World.Command
 
             protected override void Process(WorldCommandContext context)
             {
-                context.Character.Map.SpawnMonsters(context.Character.CellId);
+                //context.Character.Map.SpawnMonsters(context.Character.CellId);
             }
         }
     }

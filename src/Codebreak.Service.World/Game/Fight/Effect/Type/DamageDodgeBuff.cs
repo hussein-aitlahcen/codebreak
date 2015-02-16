@@ -19,7 +19,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
         public DamageDodgeBuff(CastInfos castInfos, FighterBase target)
-            : base(castInfos, target, ActiveType.ACTIVE_ATTACKED_AFTER_JET, DecrementType.TYPE_ENDTURN)
+            : base(castInfos, target, ActiveType.ACTIVE_ATTACK_BEFORE_JET, DecrementType.TYPE_ENDTURN)
         {
         }
 

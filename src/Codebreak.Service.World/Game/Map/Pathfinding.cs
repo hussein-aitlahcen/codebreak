@@ -11,6 +11,7 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Interactive.Type;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Job;
+using log4net;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -366,42 +367,12 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public void Clean()
-        {
-            var realTransitCells = new List<int>();
-            var realDirections = new List<int>();
-
-            for (int i = 0; i < Directions.Count - 1; i++)
-            {
-                if (i == Directions.Count - 1)
-                {
-                    realTransitCells.Add(TransitCells[i]);
-                    realDirections.Add(Directions[i]);
-                }
-                else
-                {
-                    if (Directions[i] != Directions[i + 1])
-                    {
-                        realTransitCells.Add(TransitCells[i]);
-                        realDirections.Add(Directions[i]);
-                    }
-                }
-            }
-
-            TransitCells = realTransitCells;
-            Directions = realDirections;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             if (m_serializedPath == null)
             {
                 m_serializedPath = new StringBuilder();
-                //Clean();
                 for (int i = 0; i < TransitCells.Count; i++)
                 {
                     m_serializedPath.Append(Pathfinding.GetDirectionChar(Directions[i]));
@@ -431,6 +402,8 @@ namespace Codebreak.Service.World.Game.Map
     /// </summary>
     public static class Pathfinding
     {
+        private static ILog Logger = LogManager.GetLogger(typeof(Pathfinding));
+
         public static double[] RUN_SPEEDS = { 1.700000E-001, 1.500000E-001, 1.500000E-001, 1.500000E-001, 1.700000E-001, 1.500000E-001, 1.500000E-001, 1.500000E-001 };
         public static double[] WALK_SPEEDS = { 7.000000E-002, 6.000000E-002, 6.000000E-002, 6.000000E-002, 7.000000E-002, 6.000000E-002, 6.000000E-002, 6.000000E-002 };
         public static double[] MOUNT_SPEEDS = { 2.300000E-001, 2.000000E-001, 2.000000E-001, 2.000000E-001, 2.300000E-001, 2.000000E-001, 2.000000E-001, 2.000000E-001 };
@@ -439,9 +412,6 @@ namespace Codebreak.Service.World.Game.Map
         private static int[] FIGHT_DIRECTIONS = { 1, 3, 5, 7 };
 
         private static Dictionary<int, int[]> MapDirections = new Dictionary<int, int[]>();
-        private static Dictionary<int, int> CellDistances = new Dictionary<int, int>();
-        private static Dictionary<int, bool> CellLines = new Dictionary<int, bool>();
-        private static Dictionary<int, int> CellDirections = new Dictionary<int, int>();
         private static Dictionary<int, Dictionary<int, Point>> CellPoints = new Dictionary<int, Dictionary<int, Point>>();
 
         /// <summary>
@@ -533,7 +503,19 @@ namespace Codebreak.Service.World.Game.Map
         public static Point GetPoint(MapInstance map, int cell)
         {
             if (CellPoints.ContainsKey(map.Cells.Count))
-                return CellPoints[map.Cells.Count][cell];
+            {
+                if (!CellPoints[map.Cells.Count].ContainsKey(cell))
+                {
+                    Logger.Info("Pathfinding::GetPoint unknow cell : cellId=" + cell + " cellCount=" + map.Cells.Count);
+                    var point = new Point(_GetX(map.Width, cell), _GetY(map.Width, cell));
+                    CellPoints[map.Cells.Count].Add(cell, point);
+                    return point;   
+                }
+                else
+                {
+                    return CellPoints[map.Cells.Count][cell];
+                }
+            }
 
             Pathfinding.GenerateGrid(map.Width, map.Cells.Count);
 
@@ -587,18 +569,10 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static bool InLine(MapInstance map, int beginCell, int endCell)
         {
-            var cryptedCell = beginCell * beginCell * endCell + endCell;
-            if (CellLines.ContainsKey(cryptedCell))
-                return CellLines[cryptedCell];
-
             var beginPoint = GetPoint(map, beginCell);
             var endPoint = GetPoint(map, endCell);
-
-            var line = beginPoint.X == endPoint.X || beginPoint.Y == endPoint.Y;
-
-            CellLines.Add(cryptedCell, line);
-
-            return line;
+            
+            return beginPoint.X == endPoint.X || beginPoint.Y == endPoint.Y;
         }
 
         /// <summary>
@@ -610,16 +584,10 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static int GoalDistance(MapInstance map, int beginCell, int endCell)
         {
-            var cryptedCell = beginCell * beginCell * endCell + endCell;
-            if (CellDistances.ContainsKey(cryptedCell))
-                return CellDistances[cryptedCell];
-
             var beginPoint = GetPoint(map, beginCell);
             var endPoint = GetPoint(map, endCell);
             var distance = (int)(Math.Abs(endPoint.X - beginPoint.X) + Math.Abs(endPoint.Y - beginPoint.Y));
-
-            CellDistances.Add(cryptedCell, distance);
-
+            
             return distance;
         }
 
@@ -677,10 +645,6 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static int GetDirection(MapInstance map, int beginCell, int dndCell)
         {
-            var cryptedCell = beginCell * beginCell * dndCell + dndCell;
-            if (CellDirections.ContainsKey(cryptedCell))
-                return CellDirections[cryptedCell];
-
             var listChange = GetDirectionChanges(map);
             var result = dndCell - beginCell;
             var direction = 0;
@@ -703,9 +667,7 @@ namespace Codebreak.Service.World.Game.Map
                 direction = 1;
             else
                 direction = 5;
-
-            CellDirections.Add(cryptedCell, direction);
-
+            
             return direction;
         }
 
@@ -1034,146 +996,139 @@ namespace Codebreak.Service.World.Game.Map
             return fighters;
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="fight"></param>
-        ///// <param name="beginCell"></param>
-        ///// <param name="endCell"></param>
-        ///// <returns></returns>
-        //public static bool CheckView(BaseFight fight, int beginCell, int endCell)
-        //{
-        //    var _loc5 = new Point(GetX(fight.map.Template, beginCell), GetY(fight.map.Template, beginCell));
-        //    var _loc6 = new Point(GetX(fight.map.Template, endCell), GetY(fight.map.Template, endCell));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fight"></param>
+        /// <param name="beginCell"></param>
+        /// <param name="endCell"></param>
+        /// <returns></returns>
+        public static bool CheckView(FightBase fight, int beginCell, int endCell)
+        {
+            var _loc5 = GetPoint(fight.Map, beginCell);
+            var _loc6 = GetPoint(fight.Map, endCell);
 
-        //    var _loc7 = 0.5;
-        //    var _loc8 = 0;
+            var _loc7 = 0;
+            var _loc8 = 0;
 
-        //    var _loc9 = fight.GetCell(beginCell).CanWalk ? 0 : 1.5;
-        //    var _loc10 = fight.GetCell(endCell).CanWalk ? 0 : 1.5;
+            var _loc9 = fight.GetCell(beginCell).LineOfSight ? 0 : 1.500000E+000;
+            var _loc10 = fight.GetCell(endCell).LineOfSight ? 0 : 1.500000E+000;
 
-        //    _loc5.Z = _loc7 + _loc9;
-        //    _loc6.Z = _loc8 + _loc10;
+            _loc5.Z = _loc7 + _loc9;
+            _loc6.Z = _loc8 + _loc10;
 
-        //    var _loc11 = _loc6.Z - _loc5.Z;
-        //    var _loc12 = Math.Max(Math.Abs(_loc5.Y - _loc6.Y), Math.Abs(_loc5.X - _loc6.X));
-        //    var _loc13 = (_loc5.Y - _loc6.Y) / (_loc5.X - _loc6.X);
-        //    var _loc14 = _loc5.Y - _loc13 * _loc5.X;
-        //    var _loc15 = _loc6.X - _loc5.X >= 0 ? 1 : -1;
-        //    var _loc16 = _loc6.Y - _loc5.Y >= 0 ? 1 : -1;
-        //    var _loc17 = _loc5.Y;
-        //    var _loc18 = _loc5.X;
-        //    var _loc19 = _loc6.X * _loc15;
-        //    var _loc20 = _loc6.Y * _loc16;
+            var _loc11 = _loc6.Z - _loc5.Z;
+            var _loc12 = Math.Max(Math.Abs(_loc5.Y - _loc6.Y), Math.Abs(_loc5.X - _loc6.X));
+            var _loc13 = (_loc5.Y - _loc6.Y) / (_loc5.X - _loc6.X);
+            var _loc14 = _loc5.Y - _loc13 * _loc5.X;
+            var _loc15 = _loc6.X - _loc5.X >= 0 ? 1 : -1;
+            var _loc16 = _loc6.Y - _loc5.Y >= 0 ? 1 : -1;
+            var _loc17 = _loc5.Y;
+            var _loc18 = _loc5.X;
+            var _loc19 = _loc6.X * _loc15;
+            var _loc20 = _loc6.Y * _loc16;
 
-        //    var _loc21 = 0;
-        //    var _loc22 = 0;
-        //    var _loc26 = 0;
+            var _loc21 = 0;
+            var _loc22 = 0;
+            var _loc26 = 0;
 
-        //    var _loc27 = _loc5.X + 0.5 * _loc15;
+            var _loc27 = _loc5.X + 5.000000E-001 * _loc15;
+            
+            if (_loc27 * _loc15 <= _loc19)
+            {
 
+                while (true)
+                {
+                    _loc27 += _loc15;
 
-        //    if (_loc27 * _loc15 <= _loc19)
-        //    {
+                    if (_loc27 * _loc15 > _loc19)
+                        break; // TODO: might not be correct. Was : Exit While
 
-        //        while (true)
-        //        {
-        //            _loc27 += _loc15;
+                    var _loc25 = _loc13 * _loc27 + _loc14;
 
-        //            if (_loc27 * _loc15 > _loc19)
-        //                break; // TODO: might not be correct. Was : Exit While
+                    if (_loc16 > 0)
+                    {
+                        _loc21 = (int)Math.Round(_loc25);
+                        _loc22 = (int)Math.Ceiling(_loc25 - 0.5);
+                    }
+                    else
+                    {
+                        _loc21 = (int)Math.Ceiling(_loc25 - 0.5);
+                        _loc22 = (int)Math.Round(_loc25);
+                    }
 
-        //            var _loc25 = _loc13 * _loc27 + _loc14;
-
-        //            if (_loc16 > 0)
-        //            {
-        //                _loc21 = (int)Math.Round(_loc25);
-        //                _loc22 = (int)Math.Ceiling(_loc25 - 0.5);
-        //            }
-        //            else
-        //            {
-        //                _loc21 = (int)Math.Ceiling(_loc25 - 0.5);
-        //                _loc22 = (int)Math.Round(_loc25);
-        //            }
-
-        //            _loc26 = (int)_loc17;
-
-
-        //            if ((_loc26 * _loc16 <= _loc22 * _loc16))
-        //            {
-
-        //                while (true)
-        //                {
-        //                    _loc26 += _loc16;
-
-        //                    if (_loc26 * _loc16 > _loc22 * _loc16)
-        //                    {
-        //                        break;
-        //                    }
-        //                    else
-        //                    {
-        //                        if (!CheckCellView(fight, (int)(_loc27 - _loc15 / 2), _loc26, false, _loc5, _loc6, (int)_loc11, (int)_loc12))
-        //                            return false;
-        //                    }
-
-        //                }
-
-        //            }
-        //            _loc17 = _loc21;
-        //        }
-        //    }
-
-        //    _loc26 = (int)_loc17;
+                    _loc26 = (int)_loc17;
 
 
-        //    if (_loc26 * _loc16 <= _loc6.Y * _loc16)
-        //    {
+                    while (true)
+                    {
+                        _loc26 += _loc16;
 
-        //        while (true)
-        //        {
-        //            _loc26 += _loc16;
+                        if (_loc26 * _loc16 > _loc22 * _loc16)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            if (!CheckCellView(fight, (int)(_loc27 - _loc15 / 2), _loc26, false, _loc5, _loc6, (int)_loc11, (int)_loc12))
+                                return false;
+                        }
+                    }
 
-        //            if (_loc26 * _loc16 > _loc6.Y * _loc16)
-        //            {
-        //                break; // TODO: might not be correct. Was : Exit While
-        //            }
-        //            else
-        //            {
-        //                if (!CheckCellView(fight, (int)(_loc27 - 0.5 * _loc15), _loc26, false, _loc5, _loc6, (int)_loc11, (int)_loc12))
-        //                    return false;
-        //            }
+                    _loc17 = _loc21;
+                }
+            }
 
-        //        }
-        //    }
+            _loc26 = (int)_loc17;
 
-        //    if (!CheckCellView(fight, (int)(_loc27 - 0.5 * _loc15), _loc26 - _loc16, true, _loc5, _loc6, (int)_loc11, (int)_loc12))
-        //        return false;
 
-        //    return true;
-        //}
+            if (_loc26 * _loc16 <= _loc6.Y * _loc16)
+            {
 
-        //public static bool CheckCellView(BaseFight Fight, int x, int y, bool @bool, Point p1, Point p2, int zDiff, int d)
-        //{
+                while (true)
+                {
+                    _loc26 += _loc16;
 
-        //    var _loc10 = (x * Fight.map.Template.Width + y * (Fight.map.Template.Width - 1));
-        //    var _loc11 = Fight.GetCell(_loc10);
+                    if (_loc26 * _loc16 > _loc6.Y * _loc16)
+                    {
+                        break; // TODO: might not be correct. Was : Exit While
+                    }
+                    else
+                    {
+                        if (!CheckCellView(fight, (int)(_loc27 - 0.5 * _loc15), _loc26, false, _loc5, _loc6, (int)_loc11, (int)_loc12))
+                            return false;
+                    }
 
-        //    var _loc12 = Math.Max(Math.Abs(p1.Y - y), Math.Abs(p1.X - x));
-        //    var _loc13 = _loc12 / d * zDiff + p1.Z;
+                }
+            }
 
-        //    var _loc14 = 0.5;
+            if (!CheckCellView(fight, (int)(_loc27 - 0.5 * _loc15), _loc26 - _loc16, true, _loc5, _loc6, (int)_loc11, (int)_loc12))
+                return false;
 
-        //    var _loc15 = Fight.GetCell(_loc10).CanWalk || (_loc12 == 0 || (@bool || (p2.X == x && p2.Y == y))) ? false : true;
+            return true;
+        }
 
-        //    if (_loc11.LineOfSight && (_loc14 <= _loc13 && !_loc15))
-        //    {
-        //        return (true);
-        //    }
-        //    else
-        //    {
-        //        return @bool;
-        //    }
-        //}
+        public static bool CheckCellView(FightBase fight, int x, int y, bool @bool, Point p1, Point p2, int zDiff, int d)
+        {
+            var _loc10 = (x * fight.Map.Width + y * (fight.Map.Width - 1));
+            var _loc11 = fight.GetCell(_loc10);
+
+            var _loc12 = Math.Max(Math.Abs(p1.Y - y), Math.Abs(p1.X - x));
+            var _loc13 = _loc12 / d * zDiff + p1.Z;
+
+            var _loc14 = 0;
+
+            var _loc15 = fight.GetCell(_loc10).LineOfSight || (_loc12 == 0 || (@bool || (p2.X == x && p2.Y == y))) ? false : true;
+
+            if (_loc11.LineOfSight && (_loc14 <= _loc13 && !_loc15))
+            {
+                return true;
+            }
+            else
+            {
+                return @bool;
+            }
+        }
     }
 
     public struct PathNode
@@ -1325,7 +1280,7 @@ namespace Codebreak.Service.World.Game.Map
                     }
 
                     if ((!map.IsWalkable(NewLocation) || (Obstacles != null && Obstacles.Contains(NewLocation))) && NewLocation != EndCell)
-                    {
+                    {                        
                         continue;
                     }
 

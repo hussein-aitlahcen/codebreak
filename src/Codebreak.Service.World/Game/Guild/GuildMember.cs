@@ -262,9 +262,9 @@ namespace Codebreak.Service.World.Game.Guild
             {
                 Character.SetCharacterGuild(null);
                 Character.RefreshOnMap();
-            }
 
-            CharacterDisconnected();
+                CharacterDisconnected();
+            }
         }
 
         /// <summary>

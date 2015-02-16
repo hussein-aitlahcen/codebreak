@@ -37,8 +37,8 @@ namespace Codebreak.Service.World.Frame
                 var map = character.Map;
                 if(map == null)
                 {
-                    character.MapId = WorldConfig.WORLD_MAP_START;
-                    character.CellId = WorldConfig.WORLD_CELL_START;
+                    character.MapId = WorldConfig.GetStartMap(character.Breed);
+                    character.CellId = WorldConfig.GetStartCell(character.Breed);
                     map = character.Map;
                 }
                 character.CachedBuffer = true;

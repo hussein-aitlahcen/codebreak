@@ -81,7 +81,7 @@ namespace Codebreak.Framework.Network
                     if (Environment.TickCount - LastPacketTime < 1000)
                     {
                         CumulatedPacketInOneSecond++;
-                        if (CumulatedPacketInOneSecond > 15)
+                        if (CumulatedPacketInOneSecond > 25)
                         {
                             Logger.Warn("Client kicked due to packet spam : " + Ip);
                             Disconnect();

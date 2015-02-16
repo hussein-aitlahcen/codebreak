@@ -145,7 +145,9 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="value"></param>
         public void SaveStats()
         {
+            Statistics.StatisticsChanged();
             Effects = Statistics.Serialize();
+            StringEffects = Statistics.ToItemStats();
         }
 
         /// <summary>
@@ -179,6 +181,20 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>        
+        [Write(false)]
+        [DoNotNotify]
+        public bool IsBoostEquiped
+        {
+            get
+            {
+                return IsBoostSlot(Slot);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
         public bool SatisfyConditions(CharacterEntity character)
@@ -195,9 +211,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public static bool IsEquipedSlot(ItemSlotEnum slot)
         {
-            return slot > ItemSlotEnum.SLOT_INVENTORY && slot <= ItemSlotEnum.SLOT_SHIELD;
+            return slot >= ItemSlotEnum.SLOT_AMULET && slot <= ItemSlotEnum.SLOT_BOOST_FOLLOWER;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public static bool IsBoostSlot(ItemSlotEnum slot)
+        {
+            return slot >= ItemSlotEnum.SLOT_BOOST_MUTATION && slot <= ItemSlotEnum.SLOT_BOOST_FOLLOWER;
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -240,42 +266,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         public InventoryItemDAO Clone(int quantity)
         {
-            var instance = new InventoryItemDAO();
-            instance.OwnerId = -1;
-            instance.TemplateId = TemplateId;
-            instance.Quantity = quantity;
-            instance.Effects = Statistics.Serialize();
-            instance.StringEffects = Statistics.ToItemStats();
-            instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
-            instance.IsDirty = false;
-
-            if (InventoryItemRepository.Instance.Insert(instance))
-                return instance;
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="templateId"></param>
-        /// <param name="quantity"></param>
-        /// <param name="statistics"></param>
-        /// <returns></returns>
-        public static InventoryItemDAO Create(int templateId, long quantity, GenericStats statistics)
-        {
-            var instance = new InventoryItemDAO();
-            instance.OwnerId = -1;
-            instance.TemplateId = templateId;
-            instance.Quantity = (int)quantity;
-            instance.m_statistics = statistics;
-            instance.Effects = statistics.Serialize();
-            instance.StringEffects = statistics.ToItemStats();
-            instance.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
-            instance.IsDirty = false;
-
-            if (InventoryItemRepository.Instance.Insert(instance))
-                return instance;
-            return null;
+            return InventoryItemRepository.Instance.Create(TemplateId, -1, quantity, Statistics);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <param name="map"></param>
         /// <param name="cellId"></param>
         public TrashCan(MapInstance map, int cellId) 
-            : base(map, cellId, false)
+            : base(map, cellId)
         {
             m_storage = new StorageInventory();
         }

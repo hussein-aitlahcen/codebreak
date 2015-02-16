@@ -43,7 +43,9 @@ namespace Codebreak.Service.World.Frame
         /// <param name="message"></param>
         public void FreeSoul(CharacterEntity character, string message)
         {
-            character.AddMessage(() => character.FreeSoul());
+            character.FrameManager.RemoveFrame(GameTombestoneFrame.Instance);
+
+            character.AddMessage(character.FreeSoul);
         }
     }
 }

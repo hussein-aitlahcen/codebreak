@@ -204,6 +204,23 @@ namespace Codebreak.Service.World.Game.Entity
         {
             return Items.Any(item => item.TemplateId == templateId && item.IsEquiped);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public virtual IEnumerable<InventoryItemDAO> RemoveItems()
+        {
+            foreach (var item in Items.ToArray())
+            {
+                Items.Remove(item);
+                OnItemRemoved(item.Id);
+                item.OwnerId = -1;
+                yield return item;
+            }
+        }
                
         /// <summary>
         /// 

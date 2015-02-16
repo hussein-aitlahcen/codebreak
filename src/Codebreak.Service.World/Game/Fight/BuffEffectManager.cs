@@ -24,9 +24,9 @@ namespace Codebreak.Service.World.Game.Fight
         private Dictionary<ActiveType, List<BuffBase>> ActiveBuffs = new Dictionary<ActiveType, List<BuffBase>>()
         {
             { ActiveType.ACTIVE_ATTACKED_AFTER_JET, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ATTACKED_POST_JET, new List<BuffBase>() },
+            { ActiveType.ACTIVE_ATTACKED_BEFORE_JET, new List<BuffBase>() },
             { ActiveType.ACTIVE_ATTACK_AFTER_JET, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ATTACK_POST_JET, new List<BuffBase>() },
+            { ActiveType.ACTIVE_ATTACK_BEFORE_JET, new List<BuffBase>() },
             { ActiveType.ACTIVE_BEGINTURN, new List<BuffBase>() },
             { ActiveType.ACTIVE_ENDTURN, new List<BuffBase>() },
             { ActiveType.ACTIVE_ENDMOVE, new List<BuffBase>() },
@@ -220,9 +220,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="damageValue"></param>
-        public FightActionResultEnum OnAttackPostJet(CastInfos castInfos, ref int damageValue)
+        public FightActionResultEnum OnAttackBeforeJet(CastInfos castInfos, ref int damageValue)
         {
-            foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ATTACK_POST_JET].ToArray())
+            foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ATTACK_BEFORE_JET].ToArray())
             {
                 var result = buff.ApplyEffect(ref damageValue, castInfos);
                 if(result != FightActionResultEnum.RESULT_NOTHING)
@@ -258,9 +258,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="damageValue"></param>
-        public FightActionResultEnum OnAttackedPostJet(CastInfos castInfos, ref int damageValue)
+        public FightActionResultEnum OnAttackedBeforeJet(CastInfos castInfos, ref int damageValue)
         {
-            foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ATTACKED_POST_JET].ToArray())
+            foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ATTACKED_BEFORE_JET].ToArray())
             {
                 var result = buff.ApplyEffect(ref damageValue, castInfos);
                 if(result !=  FightActionResultEnum.RESULT_NOTHING)

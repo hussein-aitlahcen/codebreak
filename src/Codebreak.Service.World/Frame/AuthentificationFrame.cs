@@ -18,8 +18,8 @@ namespace Codebreak.Service.World.Frame
         /// <returns></returns>
         public override Action<WorldClient, string> GetHandler(string message)
         {
-            if (message.StartsWith("Ak"))
-                return HandleKey;
+            //if (message.StartsWith("Ak"))
+            //    return HandleKey;
             return HandleTicket;
         }
 
@@ -28,13 +28,13 @@ namespace Codebreak.Service.World.Frame
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleKey(WorldClient client, string message)
-        {
-            client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
-            client.FrameManager.AddFrame(CharacterSelectionFrame.Instance);
-            client.Cypher = true;
-            client.Send(WorldMessage.BASIC_NO_OPERATION());
-        }
+        //private void HandleKey(WorldClient client, string message)
+        //{
+        //    client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
+        //    client.FrameManager.AddFrame(CharacterSelectionFrame.Instance);
+        //    client.Cypher = true;
+        //    client.Send(WorldMessage.BASIC_NO_OPERATION());
+        //}
 
         /// <summary>
         /// 
@@ -44,6 +44,8 @@ namespace Codebreak.Service.World.Frame
         private void HandleTicket(WorldClient client, string message)
         {
             var ticket = message.Substring(2);
+
+            client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
 
             WorldService.Instance.AddMessage(() =>
                 {
@@ -56,6 +58,7 @@ namespace Codebreak.Service.World.Frame
 
                     WorldService.Instance.AddMessage(() =>
                         {
+                            client.FrameManager.AddFrame(CharacterSelectionFrame.Instance);
                             client.Account = account;
                             ClientManager.Instance.ClientAuthentified(client);                            
                             client.Send(WorldMessage.ACCOUNT_TICKET_SUCCESS());

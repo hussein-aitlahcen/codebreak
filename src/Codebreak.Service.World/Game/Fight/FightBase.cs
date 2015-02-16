@@ -15,6 +15,7 @@ using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Fight.Challenges;
 using Codebreak.Service.World.Game.Fight.AI;
+using Codebreak.Service.World.Game.Stats;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -833,7 +834,7 @@ namespace Codebreak.Service.World.Game.Fight
             get
             {
                 if (CurrentFighter != null)
-                    if(CurrentFighter.CurrentAction != null)
+                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is GameFightActionBase)
                         return (GameFightActionBase)CurrentFighter.CurrentAction;
                 return null;
             }
@@ -1124,13 +1125,10 @@ namespace Codebreak.Service.World.Game.Fight
             fighter.TurnReady = true;
             TurnProcessor.SummonFighter(fighter);
 
-            var result = fighter.SetCell(GetCell(cellId));
-
-            if(result == FightActionResultEnum.RESULT_NOTHING)
-                base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
+            base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
             base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
 
-            return result;
+            return fighter.SetCell(GetCell(cellId));
         }
 
         /// <summary>
@@ -1298,10 +1296,9 @@ namespace Codebreak.Service.World.Game.Fight
                 base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
                 base.Dispatch(WorldMessage.FIGHT_STARTS());
                 base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
-                base.CachedBuffer = false;
-                
                 Team0.SendChallengeInfos();
                 Team1.SendChallengeInfos();
+                base.CachedBuffer = false;
 
                 State = FightStateEnum.STATE_FIGHTING;
                 NextLoopTimeout = -1;
@@ -1469,7 +1466,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public FighterBase GetFighterOnCell(int cellId)
         {
-            return AliveFighters.FirstOrDefault(fighter => fighter.Cell.Id == cellId);
+            return AliveFighters.FirstOrDefault(fighter => fighter.Cell != null && fighter.Cell.Id == cellId);
         }
 
         /// <summary>
@@ -1650,7 +1647,15 @@ namespace Codebreak.Service.World.Game.Fight
                 case FightLoopStateEnum.STATE_WAIT_AI:
                     if (CurrentFighter is AIFighter)
                     {
-                        ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                        try
+                        {
+                            ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.Error(ex.ToString());
+                            CurrentFighter.TurnPass = true;
+                        }
                     }
                     LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
                     break;
@@ -1724,6 +1729,9 @@ namespace Codebreak.Service.World.Game.Fight
 
             if(spellLevel.InLine && !Pathfinding.InLine(Map, cellId, castCell))            
                 return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
+
+            if (!Pathfinding.CheckView(this, cellId, castCell))
+                return FightSpellLaunchResultEnum.RESULT_NO_LOS;
 
             if (spellLevel.Effects != null)
             {
@@ -1893,8 +1901,8 @@ namespace Codebreak.Service.World.Game.Fight
                     if(criticalHit)                   
                         base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
 
-                    var effects = weaponTemplate.WeaponEffects;
-                    var targetLists = new List<Tuple<Tuple<EffectEnum, int, int>, List<FighterBase>>>();
+                    var effects = weapon.Statistics.WeaponEffects;
+                    var targetLists = new List<Tuple<GenericEffect, List<FighterBase>>>();
 
                     foreach (var effect in effects)
                     {
@@ -1913,7 +1921,7 @@ namespace Codebreak.Service.World.Game.Fight
                                 }
                             }
                         }
-                        targetLists.Add(Tuple.Create(effect, targetList));
+                        targetLists.Add(Tuple.Create(effect.Value, targetList));
                     }
 
                     LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
@@ -1934,11 +1942,11 @@ namespace Codebreak.Service.World.Game.Fight
                             {
                                 AddProcessingTarget(
                                         new CastInfos(
-                                                        targetsByEffect.Item1.Item1,
+                                                        targetsByEffect.Item1.EffectType,
                                                         -1,
                                                         cellId,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item2,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item3 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item3,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Value1 + weaponTemplate.CSBonus : targetsByEffect.Item1.Value1,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Value2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Value2,
                                                         -1,
                                                         -1,
                                                         0,
@@ -1955,11 +1963,11 @@ namespace Codebreak.Service.World.Game.Fight
                                 foreach (var target in targetsByEffect.Item2)
                                 {
                                     AddProcessingTarget(new CastInfos(
-                                                        targetsByEffect.Item1.Item1,
+                                                        targetsByEffect.Item1.EffectType,
                                                         -1,
                                                         cellId,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item2,
-                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.Item1) ? targetsByEffect.Item1.Item3 + weaponTemplate.CSBonus : targetsByEffect.Item1.Item3,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Value1 + weaponTemplate.CSBonus : targetsByEffect.Item1.Value1,
+                                                        criticalHit && CastInfos.IsDamageEffect(targetsByEffect.Item1.EffectType) ? targetsByEffect.Item1.Value2 + weaponTemplate.CSBonus : targetsByEffect.Item1.Value2,
                                                         -1,
                                                         -1,
                                                         0,
@@ -2025,9 +2033,10 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
-                if (CanLaunchSpell(fighter, spellLevel, spellId, fighter.Cell.Id, castCellId) != FightSpellLaunchResultEnum.RESULT_OK)
+                var launchResult = CanLaunchSpell(fighter, spellLevel, spellId, fighter.Cell.Id, castCellId);
+                if (launchResult != FightSpellLaunchResultEnum.RESULT_OK)
                 {
-                    Logger.Debug("Fight::TryLaunchSpell unable to launch spell : " + fighter.Name);
+                    Logger.Debug("Fight::TryLaunchSpell unable to launch spell : " + fighter.Name + " reason=" + launchResult);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
@@ -2251,8 +2260,6 @@ namespace Codebreak.Service.World.Game.Fight
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
                 spectator.EndFight();            
-            
-            Map.FightManager.Remove(this);
         }
         
         /// <summary>
@@ -2260,6 +2267,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void FightEnded()
         {
+            Map.FightManager.Remove(this);
+
             Dispose();
         }
 
@@ -2273,15 +2282,31 @@ namespace Codebreak.Service.World.Game.Fight
 
             Cells.Clear();
             Cells = null;
-            Team0.Dispose();
-            Team1.Dispose();
-            SpectatorTeam.Dispose();
+
+            SpectatorTeam = null;
+            Team0 = null;
+            Team1 = null;
+
             CurrentFighter = null;
-            CurrentProcessingFighter = null;
+            CurrentProcessingFighter = null;            
             CurrentSubAction = null;
+
             TurnProcessor.Dispose();
             TurnProcessor = null;
+
+            Result.Dispose();
+            Result = null;
+
             Map = null;
+
+            m_activableObjects.Clear();
+            m_activableObjects = null;
+            m_losersFighter = null;
+            m_winnersFighter = null;
+            m_winnersTeam = null;
+            m_losersTeam = null;
+            m_processingTargets.Clear();
+            m_processingTargets = null;
 
             base.Dispose();
         }
@@ -2388,8 +2413,8 @@ namespace Codebreak.Service.World.Game.Fight
                     // XX A été taclé
                     base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_TACLE, fighter.Id));
 
+                    // perte d'ap
                     var lostAP = (fighter.AP * tacledChance / 100) - 1;
-                    var lostMP = (int)Math.Abs(lostAP);
 
                     if (lostAP < 0)
                         lostAP = 1;
@@ -2400,6 +2425,8 @@ namespace Codebreak.Service.World.Game.Fight
                     fighter.UsedAP += lostAP;
 
                     base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + lostAP));
+
+                    var lostMP = fighter.MP;
 
                     if (lostMP < 0)
                         lostMP = 1;

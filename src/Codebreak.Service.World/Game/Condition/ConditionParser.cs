@@ -40,7 +40,6 @@ namespace Codebreak.Service.World.Game.Condition
         {
             if (conditions == string.Empty)
                 return true;
-
             Func<CharacterEntity, bool> method;
             lock(m_compiledExpressions)
             {

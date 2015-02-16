@@ -1,4 +1,6 @@
 ﻿using Codebreak.Framework.Database;
+using Codebreak.Service.World.Database.Repository;
+using System.Collections.Generic;
 
 namespace Codebreak.Service.World.Database.Structure
 {

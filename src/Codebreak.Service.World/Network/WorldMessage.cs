@@ -282,7 +282,9 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ACCOUNT_TICKET_SUCCESS()
         {
-            return "ATK" + Crypt.CRYPT_KEY_INDEX + Crypt.CRYPT_KEY;
+            //if(WorldConfig.NETWORK_CRYPT)
+                //return "ATK" + Crypt.CRYPT_KEY_INDEX + Crypt.CRYPT_KEY;
+            return "ATK0";
         }
 
         /// <summary>
@@ -781,7 +783,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string SERVER_INFO_MESSAGE(string message)
         {
-            return SERVER_MESSAGE(Color.Green, message);
+            return IM_INFO_MESSAGE(InformationEnum.INFO_SERVER_MESSAGE, message);
         }
 
         /// <summary>
@@ -859,9 +861,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string OBJECT_ADD_SUCCESS(InventoryItemDAO item)
         {
-            var message = new StringBuilder("OAKO");
-            item.SerializeAs_BagContent(message);
-            return message.ToString();
+            return "OAKO"  + item.ToString();
         }
 
         /// <summary>
@@ -2511,9 +2511,24 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string ITEM_SET(ItemSetDAO set, IEnumerable<InventoryItemDAO> items)
         {
+            if (set == null)
+                return "";
             var message = new StringBuilder("OS+").Append(set.Id).Append('|');
             message.Append(String.Join(";", items.Select(item => item.TemplateId))).Append('|');
             message.Append(set.GetStats(items.Count()).ToItemStats());
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static string OBJECT_CHANGE(IEnumerable<InventoryItemDAO> items)
+        {
+            var message = new StringBuilder("OCK");
+            foreach (var item in items)
+                message.Append(item.ToString()).Append('*');
             return message.ToString();
         }
     }

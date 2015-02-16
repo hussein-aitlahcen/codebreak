@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Manager
         public void Initialize()
         {
             long npcCount = 0;
-            foreach(var npcInstance in NpcInstanceRepository.Instance.GetAll())
+            foreach(var npcInstance in NpcInstanceRepository.Instance.All)
             {
                 if (!m_npcByMap.ContainsKey(npcInstance.MapId))
                     m_npcByMap.Add(npcInstance.MapId, new List<NpcInstanceDAO>());

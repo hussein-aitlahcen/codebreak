@@ -32,24 +32,23 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             switch (this.CastInfos.SpellId)
             {
                 case 1:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorFire).Boosts -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorFire).Dons -= this.CastInfos.Value1;
                     break;
 
                 case 6:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorNeutral).Boosts -= this.CastInfos.Value1;
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorEarth).Boosts -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorEarth).Dons -= this.CastInfos.Value1;
                     break;
 
                 case 14:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorAir).Boosts -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorAir).Dons -= this.CastInfos.Value1;
                     break;
 
                 case 18:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorWater).Boosts -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorWater).Dons -= this.CastInfos.Value1;
                     break;
 
                 default:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmor).Boosts -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmor).Dons -= this.CastInfos.Value1;
                     break;
             }
 

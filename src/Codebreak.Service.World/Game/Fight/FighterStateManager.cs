@@ -30,8 +30,8 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class FighterStateManager : IDisposable
     {
-        private FighterBase _fighter;
-        private Dictionary<FighterStateEnum, BuffBase> _state = new Dictionary<FighterStateEnum, BuffBase>();
+        private FighterBase m_fighter;
+        private Dictionary<FighterStateEnum, BuffBase> m_states = new Dictionary<FighterStateEnum, BuffBase>();
 
         /// <summary>
         /// 
@@ -39,7 +39,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="Fighter"></param>
         public FighterStateManager(FighterBase Fighter)
         {
-            _fighter = Fighter;
+            m_fighter = Fighter;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public bool HasState(FighterStateEnum State)
         {
-            return _state.ContainsKey(State);
+            return m_states.ContainsKey(State);
         }
 
         /// <summary>
@@ -86,15 +86,15 @@ namespace Codebreak.Service.World.Game.Fight
                         if (HasState(FighterStateEnum.STATE_STEALTH))
                             return;
 
-                        _fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, _fighter.Id, _fighter.Id + "," + Buff.Duration));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, m_fighter.Id, m_fighter.Id + "," + Buff.Duration));
 
-                        _state.Add(FighterStateEnum.STATE_STEALTH, Buff);
+                        m_states.Add(FighterStateEnum.STATE_STEALTH, Buff);
 
                         return;
 
                     default:
 
-                        _fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, _fighter.Id, _fighter.Id + "," + Buff.CastInfos.Value3 + ",1"));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, m_fighter.Id, m_fighter.Id + "," + Buff.CastInfos.Value3 + ",1"));
 
                         break;
                 }
@@ -102,7 +102,7 @@ namespace Codebreak.Service.World.Game.Fight
                 if (HasState((FighterStateEnum)Buff.CastInfos.Value3))
                     return;
 
-                _state.Add((FighterStateEnum)Buff.CastInfos.Value3, Buff);
+                m_states.Add((FighterStateEnum)Buff.CastInfos.Value3, Buff);
             }
         }
 
@@ -118,22 +118,22 @@ namespace Codebreak.Service.World.Game.Fight
                 {
                     case EffectEnum.Stealth:
 
-                        _fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, _fighter.Id, _fighter.Id.ToString()));
-                        _fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, _fighter.Id, _fighter.Id + "," + _fighter.Cell.Id));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, m_fighter.Id, m_fighter.Id.ToString()));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, m_fighter.Id, m_fighter.Id + "," + m_fighter.Cell.Id));
 
-                        _state.Remove(FighterStateEnum.STATE_STEALTH);
+                        m_states.Remove(FighterStateEnum.STATE_STEALTH);
 
                         return;
 
                     default:
 
-                        _fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, _fighter.Id, _fighter.Id + "," + Buff.CastInfos.Value3 + ",0"));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, m_fighter.Id, m_fighter.Id + "," + Buff.CastInfos.Value3 + ",0"));
 
                         break;
                 }
             }
 
-            _state.Remove((FighterStateEnum)Buff.CastInfos.Value3);
+            m_states.Remove((FighterStateEnum)Buff.CastInfos.Value3);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Codebreak.Service.World.Game.Fight
         public BuffBase FindState(FighterStateEnum state)
         {
             if (HasState(state))
-                return _state[state];
+                return m_states[state];
             return null;
         }
 
@@ -153,10 +153,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void Clear()
         {
-            foreach (var state in _state.Values)
+            foreach (var state in m_states.Values)
                 state.RemoveEffect();
 
-            _state.Clear();
+            m_states.Clear();
         }
 
         /// <summary>
@@ -164,9 +164,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void Dispose()
         {
-            _state.Clear();
-            _state = null;
-            _fighter = null;
+            m_states.Clear();
+            m_states = null;
+            m_fighter = null;
         }
     }
 }

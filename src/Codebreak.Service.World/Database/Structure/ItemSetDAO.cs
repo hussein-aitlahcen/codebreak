@@ -140,7 +140,7 @@ namespace Codebreak.Service.World.Database.Structure
                     var data = effect.Split(',');
                     var effectId = int.Parse(data[0]);
                     var value = int.Parse(data[1]);
-                    stats.AddItem((EffectEnum)effectId, value);
+                    stats.AddEffect((EffectEnum)effectId, value);
                 }
             }
             m_statistics.Add(stats);

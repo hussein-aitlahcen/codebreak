@@ -206,7 +206,7 @@ namespace Codebreak.Service.World
             var b = Math.Truncate(a / (double)level * 100);
             var c = Math.Truncate(a / (double)playersTotalLevel * 100);
             var d = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[0] * levelDeltaRate);
-            var e = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[Math.Max(0, droppers.Count() - 1)] * totalLevelDeltaRate);
+            var e = Math.Truncate(monstersExperience * WorldConfig.PVM_RATE_GROUP[Math.Min(WorldConfig.PVM_RATE_GROUP.Length - 1, droppers.Count() - 1)] * totalLevelDeltaRate);
             var f = Math.Truncate(b / 100 * d);
             var g = Math.Truncate(c / 100 * e);
             var h = wisdom;

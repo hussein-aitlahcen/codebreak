@@ -26,8 +26,8 @@ namespace Codebreak.Service.World.Game.Party
         /// <summary>
         /// 
         /// </summary>
-        private CharacterEntity _leader;
-        private Dictionary<long, CharacterEntity> _memberById;
+        private CharacterEntity m_leader;
+        private Dictionary<long, CharacterEntity> m_memberById;
 
         /// <summary>
         /// 
@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.Party
         {
             get
             {
-                return _memberById.Count;
+                return m_memberById.Count;
             }
         }
                 
@@ -49,8 +49,8 @@ namespace Codebreak.Service.World.Game.Party
         public PartyInstance(long id, CharacterEntity master, CharacterEntity member)
         {
             Id = id;
-            _memberById = new Dictionary<long, CharacterEntity>();
-            _leader = master;
+            m_memberById = new Dictionary<long, CharacterEntity>();
+            m_leader = master;
 
             AddMember(master);
             AddMember(member);
@@ -64,21 +64,21 @@ namespace Codebreak.Service.World.Game.Party
         public void KickMember(CharacterEntity member, long memberId)
         {
             // only the leader can kick someone
-            if (member.Id != _leader.Id || member.Id == memberId)
+            if (member.Id != m_leader.Id || member.Id == memberId)
             {
                 member.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             // exists ?
-            if (!_memberById.ContainsKey(memberId))
+            if (!m_memberById.ContainsKey(memberId))
             {
                 member.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
 
             // get the fuck out
-            RemoveMember(_memberById[memberId], member.Id.ToString());
+            RemoveMember(m_memberById[memberId], member.Id.ToString());
         }
 
         /// <summary>
@@ -90,14 +90,14 @@ namespace Codebreak.Service.World.Game.Party
             // new player just joined
             base.Dispatch(WorldMessage.PARTY_MEMBER_LIST(member));
 
-            _memberById.Add(member.Id, member);
+            m_memberById.Add(member.Id, member);
             AddHandler(member.SafeDispatch);
 
             // set party and send members list
             member.PartyId = Id;
-            member.SafeDispatch(WorldMessage.PARTY_CREATE_SUCCESS(_leader.Name));
-            member.SafeDispatch(WorldMessage.PARTY_SET_LEADER(_leader.Id));
-            member.SafeDispatch(WorldMessage.PARTY_MEMBER_LIST(_memberById.Values.ToArray()));
+            member.SafeDispatch(WorldMessage.PARTY_CREATE_SUCCESS(m_leader.Name));
+            member.SafeDispatch(WorldMessage.PARTY_SET_LEADER(m_leader.Id));
+            member.SafeDispatch(WorldMessage.PARTY_MEMBER_LIST(m_memberById.Values.ToArray()));
         }
 
         /// <summary>
@@ -106,23 +106,23 @@ namespace Codebreak.Service.World.Game.Party
         /// <param name="member"></param>
         public void RemoveMember(CharacterEntity member, string kickerId = "")
         {
-            if (_memberById.ContainsKey(member.Id))
+            if (m_memberById.ContainsKey(member.Id))
             {
                 member.PartyId = -1;
-                _memberById.Remove(member.Id);
+                m_memberById.Remove(member.Id);
                 RemoveHandler(member.SafeDispatch);
 
                 base.Dispatch(WorldMessage.PARTY_MEMBER_LEFT(member.Id));
 
                 member.SafeDispatch(WorldMessage.PARTY_LEAVE(kickerId));
 
-                if (_memberById.Count == 1)
+                if (m_memberById.Count == 1)
                     Destroy();
-                else if (member.Id == _leader.Id)
+                else if (member.Id == m_leader.Id)
                 {
-                    _leader = _memberById.First().Value;
+                    m_leader = m_memberById.First().Value;
 
-                    base.Dispatch(WorldMessage.PARTY_SET_LEADER(_leader.Id));
+                    base.Dispatch(WorldMessage.PARTY_SET_LEADER(m_leader.Id));
                 }
             }
         }
@@ -135,14 +135,14 @@ namespace Codebreak.Service.World.Game.Party
         {
             base.Dispatch(WorldMessage.PARTY_LEAVE());
 
-            foreach(var member in _memberById.Values)
+            foreach(var member in m_memberById.Values)
             {
                 member.PartyId = -1;
             }
                     
-            _leader = null;
-            _memberById.Clear();
-            _memberById = null;
+            m_leader = null;
+            m_memberById.Clear();
+            m_memberById = null;
 
             PartyManager.Instance.RemoveParty(this);
         }

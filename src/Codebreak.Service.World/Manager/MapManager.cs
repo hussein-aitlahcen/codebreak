@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            foreach (var mapDAO in MapRepository.Instance.GetAll())
+            foreach (var mapDAO in MapTemplateRepository.Instance.All)
             {
                 var map = new MapInstance(mapDAO.SubAreaId, mapDAO.Id, mapDAO.X, mapDAO.Y, mapDAO.Width, mapDAO.Height, mapDAO.Data, mapDAO.DataKey, mapDAO.CreateTime, mapDAO.FightTeam0Cells, mapDAO.FightTeam1Cells);
                 m_mapById.Add(map.Id, map);

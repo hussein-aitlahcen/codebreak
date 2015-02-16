@@ -1,5 +1,6 @@
 ﻿using Codebreak.RPC.Protocol;
 using Codebreak.RPC.Service;
+using System.Collections.Generic;
 
 namespace Codebreak.Service.Auth.RPC
 {
@@ -35,6 +36,12 @@ namespace Codebreak.Service.Auth.RPC
             set;
         }
 
+        public List<long> Players
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -42,6 +49,7 @@ namespace Codebreak.Service.Auth.RPC
         {
             GameState = GameStateEnum.OFFLINE;
             AuthState = AuthStateEnum.NEGOTIATING;
+            Players = new List<long>();
             GameId = -1;
         }
     }

@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Manager
         public void Save()
         {
             var templates = new Dictionary<int, SpellTemplate>();
-            foreach (var sort in SortsRepository.Instance.GetAll())
+            foreach (var sort in SortsRepository.Instance.All)
             {
                 var newTemplate = new SpellTemplate();
                 var oldTemplate = GetTemplate(sort.id);

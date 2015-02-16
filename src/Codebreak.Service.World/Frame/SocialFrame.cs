@@ -89,11 +89,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    if (!SocialRelationRepository.Instance.Remove(relation))
-                    {
-                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
+                    SocialRelationRepository.Instance.Removed(relation);
 
                     character.SafeDispatch(WorldMessage.ENNEMY_DELETE_SUCCESS());
                 });
@@ -148,11 +144,7 @@ namespace Codebreak.Service.World.Frame
                         TypeId = (int)SocialRelationTypeEnum.TYPE_ENNEMY
                     };
 
-                    if (!SocialRelationRepository.Instance.InsertWithKey(relation))
-                    {
-                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
+                    SocialRelationRepository.Instance.Created(relation);
 
                     character.SafeDispatch(WorldMessage.ENNEMY_ADD(character.Account.Pseudo, relation));
                 });
@@ -196,11 +188,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    if (!SocialRelationRepository.Instance.Remove(relation))
-                    {
-                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
+                    SocialRelationRepository.Instance.Removed(relation);
 
                     character.SafeDispatch(WorldMessage.FRIEND_DELETE_SUCCESS());
                 });
@@ -255,11 +243,7 @@ namespace Codebreak.Service.World.Frame
                         TypeId = (int)SocialRelationTypeEnum.TYPE_FRIEND
                     };
 
-                    if (!SocialRelationRepository.Instance.InsertWithKey(relation))
-                    {
-                        character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
-                        return;
-                    }
+                    SocialRelationRepository.Instance.Created(relation);
 
                     character.SafeDispatch(WorldMessage.FRIEND_ADD(character.Account.Pseudo, relation));
                 });

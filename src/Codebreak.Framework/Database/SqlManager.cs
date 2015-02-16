@@ -56,6 +56,20 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="query"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public int ExecuteQuery(string query, object param = null)
+        {
+            using (var connection = CreateConnection())
+            {
+                return connection.ExecuteQuery(query, param);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dataObject"></param>
         public bool Insert<T>(T dataObject) where T : DataAccessObject<T>, new()
@@ -158,7 +172,7 @@ namespace Codebreak.Framework.Database
         /// <typeparam name="T"></typeparam>
         /// <param name="dataObject"></param>
         /// <returns></returns>
-        public bool Remove<T>(T dataObject) where T : DataAccessObject<T>, new()
+        public bool Delete<T>(T dataObject) where T : DataAccessObject<T>, new()
         {
             using (var connection = CreateConnection())
             {
@@ -172,54 +186,22 @@ namespace Codebreak.Framework.Database
         /// <typeparam name="T"></typeparam>
         /// <param name="dataObject"></param>
         /// <returns></returns>
-        public bool Remove<T>(IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
+        public void Delete<T>(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
         {
-            using (var connection = CreateConnection())
-            {
-                using (var transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        connection.Delete<T>(dataObjects, transaction);
-                        transaction.Commit();
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        Logger.Error("Fatal errror while deleting in database : " + ex.Message);
-                        return false;
-                    }
-                }
-            }
+            connection.Delete<T>(dataObjects, transaction);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dataObjects"></param>
+        /// <param name="dataObject"></param>
         /// <returns></returns>
-        public void Update<T>(IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
+        public void InsertWithKey<T>(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<T> dataObjects) where T : DataAccessObject<T>, new()
         {
-            using (var connection = CreateConnection())
-            {
-                using (var transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        connection.Update<T>(dataObjects, transaction);
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        Logger.Error("Fatal errror while updating database : " + ex.Message);
-                    }
-                }
-            }
+            connection.InsertWithKey<T>(dataObjects, transaction);
         }
-
+        
         /// <summary>
         /// 
         /// </summary>

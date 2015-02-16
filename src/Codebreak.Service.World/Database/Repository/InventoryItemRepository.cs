@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Database;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Stats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,32 +18,29 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, InventoryItemDAO> m_itemById;
+        public long NextItemId
+        {
+            get
+            {
+                lock (m_syncLock)
+                    return m_nextItemId++;
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        public InventoryItemRepository()
-        {
-            m_itemById = new Dictionary<long, InventoryItemDAO>();
-        }
+        private long m_nextItemId;
 
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="item"></param>
         public override void OnObjectAdded(InventoryItemDAO item)
         {
-            m_itemById.Add(item.Id, item);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="item"></param>
-        public override void OnObjectRemoved(InventoryItemDAO item)
-        {
-            m_itemById.Remove(item.Id);
+            if (item.Id >= m_nextItemId)
+                m_nextItemId = item.Id + 1;
         }
 
         /// <summary>
@@ -52,9 +50,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public InventoryItemDAO GetById(long itemId)
         {
-            if (m_itemById.ContainsKey(itemId))
-                return m_itemById[itemId];
-            return base.Load("Id=@ItemId", new { ItemId = itemId });
+            return Find(item => item.Id == itemId);
         }
 
         /// <summary>
@@ -65,7 +61,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public IEnumerable<InventoryItemDAO> GetByOwner(int ownerType, long ownerId)
         {
-            return m_dataObjects.Where(item => item.OwnerType == ownerType && item.OwnerId == ownerId);
+            return FindAll(item => item.OwnerType == ownerType && item.OwnerId == ownerId);
         }
 
         /// <summary>
@@ -75,17 +71,57 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="id"></param>
         public void EntityRemoved(int type, long id)
         {
-            m_dataObjects.RemoveAll(item => item.OwnerType == type && item.OwnerId == id);
+            base.Removed(base.FindAll(item => item.OwnerType == type && item.OwnerId == id));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override void UpdateAll()
-        {         
-            lock(m_syncLock)    
-                Remove(m_dataObjects.Where(item => item.OwnerId == -1).ToList());
-            base.UpdateAll();
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            lock (m_syncLock)
+                m_dataObjects.RemoveAll(item => item.OwnerId == -1 && item.IsNew);
+
+            base.InsertAll(connection, transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void DeleteAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            lock (m_syncLock)
+                m_dataObjects.ForEach(item =>
+                {
+                    if (item.OwnerId == -1)
+                        item.IsDeleted = true;
+                });
+
+            base.DeleteAll(connection, transaction);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public InventoryItemDAO Create(int templateId, long ownerId, int quantity, GenericStats statistics, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
+        {
+            var instance = new InventoryItemDAO();
+            instance.Id = NextItemId;
+            instance.OwnerId = -1;
+            instance.TemplateId = templateId;
+            instance.Quantity = quantity;
+            instance.Effects = statistics.Serialize();
+            instance.StringEffects = statistics.ToItemStats();
+            instance.SlotId = (int)slot;
+
+            base.Created(instance);
+
+            return instance;
         }
     }
 }

@@ -94,6 +94,15 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             get;
             protected set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public FighterBase Target
+        {
+            get;
+            protected set;
+        }
         
         /// <summary>
         /// 
@@ -104,6 +113,15 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         {
             Id = (int)type;
             Success = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="team"></param>
+        public virtual void StartFight(FightTeam team)
+        {
+
         }
 
         /// <summary>
@@ -196,9 +214,9 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="cellId"></param>
-        public void FlagCell(int cellId)
+        public void FlagCell(int cellId, long fighterId = 0)
         {
-            base.Dispatch(WorldMessage.FIGHT_CELL_FLAG(cellId));
+            base.Dispatch(WorldMessage.FIGHT_CELL_FLAG(cellId, fighterId));
         }
     }
 }

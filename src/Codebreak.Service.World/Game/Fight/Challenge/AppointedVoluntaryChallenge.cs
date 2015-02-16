@@ -31,16 +31,16 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
-        public override void BeginTurn(FighterBase fighter)
+        /// <param name="team"></param>
+        public override void StartFight(FightTeam team)
         {
-            if(TargetId == 0 && fighter.Team.OpponentTeam.HasSomeoneAlive)
+            if (team.OpponentTeam.HasSomeoneAlive)
             {
-                var randomIndex = Util.Next(0, fighter.Team.OpponentTeam.AliveFighters.Count());
-                var target = fighter.Team.OpponentTeam.AliveFighters.ElementAt(randomIndex);
+                var randomIndex = Util.Next(0, team.OpponentTeam.AliveFighters.Count());
+                var target = team.OpponentTeam.AliveFighters.ElementAt(randomIndex);
 
                 TargetId = target.Id;
-                base.FlagCell(target.Cell.Id);                
+                base.FlagCell(target.Cell.Id, TargetId);
             }
         }
 

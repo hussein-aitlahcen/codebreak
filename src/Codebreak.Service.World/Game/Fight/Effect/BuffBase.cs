@@ -17,9 +17,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         ACTIVE_BEGINTURN,
         ACTIVE_ENDTURN,
         ACTIVE_ENDMOVE,
-        ACTIVE_ATTACK_POST_JET,
+        ACTIVE_ATTACK_BEFORE_JET,
         ACTIVE_ATTACK_AFTER_JET,
-        ACTIVE_ATTACKED_POST_JET,
+        ACTIVE_ATTACKED_BEFORE_JET,
         ACTIVE_ATTACKED_AFTER_JET,
     }
 

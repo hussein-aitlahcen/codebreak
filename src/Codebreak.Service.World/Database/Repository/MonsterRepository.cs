@@ -11,6 +11,94 @@ namespace Codebreak.Service.World.Database.Repository
     /// <summary>
     /// 
     /// </summary>
+    public sealed class MonsterSpawnRepository : Repository<MonsterSpawnRepository, MonsterSpawnDAO>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<MonsterSpawnDAO> GetById(SpawnTypeEnum type, int id)
+        {
+            return base.FindAll(spawn => spawn.Type == type && spawn.ZoneId == id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+    }
+ 
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class MonsterSuperRaceRepository : Repository<MonsterSuperRaceRepository, MonsterSuperRaceDAO>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class MonsterRaceRepository : Repository<MonsterRaceRepository, MonsterRaceDAO>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<int, MonsterRaceDAO> m_raceById;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MonsterRaceRepository()
+        {
+            m_raceById = new Dictionary<int, MonsterRaceDAO>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="race"></param>
+        public override void OnObjectAdded(MonsterRaceDAO race)
+        {
+            m_raceById.Add(race.Id, race);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MonsterRaceDAO GetById(int id)
+        {
+            return m_raceById[id];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class MonsterRepository : Repository<MonsterRepository, MonsterDAO>
     {
         /// <summary>
@@ -26,6 +114,18 @@ namespace Codebreak.Service.World.Database.Repository
             m_monsterById = new Dictionary<int, MonsterDAO>();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="monster"></param>
+        public override void OnObjectAdded(MonsterDAO monster)
+        {
+            m_monsterById.Add(monster.Id, monster);
+
+            MonsterRaceRepository.Instance.GetById(monster.Race).Monsters.Add(monster);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -37,16 +137,7 @@ namespace Codebreak.Service.World.Database.Repository
                 return m_monsterById[id];
             return null;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="monster"></param>
-        public override void OnObjectAdded(MonsterDAO monster)
-        {
-            m_monsterById.Add(monster.Id, monster);
-        }
-        
+                
         /// <summary>
         /// 
         /// </summary>

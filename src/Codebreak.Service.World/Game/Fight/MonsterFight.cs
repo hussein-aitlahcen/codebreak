@@ -161,8 +161,13 @@ namespace Codebreak.Service.World.Game.Fight
                     fighter => fighter.Type == EntityTypeEnum.TYPE_CHARACTER ||
                     (fighter.Invocator != null && fighter.Invocator.Type == EntityTypeEnum.TYPE_CHARACTER && ((MonsterEntity)fighter).Grade.MonsterId == WorldConfig.LIVING_CHEST_ID)
                 ));
+
+            if (m_winnersTeam == Team1)
+                m_droppers.AddRange(m_winnersFighter);
+
             if (Map.SubArea.TaxCollector != null)
                 m_droppers.Add(Map.SubArea.TaxCollector); // Perco
+
             m_droppersTotalPP = m_droppers.Sum(fighter => fighter.Prospection); // Total PP
         }
 
@@ -172,10 +177,29 @@ namespace Codebreak.Service.World.Game.Fight
         private void InitLoots()
         {
             m_itemLoot = new List<InventoryItemDAO>();
+
+            if(m_winnersTeam == Team0)
+            {
+                m_kamasLoot += MonsterGroup.Inventory.Kamas;
+                m_itemLoot.AddRange(MonsterGroup.Inventory.RemoveItems());
+            }
+
+            // Monsters lost
             foreach (var monster in m_losersFighter.OfType<MonsterEntity>())
             {
                 m_kamasLoot += (long)Math.Round(Util.Next(monster.Grade.Template.MinKamas, monster.Grade.Template.MaxKamas) * WorldConfig.RATE_KAMAS * m_challengeDropBonus);
-                m_itemLoot.AddRange(DropManager.Instance.GetDrops(m_droppersTotalPP, monster, WorldConfig.RATE_DROP * m_challengeDropBonus));
+                m_itemLoot.AddRange(DropManager.Instance.GetDrops(m_droppersTotalPP, monster, WorldConfig.RATE_DROP * m_challengeDropBonus));                
+            }
+
+            // Players lost
+            foreach (var player in m_losersFighter.OfType<CharacterEntity>())
+            {
+                player.CachedBuffer = true;
+                m_kamasLoot += player.Inventory.Kamas;
+                player.Inventory.Kamas = 0;
+                m_itemLoot.AddRange(player.Inventory.RemoveItems());
+                m_itemLoot.AddRange(player.PersonalShop.RemoveItems());
+                player.CachedBuffer = false;
             }
         }
 
@@ -191,15 +215,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public override void InitEndCalculation()
-        {            
-            // Player win
-            if (m_winnersTeam == Team0)
-            {
-                InitCalculs();
-                InitDroppers();
-                InitLoots();
-                InitDistribution();        
-            }
+        {
+            InitCalculs();
+            InitDroppers();
+            InitLoots();
+            InitDistribution();
         }
 
 
@@ -269,18 +289,38 @@ namespace Codebreak.Service.World.Game.Fight
 
                     fighter.CachedBuffer = false;
                 }
+
+                foreach (var fighter in m_losersFighter.OfType<MonsterEntity>())
+                {
+                    Result.AddResult(fighter);
+                }
+
+                Map.SpawnMonsters();
             }
             else
             {
-                foreach (var player in m_winnersFighter)
+                foreach (var monster in m_winnersFighter.OfType<MonsterEntity>())
                 {
-                    Result.AddResult(player, FightEndTypeEnum.END_WINNER);
+                    var items = m_distributedDrops[monster];
+                    Dictionary<int, int> itemCount = new Dictionary<int, int>();
+                    foreach (var item in items)
+                    {
+                        if (!itemCount.ContainsKey(item.TemplateId))
+                            itemCount.Add(item.TemplateId, 0);
+                        itemCount[item.TemplateId]++;
+                        MonsterGroup.Inventory.AddItem(item);
+                    }
+                    monster.Life = monster.MaxLife;
+                    Result.AddResult(monster, FightEndTypeEnum.END_WINNER, false, (long)(m_kamasLoot / m_winnersFighter.Count()), 0, 0, 0, 0, 0, itemCount);
                 }
-            }
+                                
+                foreach (var player in m_losersFighter.OfType<CharacterEntity>())
+                {
+                    player.Energy = 1;
+                    Result.AddResult(player);
+                }
 
-            foreach (var fighter in m_losersFighter)
-            {
-                Result.AddResult(fighter);
+                Map.SpawnEntity(MonsterGroup);
             }
         }
 

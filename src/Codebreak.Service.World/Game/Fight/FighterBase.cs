@@ -473,7 +473,7 @@ namespace Codebreak.Service.World.Game.Fight
                 Life = 1;
 
             if(Fight.State == FightStateEnum.STATE_PLACEMENT)
-                SetCell(team.FreePlace);
+                SetCell(Team.FreePlace);
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Team.Dispatch);
             StartAction(GameActionTypeEnum.FIGHT);
@@ -490,21 +490,12 @@ namespace Codebreak.Service.World.Game.Fight
                 Team.RemoveUpdatable(this);
                 Team.RemoveHandler(Dispatch);
 
-                Statistics.ClearBoosts();
-            }
-            else
-            {
-                Fight.SpectatorTeam.RemoveSpectator((CharacterEntity)this);
-                Fight.SpectatorTeam.RemoveUpdatable(this);
-                Fight.SpectatorTeam.RemoveHandler(Dispatch);
+                Statistics.ClearDons();
             }
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => null);
             StopAction(GameActionTypeEnum.FIGHT);
-            
-            if (IsDisconnected)
-                EntityManager.Instance.RemoveCharacter((CharacterEntity)this);
-            
+                        
             if (SpellManager != null)
             {
                 SpellManager.Dispose();

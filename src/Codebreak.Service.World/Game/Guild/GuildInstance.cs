@@ -295,14 +295,10 @@ namespace Codebreak.Service.World.Game.Guild
             m_members = new List<GuildMember>();
             m_taxCollectors = new List<TaxCollectorEntity>();
             m_taxCollectorDispatcher = new MessageDispatcher();
-            foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.Guild.GuildId == m_record.Id))
-            {
-                AddMember(new GuildMember(this, character));
-            }
-            foreach(var taxCollectorDAO in TaxCollectorRepository.Instance.FindAll(taxC => taxC.GuildId == m_record.Id))
-            {
-                AddTaxCollector(EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO));
-            }
+            foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.Guild.GuildId == m_record.Id))            
+                AddMember(new GuildMember(this, character));            
+            foreach(var taxCollectorDAO in TaxCollectorRepository.Instance.FindAll(taxC => taxC.GuildId == m_record.Id))            
+                AddTaxCollector(EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO));            
         }
 
         /// <summary>
@@ -349,7 +345,8 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="taxCollector"></param>
         public void RemoveTaxCollector(TaxCollectorEntity taxCollector)
         {
-            TaxCollectorRepository.Instance.Remove(taxCollector.DatabaseRecord);
+            TaxCollectorRepository.Instance.Removed(taxCollector.DatabaseRecord);
+            InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, taxCollector.Id);
             EntityManager.Instance.RemoveTaxCollector(taxCollector);
             m_taxCollectors.Remove(taxCollector);
         }
@@ -596,6 +593,7 @@ namespace Codebreak.Service.World.Game.Guild
 
                             var taxCollectorDAO = new TaxCollectorDAO()
                             {
+                                Id = TaxCollectorRepository.Instance.NextTaxCollectorId,
                                 GuildId = Id,
                                 OwnerId = member.Id,
                                 Name = Util.Next(WorldConfig.TAXCOLLECTOR_MIN_NAME, WorldConfig.TAXCOLLECTOR_MAX_NAME),
@@ -608,14 +606,11 @@ namespace Codebreak.Service.World.Game.Guild
                                 Experience = 0,
                             };
 
-                            if (!TaxCollectorRepository.Instance.Insert(taxCollectorDAO))
-                            {
-                                member.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to create Taxcollector due to unknow error."));
-                                return;
-                            }
+                            TaxCollectorRepository.Instance.Created(taxCollectorDAO);
 
                             foreach (var spell in Statistics.Spells.GetSpells())
-                                SpellBookEntryDAO.Create((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, taxCollectorDAO.Id, spell.SpellId, spell.Level, 25);
+                                if(spell.Level > 0)
+                                    SpellBookEntryDAO.Create((int)EntityTypeEnum.TYPE_TAX_COLLECTOR, taxCollectorDAO.Id, spell.SpellId, spell.Level, 25);
 
                             var taxCollector = EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO);
 
@@ -761,7 +756,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void MemberBoss(CharacterEntity character)
         {
-            var member = new GuildMember(this, character.DatabaseRecord);
+            var member = new GuildMember(this, character.DatabaseRecord);            
             member.GuildId = Id;
             member.SetBoss();
             member.CharacterConnected(character);

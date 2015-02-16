@@ -14,216 +14,21 @@ namespace Codebreak.Service.World.Game.Stats
     /// <summary>
     /// 
     /// </summary>
+    [Flags]
+    public enum StatsType
+    {
+        TYPE_BASE,
+        TYPE_BOOST,
+        TYPE_ITEM,
+        TYPE_DON,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
     public sealed class GenericStats : IDisposable
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static GenericStats Deserialize(byte[] data)
-        {
-            using (var stream = new MemoryStream(data))
-            {
-                return Serializer.Deserialize<GenericStats>(stream);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stats"></param>
-        /// <returns></returns>
-        public byte[] Serialize()
-        {
-            using(var stream = new MemoryStream())
-            {
-                Serializer.Serialize<GenericStats>(stream, this);
-
-                return stream.ToArray();
-            }
-        }
-
-
-        /// <summary>
-        /// Effet possible de statistique
-        /// </summary>
-        [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        public sealed class GenericEffect
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            [ProtoIgnore]
-            public int Total
-            {
-                get
-                {
-                    return Base + Items + Dons + Boosts;
-                }
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            [ProtoIgnore]
-            public EffectEnum EffectType
-            {
-                get
-                {
-                    return (EffectEnum)Type;
-                }
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public int Type;
-            public int Base;
-            public int Items;
-            public int Dons;
-            public int Boosts;
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="EffectId"></param>
-            /// <param name="baseValue"></param>
-            /// <param name="items"></param>
-            /// <param name="dons"></param>
-            /// <param name="boosts"></param>
-            public GenericEffect(EffectEnum EffectId, int baseValue = 0, int items = 0, int dons = 0, int boosts = 0)
-            {
-                Type = (int)EffectId;
-                Base = baseValue;
-                Items = items;
-                Dons = dons;
-                Boosts = boosts;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public GenericEffect()
-            {
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="effect"></param>
-            public void Merge(GenericEffect effect)
-            {
-                Base += effect.Base;
-                Items += effect.Items;
-                Dons += effect.Dons;
-                Boosts += effect.Boosts;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="effect"></param>
-            public void UnMerge(GenericEffect effect)
-            {
-                Base -= effect.Base;
-                Items -= effect.Items;
-                Dons -= effect.Dons;
-                Boosts -= effect.Boosts;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
-            public override string ToString()
-            {
-                return Base + "," + Items + "," + Dons + "," + Boosts;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
-            public string ToItemString()
-            {
-                var serializedStats = new StringBuilder();
-                serializedStats.Append(Type.ToString("x"));
-                serializedStats.Append("#" + Items.ToString("x") + "#0#0#");
-                serializedStats.Append("0d0+0");
-                return serializedStats.ToString();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        public sealed class VariableEffect
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            public int EffectId;
-            public int Min;
-            public int Max;
-            public string Args;
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public VariableEffect()
-            {
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="min"></param>
-            /// <param name="max"></param>
-            /// <param name="args"></param>
-            public VariableEffect(int effectId, int min, int max, string args)
-            {
-                EffectId = effectId;
-                Min = min;
-                Max = max;
-                Args = args;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
-            public override string ToString()
-            {
-                var serializedStats = new StringBuilder();
-                serializedStats.Append(EffectId.ToString("x"));
-                serializedStats.Append("#" + Min.ToString("x") + "#" + Max.ToString("x") + "#0#");
-                serializedStats.Append("0d0+0");
-                return serializedStats.ToString();
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            [ProtoIgnore]
-            public int RandomJet
-            {
-                get
-                {
-                    return Util.NextJet(Min, Max);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<EffectEnum, GenericEffect> m_genericEffects = new Dictionary<EffectEnum, GenericEffect>();
-        private List<VariableEffect> m_variableEffects = new List<VariableEffect>();
-        private Dictionary<EffectEnum, string> m_specialEffects = new Dictionary<EffectEnum, string>();
-
         /// <summary>
         /// 
         /// </summary>
@@ -270,378 +75,6 @@ namespace Codebreak.Service.World.Game.Stats
             {EffectEnum.AddReduceDamagePercentPvPEarth, new List<EffectEnum>() { EffectEnum.SubReduceDamagePercentPvPEarth }},
         };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public GenericStats()
-        {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="monster"></param>
-        public GenericStats(MonsterGradeDAO monster)
-        {
-            m_genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, monster.AP));
-            m_genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, monster.MP));
-            m_genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, monster.MaxInvocation));
-            m_genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, monster.Initiative));
-            m_genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, monster.Wisdom));
-            m_genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, monster.Strenght));
-            m_genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, monster.Intelligence));
-            m_genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, monster.Agility));
-            m_genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, monster.Chance));
-
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, monster.NeutralResistance));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, monster.EarthResistance));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, monster.FireResistance));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, monster.WaterResistance));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, monster.AirResistance));
-
-            m_genericEffects.Add(EffectEnum.AddAPDodge, new GenericEffect(EffectEnum.AddAPDodge, monster.APDodgePercent));
-            m_genericEffects.Add(EffectEnum.AddMPDodge, new GenericEffect(EffectEnum.AddMPDodge, monster.MPDodgePercent));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="guild"></param>
-        public GenericStats(GuildDAO guild) 
-        {
-            m_genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, 6));
-            m_genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, 5));   
-            m_genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, 100));
-            m_genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
-            m_genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
-            m_genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, 100 * guild.Level));
-            m_genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, guild.Level * 4));
-            m_genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, guild.Level));
-            m_genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, guild.Level));
-            m_genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, guild.Level));
-            m_genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, guild.Level));
-            m_genericEffects.Add(EffectEnum.AddDamage, new GenericEffect(EffectEnum.AddDamage, guild.Level));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, guild.Level / 2));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, guild.Level / 2));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, guild.Level / 2));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, guild.Level / 2));
-            m_genericEffects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, guild.Level / 2));  
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="character"></param>
-        public GenericStats(CharacterDAO character)
-        {
-            m_genericEffects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, character.Ap));
-            m_genericEffects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, character.Mp));
-            m_genericEffects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, ((CharacterBreedEnum)character.Breed == CharacterBreedEnum.BREED_ENUTROF ? 120 : 100)));
-            m_genericEffects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
-            m_genericEffects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, 1));
-            m_genericEffects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
-            m_genericEffects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, character.Vitality));
-            m_genericEffects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, character.Wisdom));
-            m_genericEffects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, character.Strength));
-            m_genericEffects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, character.Intelligence));
-            m_genericEffects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, character.Agility));
-            m_genericEffects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, character.Chance));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<EffectEnum, GenericEffect> GetEffects()
-        {
-            return m_genericEffects;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public List<VariableEffect> GetVariableEffects()
-        {
-            return m_variableEffects;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="effect"></param>
-        /// <returns></returns>
-        public GenericEffect GetTotalEffect(EffectEnum effectType)
-        {
-            var totalBase = 0;
-            var totalItems = 0;
-            var totalDons = 0;
-            var totalBoosts = 0;
-            var effect = GetEffect(effectType);
-
-            totalBase = effect.Base;
-            totalItems = effect.Items;
-            totalDons = effect.Dons;
-            totalBoosts = effect.Boosts;
-
-            switch (effectType)
-            {
-                case EffectEnum.AddAPDodge:
-                case EffectEnum.AddMPDodge:
-                    totalBase += GetTotal(EffectEnum.AddWisdom) / 4;
-                    break;
-                case EffectEnum.AddAP:
-                    totalItems += GetTotal(EffectEnum.AddAPBis);
-                    break;
-                case EffectEnum.AddMP:
-                    totalItems += GetTotal(EffectEnum.MPBonus);
-                    break;
-                case EffectEnum.AddReflectDamage:
-                    totalItems += GetTotal(EffectEnum.AddReflectDamageItem);
-                    break;
-            }
-
-            if (OppositeStats.ContainsKey(effectType))
-            {
-                foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
-                {
-                    if (m_genericEffects.ContainsKey(OppositeEffect))
-                    {
-                        totalBase -= m_genericEffects[OppositeEffect].Base;
-                        totalBoosts -= m_genericEffects[OppositeEffect].Boosts;
-                        totalDons -= m_genericEffects[OppositeEffect].Dons;
-                        totalItems -= m_genericEffects[OppositeEffect].Items;
-                    }
-                }
-            }
-
-            return new GenericEffect(effectType, totalBase, totalItems, totalDons, totalBoosts);
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="effectType"></param>
-        /// <returns></returns>
-        public int GetTotal(EffectEnum effectType)
-        {
-            int total = 0;
-
-            if (m_genericEffects.ContainsKey(effectType))
-            {
-                total += m_genericEffects[effectType].Total;
-            }
-
-            switch (effectType)
-            {
-                case EffectEnum.AddAPDodge:
-                case EffectEnum.AddMPDodge:
-                    total += GetTotal(EffectEnum.AddWisdom) / 4;
-                    break;
-                case EffectEnum.AddAP:
-                    total += GetTotal(EffectEnum.AddAPBis);
-                    break;
-                case EffectEnum.AddMP:
-                    total += GetTotal(EffectEnum.MPBonus);
-                    break;
-                case EffectEnum.AddReflectDamage:
-                    total += GetTotal(EffectEnum.AddReflectDamageItem);
-                    break;
-            }
-
-            if (OppositeStats.ContainsKey(effectType))
-            {
-                foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
-                {
-                    if (m_genericEffects.ContainsKey(OppositeEffect))
-                    {
-                        total -= m_genericEffects[OppositeEffect].Total;
-                    }
-                }
-            }
-
-            return total;
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <returns></returns>
-        public GenericEffect GetEffect(EffectEnum EffectType)
-        {
-            if (!m_genericEffects.ContainsKey(EffectType))
-                m_genericEffects.Add(EffectType, new GenericEffect(EffectType));
-            return m_genericEffects[EffectType];
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <returns></returns>
-        public IEnumerable<VariableEffect> GetVariableEffect(EffectEnum EffectType)
-        {
-            return m_variableEffects.Where(effect => effect.EffectId == (int)EffectType);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <returns></returns>
-        public string GetSpecialEffect(EffectEnum EffectType)
-        {
-            if (!m_specialEffects.ContainsKey(EffectType))
-                return null;
-            return m_specialEffects[EffectType];
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void ClearBoosts()
-        {
-            foreach (var effect in m_genericEffects)            
-                effect.Value.Boosts = 0;            
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="Value"></param>
-        public void AddBase(EffectEnum effectType, int Value)
-        {
-            if (!m_genericEffects.ContainsKey(effectType))
-                m_genericEffects.Add(effectType, new GenericEffect(effectType));
-            m_genericEffects[effectType].Base += Value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="Value"></param>
-        public void AddBoost(EffectEnum effectType, int value)
-        {
-            if (!m_genericEffects.ContainsKey(effectType))
-                m_genericEffects.Add(effectType, new GenericEffect(effectType));
-            m_genericEffects[effectType].Boosts += value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="effectType"></param>
-        /// <param name="value"></param>
-        public void AddItem(EffectEnum effectType, int value)
-        {
-            if (!m_genericEffects.ContainsKey(effectType))
-                m_genericEffects.Add(effectType, new GenericEffect(effectType));
-            m_genericEffects[effectType].Items += value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="Value"></param>
-        public void AddDon(EffectEnum effectType, int Value)
-        {
-            if (!m_genericEffects.ContainsKey(effectType))
-                m_genericEffects.Add(effectType, new GenericEffect(effectType));
-            m_genericEffects[effectType].Dons += Value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="effectType"></param>
-        /// <param name="minJet"></param>
-        /// <param name="maxJet"></param>
-        public void AddVariableEffect(EffectEnum effectType, int minJet, int maxJet, string args)
-        {
-            m_variableEffects.Add(new VariableEffect((int)effectType, minJet, maxJet, args));
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="EffectType"></param>
-        /// <param name="Args"></param>
-        public void AddSpecialEffect(EffectEnum EffectType, string Args)
-        {
-            m_specialEffects.Add(EffectType, Args);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [ProtoIgnore]
-        private string m_serialized;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ToItemStats()
-        {
-            if(m_serialized == null)
-            {
-                var serialized = new StringBuilder();
-                serialized.Append(string.Join(",", m_variableEffects));
-                if(m_genericEffects.Count > 0)
-                {
-                    serialized.Append(',');
-                    serialized.Append(string.Join(",", m_genericEffects.Select(x => x.Value.ToItemString())));
-                }
-                m_serialized = serialized.ToString();
-            }
-            return m_serialized;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Stats"></param>
-        public void Merge(GenericStats Stats)
-        {
-            foreach (var Effect in Stats.GetEffects())
-            {
-                if (!m_genericEffects.ContainsKey(Effect.Key))
-                    m_genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
-                m_genericEffects[Effect.Key].Merge(Effect.Value);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Stats"></param>
-        public void UnMerge(GenericStats Stats)
-        {
-            foreach (var Effect in Stats.GetEffects())
-            {
-                if (!m_genericEffects.ContainsKey(Effect.Key))
-                    m_genericEffects.Add(Effect.Key, new GenericEffect(Effect.Key));
-                m_genericEffects[Effect.Key].UnMerge(Effect.Value);
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            m_genericEffects.Clear();
-            m_genericEffects = null;
-
-            m_specialEffects.Clear();
-            m_specialEffects = null;
-
-            m_variableEffects.Clear();
-            m_variableEffects = null;
-        }
 
         /// <summary>
         /// 
@@ -718,7 +151,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 2;
                             return 3;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 50)
                                 return 1;
                             if (value < 250)
@@ -814,7 +247,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 4;
                             return 5;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 100)
                                 return 1;
                             if (value < 200)
@@ -938,7 +371,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 4;
                             return 5;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 20)
                                 return 1;
                             if (value < 40)
@@ -1060,7 +493,7 @@ namespace Codebreak.Service.World.Game.Stats
                                 return 4;
                             return 5;
 
-                        case CharacterBreedEnum.BREED_SADIDA:
+                        case CharacterBreedEnum.BREED_SADIDAS:
                             if (value < 100)
                                 return 1;
                             if (value < 200)
@@ -1147,6 +580,399 @@ namespace Codebreak.Service.World.Game.Stats
                     break;
             }
             return 5;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static GenericStats Deserialize(byte[] data)
+        {
+            using (var stream = new MemoryStream(data))
+            {
+                return Serializer.Deserialize<GenericStats>(stream);
+            }
+        }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [ProtoIgnore]
+        public Dictionary<EffectEnum, GenericEffect> Effects
+        {
+            get
+            {
+                return m_effects;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [ProtoIgnore]
+        public IEnumerable<KeyValuePair<EffectEnum, GenericEffect>> WeaponEffects
+        {
+            get
+            {
+                return m_effects.Where(x => ItemTemplateDAO.IsWeaponEffect(x.Key));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<EffectEnum, GenericEffect> m_effects = new Dictionary<EffectEnum, GenericEffect>();               
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GenericStats()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="monster"></param>
+        public GenericStats(MonsterGradeDAO monster)
+        {
+            m_effects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, monster.AP));
+            m_effects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, monster.MP));
+            m_effects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, monster.MaxInvocation));
+            m_effects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, monster.Initiative));
+            m_effects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, monster.Wisdom));
+            m_effects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, monster.Strenght));
+            m_effects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, monster.Intelligence));
+            m_effects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, monster.Agility));
+            m_effects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, monster.Chance));
+
+            m_effects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, monster.NeutralResistance));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, monster.EarthResistance));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, monster.FireResistance));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, monster.WaterResistance));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, monster.AirResistance));
+
+            m_effects.Add(EffectEnum.AddAPDodge, new GenericEffect(EffectEnum.AddAPDodge, monster.APDodgePercent));
+            m_effects.Add(EffectEnum.AddMPDodge, new GenericEffect(EffectEnum.AddMPDodge, monster.MPDodgePercent));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guild"></param>
+        public GenericStats(GuildDAO guild) 
+        {
+            m_effects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, 6));
+            m_effects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, 5));   
+            m_effects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, 100));
+            m_effects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
+            m_effects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
+            m_effects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, 100 * guild.Level));
+            m_effects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, guild.Level * 4));
+            m_effects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, guild.Level));
+            m_effects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, guild.Level));
+            m_effects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, guild.Level));
+            m_effects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, guild.Level));
+            m_effects.Add(EffectEnum.AddDamage, new GenericEffect(EffectEnum.AddDamage, guild.Level));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentAir, new GenericEffect(EffectEnum.AddReduceDamagePercentAir, guild.Level / 2));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentWater, new GenericEffect(EffectEnum.AddReduceDamagePercentWater, guild.Level / 2));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentFire, new GenericEffect(EffectEnum.AddReduceDamagePercentFire, guild.Level / 2));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentEarth, new GenericEffect(EffectEnum.AddReduceDamagePercentEarth, guild.Level / 2));
+            m_effects.Add(EffectEnum.AddReduceDamagePercentNeutral, new GenericEffect(EffectEnum.AddReduceDamagePercentNeutral, guild.Level / 2));  
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        public GenericStats(CharacterDAO character)
+        {
+            m_effects.Add(EffectEnum.AddAP, new GenericEffect(EffectEnum.AddAP, character.Ap));
+            m_effects.Add(EffectEnum.AddMP, new GenericEffect(EffectEnum.AddMP, character.Mp));
+            m_effects.Add(EffectEnum.AddProspection, new GenericEffect(EffectEnum.AddProspection, ((CharacterBreedEnum)character.Breed == CharacterBreedEnum.BREED_ENUTROF ? 120 : 100)));
+            m_effects.Add(EffectEnum.AddPods, new GenericEffect(EffectEnum.AddPods, 1000));
+            m_effects.Add(EffectEnum.AddInvocationMax, new GenericEffect(EffectEnum.AddInvocationMax, 1));
+            m_effects.Add(EffectEnum.AddInitiative, new GenericEffect(EffectEnum.AddInitiative, 100));
+            m_effects.Add(EffectEnum.AddVitality, new GenericEffect(EffectEnum.AddVitality, character.Vitality));
+            m_effects.Add(EffectEnum.AddWisdom, new GenericEffect(EffectEnum.AddWisdom, character.Wisdom));
+            m_effects.Add(EffectEnum.AddStrength, new GenericEffect(EffectEnum.AddStrength, character.Strength));
+            m_effects.Add(EffectEnum.AddIntelligence, new GenericEffect(EffectEnum.AddIntelligence, character.Intelligence));
+            m_effects.Add(EffectEnum.AddAgility, new GenericEffect(EffectEnum.AddAgility, character.Agility));
+            m_effects.Add(EffectEnum.AddChance, new GenericEffect(EffectEnum.AddChance, character.Chance));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stats"></param>
+        /// <returns></returns>
+        public byte[] Serialize()
+        {
+            using (var stream = new MemoryStream())
+            {
+                Serializer.Serialize<GenericStats>(stream, this);
+
+                return stream.ToArray();
+            }
+        }   
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <returns></returns>
+        public GenericEffect GetTotalEffect(EffectEnum effectType)
+        {
+            var totalBase = 0;
+            var totalItems = 0;
+            var totalDons = 0;
+            var totalBoosts = 0;
+            var effect = GetEffect(effectType);
+
+            totalBase = effect.Base;
+            totalItems = effect.Items;
+            totalDons = effect.Dons;
+            totalBoosts = effect.Boosts;
+
+            switch (effectType)
+            {
+                case EffectEnum.AddAPDodge:
+                case EffectEnum.AddMPDodge:
+                    totalBase += GetTotal(EffectEnum.AddWisdom) / 4;
+                    break;
+                case EffectEnum.AddAP:
+                    totalItems += GetTotal(EffectEnum.AddAPBis);
+                    break;
+                case EffectEnum.AddMP:
+                    totalItems += GetTotal(EffectEnum.MPBonus);
+                    break;
+                case EffectEnum.AddReflectDamage:
+                    totalItems += GetTotal(EffectEnum.AddReflectDamageItem);
+                    break;
+            }
+
+            if (OppositeStats.ContainsKey(effectType))
+            {
+                foreach (EffectEnum OppositeEffect in OppositeStats[effectType])
+                {
+                    if (m_effects.ContainsKey(OppositeEffect))
+                    {
+                        totalBase -= m_effects[OppositeEffect].Base;
+                        totalBoosts -= m_effects[OppositeEffect].Boosts;
+                        totalDons -= m_effects[OppositeEffect].Dons;
+                        totalItems -= m_effects[OppositeEffect].Items;
+                    }
+                }
+            }
+
+            return new GenericEffect(effectType, totalBase, totalItems, totalDons, totalBoosts);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="effectType"></param>
+        /// <returns></returns>
+        public int GetTotal(EffectEnum effectType)
+        {
+            int total = 0;
+
+            if (m_effects.ContainsKey(effectType))            
+                total += m_effects[effectType].Total;            
+
+            switch (effectType)
+            {
+                case EffectEnum.AddAPDodge:
+                case EffectEnum.AddMPDodge:
+                    total += GetTotal(EffectEnum.AddWisdom) / 4;
+                    break;
+                case EffectEnum.AddAP:
+                    total += GetTotal(EffectEnum.AddAPBis);
+                    break;
+                case EffectEnum.AddMP:
+                    total += GetTotal(EffectEnum.MPBonus);
+                    break;
+                case EffectEnum.AddReflectDamage:
+                    total += GetTotal(EffectEnum.AddReflectDamageItem);
+                    break;
+            }
+
+            if (OppositeStats.ContainsKey(effectType))            
+                foreach (EffectEnum OppositeEffect in OppositeStats[effectType])                
+                    if (m_effects.ContainsKey(OppositeEffect))                    
+                        total -= m_effects[OppositeEffect].Total;
+
+            return total;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value1"></param>
+        /// <param name="value2"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public void AddEffect(EffectEnum id, int value1, int value2 = 0, int value3 = 0, string args = "0")
+        {
+            if (!m_effects.ContainsKey(id))
+                m_effects.Add((EffectEnum)id, new GenericEffect(id, value1, value2, value3, args));
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public GenericEffect GetEffect(EffectEnum id)
+        {
+            if (!m_effects.ContainsKey(id))
+                m_effects.Add(id, new GenericEffect(id));
+            return m_effects[id];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool HasEffect(EffectEnum id)
+        {
+            return m_effects.ContainsKey(id);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="EffectType"></param>
+        /// <param name="value"></param>
+        public void AddBase(EffectEnum id, int value)
+        {
+            if (!m_effects.ContainsKey(id))
+                m_effects.Add(id, new GenericEffect(id));
+            m_effects[id].Base += value;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="EffectType"></param>
+        /// <param name="value"></param>
+        public void AddDon(EffectEnum effectType, int value)
+        {
+            if (!m_effects.ContainsKey(effectType))
+                m_effects.Add(effectType, new GenericEffect(effectType));
+            m_effects[effectType].Dons += value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Stats"></param>
+        public void Merge(StatsType type, GenericStats Stats)
+        {
+            foreach (var effect in Stats.Effects)
+            {
+                if (!m_effects.ContainsKey(effect.Key))
+                    m_effects.Add(effect.Key, new GenericEffect(effect.Key));
+                m_effects[effect.Key].Merge(type, effect.Value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Stats"></param>
+        public void UnMerge(StatsType type, GenericStats Stats)
+        {
+            foreach (var effect in Stats.Effects)
+            {
+                if (!m_effects.ContainsKey(effect.Key))
+                    m_effects.Add(effect.Key, new GenericEffect(effect.Key));
+                m_effects[effect.Key].UnMerge(type, effect.Value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Stats"></param>
+        public void Merge(GenericStats Stats)
+        {
+            foreach (var effect in Stats.Effects)
+            {
+                if (!m_effects.ContainsKey(effect.Key))
+                    m_effects.Add(effect.Key, new GenericEffect(effect.Key));
+                m_effects[effect.Key].Merge(effect.Value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Stats"></param>
+        public void UnMerge(GenericStats Stats)
+        {
+            foreach (var effect in Stats.Effects)
+            {
+                if (!m_effects.ContainsKey(effect.Key))
+                    m_effects.Add(effect.Key, new GenericEffect(effect.Key));
+                m_effects[effect.Key].UnMerge(effect.Value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ClearDons()
+        {
+            foreach (var effect in m_effects)
+                effect.Value.Dons = 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StatisticsChanged()
+        {
+            m_serialized = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [ProtoIgnore]
+        private string m_serialized;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ToItemStats()
+        {
+            if (m_serialized == null)
+            {
+                var serialized = new StringBuilder();
+                if (Effects.Count > 0)
+                {
+                    foreach (var effect in m_effects)
+                        serialized.Append(effect.Value.ToItemString()).Append(',');
+                    serialized.Remove(serialized.Length - 1, 1);
+                }
+                m_serialized = serialized.ToString();
+            }
+            return m_serialized;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            m_effects.Clear();
+            m_effects = null;
         }
     }
 }

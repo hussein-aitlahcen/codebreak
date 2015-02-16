@@ -548,6 +548,12 @@ namespace Codebreak.Service.World.Game.Spell
         /* Gateaux */
         AddEnergy = 139,
 
+        /* Bourses */
+        AddKamas = 194,
+
+        /* Bonbons boosts combats */
+        AddBoost = 811,
+
         InvocationInformations = 628,
 
         SoulStoneStats = 705,
@@ -555,6 +561,9 @@ namespace Codebreak.Service.World.Game.Spell
 
         SoulCaptureBonus = 750,
         MountExpBonus = 751,
+
+        RenameGuild = 725,
+
 
         LastEat = 808,
 
@@ -571,15 +580,18 @@ namespace Codebreak.Service.World.Game.Spell
         LivingXp = 974,
 
         CanBeExchange = 983,
-
-        MountOwner = 995,
+        MadeBy = 988,
+        Owner = 987,
+        MountOwner = 996,
         Name = 997,
 
         /* ACTION SPECIALES BDD SCRIPT */
-        DialogReply = 2000,
-        DialogLeave = 2001,
-        OpenBank = 2002,
-        AddStatistic = 2003,
+        BddDialogReply = 2000,
+        BddDialogLeave = 2001,
+        BddOpenBank = 2002,
+        BddAddStatistic = 2003,
+        BddAddItem = 2004,
+        BddTeleport = 2005,
     }
 
     /// <summary>

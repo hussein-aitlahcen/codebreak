@@ -27,19 +27,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             ShowTarget = false;
             TargetId = 0;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fighter"></param>
-        public override void BeginTurn(FighterBase fighter)
-        {
-            if(fighter.Team.Fighters.Count == 1)
-            {
-                base.OnFailed(fighter.Name);
-            }
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

@@ -109,10 +109,8 @@ namespace Codebreak.Service.World.Database.Structure
                 Level = level,
                 Position = position
             };
-            instance.IsDirty = false;
-            if(SpellBookEntryRepository.Instance.InsertWithKey(instance))
-                return instance;
-            return null;
+            SpellBookEntryRepository.Instance.Created(instance);
+            return instance;
         }
     }
 }

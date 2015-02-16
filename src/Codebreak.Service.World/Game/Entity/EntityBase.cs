@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Framework.Generic;
 
 namespace Codebreak.Service.World.Game.Entity
 {    
@@ -222,7 +223,15 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return (int)Math.Floor((double)(MaxLife / 4 + Statistics.GetTotal(EffectEnum.AddInitiative)) * ((double)Life / MaxLife));
+                return 1 + (int)Math.Floor(
+                        Level +
+                        Statistics.GetTotal(EffectEnum.AddWisdom) +
+                        Statistics.GetTotal(EffectEnum.AddStrength) +
+                        Statistics.GetTotal(EffectEnum.AddChance) +
+                        Statistics.GetTotal(EffectEnum.AddIntelligence) * 1.5 +
+                        Statistics.GetTotal(EffectEnum.AddAgility) * 1.5 +
+                        Statistics.GetTotal(EffectEnum.AddInitiative)
+                    );
             }
         }
 
@@ -233,7 +242,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return (int)Math.Floor((double)(Statistics.GetTotal(EffectEnum.AddChance) / 10)) + Statistics.GetTotal(EffectEnum.AddProspection);
+                return 1 + (int)Math.Floor((double)(Statistics.GetTotal(EffectEnum.AddChance) / 10)) + Statistics.GetTotal(EffectEnum.AddProspection);
             }
         }
                         
@@ -313,6 +322,15 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get;
             protected set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public UpdatableTimer MovementTimer
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -458,7 +476,6 @@ namespace Codebreak.Service.World.Game.Entity
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
 
-
                 case GameActionTypeEnum.MAP_MOVEMENT:
                     return (CurrentAction == null || CurrentAction.IsFinished)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
@@ -475,6 +492,11 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.NPC_DIALOG:
                     return (CurrentAction == null || CurrentAction.IsFinished)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_SPEAK_NPC);
+
+                case GameActionTypeEnum.FIGHT:
+                    return (CurrentAction == null || CurrentAction.IsFinished)
+                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE)
+                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_ASSAULT);
 
                 case GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION:
                     return (CurrentAction == null || CurrentAction.IsFinished)
@@ -552,8 +574,7 @@ namespace Codebreak.Service.World.Game.Entity
             switch (actionType)
             {
                 case GameActionTypeEnum.MAP:
-                    if(Map != null)
-                        Map.SpawnEntity(this);
+                    Map.SpawnEntity(this);
                     break;
                     
                 case GameActionTypeEnum.MAP_MOVEMENT:

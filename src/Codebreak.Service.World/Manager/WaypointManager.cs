@@ -33,8 +33,7 @@ namespace Codebreak.Service.World.Manager
         /// <param name="zaap"></param>
         public void AddWaypoint(int mapId, Waypoint zaap)
         {
-            if(!m_waypointByMap.ContainsKey(mapId))
-                m_waypointByMap.Add(mapId, zaap);
+            m_waypointByMap.Add(mapId, zaap);
         }
 
         /// <summary>

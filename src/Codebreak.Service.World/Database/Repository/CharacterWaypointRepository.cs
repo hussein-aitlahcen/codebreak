@@ -49,9 +49,33 @@ namespace Codebreak.Service.World.Database.Repository
             return m_waypointByCharacter[characterId];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             // NO UPDATE
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <param name="mapId"></param>
+        /// <returns></returns>
+        public CharacterWaypointDAO Create(long characterId, int mapId)
+        {
+            var instance = new CharacterWaypointDAO()
+            {
+                CharacterId = characterId,
+                MapId = mapId,
+            };
+            base.Created(instance);
+            return instance;
         }
     }
 }

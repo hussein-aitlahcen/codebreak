@@ -51,12 +51,12 @@ namespace Codebreak.Service.World.Database.Structure
                 if (m_actions == null)
                 {
                     m_actions = new Dictionary<EffectEnum, Dictionary<string, string>>();
-                    foreach (var action in Actions.Split(';'))
+                    foreach (var action in Actions.Split('|'))
                     {
                         var actionData = action.Split(':');
                         var actionId = (EffectEnum)int.Parse(actionData[0]);
                         var actionParams = new Dictionary<string, string>();
-                        foreach (var param in actionData[1].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+                        foreach (var param in actionData[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                         {
                             var paramData = param.Split('=');
                             actionParams.Add(paramData[0], paramData[1]);

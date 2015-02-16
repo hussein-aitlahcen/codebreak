@@ -71,12 +71,16 @@ namespace Codebreak.Framework.Database
                     try
                     {
                         foreach (var repo in m_repositories)
+                        {
+                            repo.InsertAll(connection, transaction);
+                            repo.DeleteAll(connection, transaction);
                             repo.UpdateAll(connection, transaction);
+                        }
                         transaction.Commit();
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error("DbManager::UpdateAll unable to update repositories : " + ex.Message);
+                        Logger.Error("DbManager::UpdateAll unable to update repositories : " + ex.ToString());
                         transaction.Rollback();
                     }
                 }

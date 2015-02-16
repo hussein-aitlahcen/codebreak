@@ -10,6 +10,7 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Action;
+using System.Collections.Generic;
 
 namespace Codebreak.Service.World.Command
 {
@@ -114,7 +115,16 @@ namespace Codebreak.Service.World.Command
                     return;
                 }
 
-                ActionEffectManager.Instance.ApplyEffect(context.Character, (EffectEnum)effectId, null);
+                var parameters = new Dictionary<string, string>();
+                foreach(var parameter in context.TextCommandArgument.NextToEnd().Split(','))
+                {
+                    if (parameter.Contains('='))
+                    {
+                        var data = parameter.Split('=');
+                        parameters.Add(data[0], data[1]);
+                    }
+                }
+                ActionEffectManager.Instance.ApplyEffect(context.Character, (EffectEnum)effectId, parameters);
             }
         }
 

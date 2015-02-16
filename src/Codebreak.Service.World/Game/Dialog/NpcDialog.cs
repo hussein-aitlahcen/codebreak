@@ -20,6 +20,7 @@ namespace Codebreak.Service.World.Game.Dialog
         /// 
         /// </summary>
         public const string BANK_COST = "%bankCost%";
+        public const string NAME = "%name%";
 
         /// <summary>
         /// 
@@ -100,6 +101,9 @@ namespace Codebreak.Service.World.Game.Dialog
             {
                 case BANK_COST:
                     return Character.Bank.Items.GroupBy(item => item.TemplateId).Count().ToString();
+
+                case NAME:
+                    return Character.Name;
             }
             return "";
         }

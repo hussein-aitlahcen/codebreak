@@ -150,7 +150,7 @@ namespace Codebreak.Service.Auth.RPC
             
             Logger.Info(string.Format("AuthServiceRPC [{0}][{1}] GameAccount disconnected accountId={2}", client.Ip, client.GameId, accountId));
 
-            AuthService.Instance.AddMessage(() => AuthService.Instance.GameAccountDisconnect(accountId));
+            AuthService.Instance.AddMessage(() => client.Players.Remove(accountId));
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Codebreak.Service.Auth.RPC
 
             Logger.Info(string.Format("AuthServiceRPC [{0}][{1}] GameAccount connected list, playerCount={2}", client.Ip, client.GameId, connectedList.ConnectedAccounts.Count));
 
-            AuthService.Instance.AddMessage(() => AuthService.Instance.GameAccountConnected(connectedList.ConnectedAccounts));
+            AuthService.Instance.AddMessage(() => client.Players.AddRange(connectedList.ConnectedAccounts));
         }
     }
 }

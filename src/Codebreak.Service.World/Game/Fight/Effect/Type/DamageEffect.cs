@@ -58,10 +58,10 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             // poison and reflected damages cannot triggers on hit effect
             if (!castInfos.IsPoison && !castInfos.IsReflect)
             {
-                if (caster.BuffManager.OnAttackPostJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
+                if (caster.BuffManager.OnAttackBeforeJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
                     return FightActionResultEnum.RESULT_END; // check out end of fight
 
-                if (target.BuffManager.OnAttackedPostJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
+                if (target.BuffManager.OnAttackedBeforeJet(castInfos, ref damageJet) == FightActionResultEnum.RESULT_END)
                     return FightActionResultEnum.RESULT_END; // check out end of fight
             }
 
@@ -144,7 +144,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             target.Life -= damageJet;
 
             // display damages
-            castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_DAMAGE, caster.Id, target.Id + "," + (-damageJet).ToString()));
+            castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_DAMAGE, caster.Id, target.Id + ",-" + damageJet));
 
             // check out the death
             return castInfos.Fight.TryKillFighter(target, caster.Id);

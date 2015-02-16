@@ -28,29 +28,29 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                 case 1:
                     if (castInfos.Target.Team != castInfos.Caster.Team)
                         return FightActionResultEnum.RESULT_NOTHING;
-                    castInfos.Target.Statistics.AddBoost(EffectEnum.AddArmorFire, castInfos.Value1);
+                    castInfos.Target.Statistics.AddDon(EffectEnum.AddArmorFire, castInfos.Value1);
                     break;
 
                 case 6:
                     if (castInfos.Target.Team != castInfos.Caster.Team)
                         return FightActionResultEnum.RESULT_NOTHING;
-                    castInfos.Target.Statistics.AddBoost(EffectEnum.AddArmorEarth, castInfos.Value1);
+                    castInfos.Target.Statistics.AddDon(EffectEnum.AddArmorEarth, castInfos.Value1);
                     break;
 
                 case 14:
                     if (castInfos.Target.Team != castInfos.Caster.Team)
                         return FightActionResultEnum.RESULT_NOTHING;
-                    castInfos.Target.Statistics.AddBoost(EffectEnum.AddArmorAir, castInfos.Value1);
+                    castInfos.Target.Statistics.AddDon(EffectEnum.AddArmorAir, castInfos.Value1);
                     break;
 
                 case 18:
                     if (castInfos.Target.Team != castInfos.Caster.Team)
                         return FightActionResultEnum.RESULT_NOTHING;
-                    castInfos.Target.Statistics.AddBoost(EffectEnum.AddArmorWater, castInfos.Value1);
+                    castInfos.Target.Statistics.AddDon(EffectEnum.AddArmorWater, castInfos.Value1);
                     break;
 
                 default:
-                    castInfos.Target.Statistics.AddBoost(EffectEnum.AddArmor, castInfos.Value1);
+                    castInfos.Target.Statistics.AddDon(EffectEnum.AddArmor, castInfos.Value1);
                     break;
             }
 

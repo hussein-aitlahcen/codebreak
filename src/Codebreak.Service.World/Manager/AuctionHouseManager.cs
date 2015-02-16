@@ -34,17 +34,17 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            foreach (var auctionHouseDao in AuctionHouseRepository.Instance.GetAll())
+            foreach (var auctionHouseDao in AuctionHouseRepository.Instance.All)
             {
                 var auctionHouse = new AuctionHouseInstance(auctionHouseDao);
                 m_auctionHousesById.Add(auctionHouseDao.Id, auctionHouse);
                 m_auctionHouseByNpcId.Add(auctionHouseDao.NpcId, auctionHouse);
             }
 
-            foreach (var auctionHouseAllowedTypeDao in AuctionHouseAllowedTypeRepository.Instance.GetAll())
+            foreach (var auctionHouseAllowedTypeDao in AuctionHouseAllowedTypeRepository.Instance.All)
                 m_auctionHousesById[auctionHouseAllowedTypeDao.AuctionHouseId].AddAllowedType(auctionHouseAllowedTypeDao.TemplateId);
 
-            foreach (var auctionHouseEntry in AuctionHouseEntryRepository.Instance.GetAll())
+            foreach (var auctionHouseEntry in AuctionHouseEntryRepository.Instance.All)
                 m_auctionHousesById[auctionHouseEntry.AuctionHouseId].Add(new AuctionEntry(auctionHouseEntry));     
         }
 

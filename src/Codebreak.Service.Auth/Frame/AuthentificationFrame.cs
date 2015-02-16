@@ -17,8 +17,8 @@ namespace Codebreak.Service.Auth.Frames
         /// <returns></returns>
         public override Action<AuthClient, string> GetHandler(string message)
         {
-            if (message.StartsWith("Ak"))
-                return HandleKey;
+            //if (message.StartsWith("Ak"))
+            //    return HandleKey;
             if(message != "Af")
                 return HandleAuthentification;
             return null;
@@ -29,12 +29,12 @@ namespace Codebreak.Service.Auth.Frames
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleKey(AuthClient client, string message)
-        {
-            client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
-            client.FrameManager.AddFrame(WorldSelectionFrame.Instance);
-            client.Cypher = true;
-        }
+        //private void HandleKey(AuthClient client, string message)
+        //{
+        //    client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
+        //    client.FrameManager.AddFrame(WorldSelectionFrame.Instance);
+        //    client.Cypher = true;
+        //}
 
         /// <summary>
         /// 
@@ -64,6 +64,8 @@ namespace Codebreak.Service.Auth.Frames
         /// <param name="password"></param>
         private void ProcessAuthentification(AuthClient client, string accountName, string password)
         {
+            client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
+
             var account = AccountRepository.Instance.GetByName(accountName);
 
             if (account == null || Util.CryptPassword(client.AuthKey, account.Password) != password)
@@ -97,7 +99,8 @@ namespace Codebreak.Service.Auth.Frames
 
                     client.Send(AuthMessage.ACCOUNT_RIGHT(client.Account.Power));
                     client.Send(AuthMessage.ACCOUNT_SECRET_ANSWER());
-                    client.Send(AuthMessage.ACCOUNT_KEY());
+
+                    client.FrameManager.AddFrame(WorldSelectionFrame.Instance);
                 });
         }
     }

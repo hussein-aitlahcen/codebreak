@@ -377,8 +377,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void SendChallengeInfos()
         {
-            base.CachedBuffer = true;
             foreach (var challenge in m_challenges)
+            {
+                challenge.StartFight(this);
+
                 base.Dispatch(WorldMessage.FIGHT_CHALLENGE_INFORMATIONS(challenge.Id,
                     challenge.ShowTarget,
                     challenge.TargetId,
@@ -387,7 +389,7 @@ namespace Codebreak.Service.World.Game.Fight
                     challenge.BasicDropBonus,
                     challenge.TeamDropBonus,
                     challenge.Success));
-            base.CachedBuffer = false;
+            }
         }
 
         /// <summary>

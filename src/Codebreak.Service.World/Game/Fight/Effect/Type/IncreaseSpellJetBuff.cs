@@ -17,7 +17,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
         public IncreaseSpellJetBuff(CastInfos castInfos, FighterBase target)
-            : base(castInfos, target, ActiveType.ACTIVE_ATTACK_POST_JET, DecrementType.TYPE_ENDTURN)
+            : base(castInfos, target, ActiveType.ACTIVE_ATTACK_BEFORE_JET, DecrementType.TYPE_ENDTURN)
         {
             Duration += 2;
         }

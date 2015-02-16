@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public override bool ProcessItem(CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericStats.VariableEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericEffect effect, long targetId, int targetCell)
         {
             throw new NotImplementedException();
         }
@@ -50,8 +50,8 @@ namespace Codebreak.Service.World.Game.ActionEffect
 
             character.CachedBuffer = true;
             character.Inventory.SubKamas(taxe);
-            character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_KAMAS_LOST, taxe));
             character.ExchangeStorage(character.Bank);
+            character.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_KAMAS_LOST, taxe));
             character.CachedBuffer = false;
 
             return true;
