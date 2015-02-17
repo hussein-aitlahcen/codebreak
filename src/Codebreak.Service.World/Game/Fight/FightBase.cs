@@ -2115,7 +2115,7 @@ namespace Codebreak.Service.World.Game.Fight
                 {
                     targetLists.Add(effect, new List<FighterBase>());
 
-                    var targetType = spellLevel.Targets != null ? spellLevel.Targets.Length > effectIndex ? spellLevel.Targets[effectIndex] : -1 : -1;
+                    var targetType = spellLevel.Template.Targets != null ? spellLevel.Template.Targets.Count > effectIndex ? spellLevel.Template.Targets[effectIndex] : -1 : -1;
 
                     if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
                     {
@@ -2128,27 +2128,27 @@ namespace Codebreak.Service.World.Game.Fight
                                 {
                                     if (targetType != -1)
                                     {
-                                        // doesnt affect team mates
-                                        if (((targetType & 1) == 1) && fighter.Team != fighterObject.Team)
+                                        // doesnt affect team mates : 1
+                                        if (((targetType & 1) == 1) && fighter.Team == fighterObject.Team)
                                             continue;
 
-                                        // doesnt affect the caster
+                                        // doesnt affect the caster : 2
                                         if ((((targetType >> 1) & 1) == 1) && fighter == fighterObject)
                                             continue;
 
-                                        // doesnt affect ennemies
+                                        // doesnt affect ennemies : 4
                                         if ((((targetType >> 2) & 1) == 1) && fighter.Team != fighterObject.Team)
                                             continue;
 
-                                        // only invocation
+                                        // only invocation : 8
                                         if (((((targetType >> 3) & 1) == 1) && (fighter.Invocator == null)))
                                             continue;
 
-                                        // doesnt affect invocs
+                                        // doesnt affect invocs : 16
                                         if (((((targetType >> 4) & 1) == 1) && (fighter.Invocator != null)))
                                             continue;
 
-                                        // only caster
+                                        // only caster : 32
                                         if (((((targetType >> 5) & 1) == 1) && (fighter.Id != fighterObject.Id)))
                                         {
                                             if (!targetLists[effect].Contains(fighter))

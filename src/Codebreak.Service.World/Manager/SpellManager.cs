@@ -7,6 +7,7 @@ using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Game.Spell;
 using ProtoBuf;
+using System.Xml.Serialization;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -22,9 +23,13 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            using (var stream = File.OpenRead(ResourceManager.SPELLS_BINARY_PATH))            
-                m_templateById = Serializer.Deserialize<Dictionary<int, SpellTemplate>>(stream);
-
+            using (var stream = File.Open(ResourceManager.SPELLS_XML_PATH, FileMode.Open))
+            {
+                var serializer = new XmlSerializer(typeof(List<SpellTemplate>));
+                foreach (var template in (List<SpellTemplate>)serializer.Deserialize(stream))
+                    m_templateById.Add(template.Id, template);          
+            }
+                      
             Logger.Info("SpellManager : " + m_templateById.Count + " SpellTemplate loaded.");
         }
 
@@ -48,6 +53,7 @@ namespace Codebreak.Service.World.Manager
                     sort.effectTarget.Contains(",") ? sort.effectTarget.Split(',').Select(x => int.Parse(x)).ToArray() :
                     sort.effectTarget.Split(';').Select(x => int.Parse(x)).ToArray();
                 int lvl = 1;
+                newTemplate.Targets = new List<int>(targets);
                 foreach (var level in newTemplate.Levels)
                 {
                     string oldLevel = "";
@@ -97,10 +103,6 @@ namespace Codebreak.Service.World.Manager
                     if (level.Effects == null)
                         level.Effects = new List<SpellEffect>();
                     level.SpellId = newTemplate.Id;
-                    if (targets.Length > 0)
-                        level.Targets = targets;
-                    else
-                        level.Targets = new int[] { };
                     level.Level = lvl++;
                     foreach (var effect in level.Effects.Concat(level.CriticalEffects))
                     {

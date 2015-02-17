@@ -598,6 +598,7 @@ namespace Codebreak.Service.World.Game.Spell
     /// 
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
+    [Serializable]
     public sealed class SpellEffect
     {
         public int SpellId;
@@ -608,6 +609,9 @@ namespace Codebreak.Service.World.Game.Spell
         public int Value3;
         public int Duration;
         public int Chance;
+        
+        [ProtoIgnore]
+        [NonSerialized]
         private SpellLevel _level;
 
         /// <summary>

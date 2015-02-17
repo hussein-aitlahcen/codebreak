@@ -447,13 +447,7 @@ namespace Codebreak.Service.World.Game.Entity
                         || CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO)
                         && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
-                    
-                case GameActionTypeEnum.FIGHT_JOIN:
-                    return HasGameAction(GameActionTypeEnum.MAP)
-                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_CANT_BE_CHALLENGE)
-                        && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE)
-                        && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE);
-                    
+                                        
                 case GameActionTypeEnum.CHALLENGE_REQUEST:
                     return (CurrentAction == null || CurrentAction.IsFinished)
                         && HasGameAction(GameActionTypeEnum.MAP)
@@ -493,6 +487,7 @@ namespace Codebreak.Service.World.Game.Entity
                     return (CurrentAction == null || CurrentAction.IsFinished)
                         && !HasPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_SPEAK_NPC);
 
+                case GameActionTypeEnum.FIGHT_JOIN:
                 case GameActionTypeEnum.FIGHT:
                     return (CurrentAction == null || CurrentAction.IsFinished)
                          && !HasEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE)

@@ -116,7 +116,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                             {
                                 TargetList[castCell][spellLevel.SpellId].Add(effect, new List<FighterBase>());
 
-                                var targetType = spellLevel.Targets != null ? spellLevel.Targets.Length > effectIndex ? spellLevel.Targets[effectIndex] : -1 : -1;
+                                var targetType = spellLevel.Template.Targets != null ? spellLevel.Template.Targets.Count > effectIndex ? spellLevel.Template.Targets[effectIndex] : -1 : -1;
 
                                 if (effect.TypeEnum != EffectEnum.UseGlyph && effect.TypeEnum != EffectEnum.UseTrap)
                                 {
@@ -129,7 +129,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                             {
                                                 if (targetType != -1)
                                                 {
-                                                    if (((targetType & 1) == 1) && Fighter.Team != fighterObject.Team)
+                                                    if (((targetType & 1) == 1) && Fighter.Team == fighterObject.Team)
                                                         continue;
                                                     if ((((targetType >> 1) & 1) == 1) && Fighter == fighterObject)
                                                         continue;

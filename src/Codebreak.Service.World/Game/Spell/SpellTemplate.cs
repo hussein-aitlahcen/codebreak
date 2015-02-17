@@ -11,6 +11,7 @@ namespace Codebreak.Service.World.Game.Spell
     /// 
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
+    [Serializable]
     public sealed class SpellTemplate
     {
         public int Id;
@@ -18,6 +19,7 @@ namespace Codebreak.Service.World.Game.Spell
         public string Description;
         public int Sprite;
         public string SpriteInfos;
+        public List<int> Targets;
         public List<SpellLevel> Levels;
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Manager
     public sealed class ResourceManager : Singleton<ResourceManager>
     {
         public const string RESOURCES_PATH = "data/";
-        public const string SPELLS_BINARY = "spells.bin";
-        public const string SPELLS_BINARY_PATH = RESOURCES_PATH + SPELLS_BINARY;
+        public const string RESOURCES_XML_PATH = RESOURCES_PATH + "xml/";
+        public const string SPELLS_XML_PATH = RESOURCES_XML_PATH + "spells.xml";
     }
 }

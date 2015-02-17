@@ -1,4 +1,5 @@
-﻿using ProtoBuf;
+﻿using Codebreak.Service.World.Manager;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Codebreak.Service.World.Game.Spell
     /// 
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
+    [Serializable]
     public sealed class SpellLevel
     {
         public int SpellId;
@@ -30,8 +32,24 @@ namespace Codebreak.Service.World.Game.Spell
         public int Cooldown;
         public int RequiredLevel;
         public string RangeType;
-        public int[] Targets;
         public List<SpellEffect> Effects;
         public List<SpellEffect> CriticalEffects;
+
+        [ProtoIgnore]
+        [NonSerialized]
+        private SpellTemplate m_template;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SpellTemplate Template
+        {
+            get
+            {
+                if (m_template == null)
+                    m_template = SpellManager.Instance.GetTemplate(SpellId);
+                return m_template;
+            }
+        }
     }
 }
