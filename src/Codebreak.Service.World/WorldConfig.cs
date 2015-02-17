@@ -13,46 +13,6 @@ namespace Codebreak.Service.World
     /// </summary>
     public static class WorldConfig
     {
-        public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int,int>()
-        {
-            { 8950, 8943 } // Shigekax orange
-        };
-
-        public const bool NETWORK_CRYPT = false;
-
-        public static int[] MULTIPLE_INSTANCE_MAP_ID = 
-        {
-        };
-
-        public static string[] NPC_BEGIN_TRADE_SPEAK = 
-        {
-            "Encore un client, que désirez vous {0} ?",
-            "Des nouveautés tous les jours !",
-        };
-
-        public static string[] NPC_BUY_TRADE_SPEAK = 
-        {
-            "{0} est riche !",
-            "L'aura de {0} n'a d'egale que sa richesse.",
-        };
-
-        public static string[] NPC_LEAVE_TRADE_SPEAK = 
-        {
-            "J'espère vous revoir très prochainement.",
-            "A bientôt, sachez que je suis toujours ouvert.",
-        };
-
-        public const int SPAWN_MAX_GROUP_PER_MAP = 3;
-        public const int SPAWN_CHECK_INTERVAL = 1 * 60 * 1000;
-
-        public const int INACTIVITY_CHECK_INTERVAL = MAX_AWAY_TIME;
-        public const int MAX_AWAY_TIME = 2 * 60 * 1000; // 2 mint afk or kicked
-
-        public const int RPC_ACCOUNT_TICKET_CHECK_INTERVAL = 2000;
-        public const int RPC_ACCOUNT_TICKET_TIMEOUT = 5000;
-
-        public const int WORLD_SAVE_INTERVAL = 2 * 60 * 1000;
-        
         public static int GetStartCell(CharacterBreedEnum breed)
         {
             switch (breed)
@@ -100,7 +60,7 @@ namespace Codebreak.Service.World
 
         public static int GetStartMap(CharacterBreedEnum breed)
         {
-            switch(breed)
+            switch (breed)
             {
                 case CharacterBreedEnum.BREED_CRA:
                     return MAP_START_CRA;
@@ -137,112 +97,262 @@ namespace Codebreak.Service.World
 
                 case CharacterBreedEnum.BREED_XELOR:
                     return MAP_START_XELOR;
-                    
+
                 default:
                     throw new Exception("Unknow breedId " + breed);
             }
         }
 
-        public const int MAP_START_ENUTROF = 10299,
-                         CELL_START_ENUTROF = 272;
+        [Configurable()]
+        public static int MAP_START_ENUTROF = 10299;
+        [Configurable()]
+        public static int CELL_START_ENUTROF = 272;
 
-        public const int MAP_START_FECA = 10300,
+        [Configurable()]
+        public static int MAP_START_FECA = 10300;
+        public static int
                          CELL_START_FECA = 321;
 
-        public const int MAP_START_ECAFLIP = 10276,
-                         CELL_START_ECAFLIP = 297;
+        [Configurable()]
+        public static int MAP_START_ECAFLIP = 10276;
+        [Configurable()]
+        public static int
+            CELL_START_ECAFLIP = 297;
 
-        public const int MAP_START_SADIDAS = 10279,
+        [Configurable()]
+        public static int MAP_START_SADIDAS = 10279;
+        [Configurable()]
+        public static int
                          CELL_START_SADIDAS = 255;
 
-        public const int MAP_START_ENIRIPSA = 10283,
+        [Configurable()]
+        public static int MAP_START_ENIRIPSA = 10283;
+        [Configurable()]
+        public static int
                          CELL_START_ENIRIPSA = 270;
 
-        public const int MAP_START_OSAMODAS = 10285,
+        [Configurable()]
+        public static int MAP_START_OSAMODAS = 10285;
+        [Configurable()]
+        public static int
                          CELL_START_OSAMODAS = 219;
 
-        public const int MAP_START_SRAM = 10285,
+        [Configurable()]
+        public static int MAP_START_SRAM = 10285;
+        [Configurable()]
+        public static int
                          CELL_START_SRAM = 219;
 
-        public const int MAP_START_PANDAWA = 10289,
+        [Configurable()]
+        public static int MAP_START_PANDAWA = 10289;
+        [Configurable()]
+        public static int
                          CELL_START_PANDAWA = 249;
 
-        public const int MAP_START_CRA = 10285,
+        [Configurable()]
+        public static int MAP_START_CRA = 10285;
+        [Configurable()]
+        public static int
                          CELL_START_CRA = 219;
 
-        public const int MAP_START_IOP = 10294,
+        [Configurable()]
+        public static int MAP_START_IOP = 10294;
+        [Configurable()]
+        public static int
                          CELL_START_IOP = 235;
 
-        public const int MAP_START_SACRIEUR = 10296,
+        [Configurable()]
+        public static int MAP_START_SACRIEUR = 10296;
+        [Configurable()]
+        public static int
                          CELL_START_SACRIEUR = 229;
 
-        public const int MAP_START_XELOR = 10298,
+        [Configurable()]
+        public static int MAP_START_XELOR = 10298;
+        [Configurable()]
+        public static int
                          CELL_START_XELOR = 286;
 
-        public const int CHARACTER_CREATION_LEVEL = 1;
-        public const int CHARACTER_CREATION_VITALITY = 0;
-        public const int CHARACTER_CREATION_WISDOM = 0;
-        public const int CHARACTER_CREATION_AGILITY = 0;
-        public const int CHARACTER_CREATION_INTELLIGENCE = 0;
-        public const int CHARACTER_CREATION_CHANCE = 0;
-        public const int CHARACTER_CREATION_STRENGTH = 0;
-        public const int CHARACTER_CREATION_AP = 6;
-        public const int CHARACTER_CREATION_MP = 3;
-        public const int CHARACTER_CREATION_SKIN_SIZE = 100;
-        public const int CHARACTER_CREATION_SPELLPOINT = 0;
-        public const int CHARACTER_CREATION_CARACPOINT = 0;
-        public const int CHARACTER_CREATION_LIFE = 55;
-        public const int CHARACTER_CREATION_ENERGY = 10000;
-        public const int CHARACTER_CREATION_EMOTE_CAPACITY = 1376255;
+        public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int, int>()
+        {
+            { 8950, 8943 } // Shigekax orange
+        };
 
-        public const int LIVING_CHEST_ID = 285;
+        [Configurable()]
+        public static bool NETWORK_CRYPT = false;
 
-        public const int GHOST_SKIN_ID = 8004;
+        public static int[] MULTIPLE_INSTANCE_MAP_ID = 
+        {
+        };
 
-        public const int MAX_MERCHANT_PER_MAP = 5;
+        public static string[] NPC_BEGIN_TRADE_SPEAK = 
+        {
+            "Encore un client, que désirez vous {0} ?",
+            "Des nouveautés tous les jours !",
+        };
 
-        public const int MAX_ENNEMIES = 100;
-        public const int MAX_FRIENDS = 100;
+        public static string[] NPC_BUY_TRADE_SPEAK = 
+        {
+            "{0} est riche !",
+            "L'aura de {0} n'a d'egale que sa richesse.",
+        };
 
-        public const double REGEN_TIMER_SIT = 300;
-        public const double REGEN_TIMER = 1500;
+        public static string[] NPC_LEAVE_TRADE_SPEAK = 
+        {
+            "J'espère vous revoir très prochainement.",
+            "A bientôt, sachez que je suis toujours ouvert.",
+        };
 
-        public const int PVT_TELEPORT_DEFENDERS_TIMEOUT = 45000;
-        public const int PVT_START_TIMEOUT = 60000;
-        public const int PVT_TURN_TIME = 30000;
+        [Configurable()]
+        public static int SPAWN_MAX_GROUP_PER_MAP = 3;
+        [Configurable()]
+        public static int SPAWN_CHECK_INTERVAL = 1 * 60 * 1000;
 
-        public const int PVM_MAX_STAR_BONUS = 1000;
-        public const int PVM_STAR_BONUS_PERCENT_SECONDS = 10;
-        public const int PVM_CHALLENGE_COUNT = 3;
-        public const int PVM_START_TIMEOUT = 60000;
-        public const int PVM_TURN_TIME = 30000;
+        [Configurable()]
+        public static int MAX_AWAY_TIME = 20 * 60 * 1000;
+        [Configurable()]
+        public static int INACTIVITY_CHECK_INTERVAL = MAX_AWAY_TIME / 2;
+
+        [Configurable()]
+        public static int RPC_ACCOUNT_TICKET_TIMEOUT = 5000;
+        [Configurable()]
+        public static int RPC_ACCOUNT_TICKET_CHECK_INTERVAL = RPC_ACCOUNT_TICKET_TIMEOUT / 2;
+
+        [Configurable()]
+        public static int WORLD_SAVE_INTERVAL = 20 * 60 * 1000;
+        
+        [Configurable()]
+        public static string WORLD_SERVICE_IP = "127.0.0.1";
+
+        [Configurable()]
+        public static int WORLD_SERVICE_PORT = 5555;
+        
+        [Configurable()]
+        public static string WORLD_DB_CONNECTION = "Server=localhost;Database=codebreak_world;Uid=root;Pwd=;";
+
+        [Configurable()]
+        public static string RPC_PASSWORD = "smarken";
+
+        [Configurable()]
+        public static string RPC_IP = "127.0.0.1";
+
+        [Configurable()]
+        public static int RPC_PORT = 4321;
+
+        [Configurable()]
+        public static int CHARACTER_CREATION_LEVEL = 1;
+        [Configurable()]
+        public static int CHARACTER_CREATION_VITALITY = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_WISDOM = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_AGILITY = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_INTELLIGENCE = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_CHANCE = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_STRENGTH = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_AP = 6;
+        [Configurable()]
+        public static int CHARACTER_CREATION_MP = 3;
+        [Configurable()]
+        public static int CHARACTER_CREATION_SKIN_SIZE = 100;
+        [Configurable()]
+        public static int CHARACTER_CREATION_SPELLPOINT = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_CARACPOINT = 0;
+        [Configurable()]
+        public static int CHARACTER_CREATION_LIFE = 55;
+        [Configurable()]
+        public static int CHARACTER_CREATION_ENERGY = 10000;
+        [Configurable()]
+        public static int CHARACTER_CREATION_EMOTE_CAPACITY = 1376255;
+
+        [Configurable()]
+        public static int LIVING_CHEST_ID = 285;
+
+        [Configurable()]
+        public static int GHOST_SKIN_ID = 8004;
+
+        [Configurable()]
+        public static int MAX_MERCHANT_PER_MAP = 5;
+
+        [Configurable()]
+        public static int MAX_ENNEMIES = 100;
+        [Configurable()]
+        public static int MAX_FRIENDS = 100;
+
+        [Configurable()]
+        public static double REGEN_TIMER_SIT = 300;
+        [Configurable()]
+        public static double REGEN_TIMER = 1500;
+
+        [Configurable()]
+        public static int PVT_TELEPORT_DEFENDERS_TIMEOUT = 45000;
+        [Configurable()]
+        public static int PVT_START_TIMEOUT = 60000;
+        [Configurable()]
+        public static int PVT_TURN_TIME = 30000;
+
+        [Configurable()]
+        public static int PVM_MAX_STAR_BONUS = 1000;
+        [Configurable()]
+        public static int PVM_STAR_BONUS_PERCENT_SECONDS = 10;
+        [Configurable()]
+        public static int PVM_CHALLENGE_COUNT = 3;
+        [Configurable()]
+        public static int PVM_START_TIMEOUT = 60000;
+        [Configurable()]
+        public static int PVM_TURN_TIME = 30000;
 
         public static double[] PVM_RATE_GROUP = { 1, 1.1, 1.5, 2.3, 3.1, 3.6, 4.2, 4.7 };
 
-        public const double RATE_XP = 5;
-        public const double RATE_DROP = 3;
-        public const double RATE_KAMAS = 3;
+        [Configurable()]
+        public static double RATE_XP = 5;
+        [Configurable()]
+        public static double RATE_DROP = 3;
+        [Configurable()]
+        public static double RATE_KAMAS = 2;
 
-        public const int PVP_START_TIMEOUT = 60000;
-        public const int PVP_TURN_TIME = 30000;
+        [Configurable()]
+        public static int PVP_START_TIMEOUT = 60000;
+        [Configurable()]
+        public static int PVP_TURN_TIME = 30000;
 
-        public const int AGGRESSION_KNGIHT_MONSTER_ID = 394;
-        public const int AGGRESSION_START_TIMEOUT = 60000;
-        public const int AGGRESSION_TURN_TIME = 30000;
+        [Configurable()]
+        public static int AGGRESSION_KNGIHT_MONSTER_ID = 394;
+        [Configurable()]
+        public static int AGGRESSION_START_TIMEOUT = 60000;
+        [Configurable()]
+        public static int AGGRESSION_TURN_TIME = 30000;
 
-        public const double TAXCOLLECTOR_XP_RATIO = 0.01;
-        public const int TAXCOLLECTOR_MIN_NAME = 1;
-        public const int TAXCOLLECTOR_MAX_NAME = 228;
-        public const int TAXCOLLECTOR_MIN_FIRSTNAME = 1;
-        public const int TAXCOLLECTOR_MAX_FIRSTNAME = 130;
-        public const int TAXCOLLECTOR_SKIN_BASE = 6000;
-        public const int TAXCOLLECTOR_SKIN_SIZE_BASE = 100;
+        [Configurable()]
+        public static double TAXCOLLECTOR_XP_RATIO = 0.01;
+        [Configurable()]
+        public static int TAXCOLLECTOR_MIN_NAME = 1;
+        [Configurable()]
+        public static int TAXCOLLECTOR_MAX_NAME = 228;
+        [Configurable()]
+        public static int TAXCOLLECTOR_MIN_FIRSTNAME = 1;
+        [Configurable()]
+        public static int TAXCOLLECTOR_MAX_FIRSTNAME = 130;
+        [Configurable()]
+        public static int TAXCOLLECTOR_SKIN_BASE = 6000;
+        [Configurable()]
+        public static int TAXCOLLECTOR_SKIN_SIZE_BASE = 100;
 
-        public const int FIGHT_DISCONNECTION_TURN = 20;
-        public const int FIGHT_PUSH_CELL_TIME = 270;
-        public const int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
+        [Configurable()]
+        public static int FIGHT_DISCONNECTION_TURN = 20;
+        [Configurable()]
+        public static int FIGHT_PUSH_CELL_TIME = 270;
+        [Configurable()]
+        public static int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
 
+        [Configurable()]
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);
-        public const int GAME_ID = 1; // Jiva ? guess so;
+        [Configurable()]
+        public static int GAME_ID = 1; // Jiva ? guess so;
     }
 }

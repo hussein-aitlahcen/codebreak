@@ -28,25 +28,7 @@ namespace Codebreak.Service.World
     /// 
     /// </summary>
     public class WorldService : TcpServerBase<WorldService, WorldClient>
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        [Configurable("WorldSaveInternal")]
-        public static int WorldSaveInternal = 60 * 1000;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Configurable("WorldServiceIP")]
-        public static string WorldServiceIP = "127.0.0.1";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Configurable("WorldServicePort")]
-        public static int WorldServicePort = 5555;
-
+    {  
         /// <summary>
         /// 
         /// </summary>
@@ -90,7 +72,7 @@ namespace Codebreak.Service.World
 
             base.AddUpdatable(Dispatcher = new MessageDispatcher());
             base.AddUpdatable(RPCManager.Instance);
-            base.AddTimer(WorldSaveInternal, SaveWorld);
+            base.AddTimer(WorldConfig.WORLD_SAVE_INTERVAL, SaveWorld);
 
             Crypt.GenerateNetworkKey();            
             WorldDbMgr.Instance.Initialize();
@@ -107,7 +89,7 @@ namespace Codebreak.Service.World
             EntityManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
             
-            base.Start(WorldServiceIP, WorldServicePort);
+            base.Start(WorldConfig.WORLD_SERVICE_IP, WorldConfig.WORLD_SERVICE_PORT);
         }
 
         #region Network

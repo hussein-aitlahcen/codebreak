@@ -5,11 +5,15 @@ using Codebreak.Service.World.Database.Structure;
 
 namespace Codebreak.Service.World.Database
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class WorldDbMgr : DbManager<WorldDbMgr>
     {
-        [Configurable("DbConnection")]
-		public static string DbConnection = "Server=localhost;Database=codebreak_world;Uid=root;Pwd=;";
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbConnection"></param>
         public void Initialize(string dbConnection = "")
         {
             base.AddRepository(ExperienceTemplateRepository.Instance);
@@ -48,7 +52,7 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(MonstersRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
 
-            base.LoadAll(string.IsNullOrWhiteSpace(dbConnection) ? DbConnection : dbConnection);
+            base.LoadAll(string.IsNullOrWhiteSpace(dbConnection) ? WorldConfig.WORLD_DB_CONNECTION : dbConnection);
         }
     }
 }

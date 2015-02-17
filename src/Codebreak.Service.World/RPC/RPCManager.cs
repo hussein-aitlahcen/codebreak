@@ -10,25 +10,7 @@ namespace Codebreak.Service.World.RPC
     /// 
     /// </summary>
     public sealed class RPCManager : Updatable
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        [Configurable("RPCPassword")]
-        public static string RPCPassword = "smarken";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Configurable("RPCIP")]
-        public static string RPCIP = "127.0.0.1";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Configurable("RPCPort")]
-        public static int RPCPort = 4321;
-
+    {        
         /// <summary>
         /// 
         /// </summary>
@@ -107,7 +89,7 @@ namespace Codebreak.Service.World.RPC
             {
                 Logger.Info("RPCManager connecting...");
 
-                m_rpcConnection.Connect(RPCIP, RPCPort);
+                m_rpcConnection.Connect(WorldConfig.RPC_IP, WorldConfig.RPC_PORT);
             });
         }
 
@@ -120,7 +102,7 @@ namespace Codebreak.Service.World.RPC
 
             AuthState = AuthStateEnum.NEGOTIATING;
 
-            m_rpcConnection.Send(new AuthentificationMessage(RPCPassword));
+            m_rpcConnection.Send(new AuthentificationMessage(WorldConfig.RPC_PASSWORD));
         }
 
         /// <summary>

@@ -86,6 +86,9 @@ namespace Codebreak.Framework.Configuration
                     if(attr == null)
                         continue;
 
+                    if (attr.Name == string.Empty)
+                        attr.Name = field.Name;
+
                     if (m_configurables.ContainsKey(attr.Name))
                         throw new Exception(string.Format("Configurable name's `{0}` is already used.", attr.Name));
 

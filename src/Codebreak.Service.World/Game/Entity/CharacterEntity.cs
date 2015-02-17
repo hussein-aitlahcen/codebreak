@@ -1324,7 +1324,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void StartRegeneration(double timer = WorldConfig.REGEN_TIMER)
+        public void StartRegeneration(double timer)
         {
             if (Life >= MaxLife)
                 return;

@@ -18,14 +18,14 @@ namespace Codebreak.Framework.Configuration
         public string Name
         {
             get; 
-            private set;
+            set;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
-        public ConfigurableAttribute(string name)
+        public ConfigurableAttribute(string name = "")
         {
             Name = name;
         }
