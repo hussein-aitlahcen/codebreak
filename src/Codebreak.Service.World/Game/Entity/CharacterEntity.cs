@@ -181,6 +181,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int LifeBeforeFight
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override int Restriction
         {
             get
@@ -1108,76 +1117,19 @@ namespace Codebreak.Service.World.Game.Entity
                 base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_ENERGY_LOW, Energy));
             }
         }
-
+               
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="win"></param>
-        public override void EndFight(bool win = false)
+        /// <param name="fight"></param>
+        /// <param name="team"></param>
+        public override void JoinFight(FightBase fight, FightTeam team)
         {
-            if (!IsSpectating)
-            {
-                if (IsFighterDead)
-                {
-                    switch (Fight.Type)
-                    {
-                        case FightTypeEnum.TYPE_CHALLENGE:
-                        case FightTypeEnum.TYPE_AGGRESSION:
-                        case FightTypeEnum.TYPE_PVM:
-                        case FightTypeEnum.TYPE_PVT:
-                            Life = 1;
-                            break;
-                    }
-                }
+            LifeBeforeFight = Life;
 
-                if (!win)
-                {
-                    switch (Fight.Type)
-                    {
-                        case FightTypeEnum.TYPE_AGGRESSION:
-                        case FightTypeEnum.TYPE_PVT:
-                            OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
-                            break;
-
-                        case FightTypeEnum.TYPE_PVM:
-                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
-                            break;
-                    }
-                }
-
-                base.CachedBuffer = true;
-                var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
-                foreach (var item in items)
-                {
-                    if (item.Statistics.HasEffect(EffectEnum.AddBoost))
-                    {
-                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
-                        effect.Value3--;
-                        item.SaveStats();
-                        if (effect.Value3 <= 0)
-                            Inventory.RemoveItem(item.Id);
-                    }
-                }
-                if (items.Count > 0)
-                {
-                    base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
-                    SendAccountStats();
-                }
-                base.CachedBuffer = false;
-            }
-            else
-            {
-                Fight.SpectatorTeam.RemoveSpectator(this);
-                Fight.SpectatorTeam.RemoveUpdatable(this);
-                Fight.SpectatorTeam.RemoveHandler(Dispatch);
-            }
-            
-            if (IsDisconnected)
-                EntityManager.Instance.RemoveCharacter(this);
-
-            base.EndFight(win);
+            base.JoinFight(fight, team);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1244,6 +1196,9 @@ namespace Codebreak.Service.World.Game.Entity
                     Fight.Result.AddResult(this, FightEndTypeEnum.END_LOSER, true);
                     switch (Fight.Type)
                     {
+                        case FightTypeEnum.TYPE_CHALLENGE:
+                            break;
+
                         case FightTypeEnum.TYPE_AGGRESSION:
                         case FightTypeEnum.TYPE_PVT:
                             OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
@@ -1259,6 +1214,81 @@ namespace Codebreak.Service.World.Game.Entity
             }
 
             base.EndFight();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="win"></param>
+        public override void EndFight(bool win = false)
+        {
+            if (!IsSpectating)
+            {
+                if (IsFighterDead)
+                {
+                    switch (Fight.Type)
+                    {
+                        case FightTypeEnum.TYPE_AGGRESSION:
+                        case FightTypeEnum.TYPE_PVM:
+                        case FightTypeEnum.TYPE_PVT:
+                            Life = 1;
+                            break;
+                    }
+                }
+
+                if (!win)
+                {
+                    switch (Fight.Type)
+                    {
+                        case FightTypeEnum.TYPE_AGGRESSION:
+                        case FightTypeEnum.TYPE_PVT:
+                            OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
+                            break;
+
+                        case FightTypeEnum.TYPE_PVM:
+                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
+                            break;
+                    }
+                }
+
+                switch (Fight.Type)
+                {
+                    case FightTypeEnum.TYPE_CHALLENGE:
+                        Life = LifeBeforeFight;
+                        break;
+                }
+                
+                base.CachedBuffer = true;
+                var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
+                foreach (var item in items)
+                {
+                    if (item.Statistics.HasEffect(EffectEnum.AddBoost))
+                    {
+                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
+                        effect.Value3--;
+                        item.SaveStats();
+                        if (effect.Value3 <= 0)
+                            Inventory.RemoveItem(item.Id);
+                    }
+                }
+                if (items.Count > 0)
+                {
+                    base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
+                    SendAccountStats();
+                }
+                base.CachedBuffer = false;
+            }
+            else
+            {
+                Fight.SpectatorTeam.RemoveSpectator(this);
+                Fight.SpectatorTeam.RemoveUpdatable(this);
+                Fight.SpectatorTeam.RemoveHandler(Dispatch);
+            }
+
+            if (IsDisconnected)
+                EntityManager.Instance.RemoveCharacter(this);
+
+            base.EndFight(win);
         }
 
         /// <summary>
