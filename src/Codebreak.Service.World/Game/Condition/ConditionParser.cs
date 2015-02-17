@@ -97,7 +97,13 @@ namespace Codebreak.Service.World.Game.Condition
                     realConditions.Replace("MiS", "character.Id");
                     realConditions.Replace("BI", "0"); // ?
 
-                    method = new CompiledExpression<bool>(realConditions.ToString()).ScopeCompile<ConditionScope>();                 
+                    var registry = new TypeRegistry();
+                    registry.RegisterType("EffectEnum", typeof(EffectEnum));
+
+                    method = new CompiledExpression<bool>(realConditions.ToString())
+                    {
+                        TypeRegistry = registry
+                    }.ScopeCompile<ConditionScope>();                 
                     m_compiledExpressions.Add(conditions, method);
                 }
             }
