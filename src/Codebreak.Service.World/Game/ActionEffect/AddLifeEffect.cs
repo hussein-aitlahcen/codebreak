@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
                 default:
                     break;
             }
-
+                        
             return Process(character, new Dictionary<string, string>() { { "life", effect.RandomJet.ToString() } });
         }
 
@@ -57,6 +57,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="parameters"></param>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
+            if (character.Life == character.MaxLife)
+                return false;
+
             var heal = int.Parse(parameters["life"]);
             if (character.Life + heal > character.MaxLife)
                 heal = character.MaxLife - character.Life;
