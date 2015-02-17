@@ -1125,10 +1125,20 @@ namespace Codebreak.Service.World.Game.Fight
             fighter.TurnReady = true;
             TurnProcessor.SummonFighter(fighter);
 
-            base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
+            var result = fighter.SetCell(GetCell(cellId));
+            if (result != FightActionResultEnum.RESULT_NOTHING)
+                return result;
+
+            var message = new StringBuilder("+");
+            fighter.SerializeAs_GameMapInformations(OperatorEnum.OPERATOR_ADD, message);
+
+            if (fighter.Invocator != null)
+                base.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
+            else
+                base.Dispatch(message.ToString());
             base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
 
-            return fighter.SetCell(GetCell(cellId));
+            return result;
         }
 
         /// <summary>
