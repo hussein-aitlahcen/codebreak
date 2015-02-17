@@ -727,7 +727,7 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>

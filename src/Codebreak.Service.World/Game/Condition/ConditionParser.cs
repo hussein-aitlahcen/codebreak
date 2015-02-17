@@ -92,12 +92,10 @@ namespace Codebreak.Service.World.Game.Condition
                         realConditions.Replace("PZ", "1"); // Abonné
                         realConditions.Replace("PN", "character.Name");
                         realConditions.Replace("Pg", "0"); // Don
-                        realConditions.Replace("PR", "0"); // Married 
-                        if (character.Account != null)
-                            realConditions.Replace("PX", "character.Account.Power"); // Admin level
+                        realConditions.Replace("PR", "0"); // Married
+                        realConditions.Replace("PX", "character.Account.Power"); // Admin level
                         realConditions.Replace("PW", "10000"); // MaxWeight
-                        if (character.Map != null)
-                            realConditions.Replace("PB", "character.Map.SubAreaId");
+                        realConditions.Replace("PB", "character.Map.SubAreaId");
                         realConditions.Replace("SI", "character.MapId");
                         realConditions.Replace("MiS", "character.Id");
 
