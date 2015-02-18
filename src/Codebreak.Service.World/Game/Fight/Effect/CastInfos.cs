@@ -52,9 +52,11 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         {
             switch(effectType)
             {
+                case EffectEnum.Sacrifice:
                 case EffectEnum.Evasion:
                 case EffectEnum.Transpose:
                 case EffectEnum.PandaCarrier:
+                case EffectEnum.PandaLaunch:
                 case EffectEnum.ReflectSpell:
                     return true;
             }
