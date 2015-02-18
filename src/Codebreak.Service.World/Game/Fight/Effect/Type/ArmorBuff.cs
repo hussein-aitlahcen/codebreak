@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             : base(castInfos, target, ActiveType.ACTIVE_ATTACKED_AFTER_JET, DecrementType.TYPE_ENDTURN)
         {
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -29,26 +29,26 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         public override FightActionResultEnum RemoveEffect()
         {
             // On supprime le boost stats
-            switch (this.CastInfos.SpellId)
+            switch (CastInfos.SpellId)
             {
                 case 1:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorFire).Dons -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorFire).Dons -= CastInfos.Value1;
                     break;
 
                 case 6:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorEarth).Dons -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorEarth).Dons -= CastInfos.Value1;
                     break;
 
                 case 14:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorAir).Dons -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorAir).Dons -= CastInfos.Value1;
                     break;
 
                 case 18:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmorWater).Dons -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmorWater).Dons -= CastInfos.Value1;
                     break;
 
                 default:
-                    Target.Statistics.GetEffect(EffectEnum.AddArmor).Dons -= this.CastInfos.Value1;
+                    Target.Statistics.GetEffect(EffectEnum.AddArmor).Dons -= CastInfos.Value1;
                     break;
             }
 

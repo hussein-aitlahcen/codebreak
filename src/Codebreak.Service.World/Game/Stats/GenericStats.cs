@@ -874,7 +874,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="Stats"></param>
         public void Merge(StatsType type, GenericStats Stats)
         {
-            foreach (var effect in Stats.Effects)
+            foreach (var effect in Stats.Effects.Except(Stats.WeaponEffects))
             {
                 if (!m_effects.ContainsKey(effect.Key))
                     m_effects.Add(effect.Key, new GenericEffect(effect.Key));
@@ -888,7 +888,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// <param name="Stats"></param>
         public void UnMerge(StatsType type, GenericStats Stats)
         {
-            foreach (var effect in Stats.Effects)
+            foreach (var effect in Stats.Effects.Except(Stats.WeaponEffects))
             {
                 if (!m_effects.ContainsKey(effect.Key))
                     m_effects.Add(effect.Key, new GenericEffect(effect.Key));
