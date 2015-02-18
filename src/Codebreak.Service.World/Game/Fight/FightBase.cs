@@ -2133,6 +2133,7 @@ namespace Codebreak.Service.World.Game.Fight
                                         {
                                             if (!targetLists[effect].Contains(fighter))
                                                 targetLists[effect].Add(fighter);
+                                            continue;
                                         }
 
                                         // doesnt affect team mates : 1
