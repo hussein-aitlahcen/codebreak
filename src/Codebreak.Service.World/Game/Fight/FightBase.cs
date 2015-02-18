@@ -2128,12 +2128,11 @@ namespace Codebreak.Service.World.Game.Fight
                                 {
                                     if (targetType != -1)
                                     {
-                                        // only caster : 32
+                                        // affect caster : 32
                                         if (((((targetType >> 5) & 1) == 1) && (fighter.Id != fighterObject.Id)))
                                         {
                                             if (!targetLists[effect].Contains(fighter))
                                                 targetLists[effect].Add(fighter);
-                                            continue;
                                         }
 
                                         // doesnt affect team mates : 1
