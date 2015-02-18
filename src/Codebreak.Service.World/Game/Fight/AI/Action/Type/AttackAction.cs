@@ -141,9 +141,9 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                                         continue;
                                                     if ((((targetType >> 2) & 1) == 1) && Fighter.Team != fighterObject.Team)
                                                         continue;
-                                                    if (((((targetType >> 3) & 1) == 1) && (Fighter.Invocator == null)))
+                                                    if (((((targetType >> 3) & 1) == 1) && (fighterObject.Invocator == null)))
                                                         continue;
-                                                    if (((((targetType >> 4) & 1) == 1) && (Fighter.Invocator != null)))
+                                                    if (((((targetType >> 4) & 1) == 1) && (fighterObject.Invocator != null)))
                                                         continue;                                                                                                   
                                                 }
 

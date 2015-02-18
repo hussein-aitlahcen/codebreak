@@ -2148,11 +2148,11 @@ namespace Codebreak.Service.World.Game.Fight
                                             continue;
 
                                         // only invocation : 8
-                                        if (((((targetType >> 3) & 1) == 1) && (fighter.Invocator == null)))
+                                        if (((((targetType >> 3) & 1) == 1) && (fighterObject.Invocator == null)))
                                             continue;
 
                                         // doesnt affect invocs : 16
-                                        if (((((targetType >> 4) & 1) == 1) && (fighter.Invocator != null)))
+                                        if (((((targetType >> 4) & 1) == 1) && (fighterObject.Invocator != null)))
                                             continue;                                        
                                     }
 
