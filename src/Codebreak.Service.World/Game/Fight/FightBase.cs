@@ -2140,7 +2140,7 @@ namespace Codebreak.Service.World.Game.Fight
                                             continue;
 
                                         // doesnt affect the caster : 2
-                                        if ((((targetType >> 1) & 1) == 1) && fighter == fighterObject)
+                                        if ((((targetType >> 1) & 1) == 1) && fighter.Id == fighterObject.Id)
                                             continue;
 
                                         // doesnt affect ennemies : 4
