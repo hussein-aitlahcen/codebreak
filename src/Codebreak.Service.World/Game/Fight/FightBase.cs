@@ -2128,6 +2128,14 @@ namespace Codebreak.Service.World.Game.Fight
                                 {
                                     if (targetType != -1)
                                     {
+                                        // only caster : 32
+                                        if (((((targetType >> 5) & 1) == 1) && (fighter.Id != fighterObject.Id)))
+                                        {
+                                            if (!targetLists[effect].Contains(fighter))
+                                                targetLists[effect].Add(fighter);
+                                            continue;
+                                        }
+
                                         // doesnt affect team mates : 1
                                         if (((targetType & 1) == 1) && fighter.Team == fighterObject.Team)
                                             continue;
@@ -2146,15 +2154,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                                         // doesnt affect invocs : 16
                                         if (((((targetType >> 4) & 1) == 1) && (fighter.Invocator != null)))
-                                            continue;
-
-                                        // only caster : 32
-                                        if (((((targetType >> 5) & 1) == 1) && (fighter.Id != fighterObject.Id)))
-                                        {
-                                            if (!targetLists[effect].Contains(fighter))
-                                                targetLists[effect].Add(fighter);
-                                            continue;
-                                        }
+                                            continue;                                        
                                     }
 
                                     if (!targetLists[effect].Contains(fighterObject))

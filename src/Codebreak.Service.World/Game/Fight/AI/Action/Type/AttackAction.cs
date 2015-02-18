@@ -129,6 +129,12 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                             {
                                                 if (targetType != -1)
                                                 {
+                                                    if (((((targetType >> 5) & 1) == 1) && (Fighter.Id != fighterObject.Id)))
+                                                    {
+                                                        if (!TargetList[castCell][spellLevel.SpellId][effect].Contains(Fighter))
+                                                            TargetList[castCell][spellLevel.SpellId][effect].Add(Fighter);
+                                                        continue;
+                                                    }
                                                     if (((targetType & 1) == 1) && Fighter.Team == fighterObject.Team)
                                                         continue;
                                                     if ((((targetType >> 1) & 1) == 1) && Fighter == fighterObject)
@@ -138,13 +144,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                                     if (((((targetType >> 3) & 1) == 1) && (Fighter.Invocator == null)))
                                                         continue;
                                                     if (((((targetType >> 4) & 1) == 1) && (Fighter.Invocator != null)))
-                                                        continue;
-                                                    if (((((targetType >> 5) & 1) == 1) && (Fighter.Id != fighterObject.Id)))
-                                                    {
-                                                        if (!TargetList[castCell][spellLevel.SpellId][effect].Contains(Fighter))
-                                                            TargetList[castCell][spellLevel.SpellId][effect].Add(Fighter);
-                                                        continue;
-                                                    }
+                                                        continue;                                                                                                   
                                                 }
 
                                                 if (!TargetList[castCell][spellLevel.SpellId][effect].Contains(fighterObject))
@@ -180,9 +180,9 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                     if (CastInfos.IsDamageEffect(effect.TypeEnum))
                                     {
                                         if (fighter.Team.Id != Fighter.Team.Id)
-                                            currentScore += 60 + effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore += 200 + effect.Value1 + effect.Value2 + effect.Value3;
                                         else
-                                            currentScore -= 60 + effect.Value1 + effect.Value2 + effect.Value3;
+                                            currentScore -= 200 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }
                                     else if (CastInfos.IsMalusEffect(effect.TypeEnum))
                                     {
