@@ -41,9 +41,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
 
             if (CastInfos.Value1 > 0)
             {
-                var BuffStats = new StatsBuff(new CastInfos(CastInfos.EffectType, CastInfos.SpellId, CastInfos.SpellId, CastInfos.Value1, 0, 0, 0, Duration, CastInfos.Caster, null), Target);
-                BuffStats.ApplyEffect(ref mpLost);
-                Target.BuffManager.AddBuff(BuffStats);
+                var buff = new StatsBuff(new CastInfos(CastInfos.EffectType, CastInfos.SpellId, CastInfos.SpellId, CastInfos.Value1, 0, 0, 0, Duration, CastInfos.Caster, null), Target);
+                buff.ApplyEffect(ref mpLost);
+                Target.BuffManager.AddBuff(buff);
             }
 
             return base.ApplyEffect(ref damageValue, damageInfos);
