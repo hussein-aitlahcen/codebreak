@@ -123,6 +123,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect
 
             // Ajout ou reduction de dommage
             m_effects.Add(EffectEnum.AddDamage, new StatsEffect());
+            m_effects.Add(EffectEnum.AddDamagePhysic, new StatsEffect());
+            m_effects.Add(EffectEnum.AddDamageMagic, new StatsEffect());
             m_effects.Add(EffectEnum.AddEchecCritic, new StatsEffect());
             m_effects.Add(EffectEnum.AddDamageCritic, new StatsEffect());
             m_effects.Add(EffectEnum.AddDamagePercent, new StatsEffect());
