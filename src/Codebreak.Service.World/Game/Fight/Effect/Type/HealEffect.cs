@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             // Si > 0 alors c'est un buff
             if (castInfos.Duration > 0)
             {
-                castInfos.Target.BuffManager.AddBuff(new DamageBuff(castInfos, castInfos.Target));
+                castInfos.Target.BuffManager.AddBuff(new HealBuff(castInfos, castInfos.Target));
             }
             else // Heal direct
             {

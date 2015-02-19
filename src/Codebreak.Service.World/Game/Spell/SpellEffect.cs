@@ -473,6 +473,7 @@ namespace Codebreak.Service.World.Game.Spell
 
         InvocDouble = 180,
         Invocation = 181,
+        InvocationStatic = 185,
 
         AddReduceDamagePhysic = 183,
         AddReduceDamageMagic = 184,

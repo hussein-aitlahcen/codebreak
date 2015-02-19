@@ -240,6 +240,8 @@
     <Compile Include="Game\Fight\Effect\EffectBase.cs" />
     <Compile Include="Game\Fight\Effect\EffectManager.cs" />
     <Compile Include="Game\Fight\Effect\Type\DamageLifePercentEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\DamagePerAPBuff.cs" />
+    <Compile Include="Game\Fight\Effect\Type\DamagePerAPEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\DropLifeEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceBuff.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceEffect.cs" />

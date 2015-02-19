@@ -20,10 +20,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         {
             if (castInfos.Target == null)
                 return FightActionResultEnum.RESULT_NOTHING;
-
-            if (castInfos.Target.Team != castInfos.Caster.Team || castInfos.Target == castInfos.Caster)
-                return FightActionResultEnum.RESULT_NOTHING;
-
+            
             castInfos.Target.BuffManager.AddBuff(new SacrificeBuff(castInfos, castInfos.Target));
 
             return FightActionResultEnum.RESULT_NOTHING;

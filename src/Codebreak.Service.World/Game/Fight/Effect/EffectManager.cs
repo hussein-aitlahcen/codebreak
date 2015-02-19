@@ -33,6 +33,16 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             m_effects.Add(EffectEnum.DamageFire, new DamageEffect());
             m_effects.Add(EffectEnum.DamageWater, new DamageEffect());
             m_effects.Add(EffectEnum.DamageAir, new DamageEffect());
+            m_effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect(EffectEnum.DamageBrut));
+            m_effects.Add(EffectEnum.DamageLifeAir, new DamageLifePercentEffect(EffectEnum.DamageAir));
+            m_effects.Add(EffectEnum.DamageLifeEarth, new DamageLifePercentEffect(EffectEnum.DamageEarth));
+            m_effects.Add(EffectEnum.DamageLifeFire, new DamageLifePercentEffect(EffectEnum.DamageFire));
+            m_effects.Add(EffectEnum.DamageLifeWater, new DamageLifePercentEffect(EffectEnum.DamageWater));
+            m_effects.Add(EffectEnum.DamageDropLife, new DropLifeEffect());
+            m_effects.Add(EffectEnum.Punition, new PunishmentDamageEffect());
+            m_effects.Add(EffectEnum.ReflectSpell, new ReflectSpellEffect());
+            m_effects.Add(EffectEnum.LifeSteal, new PureLifeStealEffect());
+            m_effects.Add(EffectEnum.DamagePerAP, new DamagePerAPEffect());
 
             // Vol de statistique
             m_effects.Add(EffectEnum.StealNeutral, new LifeStealEffect());
@@ -147,12 +157,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             m_effects.Add(EffectEnum.POSteal, new StatsStealEffect());
 
             // Autres
-            m_effects.Add(EffectEnum.DamageLifeNeutral, new DamageLifePercentEffect());
             m_effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
-            m_effects.Add(EffectEnum.Punition, new PunishmentDamageEffect());
-            m_effects.Add(EffectEnum.ReflectSpell, new ReflectSpellEffect());
-            m_effects.Add(EffectEnum.DamageDropLife, new DropLifeEffect());
-            m_effects.Add(EffectEnum.LifeSteal, new PureLifeStealEffect());
 
             // Sacrifice
             m_effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());
@@ -166,6 +171,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
 
             // Invocation
             m_effects.Add(EffectEnum.Invocation, new SummoningEffect());
+            m_effects.Add(EffectEnum.InvocationStatic, new SummoningEffect(true));
 
             // Debuff
             m_effects.Add(EffectEnum.DeleteAllBonus, new BuffRemoveEffect());

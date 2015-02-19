@@ -15,6 +15,20 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <summary>
         /// 
         /// </summary>
+        private EffectEnum m_damageType;
+
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <param name="damageType"></param>
+        public DamageLifePercentEffect(EffectEnum damageType)
+        {
+            m_damageType = damageType;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="castInfos"></param>
         /// <returns></returns>
         public override FightActionResultEnum ApplyEffect(CastInfos castInfos)
@@ -25,7 +39,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (castInfos.Target != castInfos.Caster)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            var damageInfos = new CastInfos(EffectEnum.DamageBrut, -1, -1, -1, -1, -1, -1, -1, castInfos.Caster, castInfos.Target);
+            var damageInfos = new CastInfos(m_damageType, -1, -1, -1, -1, -1, -1, -1, castInfos.Caster, castInfos.Target);
             var damageJet = (castInfos.Target.Life / 100) * castInfos.RandomJet;
 
             return DamageEffect.ApplyDamages(damageInfos, damageInfos.Target, ref damageJet);

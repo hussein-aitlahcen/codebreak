@@ -11,7 +11,6 @@ namespace Codebreak.Service.World.Game.Fight
         TYPE_FIGHTER,
         TYPE_TRAP,
         TYPE_GLYPH,
-        TYPE_CAWWOT,
     }
 
     /// <summary>

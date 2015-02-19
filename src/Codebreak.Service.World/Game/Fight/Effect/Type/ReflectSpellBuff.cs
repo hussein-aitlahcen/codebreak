@@ -30,7 +30,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                 return FightActionResultEnum.RESULT_NOTHING;
 
             // reflect only spells
-            if (damageInfos.SpellId < 0)
+            if (damageInfos.SpellId < 1)
                 return FightActionResultEnum.RESULT_NOTHING;
 
             // cannot reflect a spell that is higher in level

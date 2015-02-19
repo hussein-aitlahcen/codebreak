@@ -364,7 +364,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             FightObjects.Add(fightObject);
 
-            if (fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_FIGHTER || fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_CAWWOT)
+            if (fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_FIGHTER)
             {
                 var fighter = (FighterBase)fightObject;
 
@@ -1133,7 +1133,7 @@ namespace Codebreak.Service.World.Game.Fight
             fighter.SerializeAs_GameMapInformations(OperatorEnum.OPERATOR_ADD, message);
 
             if (fighter.Invocator != null)
-                base.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
+                base.Dispatch(WorldMessage.GAME_ACTION(fighter.StaticInvocation ? EffectEnum.InvocationStatic : EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
             else
                 base.Dispatch(message.ToString());
             base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
@@ -1747,7 +1747,7 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 if (spellLevel.Effects.Any(effect => effect.TypeEnum == EffectEnum.Invocation))
                 {
-                    var invocationCount = fighter.Team.AliveFighters.Count(f => f.Invocator == fighter);
+                    var invocationCount = fighter.Team.AliveFighters.Count(f => f.Invocator == fighter && !f.StaticInvocation);
                     if (invocationCount >= fighter.Statistics.GetTotal(EffectEnum.AddInvocationMax))
                     {
                         fighter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_MAX_INVOCATION_REACHED, fighter.Statistics.GetTotal(EffectEnum.AddInvocationMax)));

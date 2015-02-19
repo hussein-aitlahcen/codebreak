@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Spell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,24 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <summary>
         /// 
         /// </summary>
+        private bool m_static;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="staticInvoc"></param>
+        public SummoningEffect(bool staticInvoc = false)
+        {
+            m_static = staticInvoc;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="castInfos"></param>
         /// <returns></returns>
         public override FightActionResultEnum ApplyEffect(CastInfos castInfos)
         {
-            var invocationCount = castInfos.Caster.Team.AliveFighters.Count(fighter => fighter.Invocator == castInfos.Caster);
-            if (invocationCount >= castInfos.Caster.Statistics.GetTotal(Spell.EffectEnum.AddInvocationMax))
-                return FightActionResultEnum.RESULT_NOTHING;
-
             var monsterTemplate = Database.Repository.MonsterRepository.Instance.GetById(castInfos.Value1);
             if (monsterTemplate == null)
                 return FightActionResultEnum.RESULT_NOTHING;
@@ -35,7 +46,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             if (!cell.CanWalk)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            return castInfos.Fight.SummonFighter(new MonsterEntity(castInfos.Fight.NextFighterId, monsterGrade, castInfos.Caster), castInfos.Caster.Team, castInfos.CellId);
+            return castInfos.Fight.SummonFighter(new MonsterEntity(castInfos.Fight.NextFighterId, monsterGrade, castInfos.Caster, m_static), castInfos.Caster.Team, castInfos.CellId);
         }
     }
 }

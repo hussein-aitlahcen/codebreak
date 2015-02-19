@@ -361,6 +361,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public bool StaticInvocation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public BuffEffectManager BuffManager
         {
             get;
@@ -401,9 +410,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase(EntityTypeEnum type, long id)
+        public FighterBase(EntityTypeEnum type, long id, bool staticInvocation = false)
             : base(type, id)
         {
+            StaticInvocation = staticInvocation;
         }
 
         /// <summary>

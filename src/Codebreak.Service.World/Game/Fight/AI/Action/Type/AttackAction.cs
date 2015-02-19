@@ -218,6 +218,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                             break;
 
                                         case EffectEnum.Invocation:
+                                        case EffectEnum.InvocationStatic:
                                         case EffectEnum.InvocDouble:
                                             currentScore += 50;
                                             break;

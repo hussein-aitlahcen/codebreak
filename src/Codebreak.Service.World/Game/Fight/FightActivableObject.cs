@@ -213,7 +213,6 @@ namespace Codebreak.Service.World.Game.Fight
                 if (fightCell != null)
                 {
                     fightCell.AddObject(this);
-
                     AffectedCells.Add(fightCell);
                 }
             }
