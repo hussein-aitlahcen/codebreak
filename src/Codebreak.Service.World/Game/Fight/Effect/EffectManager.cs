@@ -127,10 +127,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             m_effects.Add(EffectEnum.AddDamageMagic, new StatsEffect());
             m_effects.Add(EffectEnum.AddEchecCritic, new StatsEffect());
             m_effects.Add(EffectEnum.AddDamageCritic, new StatsEffect());
+
             m_effects.Add(EffectEnum.AddDamagePercent, new StatsEffect());
             m_effects.Add(EffectEnum.SubDamagePercent, new StatsEffect());
             m_effects.Add(EffectEnum.SubDamage, new StatsEffect());
             m_effects.Add(EffectEnum.SubDamageCritic, new StatsEffect());
+            m_effects.Add(EffectEnum.SubDamageMagic, new StatsEffect());
+            m_effects.Add(EffectEnum.SubDamagePhysic, new StatsEffect());
+
             m_effects.Add(EffectEnum.AddReflectDamage, new StatsEffect());
             m_effects.Add(EffectEnum.AddReflectDamageItem, new StatsEffect());
 
