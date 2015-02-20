@@ -318,7 +318,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public SpellBook Spells
+        public SpellBook SpellBook
         {
             get;
             protected set;
@@ -710,10 +710,10 @@ namespace Codebreak.Service.World.Game.Entity
                 Statistics = null;
             }
 
-            if (Spells != null)
+            if (SpellBook != null)
             {
-                Spells.Dispose();
-                Spells = null;
+                SpellBook.Dispose();
+                SpellBook = null;
             }
 
             if (Inventory != null)

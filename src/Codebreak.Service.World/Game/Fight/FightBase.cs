@@ -2027,14 +2027,14 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
-                if (fighter.Spells == null)
+                if (fighter.SpellBook == null)
                 {
                     Logger.Debug("Fight::TryLaunchSpell empty spellbook : " + fighter.Name);
                     fighter.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var spellLevel = fighter.Spells.GetSpellLevel(spellId);
+                var spellLevel = fighter.SpellBook.GetSpellLevel(spellId);
 
                 if (spellLevel == null)
                 {

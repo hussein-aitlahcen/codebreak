@@ -57,19 +57,19 @@ namespace Codebreak.Service.World.Frame
 
             character.AddMessage(() =>
                 {
-                    if (character.Spells == null)
+                    if (character.SpellBook == null)
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    if (!character.Spells.HasSpell(spellId))
+                    if (!character.SpellBook.HasSpell(spellId))
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
 
-                    character.Spells.MoveSpell(spellId, position);
+                    character.SpellBook.MoveSpell(spellId, position);
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 });
         }
@@ -90,19 +90,19 @@ namespace Codebreak.Service.World.Frame
 
             character.AddMessage(() =>
             {
-                if (character.Spells == null)
+                if (character.SpellBook == null)
                 {
                     character.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                     return;
                 }
 
-                if (!character.Spells.HasSpell(spellId))
+                if (!character.SpellBook.HasSpell(spellId))
                 {
                     character.Dispatch(WorldMessage.SPELL_UPGRADE_ERROR());
                     return;
                 }
 
-                var spell = character.Spells.GetSpellLevel(spellId);
+                var spell = character.SpellBook.GetSpellLevel(spellId);
 
                 if (character.SpellPoint < spell.Level)
                 {
@@ -110,7 +110,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                character.Spells.LevelUp(spellId);
+                character.SpellBook.LevelUp(spellId);
                 character.SpellPoint -= spell.Level;
 
                 character.CachedBuffer = true;

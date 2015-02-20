@@ -954,7 +954,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             CharacterJobs = new JobBook();
             Statistics = new GenericStats(characterDAO);
-            Spells = SpellBookFactory.Instance.Create(this);
+            SpellBook = SpellBookFactory.Instance.Create(this);
             Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);
             FrameManager = new FrameManager<CharacterEntity, string>(this);
             Inventory = new CharacterInventory(this);
@@ -1829,7 +1829,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 base.CachedBuffer = true;
                 base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
-                base.Dispatch(WorldMessage.SPELLS_LIST(Spells));
+                base.Dispatch(WorldMessage.SPELLS_LIST(SpellBook));
                 base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
                 base.CachedBuffer = false;
             }
@@ -1851,9 +1851,9 @@ namespace Codebreak.Service.World.Game.Entity
                 Statistics.AddBase(EffectEnum.AddAP, 1);
             }
 
-            if (Spells != null)
+            if (SpellBook != null)
             {
-                Spells.GenerateLevelUpSpell(Breed, Level);
+                SpellBook.GenerateLevelUpSpell(Breed, Level);
             }
         }
 

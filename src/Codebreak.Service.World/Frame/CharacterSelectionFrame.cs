@@ -115,7 +115,7 @@ namespace Codebreak.Service.World.Frame
 
                 client.CurrentCharacter.CachedBuffer = true;
                 client.CurrentCharacter.Dispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
-                client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.Spells));
+                client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.SpellBook));
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
                 client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
                 client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST()); 
@@ -486,7 +486,7 @@ namespace Codebreak.Service.World.Frame
 
                     client.CurrentCharacter.CachedBuffer = true;
                     client.CurrentCharacter.Dispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
-                    client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.Spells));
+                    client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.SpellBook));
                     client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
                     client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
                     client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST()); 

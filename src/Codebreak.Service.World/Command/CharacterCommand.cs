@@ -756,7 +756,7 @@ namespace Codebreak.Service.World.Command
                             context.Character.LevelUp();
                         
                         context.Character.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(context.Character.Level));
-                        context.Character.Dispatch(WorldMessage.SPELLS_LIST(context.Character.Spells));
+                        context.Character.Dispatch(WorldMessage.SPELLS_LIST(context.Character.SpellBook));
                         context.Character.Dispatch(WorldMessage.ACCOUNT_STATS(context.Character));
                         context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("You are now level " + level));
                     }

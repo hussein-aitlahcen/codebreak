@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
             SpellId = 0;
             AttackState = AttackStateEnum.STATE_CALCULATE_CELLS;
 
-            return Fighter.AP > 0 && Fighter.Spells.GetSpells().Any(spell => spell.APCost <= Fighter.AP) ? AIActionResult.RUNNING : AIActionResult.FAILURE;
+            return Fighter.AP > 0 && Fighter.SpellBook.GetSpells().Any(spell => spell.APCost <= Fighter.AP) ? AIActionResult.RUNNING : AIActionResult.FAILURE;
         }
 
         public override AIActionResult Execute()
@@ -79,7 +79,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     CastCellList = new Dictionary<int,List<SpellLevel>>();
                     WeakestEnnemies = Fighter.Team.OpponentTeam.AliveFighters.OrderBy(fighter => fighter.Life);
 
-                    foreach(var spellLevel in Fighter.Spells.GetSpells())
+                    foreach(var spellLevel in Fighter.SpellBook.GetSpells())
                     {
                         foreach (var castCell in CellZone.GetCircleCells(Map, Fighter.Cell.Id, spellLevel.MaxPO))
                         {

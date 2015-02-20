@@ -568,6 +568,7 @@ namespace Codebreak.Service.World.Game.Spell
 
         LastEat = 808,
 
+        AlignmentChange = 188,
         AlignmentId = 960,
         AlignmentGrade = 961,
         TargetLevel = 962,
@@ -593,6 +594,8 @@ namespace Codebreak.Service.World.Game.Spell
         BddAddStatistic = 2003,
         BddAddItem = 2004,
         BddTeleport = 2005,
+        BddResetStats = 2006,
+        BddResetSpells = 2005,
     }
 
     /// <summary>

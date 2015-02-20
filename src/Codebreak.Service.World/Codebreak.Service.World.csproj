@@ -146,11 +146,14 @@
     <Compile Include="Game\ActionEffect\AddSpellEffect.cs" />
     <Compile Include="Game\ActionEffect\AddSpellpointEffect.cs" />
     <Compile Include="Game\ActionEffect\AddStatsEffect.cs" />
+    <Compile Include="Game\ActionEffect\ChangeAlignmentEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\DialogLeaveEffect.cs" />
     <Compile Include="Game\ActionEffect\DialogReplyEffect.cs" />
     <Compile Include="Game\ActionEffect\OpenBankEffect.cs" />
     <Compile Include="Game\ActionEffect\RecallEffect.cs" />
+    <Compile Include="Game\ActionEffect\ResetSpellEffect.cs" />
+    <Compile Include="Game\ActionEffect\ResetStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\TeleportEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />

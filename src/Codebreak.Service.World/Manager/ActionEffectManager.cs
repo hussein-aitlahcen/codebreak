@@ -36,6 +36,10 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.BddAddStatistic, AddStatsEffect.Instance);
             m_effectById.Add(EffectEnum.BddAddItem, AddItemEffect.Instance);
             m_effectById.Add(EffectEnum.BddTeleport, TeleportEffect.Instance);
+            m_effectById.Add(EffectEnum.BddResetStats, ResetStatsEffect.Instance);
+            m_effectById.Add(EffectEnum.BddResetSpells, ResetSpellEffect.Instance);
+
+            m_effectById.Add(EffectEnum.AlignmentChange, ChangeAlignmentEffect.Instance);
 
             m_effectById.Add(EffectEnum.TeleportSavedZaap, RecallEffect.Instance);
 
@@ -64,7 +68,7 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.AddIntelligence, AddStatsEffect.Instance);
             m_effectById.Add(EffectEnum.AddAgility, AddStatsEffect.Instance);
             m_effectById.Add(EffectEnum.AddChance, AddStatsEffect.Instance);
-
+            
             m_effectByType = new Dictionary<ItemTypeEnum, List<IActionEffect>>();
             m_effectByType.Add(ItemTypeEnum.TYPE_FEE_ARTIFICE, new List<IActionEffect>()
             {

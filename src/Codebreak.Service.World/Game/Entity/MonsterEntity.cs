@@ -133,7 +133,7 @@ namespace Codebreak.Service.World.Game.Entity
             Grade = monsterGrade;
 
             Statistics = new GenericStats(monsterGrade);
-            Spells = SpellBookFactory.Instance.Create(this);
+            SpellBook = SpellBookFactory.Instance.Create(this);
 
             RealLife = MaxLife;
             Invocator = invocator;

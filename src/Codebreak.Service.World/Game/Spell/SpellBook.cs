@@ -30,6 +30,17 @@ namespace Codebreak.Service.World.Game.Spell
                 return m_spellById.Count == 0;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<SpellBookEntryDAO> Spells
+        {
+            get
+            {
+                return m_spellById.Values.ToList();
+            }
+        }
        
         /// <summary>
         /// 
