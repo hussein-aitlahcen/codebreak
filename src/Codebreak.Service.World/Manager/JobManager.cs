@@ -73,23 +73,56 @@ namespace Codebreak.Service.World.Manager
                     JobIdEnum.JOB_BUCHERON,
                     JobIdEnum.JOB_NONE,
                     new HarvestSkill(SkillIdEnum.SKILL_COUPER, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_1, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_2, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_3, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_4, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_5, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_6, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_7, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_8, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_9, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_10, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_11, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_12, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_13, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_14, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_15, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
-                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_16, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON])
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_1, 10, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_2, 20, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_3, 30, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_4, 35, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_5, 35, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_6, 40, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_7, 50, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_8, 50, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_9, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_10, 70, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_11, 75, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_12, 80, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_13, 80, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_14, 90, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_15, 100, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_16, 100, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON])
                 ));
+
+            m_templateById.Add((int)JobIdEnum.JOB_PAYSAN, new JobTemplate(
+                    JobIdEnum.JOB_PAYSAN,
+                    JobIdEnum.JOB_NONE,
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_1, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_2, 20, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_3, 30, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_4, 40, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_5, 40, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_6, 50, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_7, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_8, 100, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_EGRENER, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_MOUDRE, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN])                
+                ));
+
+            m_templateById.Add((int)JobIdEnum.JOB_PECHEUR, new JobTemplate(
+                    JobIdEnum.JOB_PECHEUR,
+                    JobIdEnum.JOB_NONE,
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_1, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_2, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_3, 10, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_4, 20, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_5, 40, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_6, 50, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_7, 70, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_8, 80, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_9, 80, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
+                    new HarvestSkill(SkillIdEnum.SKILL_PECHER_10, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR])
+                ));
+           
         }
 
         /// <summary>
