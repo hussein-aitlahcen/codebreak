@@ -952,7 +952,7 @@ namespace Codebreak.Service.World.Game.Entity
             m_lastRegenTime = -1;
             m_lastEmoteId = -1;
 
-            CharacterJobs = new JobBook();
+            CharacterJobs = new JobBook(this);
             Statistics = new GenericStats(characterDAO);
             SpellBook = SpellBookFactory.Instance.Create(this);
             Waypoints = CharacterWaypointRepository.Instance.GetByCharacterId(Id);

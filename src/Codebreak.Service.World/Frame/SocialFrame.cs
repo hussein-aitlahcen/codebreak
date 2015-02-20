@@ -137,14 +137,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    var relation = new SocialRelationDAO()
-                    {
-                        AccountId = character.AccountId,
-                        Pseudo = target.Account.Pseudo,
-                        TypeId = (int)SocialRelationTypeEnum.TYPE_ENNEMY
-                    };
-
-                    SocialRelationRepository.Instance.Created(relation);
+                    var relation = SocialRelationRepository.Instance.Create(character.AccountId, target.Account.Pseudo, (int)SocialRelationTypeEnum.TYPE_ENNEMY);
 
                     character.SafeDispatch(WorldMessage.ENNEMY_ADD(character.Account.Pseudo, relation));
                 });
@@ -236,14 +229,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    var relation = new SocialRelationDAO()
-                    {
-                        AccountId = character.AccountId,
-                        Pseudo = target.Account.Pseudo,
-                        TypeId = (int)SocialRelationTypeEnum.TYPE_FRIEND
-                    };
-
-                    SocialRelationRepository.Instance.Created(relation);
+                    var relation = SocialRelationRepository.Instance.Create(character.AccountId, target.Account.Pseudo, (int)SocialRelationTypeEnum.TYPE_FRIEND);
 
                     character.SafeDispatch(WorldMessage.FRIEND_ADD(character.Account.Pseudo, relation));
                 });

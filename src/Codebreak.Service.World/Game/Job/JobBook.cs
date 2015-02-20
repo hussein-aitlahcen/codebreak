@@ -1,4 +1,7 @@
-﻿using Codebreak.Service.World.Manager;
+﻿using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +18,20 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, JobTemplate> m_templateById;
+        private List<CharacterJobDAO> m_jobs;
 
         /// <summary>
         /// 
         /// </summary>
-        public JobBook()
+        private CharacterEntity m_character;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public JobBook(CharacterEntity character)
         {
-            m_templateById = new Dictionary<int, JobTemplate>();
+            m_jobs = CharacterJobRepository.Instance.GetByCharacterId(character.Id);
+            m_character = character;
 
             // JOB BASE, GOT YA
             AddJob(JobIdEnum.JOB_BASE);
@@ -43,7 +52,12 @@ namespace Codebreak.Service.World.Game.Job
         /// <param name="jobId"></param>
         public void AddJob(int jobId)
         {
-            m_templateById.Add(jobId, JobManager.Instance.GetById(jobId));
+            // already exists
+            if (m_jobs.Any(job => job.JobId == jobId))
+                return;
+
+            // will implicitly added to the list of job because it has the same reference
+            CharacterJobRepository.Instance.Create(m_character.Id, jobId);
         }
 
         /// <summary>
@@ -53,7 +67,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <returns></returns>
         public bool HasSkill(int skillId)
         {
-            return m_templateById.Values.Any(job => job.HasSkill(skillId));
+            return m_jobs.Any(job => job.HasSkill(m_character, skillId));
         }
 
         /// <summary>

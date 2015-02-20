@@ -27,6 +27,7 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(CharacterGuildRepository.Instance);
             base.AddRepository(CharacterAlignmentRepository.Instance);
             base.AddRepository(CharacterRepository.Instance);
+            base.AddRepository(CharacterJobRepository.Instance);
             base.AddRepository(SocialRelationRepository.Instance);
             base.AddRepository(BankRepository.Instance);
             base.AddRepository(MapTriggerRepository.Instance);

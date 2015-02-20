@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codebreak.Service.World.Game.Entity;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -240,19 +241,18 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
-        private List<int> m_skills;
+        private List<JobSkill> m_skills;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="parent"></param>
-        public JobTemplate(JobIdEnum id, JobIdEnum parentId = JobIdEnum.JOB_NONE, params SkillIdEnum[] skills)
+        public JobTemplate(JobIdEnum id, JobIdEnum parentId = JobIdEnum.JOB_NONE, params JobSkill[] skills)
         {
             Id = id;
             ParentJobId = parentId;
-
-            m_skills = new List<int>(skills.Select(skill => (int)skill));
+            m_skills = new List<JobSkill>(skills);
         }
 
         /// <summary>
@@ -260,9 +260,9 @@ namespace Codebreak.Service.World.Game.Job
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool HasSkill(int id)
+        public bool HasSkill(CharacterEntity character, int id, int level)
         {
-            return m_skills.Contains(id);
+            return m_skills.Any(skill => (int)skill.SkillId == id && skill.Usable(character, level));
         }
 
         /// <summary>
@@ -270,9 +270,9 @@ namespace Codebreak.Service.World.Game.Job
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool HasSkill(SkillIdEnum id)
+        public bool HasSkill(CharacterEntity character, SkillIdEnum id, int level)
         {
-            return HasSkill((int)id);
+            return HasSkill(character, (int)id, level);
         }
     }
 }

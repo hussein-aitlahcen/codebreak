@@ -595,7 +595,7 @@ namespace Codebreak.Service.World.Game.Spell
         BddAddItem = 2004,
         BddTeleport = 2005,
         BddResetStats = 2006,
-        BddResetSpells = 2005,
+        BddResetSpells = 2007,
     }
 
     /// <summary>

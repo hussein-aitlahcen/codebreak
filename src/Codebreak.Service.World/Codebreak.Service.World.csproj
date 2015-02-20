@@ -79,6 +79,7 @@
     <Compile Include="Database\Repository\BankRepository.cs" />
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
+    <Compile Include="Database\Repository\CharacterJobRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
     <Compile Include="Database\Repository\CharacterWaypointRepository.cs" />
     <Compile Include="Database\Repository\DropTemplateRepository.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Database\Structure\CharacterAlignmentDAO.cs" />
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
+    <Compile Include="Database\Structure\CharacterJobDAO.cs" />
     <Compile Include="Database\Structure\CharacterWaypointDAO.cs" />
     <Compile Include="Database\Structure\DropTemplateDAO.cs" />
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
@@ -312,7 +314,9 @@
     <Compile Include="Game\Interactive\Type\TrashCan.cs" />
     <Compile Include="Game\Interactive\Type\Waypoint.cs" />
     <Compile Include="Game\Job\JobBook.cs" />
+    <Compile Include="Game\Job\JobSkill.cs" />
     <Compile Include="Game\Job\JobTemplate.cs" />
+    <Compile Include="Game\Job\Skill\BasicSkill.cs" />
     <Compile Include="Game\Map\CellZone.cs" />
     <Compile Include="Game\Map\IMovementHandler.cs" />
     <Compile Include="Game\Map\MapCell.cs" />
