@@ -163,6 +163,7 @@
     <Compile Include="Game\Action\GameAuctionHouseBuyAction.cs" />
     <Compile Include="Game\Action\GameAuctionHouseSellAction.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
+    <Compile Include="Game\Action\GameHarvestAction.cs" />
     <Compile Include="Game\Action\GameMerchantExchangeAction.cs" />
     <Compile Include="Game\Action\GameNpcDialogAction.cs" />
     <Compile Include="Game\Action\GameExchangeActionBase.cs" />
@@ -310,6 +311,7 @@
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
     <Compile Include="Game\Guild\GuildStatistics.cs" />
     <Compile Include="Game\Interactive\InteractiveObject.cs" />
+    <Compile Include="Game\Interactive\Type\HarvestableResource.cs" />
     <Compile Include="Game\Interactive\Type\Pheonix.cs" />
     <Compile Include="Game\Interactive\Type\TrashCan.cs" />
     <Compile Include="Game\Interactive\Type\Waypoint.cs" />

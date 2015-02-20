@@ -39,6 +39,7 @@ namespace Codebreak.Service.World.Game.Action
         FIGHT_DODGE_SUBPM = 309,
 
         SKILL_USE = 500,
+        SKILL_HARVEST = 501,
 
         // custom
         MAP,

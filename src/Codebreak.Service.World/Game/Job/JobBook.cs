@@ -103,6 +103,16 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="skillId"></param>
+        /// <returns></returns>
+        public CharacterJobDAO GetJob(SkillIdEnum skill)
+        {
+            return Jobs.Find(job => job.HasSkill(m_character, (int)skill));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
         public void SerializeAs_SkillListMessage(StringBuilder message)
         {

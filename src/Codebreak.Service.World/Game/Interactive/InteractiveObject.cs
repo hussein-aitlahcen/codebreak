@@ -184,7 +184,7 @@ namespace Codebreak.Service.World.Game.Interactive
             m_active = true;
             m_frameId = 0;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -209,6 +209,35 @@ namespace Codebreak.Service.World.Game.Interactive
             base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(CellId, m_frameId, m_active));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Activate()
+        {
+            m_active = true;
+            SendUpdate();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Deactivate()
+        {
+            m_active = false;
+            SendUpdate();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_InteractiveListMessage(StringBuilder message)
+        {
+            message.Append(CellId).Append(';');
+            message.Append(m_frameId).Append(';');
+            message.Append(m_active ? '1': '0').Append('|');
+        }
+      
         /// <summary>
         /// 
         /// </summary>

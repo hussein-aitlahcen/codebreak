@@ -1701,6 +1701,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="resource"></param>
+        public void HarvestStart(HarvestableResource resource, int duration)
+        {
+            CurrentAction = new GameHarvestAction(this, resource, duration);
+            StartAction(GameActionTypeEnum.SKILL_HARVEST);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="npc"></param>
         public void ExchangeNpc(NonPlayerCharacterEntity npc)
         {

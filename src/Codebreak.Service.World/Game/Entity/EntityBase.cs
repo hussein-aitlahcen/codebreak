@@ -571,11 +571,12 @@ namespace Codebreak.Service.World.Game.Entity
                 case GameActionTypeEnum.MAP:
                     Map.SpawnEntity(this);
                     break;
-                    
+
+                case GameActionTypeEnum.SKILL_HARVEST:
                 case GameActionTypeEnum.MAP_MOVEMENT:
                     MovementHandler.Dispatch(WorldMessage.GAME_ACTION(actionType, Id, CurrentAction.SerializeAs_GameAction()));
                     break;
-
+                    
                 case GameActionTypeEnum.MAP_TELEPORT:
                     StopAction(GameActionTypeEnum.MAP);
                     StopAction(GameActionTypeEnum.MAP_TELEPORT);

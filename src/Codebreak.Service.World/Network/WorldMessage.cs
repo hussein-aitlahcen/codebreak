@@ -15,6 +15,7 @@ using Codebreak.Service.World.Game.Auction;
 using Codebreak.Service.World.Manager;
 using Codebreak.Framework.Util;
 using Codebreak.Service.World.Game.Job;
+using Codebreak.Service.World.Game.Interactive;
 
 namespace Codebreak.Service.World.Network
 {
@@ -718,6 +719,15 @@ namespace Codebreak.Service.World.Network
         public static string GAME_ACTION(int actionId, long entityId, string args = "")
         {
             return "GA" + ';' + (int)actionId + ';' + entityId + ';' + args;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GAME_ACTION_FAILED()
+        {
+            return "GAE";
         }
 
         /// <summary>
@@ -2111,6 +2121,22 @@ namespace Codebreak.Service.World.Network
         public static string INTERACTIVE_DATA_FRAME(int cellId, int frameId, bool activated)
         {
             return "GDF|" + cellId + ";" + frameId + ";" + (activated ? "1" : "0");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="frameId"></param>
+        /// <param name="activated"></param>
+        /// <returns></returns>
+        public static string INTERACTIVE_DATA_FRAME(IEnumerable<InteractiveObject> iobjects)
+        {
+            var message = new StringBuilder("GDF");
+            foreach (var io in iobjects)
+                io.SerializeAs_InteractiveListMessage(message);
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
         }
 
         /// <summary>

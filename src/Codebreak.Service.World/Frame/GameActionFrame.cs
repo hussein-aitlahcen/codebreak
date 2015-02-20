@@ -129,7 +129,10 @@ namespace Codebreak.Service.World.Frame
                 if (!character.CanGameAction(actionType))
                 {
                     Logger.Debug("GameActionFrame::Start entity cant game action : " + character.Name);
+                    character.CachedBuffer = true;
                     character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_YOU_ARE_AWAY));
+                    character.Dispatch(WorldMessage.GAME_ACTION_FAILED());
+                    character.CachedBuffer = false;
                     return;
                 }
 

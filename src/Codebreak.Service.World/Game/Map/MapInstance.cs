@@ -16,6 +16,7 @@ using Codebreak.Service.World.Game.Condition;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Game.Spawn;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Interactive;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -249,6 +250,7 @@ namespace Codebreak.Service.World.Game.Map
         private Dictionary<string, EntityBase> m_entityByName;
         private Dictionary<int, MapCell> m_cellById;
         private List<MapCell> m_cells;
+        private List<InteractiveObject> m_interactiveObjects;
         private SubAreaInstance m_subArea;
         private long m_nextMonsterId;
         private bool m_movementInitialized;
@@ -287,6 +289,7 @@ namespace Codebreak.Service.World.Game.Map
             m_subInstance = subInstance;
             m_movementInitialized = false;
             m_cells = new List<MapCell>();
+            m_interactiveObjects = new List<InteractiveObject>();
             m_cellById = new Dictionary<int, MapCell>();
             m_entityById = new Dictionary<long, EntityBase>();
             m_entityByName = new Dictionary<string, EntityBase>();
@@ -321,6 +324,7 @@ namespace Codebreak.Service.World.Game.Map
                 {
                     base.AddUpdatable(cell.InteractiveObject);
                     cell.InteractiveObject.AddHandler(base.Dispatch);
+                    m_interactiveObjects.Add(cell.InteractiveObject);
                 }
                 m_cellById.Add(id, cell);
                 m_cells.Add(cell);
@@ -539,6 +543,7 @@ namespace Codebreak.Service.World.Game.Map
                         base.AddHandler(entity.Dispatch);
                         entity.CachedBuffer = true;
                         entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
+                        entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
                         entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
                         entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
                         foreach (var fight in FightManager.Fights)                        

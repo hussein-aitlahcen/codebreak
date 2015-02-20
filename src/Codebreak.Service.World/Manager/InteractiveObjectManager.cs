@@ -44,6 +44,7 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ZAAP, (map, cellId) => new Waypoint(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POUBELLE, (map, cellId) => new TrashCan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PHOENIX, (map, cellId) => new Pheonix(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FRENE, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 5, 1000 * 20, 10));
 
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
             AddInteractiveGfx(7003, InteractiveObjectIdEnum.INTERACTIVE_SCIE);
