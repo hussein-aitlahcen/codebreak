@@ -122,7 +122,7 @@ namespace Codebreak.Service.World.Game.Interactive
         INTERACTIVE_BAMBOU_SOMBRE = 109,
         INTERACTIVE_ENCLUME_MAGIQUE = 92,
         INTERACTIVE_TREMBLE = 133,
-        INTERACTIVE_BAMBOU_SACRE_ = 110,        
+        INTERACTIVE_BAMBOU_SACRE = 110,        
         INTERACTIVE_MORTIER_ET_PILON = 69,
         INTERACTIVE_PHOENIX = 200,
     }

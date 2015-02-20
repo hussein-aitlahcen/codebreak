@@ -73,6 +73,7 @@ namespace Codebreak.Service.World.Manager
                     JobIdEnum.JOB_BUCHERON,
                     JobIdEnum.JOB_NONE,
                     new HarvestSkill(SkillIdEnum.SKILL_COUPER, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_1, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
                     new HarvestSkill(SkillIdEnum.SKILL_COUPER_2, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
                     new HarvestSkill(SkillIdEnum.SKILL_COUPER_3, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
                     new HarvestSkill(SkillIdEnum.SKILL_COUPER_4, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),

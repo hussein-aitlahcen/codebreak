@@ -41,11 +41,30 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
+            // Autre
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ZAAP, (map, cellId) => new Waypoint(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POUBELLE, (map, cellId) => new TrashCan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PHOENIX, (map, cellId) => new Pheonix(map, cellId));
-            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FRENE, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 5, 1000 * 20, 10));
 
+            // Bois
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FRENE, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHATAIGNIER, (map, cellId) => new HarvestableResource(map, cellId, 473, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_IF, (map, cellId) => new HarvestableResource(map, cellId, 461, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ERABLE, (map, cellId) => new HarvestableResource(map, cellId, 471, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHARME, (map, cellId) => new HarvestableResource(map, cellId, 472, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHENE, (map, cellId) => new HarvestableResource(map, cellId, 460, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_NOYER, (map, cellId) => new HarvestableResource(map, cellId, 476, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_EBENE, (map, cellId) => new HarvestableResource(map, cellId, 449, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_KALIPTUS, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MERISIER, (map, cellId) => new HarvestableResource(map, cellId, 474, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ORME, (map, cellId) => new HarvestableResource(map, cellId, 470, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BAMBOU_SACRE, (map, cellId) => new HarvestableResource(map, cellId, 7014, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BAMBOU_SOMBRE, (map, cellId) => new HarvestableResource(map, cellId, 7016, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BAMBOU, (map, cellId) => new HarvestableResource(map, cellId, 7013, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BOMBU, (map, cellId) => new HarvestableResource(map, cellId, 2358, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_OLIVIOLET, (map, cellId) => new HarvestableResource(map, cellId, 2357, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+
+            // GFX
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
             AddInteractiveGfx(7003, InteractiveObjectIdEnum.INTERACTIVE_SCIE);
             AddInteractiveGfx(7503, InteractiveObjectIdEnum.INTERACTIVE_CHENE);
@@ -204,7 +223,7 @@ namespace Codebreak.Service.World.Manager
             AddInteractiveGfx(7027, InteractiveObjectIdEnum.INTERACTIVE_ENCLUME_A_BOUCLIERS);
             AddInteractiveGfx(7553, InteractiveObjectIdEnum.INTERACTIVE_BAMBOU);
             AddInteractiveGfx(7554, InteractiveObjectIdEnum.INTERACTIVE_BAMBOU_SOMBRE);
-            AddInteractiveGfx(7552, InteractiveObjectIdEnum.INTERACTIVE_BAMBOU_SACRE_);
+            AddInteractiveGfx(7552, InteractiveObjectIdEnum.INTERACTIVE_BAMBOU_SACRE);
             AddInteractiveGfx(7550, InteractiveObjectIdEnum.INTERACTIVE_RIZ);
             AddInteractiveGfx(7551, InteractiveObjectIdEnum.INTERACTIVE_PANDOUILLE);
             AddInteractiveGfx(7555, InteractiveObjectIdEnum.INTERACTIVE_DOLOMITE);

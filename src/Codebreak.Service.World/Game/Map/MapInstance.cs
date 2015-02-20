@@ -378,7 +378,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             entity.AddTimer(Util.Next(1000, 10000), () =>
             {
-                var timer = new UpdatableTimer(Util.Next(15000, 25000), () => MoveEntity(entity));
+                var timer = new UpdatableTimer(Util.Next(20000, 38000), () => MoveEntity(entity));
                 entity.MovementTimer = timer;
                 entity.AddTimer(timer);
             }, true);

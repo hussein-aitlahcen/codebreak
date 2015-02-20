@@ -160,30 +160,27 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <param name="skill"></param>
         public override void UseWithSkill(CharacterEntity character, SkillIdEnum skill)
         {
-            if (m_active)
+            switch (skill)
             {
-                switch (skill)
-                {
-                    case Job.SkillIdEnum.SKILL_COUPER:
-                    case Job.SkillIdEnum.SKILL_COUPER_1:
-                    case Job.SkillIdEnum.SKILL_COUPER_2:
-                    case Job.SkillIdEnum.SKILL_COUPER_3:
-                    case Job.SkillIdEnum.SKILL_COUPER_4:
-                    case Job.SkillIdEnum.SKILL_COUPER_5:
-                    case Job.SkillIdEnum.SKILL_COUPER_6:
-                    case Job.SkillIdEnum.SKILL_COUPER_7:
-                    case Job.SkillIdEnum.SKILL_COUPER_8:
-                    case Job.SkillIdEnum.SKILL_COUPER_9:
-                    case Job.SkillIdEnum.SKILL_COUPER_10:
-                    case Job.SkillIdEnum.SKILL_COUPER_11:
-                    case Job.SkillIdEnum.SKILL_COUPER_12:
-                    case Job.SkillIdEnum.SKILL_COUPER_13:
-                    case Job.SkillIdEnum.SKILL_COUPER_14:
-                    case Job.SkillIdEnum.SKILL_COUPER_15:
-                    case Job.SkillIdEnum.SKILL_COUPER_16:
-                        Harvest(character, skill);
-                        break;
-                }
+                case SkillIdEnum.SKILL_COUPER:
+                case SkillIdEnum.SKILL_COUPER_1:
+                case SkillIdEnum.SKILL_COUPER_2:
+                case SkillIdEnum.SKILL_COUPER_3:
+                case SkillIdEnum.SKILL_COUPER_4:
+                case SkillIdEnum.SKILL_COUPER_5:
+                case SkillIdEnum.SKILL_COUPER_6:
+                case SkillIdEnum.SKILL_COUPER_7:
+                case SkillIdEnum.SKILL_COUPER_8:
+                case SkillIdEnum.SKILL_COUPER_9:
+                case SkillIdEnum.SKILL_COUPER_10:
+                case SkillIdEnum.SKILL_COUPER_11:
+                case SkillIdEnum.SKILL_COUPER_12:
+                case SkillIdEnum.SKILL_COUPER_13:
+                case SkillIdEnum.SKILL_COUPER_14:
+                case SkillIdEnum.SKILL_COUPER_15:
+                case SkillIdEnum.SKILL_COUPER_16:
+                    Harvest(character, skill);
+                    break;
             }
         }
 
@@ -199,6 +196,9 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_YOU_ARE_AWAY));
                 return;
             }
+
+            if (!m_active)
+                return;
 
             var job = character.CharacterJobs.GetJob(skill);
             if(job == null)            
