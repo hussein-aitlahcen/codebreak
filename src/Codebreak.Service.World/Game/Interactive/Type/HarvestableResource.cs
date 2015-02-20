@@ -179,6 +179,28 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 case SkillIdEnum.SKILL_COUPER_14:
                 case SkillIdEnum.SKILL_COUPER_15:
                 case SkillIdEnum.SKILL_COUPER_16:
+                case SkillIdEnum.SKILL_FAUCHER:
+                case SkillIdEnum.SKILL_FAUCHER_1:
+                case SkillIdEnum.SKILL_FAUCHER_2:
+                case SkillIdEnum.SKILL_FAUCHER_3:
+                case SkillIdEnum.SKILL_FAUCHER_4:
+                case SkillIdEnum.SKILL_FAUCHER_5:
+                case SkillIdEnum.SKILL_FAUCHER_6:
+                case SkillIdEnum.SKILL_FAUCHER_7:
+                case SkillIdEnum.SKILL_FAUCHER_8:
+                case SkillIdEnum.SKILL_FAUCHER_9:
+                case SkillIdEnum.SKILL_EGRENER:
+                case SkillIdEnum.SKILL_MOUDRE:
+                case SkillIdEnum.SKILL_PECHER:
+                case SkillIdEnum.SKILL_PECHER_1:
+                case SkillIdEnum.SKILL_PECHER_2:
+                case SkillIdEnum.SKILL_PECHER_3:
+                case SkillIdEnum.SKILL_PECHER_4:
+                case SkillIdEnum.SKILL_PECHER_5:
+                case SkillIdEnum.SKILL_PECHER_6:
+                case SkillIdEnum.SKILL_PECHER_7:
+                case SkillIdEnum.SKILL_PECHER_8:
+                case SkillIdEnum.SKILL_PECHER_9:
                     Harvest(character, skill);
                     break;
             }

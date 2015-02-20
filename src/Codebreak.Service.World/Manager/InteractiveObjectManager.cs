@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POUBELLE, (map, cellId) => new TrashCan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PHOENIX, (map, cellId) => new Pheonix(map, cellId));
 
-            // Bois
+           // Bois
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FRENE, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 60 * 1, 1000 * 60 * 5, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHATAIGNIER, (map, cellId) => new HarvestableResource(map, cellId, 473, 1000 * 60 * 1, 1000 * 60 * 5, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_IF, (map, cellId) => new HarvestableResource(map, cellId, 461, 1000 * 60 * 1, 1000 * 60 * 5, 10));
@@ -63,6 +63,27 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BAMBOU, (map, cellId) => new HarvestableResource(map, cellId, 7013, 1000 * 60 * 1, 1000 * 60 * 5, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BOMBU, (map, cellId) => new HarvestableResource(map, cellId, 2358, 1000 * 60 * 1, 1000 * 60 * 5, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_OLIVIOLET, (map, cellId) => new HarvestableResource(map, cellId, 2357, 1000 * 60 * 1, 1000 * 60 * 5, 10));
+
+            // Paysan
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BLE, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ORGE, (map, cellId) => new HarvestableResource(map, cellId, 400, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_AVOINE, (map, cellId) => new HarvestableResource(map, cellId, 533, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_HOUBLON, (map, cellId) => new HarvestableResource(map, cellId, 401, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHANVRE, (map, cellId) => new HarvestableResource(map, cellId, 425, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_LIN, (map, cellId) => new HarvestableResource(map, cellId, 423, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_RIZ, (map, cellId) => new HarvestableResource(map, cellId, 7018, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_SEIGLE, (map, cellId) => new HarvestableResource(map, cellId, 532, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MALT, (map, cellId) => new HarvestableResource(map, cellId, 405, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+
+            // Pêcheur
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PETITS_POISSONS_MER, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POISSONS_RIVIERE, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PETITS_POISSONS_RIVIERE, (map, cellId) => new HarvestableResource(map, cellId, 1782, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_GROS_POISSONS_RIVIERE, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POISSONS_MER, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_GROS_POISSONS_MER, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POISSONS_GEANTS_RIVIERE, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POISSONS_GEANTS_MER, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
 
             // GFX
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
