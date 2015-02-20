@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Job.Skill
             var weaponId = -1;
             if (weapon != null)
                 weaponId = weapon.TemplateId;
-            return ObtainLevel >= level && (Tools.Count == 0 || Tools.Contains(weaponId));
+            return ObtainLevel <= level && (Tools.Count == 0 || Tools.Contains(weaponId));
         }
     }
 }
