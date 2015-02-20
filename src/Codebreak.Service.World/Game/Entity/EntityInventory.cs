@@ -81,6 +81,15 @@ namespace Codebreak.Service.World.Game.Entity
                         Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
                     else
                         Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
+
+                    if (item.Slot == ItemSlotEnum.SLOT_WEAPON)
+                    {
+                        if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+                        {
+                            var character = (CharacterEntity)Entity;
+                            character.CharacterJobs.ToolEquipped(item.TemplateId);
+                        }
+                    }
                 }
             }
         }
@@ -146,6 +155,11 @@ namespace Codebreak.Service.World.Game.Entity
                     Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
                 else
                     Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
+
+                if (item.Slot == ItemSlotEnum.SLOT_WEAPON)
+                {
+                    Entity.Dispatch(WorldMessage.JOB_TOOL_EQUIPPED());
+                }
 
                 item.SlotId = (int)slot;
                 m_entityLookRefresh = true;
@@ -218,7 +232,7 @@ namespace Codebreak.Service.World.Game.Entity
                     Entity.Statistics.Merge(StatsType.TYPE_BOOST, item.Statistics);
                 else
                     Entity.Statistics.Merge(StatsType.TYPE_ITEM, item.Statistics);
-
+               
                 // send new stats
                 if (Entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
@@ -229,6 +243,11 @@ namespace Codebreak.Service.World.Game.Entity
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
                     if(item.Template.SetId != 0)                    
                         base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));
+                    if (item.Slot == ItemSlotEnum.SLOT_WEAPON)
+                    {
+                        var character = (CharacterEntity)Entity;
+                        character.CharacterJobs.ToolEquipped(item.TemplateId);
+                    }
                     base.CachedBuffer = false;
                 }
             }

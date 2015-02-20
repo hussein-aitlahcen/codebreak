@@ -35,6 +35,34 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public long ExperienceFloorNext
+        {
+            get
+            {
+                var next = ExperienceManager.Instance.GetFloor(Level + 1, ExperienceTypeEnum.JOB);
+                if (next == -1)
+                    return Experience;
+                return next;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public long ExperienceFloorCurrent
+        {
+            get
+            {
+                return ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.JOB);
+            }
+        }
+
         
         /// <summary>
         /// 

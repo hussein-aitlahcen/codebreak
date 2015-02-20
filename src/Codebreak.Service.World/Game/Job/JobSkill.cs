@@ -58,11 +58,20 @@ namespace Codebreak.Service.World.Game.Job
         /// <returns></returns>
         public virtual bool Usable(CharacterEntity character, int level)
         {
-            var weapon = character.Inventory.Items.Find(item => item.Slot == Database.Structure.ItemSlotEnum.SLOT_WEAPON);
-            var weaponId = -1;
-            if(weapon != null)
-                weaponId = weapon.TemplateId;
-            return ObtainLevel >= level && (Tools.Count == 0 || Tools.Contains(weaponId));
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public virtual void SerializeAs_SkillListMessage(StringBuilder message)
+        {
+            message.Append((int)SkillId).Append('~');
+            message.Append("").Append('~'); // param1
+            message.Append("").Append('~'); // param2
+            message.Append("").Append('~'); // param3
+            message.Append(""); // param4
         }
     }
 }

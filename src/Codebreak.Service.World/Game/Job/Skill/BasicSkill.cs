@@ -20,16 +20,5 @@ namespace Codebreak.Service.World.Game.Job.Skill
             : base(skillId)
         {
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="tool"></param>
-        /// <returns></returns>
-        public override bool Usable(CharacterEntity character, int level)
-        {
-            return true;
-        }
     }
 }

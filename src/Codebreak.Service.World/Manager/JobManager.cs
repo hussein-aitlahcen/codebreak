@@ -66,7 +66,29 @@ namespace Codebreak.Service.World.Manager
                     new BasicSkill(SkillIdEnum.SKILL_VENDRE_1),
                     new BasicSkill(SkillIdEnum.SKILL_VERROUILLER),
                     new BasicSkill(SkillIdEnum.SKILL_VERROUILLER_1),
-                    new BasicSkill(SkillIdEnum.SKILL_SE_RENDRE_A_INCARNAM)));
+                    new BasicSkill(SkillIdEnum.SKILL_SE_RENDRE_A_INCARNAM)
+                ));
+
+            m_templateById.Add((int)JobIdEnum.JOB_BUCHERON, new JobTemplate(
+                    JobIdEnum.JOB_BUCHERON,
+                    JobIdEnum.JOB_NONE,
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_2, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_3, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_4, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_5, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_6, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_7, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_8, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_9, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_10, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_11, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_12, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_13, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_14, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_15, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
+                    new HarvestSkill(SkillIdEnum.SKILL_COUPER_16, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON])
+                ));
         }
 
         /// <summary>

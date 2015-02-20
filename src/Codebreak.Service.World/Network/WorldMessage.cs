@@ -14,6 +14,7 @@ using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Auction;
 using Codebreak.Service.World.Manager;
 using Codebreak.Framework.Util;
+using Codebreak.Service.World.Game.Job;
 
 namespace Codebreak.Service.World.Network
 {
@@ -901,19 +902,7 @@ namespace Codebreak.Service.World.Network
         {
             return "OM" + guid + "|" + (slot == (int)ItemSlotEnum.SLOT_INVENTORY ? "" : slot.ToString());
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="templateId"></param>
-        /// <returns></returns>
-        public static string OBJECT_WEAPON_EQUIPPED(int templateId)
-        {
-            if (templateId == -1)
-                return "OT";
-            return "OT" + templateId;
-        }
-
+              
         /// <summary>
         /// 
         /// </summary>
@@ -2530,6 +2519,52 @@ namespace Codebreak.Service.World.Network
             foreach (var item in items)
                 message.Append(item.ToString()).Append('*');
             return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public static string JOB_SKILL(JobBook book)
+        {
+            var message = new StringBuilder("JSK");
+            book.SerializeAs_SkillListMessage(message);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public static string JOB_XP(JobBook book)
+        {
+            var message = new StringBuilder("JXK");
+            foreach(var job in book.Jobs)
+            {
+                if (job.JobId != (int)JobIdEnum.JOB_BASE)
+                {
+                    message.Append(job.JobId).Append(';');
+                    message.Append(job.Level).Append(';');
+                    message.Append(job.ExperienceFloorCurrent).Append(';');
+                    message.Append(job.Experience).Append(';');
+                    message.Append(job.ExperienceFloorNext).Append('|');
+                }
+            }
+            if(book.Jobs.Count > 1)
+                message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string JOB_TOOL_EQUIPPED(string jobId = "n")
+        {
+            return "OT" + jobId;
         }
     }
 }

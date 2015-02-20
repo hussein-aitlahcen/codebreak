@@ -274,5 +274,35 @@ namespace Codebreak.Service.World.Game.Job
         {
             return HasSkill(character, (int)id, level);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public bool HasTool(int templateId)
+        {
+            return m_skills.Any(skill => skill.Tools.Contains(templateId));
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_SkillListMessage(CharacterEntity character, int level, StringBuilder message)
+        {
+            message.Append((int)Id).Append(';');
+            foreach(var skill in m_skills)
+            {
+                if(skill.ObtainLevel <= level)
+                {
+                    skill.SerializeAs_SkillListMessage(message);
+                    message.Append(',');
+                }
+            }
+            if(m_skills.Count > 0)
+                message.Remove(message.Length - 1, 1);
+            message.Append('|');
+        }
     }
 }

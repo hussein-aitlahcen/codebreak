@@ -317,6 +317,7 @@
     <Compile Include="Game\Job\JobSkill.cs" />
     <Compile Include="Game\Job\JobTemplate.cs" />
     <Compile Include="Game\Job\Skill\BasicSkill.cs" />
+    <Compile Include="Game\Job\Skill\HarvestSkill.cs" />
     <Compile Include="Game\Map\CellZone.cs" />
     <Compile Include="Game\Map\IMovementHandler.cs" />
     <Compile Include="Game\Map\MapCell.cs" />

@@ -1,5 +1,6 @@
 ﻿using Codebreak.Framework.Configuration;
 using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Job;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -170,8 +171,9 @@ namespace Codebreak.Service.World
         [Configurable()]
         public static int MAP_START_XELOR = 10298;
         [Configurable()]
-        public static int
-                         CELL_START_XELOR = 286;
+        public static int CELL_START_XELOR = 286;
+
+        public static Dictionary<JobIdEnum, int[]> JOB_TOOLS = new Dictionary<JobIdEnum,int[]>() { { JobIdEnum.JOB_BUCHERON, new int[] { 454, 456, 478, 502, 673, 674, 675, 676, 771, 2587, 2592, 2593, 2600, 7212 } } };
 
         public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int, int>()
         {

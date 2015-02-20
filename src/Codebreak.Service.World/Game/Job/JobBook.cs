@@ -2,6 +2,7 @@
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,11 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
-        private List<CharacterJobDAO> m_jobs;
+        public List<CharacterJobDAO> Jobs
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 
@@ -30,7 +35,7 @@ namespace Codebreak.Service.World.Game.Job
         /// </summary>
         public JobBook(CharacterEntity character)
         {
-            m_jobs = CharacterJobRepository.Instance.GetByCharacterId(character.Id);
+            Jobs = CharacterJobRepository.Instance.GetByCharacterId(character.Id);
             m_character = character;
 
             // JOB BASE, GOT YA
@@ -53,7 +58,7 @@ namespace Codebreak.Service.World.Game.Job
         public void AddJob(int jobId)
         {
             // already exists
-            if (m_jobs.Any(job => job.JobId == jobId))
+            if (Jobs.Any(job => job.JobId == jobId))
                 return;
 
             // will implicitly added to the list of job because it has the same reference
@@ -67,7 +72,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <returns></returns>
         public bool HasSkill(int skillId)
         {
-            return m_jobs.Any(job => job.HasSkill(m_character, skillId));
+            return Jobs.Any(job => job.HasSkill(m_character, skillId));
         }
 
         /// <summary>
@@ -78,6 +83,38 @@ namespace Codebreak.Service.World.Game.Job
         public bool HasSkill(SkillIdEnum id)
         {
             return HasSkill((int)id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="toolId"></param>
+        /// <returns></returns>
+        public void ToolEquipped(int templatId)
+        {
+            foreach (var job in Jobs)
+                if (job.Template.HasTool(templatId))
+                {
+                    m_character.SafeDispatch(WorldMessage.JOB_TOOL_EQUIPPED(job.JobId.ToString()));
+                    return;
+                }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_SkillListMessage(StringBuilder message)
+        {
+            foreach(var job in Jobs)
+            {
+                if (job.JobId != (int)JobIdEnum.JOB_BASE)
+                {
+                    job.Template.SerializeAs_SkillListMessage(m_character, job.Level, message);
+                }
+            }
+            if (Jobs.Count > 1)
+                message.Remove(message.Length - 1, 1);
         }
     }
 }
