@@ -103,8 +103,8 @@ namespace Codebreak.Service.World.Manager
                     new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_6, 50, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
                     new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_7, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
                     new HarvestSkill(SkillIdEnum.SKILL_FAUCHER_8, 100, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
-                    new HarvestSkill(SkillIdEnum.SKILL_EGRENER, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
-                    new HarvestSkill(SkillIdEnum.SKILL_MOUDRE, 60, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN])                
+                    new HarvestSkill(SkillIdEnum.SKILL_EGRENER, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN]),
+                    new HarvestSkill(SkillIdEnum.SKILL_MOUDRE, 1 , WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PAYSAN])                
                 ));
 
             m_templateById.Add((int)JobIdEnum.JOB_PECHEUR, new JobTemplate(
