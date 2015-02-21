@@ -598,7 +598,7 @@ namespace Codebreak.Service.World.Game.Map
             {
                 if(cell.InteractiveObject != null)
                 {
-                    cell.InteractiveObject.UseWithSkill(character, (SkillIdEnum)skillId);
+                    cell.InteractiveObject.UseWithSkill(character, character.CharacterJobs.GetSkill(skillId));
                 }
                 else
                 {

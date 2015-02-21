@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="exchange"></param>
         /// <param name="localEntity"></param>
         /// <param name="distantEntity"></param>
-        public GameExchangeActionBase(ExchangeBase exchange, EntityBase localEntity, EntityBase distantEntity)
+        public GameExchangeActionBase(ExchangeBase exchange, EntityBase localEntity, EntityBase distantEntity = null)
             : base(GameActionTypeEnum.EXCHANGE, localEntity)
         {
             DistantEntity = distantEntity;

@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// </summary>
         /// <param name="character"></param>
         /// <param name="skill"></param>
-        public override void UseWithSkill(CharacterEntity character, SkillIdEnum skill)
+        public override void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
             if (!character.Waypoints.Any(waypoint => waypoint.MapId == Map.Id))
             {
@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_WAYPOINT_REGISTERED));
             }
 
-            switch(skill)
+            switch(skill.SkillId)
             { 
                 case SkillIdEnum.SKILL_SAUVEGARDER:
                     Save(character);

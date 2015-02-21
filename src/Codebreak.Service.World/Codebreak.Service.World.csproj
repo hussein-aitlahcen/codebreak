@@ -82,6 +82,7 @@
     <Compile Include="Database\Repository\CharacterJobRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
     <Compile Include="Database\Repository\CharacterWaypointRepository.cs" />
+    <Compile Include="Database\Repository\CraftEntryRepository.cs" />
     <Compile Include="Database\Repository\DropTemplateRepository.cs" />
     <Compile Include="Database\Repository\ExperienceTemplateRepository.cs" />
     <Compile Include="Database\Repository\GuildRepository.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
     <Compile Include="Database\Structure\CharacterJobDAO.cs" />
     <Compile Include="Database\Structure\CharacterWaypointDAO.cs" />
+    <Compile Include="Database\Structure\CraftEntryDAO.cs" />
     <Compile Include="Database\Structure\DropTemplateDAO.cs" />
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="Game\ActionEffect\AddEnergyEffect.cs" />
     <Compile Include="Game\ActionEffect\AddExperienceEffect.cs" />
     <Compile Include="Game\ActionEffect\AddItemAction.cs" />
+    <Compile Include="Game\ActionEffect\AddJobEffect.cs" />
     <Compile Include="Game\ActionEffect\AddKamasEffect.cs" />
     <Compile Include="Game\ActionEffect\AddLifeEffect.cs" />
     <Compile Include="Game\ActionEffect\AddSpellEffect.cs" />
@@ -163,6 +166,7 @@
     <Compile Include="Game\Action\GameAuctionHouseBuyAction.cs" />
     <Compile Include="Game\Action\GameAuctionHouseSellAction.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
+    <Compile Include="Game\Action\GameCraftPlanExchangeAction.cs" />
     <Compile Include="Game\Action\GameHarvestAction.cs" />
     <Compile Include="Game\Action\GameMerchantExchangeAction.cs" />
     <Compile Include="Game\Action\GameNpcDialogAction.cs" />
@@ -207,6 +211,7 @@
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseSellExchange.cs" />
+    <Compile Include="Game\Exchange\CraftPlanExchange.cs" />
     <Compile Include="Game\Exchange\MerchantExchange.cs" />
     <Compile Include="Game\Exchange\PersonalShopExchange.cs" />
     <Compile Include="Game\Exchange\EntityExchange.cs" />
@@ -311,6 +316,7 @@
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
     <Compile Include="Game\Guild\GuildStatistics.cs" />
     <Compile Include="Game\Interactive\InteractiveObject.cs" />
+    <Compile Include="Game\Interactive\Type\CraftPlan.cs" />
     <Compile Include="Game\Interactive\Type\HarvestableResource.cs" />
     <Compile Include="Game\Interactive\Type\Pheonix.cs" />
     <Compile Include="Game\Interactive\Type\TrashCan.cs" />
@@ -319,6 +325,7 @@
     <Compile Include="Game\Job\JobSkill.cs" />
     <Compile Include="Game\Job\JobTemplate.cs" />
     <Compile Include="Game\Job\Skill\BasicSkill.cs" />
+    <Compile Include="Game\Job\Skill\CraftSkill.cs" />
     <Compile Include="Game\Job\Skill\HarvestSkill.cs" />
     <Compile Include="Game\Map\CellZone.cs" />
     <Compile Include="Game\Map\IMovementHandler.cs" />

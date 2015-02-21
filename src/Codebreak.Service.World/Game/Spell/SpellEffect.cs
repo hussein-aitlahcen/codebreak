@@ -535,6 +535,7 @@ namespace Codebreak.Service.World.Game.Spell
         TeleportSavedZaap = 600,
 
         /* Parchemins */
+        AddJob = 603,
         AddSpell = 604,
         AddExperience = 605,
         AddCaractStrength = 607,
@@ -596,6 +597,7 @@ namespace Codebreak.Service.World.Game.Spell
         BddTeleport = 2005,
         BddResetStats = 2006,
         BddResetSpells = 2007,
+        BddAddJob = 2008,
     }
 
     /// <summary>

@@ -490,7 +490,7 @@ namespace Codebreak.Service.World.Frame
                     }
 
                     var action = character.CurrentAction as GameExchangeActionBase;
-                    var exchange = action.Exchange as EntityExchange;
+                    var exchange = action.Exchange as IValidableExchange;
                     if(exchange == null)
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());

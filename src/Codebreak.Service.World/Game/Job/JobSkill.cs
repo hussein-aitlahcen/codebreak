@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Game.Entity;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace Codebreak.Service.World.Game.Job
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public virtual void SerializeAs_SkillListMessage(StringBuilder message)
+        public virtual void SerializeAs_SkillListMessage(CharacterJobDAO job, StringBuilder message)
         {
             message.Append((int)SkillId).Append('~');
             message.Append("").Append('~'); // param1

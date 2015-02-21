@@ -11,8 +11,13 @@ namespace Codebreak.Service.World.Database.Repository
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuctionHouseAllowedTypeRepository : Repository<AuctionHouseAllowedTypeRepository, AuctionHouseAllowedTypeDAO>
+    public sealed class CraftEntryRepository : Repository<CraftEntryRepository, CraftEntryDAO>
     {
+        public override void OnObjectAdded(CraftEntryDAO craftEntry)
+        {
+            ItemTemplateRepository.Instance.GetById(craftEntry.TemplateId).Ingredients.Add(craftEntry);
+        }
+
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
         }

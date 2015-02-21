@@ -34,5 +34,19 @@ namespace Codebreak.Service.World.Game.Job.Skill
                 weaponId = weapon.TemplateId;
             return ObtainLevel <= level && (Tools.Count == 0 || Tools.Contains(weaponId));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="message"></param>
+        public override void SerializeAs_SkillListMessage(Database.Structure.CharacterJobDAO job, StringBuilder message)
+        {
+            message.Append((int)SkillId).Append('~');
+            message.Append(job.HarvestMinQuantity).Append('~'); // param1
+            message.Append(job.HarvestMaxQuantity).Append('~'); // param2
+            message.Append("").Append('~'); // param3
+            message.Append(job.HarvestDuration); // param4
+        }
     }
 }

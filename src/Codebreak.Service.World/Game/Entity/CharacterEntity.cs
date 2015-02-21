@@ -1711,6 +1711,17 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="plan"></param>
+        /// <param name="skill"></param>
+        public void CraftStart(CraftPlan plan, JobSkill skill)
+        {
+            CurrentAction = new GameCraftPlanExchangeAction(this, skill);
+            StartAction(GameActionTypeEnum.EXCHANGE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="npc"></param>
         public void ExchangeNpc(NonPlayerCharacterEntity npc)
         {

@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Game.Job
     /// <summary>
     /// 
     /// </summary>
-    public sealed class JobBook
+    public sealed class JobBook : MessageDispatcher
     {
         /// <summary>
         /// 
@@ -23,6 +23,17 @@ namespace Codebreak.Service.World.Game.Job
         {
             get;
             private set;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int BaseJobCount
+        {
+            get
+            {
+                return Jobs.Count(job => job.Template.ParentJobId == JobIdEnum.JOB_NONE && job.Template.Id != JobIdEnum.JOB_BASE);
+            }
         }
 
         /// <summary>
@@ -40,6 +51,18 @@ namespace Codebreak.Service.World.Game.Job
 
             // JOB BASE, GOT YA
             AddJob(JobIdEnum.JOB_BASE);
+
+            base.AddHandler(character.Dispatch);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        public void LearnJob(int jobId)
+        {
+            AddJob(jobId);
+            
         }
 
         /// <summary>
@@ -63,6 +86,22 @@ namespace Codebreak.Service.World.Game.Job
 
             // will implicitly added to the list of job because it has the same reference
             CharacterJobRepository.Instance.Create(m_character.Id, jobId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="skillId"></param>
+        /// <returns></returns>
+        public JobSkill GetSkill(int skillId)
+        {
+            foreach(var job in Jobs)
+            {
+                var skill = job.GetSkill(m_character, skillId);
+                if (skill != null)
+                    return skill;
+            }
+            return null;
         }
 
         /// <summary>
@@ -113,6 +152,37 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
+        public bool HasJob(int jobId)
+        {
+            return Jobs.Any(job => job.JobId == jobId);
+        }
+              
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="experience"></param>
+        public void AddExperience(CharacterJobDAO job, long experience)
+        {
+            job.Experience += experience;
+
+            var currentLevel = job.Level;
+
+            while (job.Experience > job.ExperienceFloorNext)
+                job.Level++;
+
+            if (job.Level != currentLevel)
+            {
+                base.Dispatch(WorldMessage.JOB_NEW_LEVEL(job.JobId, job.Level));
+                base.Dispatch(WorldMessage.JOB_SKILL(job));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
         public void SerializeAs_SkillListMessage(StringBuilder message)
         {
@@ -120,7 +190,7 @@ namespace Codebreak.Service.World.Game.Job
             {
                 if (job.JobId != (int)JobIdEnum.JOB_BASE)
                 {
-                    job.Template.SerializeAs_SkillListMessage(m_character, job.Level, message);
+                    job.Template.SerializeAs_SkillListMessage(job, message);
                 }
             }
             if (Jobs.Count > 1)

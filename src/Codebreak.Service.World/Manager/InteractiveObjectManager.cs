@@ -46,7 +46,11 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POUBELLE, (map, cellId) => new TrashCan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PHOENIX, (map, cellId) => new Pheonix(map, cellId));
 
-           // Bois
+            // Craft
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_SCIE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME, (map, cellId) => new CraftPlan(map, cellId));
+
+            // Bois
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FRENE, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 60 * 1, 1000 * 60 * 5, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHATAIGNIER, (map, cellId) => new HarvestableResource(map, cellId, 473, 1000 * 60 * 1, 1000 * 60 * 5, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_IF, (map, cellId) => new HarvestableResource(map, cellId, 461, 1000 * 60 * 1, 1000 * 60 * 5, 10));

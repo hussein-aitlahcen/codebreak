@@ -4,6 +4,7 @@ using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Job;
+using Codebreak.Service.World.Game.Job.Skill;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
 using System;
@@ -38,36 +39,6 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// 
         /// </summary>
         public const int FRAME_GROW = 5;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jobLevel"></param>
-        /// <returns></returns>
-        public static int GeneratedMinQuantity(int jobLevel) 
-        { 
-            return 1 + (int)Math.Floor((double)jobLevel / 5) + 6 * (int)Math.Floor((double)jobLevel / 100);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jobLevel"></param>
-        /// <returns></returns>
-        public static int GeneratedMaxQuantity(int jobLevel)
-        { 
-            return GeneratedMinQuantity(jobLevel) + 2; 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jobLevel"></param>
-        /// <returns></returns>
-        public static int HarvestTime(int jobLevel)
-        {
-            return (int)(1000 * (10 - Math.Round(0.1 * (jobLevel - 1), 1))); 
-        }
 
         /// <summary>
         /// 
@@ -131,6 +102,11 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
+        private CharacterJobDAO m_currentJob;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private ItemTemplateDAO m_generatedTemplate;
 
         /// <summary>
@@ -158,9 +134,9 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// </summary>
         /// <param name="character"></param>
         /// <param name="skill"></param>
-        public override void UseWithSkill(CharacterEntity character, SkillIdEnum skill)
+        public override void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
-            switch (skill)
+            switch (skill.SkillId)
             {
                 case SkillIdEnum.SKILL_COUPER:
                 case SkillIdEnum.SKILL_COUPER_1:
@@ -201,7 +177,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 case SkillIdEnum.SKILL_PECHER_7:
                 case SkillIdEnum.SKILL_PECHER_8:
                 case SkillIdEnum.SKILL_PECHER_9:
-                    Harvest(character, skill);
+                    Harvest(character, skill.SkillId);
                     break;
             }
         }
@@ -222,19 +198,19 @@ namespace Codebreak.Service.World.Game.Interactive.Type
             if (!m_active)
                 return;
 
-            var job = character.CharacterJobs.GetJob(skill);
-            if(job == null)            
+            m_currentJob = character.CharacterJobs.GetJob(skill);
+            if (m_currentJob == null)            
                 return;
 
-            var duraction = HarvestTime(job.Level);
-            m_quantityFarmed = Util.Next(GeneratedMinQuantity(job.Level), GeneratedMaxQuantity(job.Level));
+            var duration = m_currentJob.HarvestDuration;
+            m_quantityFarmed = Util.Next(m_currentJob.HarvestMinQuantity, m_currentJob.HarvestMaxQuantity);
 
-            character.HarvestStart(this, duraction);
+            character.HarvestStart(this, duration);
             m_currentHarvester = character;
 
             Deactivate();
 
-            m_harvestTimer = base.AddTimer(duraction, StopHarvest, true);
+            m_harvestTimer = base.AddTimer(duration, StopHarvest, true);
         }
 
         /// <summary>
@@ -246,6 +222,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
             Activate();
 
             m_currentHarvester = null;
+            m_currentJob = null;
 
             base.RemoveTimer(m_harvestTimer);
         }
@@ -257,9 +234,17 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         public void StopHarvest()
         {
             m_currentHarvester.StopAction(GameActionTypeEnum.SKILL_HARVEST);
+
+            var exprienceWin = m_quantityFarmed * Experience * WorldConfig.RATE_XP;
+
+            m_currentHarvester.CachedBuffer = true;
             m_currentHarvester.Inventory.AddItem(GeneratedTemplate.Create(m_quantityFarmed));
+            m_currentHarvester.CharacterJobs.AddExperience(m_currentJob, (long)exprienceWin);
             m_currentHarvester.Dispatch(WorldMessage.INTERACTIVE_FARMED_QUANTITY(m_currentHarvester.Id, m_quantityFarmed));
-           
+            m_currentHarvester.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_WON_JOB_XP, exprienceWin, m_currentJob.JobId));
+            m_currentHarvester.Dispatch(WorldMessage.JOB_XP(m_currentJob));
+            m_currentHarvester.CachedBuffer = false;
+
             base.UpdateFrame(FRAME_FARMING, FRAME_CUT);
             base.AddTimer(Util.Next(MinRespawnTime, MaxRespawnTime), Respawn, true);
         }

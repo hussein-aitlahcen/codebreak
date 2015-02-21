@@ -1,6 +1,7 @@
 ﻿using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Stats;
+using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,12 @@ namespace Codebreak.Service.World.Game.ActionEffect
         {
             var spellId = int.Parse(parameters["spellId"]);
 
+            if(SpellManager.Instance.GetTemplate(spellId) == null)
+            {
+                character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Sort inconnu, veuillez porter l'item sur le forum."));
+                return false;
+            }
+            
             if (character.SpellBook.HasSpell(spellId))
             {
                 character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_UNABLE_LEARN_SPELL, spellId));

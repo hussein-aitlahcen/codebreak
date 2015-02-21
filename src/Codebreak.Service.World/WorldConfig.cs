@@ -174,7 +174,8 @@ namespace Codebreak.Service.World
         public static Dictionary<JobIdEnum, int[]> JOB_TOOLS = new Dictionary<JobIdEnum,int[]>() { 
             { JobIdEnum.JOB_BUCHERON, new int[] { 454, 456, 478, 502, 673, 674, 675, 676, 771, 2587, 2592, 2593, 2600, 7212 } },
             { JobIdEnum.JOB_PAYSAN, new int[] { 577, 765, 8127, 8540, 8992, 12006 } },
-            { JobIdEnum.JOB_PECHEUR, new int[] { 596, 1860, 1863, 1865, 1866, 1867, 1868, 2188, 2366, 8541 } }
+            { JobIdEnum.JOB_PECHEUR, new int[] { 596, 1860, 1863, 1865, 1866, 1867, 1868, 2188, 2366, 8541 } },
+            { JobIdEnum.JOB_FORGEUR_EPEES, new int[] { 494 } }
         };
 
         public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int, int>()

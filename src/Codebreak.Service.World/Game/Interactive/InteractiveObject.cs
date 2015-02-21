@@ -243,7 +243,7 @@ namespace Codebreak.Service.World.Game.Interactive
         /// </summary>
         /// <param name="character"></param>
         /// <param name="skillId"></param>
-        public virtual void UseWithSkill(CharacterEntity character, SkillIdEnum skill)
+        public virtual void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
             character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("Cet objet interactif est en cours de developpement."));
         }

@@ -13,7 +13,20 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public abstract class EntityExchange : ExchangeBase
+    public interface IValidableExchange
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        bool Validate(EntityBase entity);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class EntityExchange : ExchangeBase, IValidableExchange
     {
          /// <summary>
         /// 

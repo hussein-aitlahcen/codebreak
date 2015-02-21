@@ -16,6 +16,7 @@ namespace Codebreak.Service.World.Game.Exchange
         EXCHANGE_SHOP = 0, // Merchant/npc
         EXCHANGE_PLAYER = 1,
         EXCHANGE_NPC = 2,
+        EXCHANGE_CRAFTPLAN = 3,
         EXCHANGE_MERCHANT = 4,
         EXCHANGE_STORAGE = 5,
         EXCHANGE_TAXCOLLECTOR = 8,

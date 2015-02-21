@@ -24,12 +24,16 @@ namespace Codebreak.Service.World.Database.Repository
             return base.FindAll(spawn => spawn.Type == type && spawn.ZoneId == id);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void DeleteAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
         }
     }
@@ -39,12 +43,16 @@ namespace Codebreak.Service.World.Database.Repository
     /// </summary>
     public sealed class MonsterSuperRaceRepository : Repository<MonsterSuperRaceRepository, MonsterSuperRaceDAO>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void DeleteAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
         }
     }
@@ -86,12 +94,16 @@ namespace Codebreak.Service.World.Database.Repository
             return m_raceById[id];
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void DeleteAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
         }
     }
@@ -137,15 +149,17 @@ namespace Codebreak.Service.World.Database.Repository
                 return m_monsterById[id];
             return null;
         }
-                
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+        
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            // NO UPDATE
+        }
+
+        public override void DeleteAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+        }
+
+        public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
         }
     }
 }

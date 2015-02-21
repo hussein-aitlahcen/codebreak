@@ -12,14 +12,12 @@ namespace Codebreak.Service.World.Game.Interactive.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Pheonix : InteractiveObject
+    public class CraftPlan : InteractiveObject
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="map"></param>
-        /// <param name="cellId"></param>
-        public Pheonix(MapInstance map, int cellId) 
+        public CraftPlan(MapInstance map, int cellId)
             : base(map, cellId)
         {
         }
@@ -33,8 +31,9 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         {
             switch(skill.SkillId)
             {
-                case SkillIdEnum.SKILL_USE_PHOENIX:
-                    ReleasePlayer(character);
+                case SkillIdEnum.SKILL_SCIER:
+                case SkillIdEnum.SKILL_FORGER_UNE_EPEE:
+                    Craft(character, skill);
                     break;
             }
         }
@@ -42,12 +41,11 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
-        private void ReleasePlayer(CharacterEntity character)
+        /// <param name="character"></param>
+        /// <param name="skill"></param>
+        private void Craft(CharacterEntity character, JobSkill skill)
         {
-            if (!character.IsGhost)
-                return;
-
-            character.Reborn();
+            character.CraftStart(this, skill);
         }
     }
 }

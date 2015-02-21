@@ -1,4 +1,5 @@
-﻿using Codebreak.Service.World.Game.Entity;
+﻿using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Game.Entity;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -268,6 +269,18 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <param name="id"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public JobSkill GetSkill(CharacterEntity character, int id, int level)
+        {
+            return m_skills.Find(skill => (int)skill.SkillId == id && skill.Usable(character, level));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public bool HasSkill(CharacterEntity character, SkillIdEnum id, int level)
@@ -289,14 +302,14 @@ namespace Codebreak.Service.World.Game.Job
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public void SerializeAs_SkillListMessage(CharacterEntity character, int level, StringBuilder message)
+        public void SerializeAs_SkillListMessage(CharacterJobDAO job, StringBuilder message)
         {
             message.Append((int)Id).Append(';');
             foreach(var skill in m_skills)
             {
-                if(skill.ObtainLevel <= level)
+                if(skill.ObtainLevel <= job.Level)
                 {
-                    skill.SerializeAs_SkillListMessage(message);
+                    skill.SerializeAs_SkillListMessage(job, message);
                     message.Append(',');
                 }
             }

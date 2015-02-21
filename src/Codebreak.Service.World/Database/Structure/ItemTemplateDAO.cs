@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game;
@@ -485,6 +486,25 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        private List<CraftEntryDAO> m_ingredients;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public List<CraftEntryDAO> Ingredients
+        {
+            get
+            {
+                if (m_ingredients == null)
+                    m_ingredients = new List<CraftEntryDAO>();
+                return m_ingredients;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private ItemSetDAO m_set;
 
         /// <summary>
@@ -623,6 +643,18 @@ namespace Codebreak.Service.World.Database.Structure
         public InventoryItemDAO Create(int quantity = 1, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY, bool maxJet = false)
         {
             return InventoryItemRepository.Instance.Create(Id, -1, quantity, GenerateStats(maxJet), slot);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateIds"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public bool MatchCraft(Dictionary<int, long> templates)
+        {
+            return Ingredients.All(ingredient => templates.Any(template => ingredient.RequiredId == template.Key && ingredient.RequiredQuantity == template.Value))
+                && templates.All(template => Ingredients.Any(ingredient => ingredient.RequiredId == template.Key && ingredient.RequiredQuantity == template.Value));
         }
 
         /// <summary>

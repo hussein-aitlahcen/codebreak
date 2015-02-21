@@ -54,10 +54,12 @@ namespace Codebreak.Service.World.Network
         INFO_SERVER_MESSAGE = 0,
 
         INFO_LIFE_RECOVERED = 1,
+        INFO_JOB_LEARNT = 2,
 
         INFO_GAVE_KAMAS_TO_OPEN = 20,
 
         INFO_CARACTERISTIC_UPGRADED = 15,
+        INFO_WON_JOB_XP = 17,
 
         INFO_EXPERIENCE_GAINED = 8,
         INFO_ENERGY_RECOVERED = 7,
@@ -113,8 +115,12 @@ namespace Codebreak.Service.World.Network
         INFO_AUCTION_EXPIRED = 67,
         INFO_AUCTION_LOT_BOUGHT = 68,
 
-        ERROR_UNABLE_LEARN_SPELL = 7,
+        ERROR_UNABLE_LEARN_JOB = 6,
+        ERROR_TOO_MUCH_JOB = 9,
+        ERROR_ALREADY_JOB = 11,
 
+        ERROR_UNABLE_LEARN_SPELL = 7,
+        
         ERROR_CONDITIONS_UNSATISFIED = 19,
 
         ERROR_STORAGE_ALREADY_IN_USE = 20,
@@ -2562,12 +2568,26 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        public static string JOB_SKILL(CharacterJobDAO job)
+        {
+            var message = new StringBuilder("JSK");
+            job.Template.SerializeAs_SkillListMessage(job, message);
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static string JOB_XP(JobBook book)
+        public static string JOB_XP(List<CharacterJobDAO> jobs)
         {
             var message = new StringBuilder("JXK");
-            foreach(var job in book.Jobs)
+            foreach(var job in jobs)
             {
                 if (job.JobId != (int)JobIdEnum.JOB_BASE)
                 {
@@ -2578,9 +2598,23 @@ namespace Codebreak.Service.World.Network
                     message.Append(job.ExperienceFloorNext).Append('|');
                 }
             }
-            if(book.Jobs.Count > 1)
+            if(jobs.Count > 1)
                 message.Remove(message.Length - 1, 1);
             return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        public static string JOB_XP(CharacterJobDAO job)
+        {
+            return "JXK" + job.JobId + ";"
+                + job.Level + ";"
+                + job.ExperienceFloorCurrent + ";"
+                + job.Experience + ";"
+                + job.ExperienceFloorNext;
         }
 
         /// <summary>
@@ -2591,6 +2625,17 @@ namespace Codebreak.Service.World.Network
         public static string JOB_TOOL_EQUIPPED(string jobId = "n")
         {
             return "OT" + jobId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public static string JOB_NEW_LEVEL(int jobId, int level)
+        {
+            return "JN" + jobId + "|" + level;
         }
     }
 }

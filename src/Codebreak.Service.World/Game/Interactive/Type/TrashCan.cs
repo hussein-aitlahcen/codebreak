@@ -37,9 +37,9 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// </summary>
         /// <param name="character"></param>
         /// <param name="skill"></param>
-        public override void UseWithSkill(CharacterEntity character, SkillIdEnum skill)
+        public override void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
-            switch(skill)
+            switch(skill.SkillId)
             {
                 case SkillIdEnum.SKILL_FOUILLER:
                     StartUse(character);

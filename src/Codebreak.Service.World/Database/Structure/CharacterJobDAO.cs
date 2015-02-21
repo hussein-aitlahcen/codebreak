@@ -19,6 +19,36 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="jobLevel"></param>
+        /// <returns></returns>
+        public static int GeneratedMinQuantity(int jobLevel)
+        {
+            return 1 + (int)Math.Floor((double)jobLevel / 5) + 6 * (int)Math.Floor((double)jobLevel / 100);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobLevel"></param>
+        /// <returns></returns>
+        public static int GeneratedMaxQuantity(int jobLevel)
+        {
+            return GeneratedMinQuantity(jobLevel) + 2;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobLevel"></param>
+        /// <returns></returns>
+        public static int HarvestTime(int jobLevel)
+        {
+            return Math.Max(2000, (int)(1000 * (10 - Math.Round(0.1 * (jobLevel - 1), 1))));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         [Key]
         public long Id
         {
@@ -117,6 +147,82 @@ namespace Codebreak.Service.World.Database.Structure
         public bool HasSkill(CharacterEntity character, int skillId)
         {
             return Template.HasSkill(character, skillId, Level);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="skillId"></param>
+        /// <param name="?"></param>
+        /// <returns></returns>
+        public JobSkill GetSkill(CharacterEntity character, int skillId)
+        {
+            return Template.GetSkill(character, skillId, Level);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public int HarvestMinQuantity
+        {
+            get
+            {
+                return GeneratedMinQuantity(Level);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public int HarvestMaxQuantity
+        {
+            get
+            {
+                return GeneratedMaxQuantity(Level);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public int HarvestDuration
+        {
+            get
+            {
+                return HarvestTime(Level);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Write(false)]
+        public int CraftMaxCase
+        {
+            get
+            {
+                if (Level < 10) return 2;
+                else if (Level < 20) return 3;
+                else if (Level < 40) return 4;
+                else if (Level < 60) return 5;
+                else if (Level < 80) return 6;
+                else if (Level < 100) return 7;
+                else return 8;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CraftSuccessPercent(int caseCount)
+        {
+            var maxCase = CraftMaxCase;
+            if (maxCase - caseCount > 2) return 100;
+            else return (Level / 2) + 50;
         }
     }
 }
