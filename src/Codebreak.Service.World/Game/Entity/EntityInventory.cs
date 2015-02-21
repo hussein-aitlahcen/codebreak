@@ -243,7 +243,7 @@ namespace Codebreak.Service.World.Game.Entity
                     base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
                     if(item.Template.SetId != 0)                    
                         base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));
-                    if (item.Slot == ItemSlotEnum.SLOT_WEAPON)
+                    if (newItem.Slot == ItemSlotEnum.SLOT_WEAPON)
                     {
                         var character = (CharacterEntity)Entity;
                         character.CharacterJobs.ToolEquipped(item.TemplateId);

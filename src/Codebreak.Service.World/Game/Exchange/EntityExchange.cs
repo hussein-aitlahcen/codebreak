@@ -26,6 +26,23 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
+    public interface IRetryableExchange
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        void Retry(int count);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void CancelRetry();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class EntityExchange : ExchangeBase, IValidableExchange
     {
          /// <summary>

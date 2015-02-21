@@ -223,14 +223,13 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return 1 + (int)Math.Floor(
-                        Level +
-                        Statistics.GetTotal(EffectEnum.AddWisdom) +
+                return 1 + (int)Math.Floor((
                         Statistics.GetTotal(EffectEnum.AddStrength) +
                         Statistics.GetTotal(EffectEnum.AddChance) +
-                        Statistics.GetTotal(EffectEnum.AddIntelligence) * 1.5 +
-                        Statistics.GetTotal(EffectEnum.AddAgility) * 1.5 +
-                        Statistics.GetTotal(EffectEnum.AddInitiative)
+                        Statistics.GetTotal(EffectEnum.AddIntelligence) +
+                        Statistics.GetTotal(EffectEnum.AddAgility) +
+                        Statistics.GetTotal(EffectEnum.AddInitiative)) *
+                        ((double)Life / MaxLife)
                     );
             }
         }

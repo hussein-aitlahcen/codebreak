@@ -178,6 +178,9 @@ namespace Codebreak.Service.World.Game.Job
                 base.Dispatch(WorldMessage.JOB_NEW_LEVEL(job.JobId, job.Level));
                 base.Dispatch(WorldMessage.JOB_SKILL(job));
             }
+
+            base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_WON_JOB_XP, experience, job.JobId));
+            base.Dispatch(WorldMessage.JOB_XP(job));
         }
 
         /// <summary>

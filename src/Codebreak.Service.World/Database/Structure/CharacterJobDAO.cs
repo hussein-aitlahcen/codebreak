@@ -218,6 +218,31 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="caseCount"></param>
+        /// <returns></returns>
+        public long CraftExperience(int caseCount)
+        {
+            if(Level >= 100)
+                return 0;
+
+            switch(caseCount)
+            {
+                case 1: if (Level < 10) return 1; break;
+                case 2: if (Level < 60) return 10; break;
+                case 3: if (Level > 9 && Level < 80) return 25; break;
+                case 4: if (Level > 19) return 50; break;
+                case 5: if (Level > 39) return 100; break;
+                case 6: if (Level > 59) return 250; break;
+                case 7: if (Level > 79) return 500; break;
+                case 8: if (Level > 99) return 1000; break;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int CraftSuccessPercent(int caseCount)
         {
             var maxCase = CraftMaxCase;

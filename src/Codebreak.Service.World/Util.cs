@@ -215,6 +215,6 @@ namespace Codebreak.Service.World
             var k = WorldConfig.RATE_XP;
 
             return (long)Math.Truncate(j * k);
-        }
+        }       
     }
 }

@@ -138,45 +138,60 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         {
             switch (skill.SkillId)
             {
-                case SkillIdEnum.SKILL_COUPER:
-                case SkillIdEnum.SKILL_COUPER_1:
-                case SkillIdEnum.SKILL_COUPER_2:
-                case SkillIdEnum.SKILL_COUPER_3:
-                case SkillIdEnum.SKILL_COUPER_4:
-                case SkillIdEnum.SKILL_COUPER_5:
-                case SkillIdEnum.SKILL_COUPER_6:
-                case SkillIdEnum.SKILL_COUPER_7:
-                case SkillIdEnum.SKILL_COUPER_8:
-                case SkillIdEnum.SKILL_COUPER_9:
-                case SkillIdEnum.SKILL_COUPER_10:
-                case SkillIdEnum.SKILL_COUPER_11:
-                case SkillIdEnum.SKILL_COUPER_12:
-                case SkillIdEnum.SKILL_COUPER_13:
-                case SkillIdEnum.SKILL_COUPER_14:
-                case SkillIdEnum.SKILL_COUPER_15:
-                case SkillIdEnum.SKILL_COUPER_16:
-                case SkillIdEnum.SKILL_FAUCHER:
-                case SkillIdEnum.SKILL_FAUCHER_1:
-                case SkillIdEnum.SKILL_FAUCHER_2:
-                case SkillIdEnum.SKILL_FAUCHER_3:
-                case SkillIdEnum.SKILL_FAUCHER_4:
-                case SkillIdEnum.SKILL_FAUCHER_5:
-                case SkillIdEnum.SKILL_FAUCHER_6:
-                case SkillIdEnum.SKILL_FAUCHER_7:
-                case SkillIdEnum.SKILL_FAUCHER_8:
-                case SkillIdEnum.SKILL_FAUCHER_9:
-                case SkillIdEnum.SKILL_EGRENER:
-                case SkillIdEnum.SKILL_MOUDRE:
-                case SkillIdEnum.SKILL_PECHER:
-                case SkillIdEnum.SKILL_PECHER_1:
-                case SkillIdEnum.SKILL_PECHER_2:
-                case SkillIdEnum.SKILL_PECHER_3:
-                case SkillIdEnum.SKILL_PECHER_4:
-                case SkillIdEnum.SKILL_PECHER_5:
-                case SkillIdEnum.SKILL_PECHER_6:
-                case SkillIdEnum.SKILL_PECHER_7:
-                case SkillIdEnum.SKILL_PECHER_8:
-                case SkillIdEnum.SKILL_PECHER_9:
+                case SkillIdEnum.SKILL_COUPER_BAMBOU:
+                case SkillIdEnum.SKILL_COUPER_BAMBOUSACRE:
+                case SkillIdEnum.SKILL_COUPER_BAMBOUSOMBRE:
+                case SkillIdEnum.SKILL_COUPER_BOMBU:
+                case SkillIdEnum.SKILL_COUPER_CHARME:
+                case SkillIdEnum.SKILL_COUPER_CHATAIGNER:
+                case SkillIdEnum.SKILL_COUPER_CHENE:
+                case SkillIdEnum.SKILL_COUPER_EBENE:
+                case SkillIdEnum.SKILL_COUPER_ERABLE:
+                case SkillIdEnum.SKILL_COUPER_FRENE:
+                case SkillIdEnum.SKILL_COUPER_IF:
+                case SkillIdEnum.SKILL_COUPER_KALIPTUS:
+                case SkillIdEnum.SKILL_COUPER_MERISIER:
+                case SkillIdEnum.SKILL_COUPER_NOYER:
+                case SkillIdEnum.SKILL_COUPER_OLIVIOLET:
+                case SkillIdEnum.SKILL_COUPER_ORME:
+                case SkillIdEnum.SKILL_PECHER_GOUJON:
+                case SkillIdEnum.SKILL_PECHER_TRUITE:
+                case SkillIdEnum.SKILL_PECHER_POISSONCHATON:
+                case SkillIdEnum.SKILL_PECHER_BROCHET:
+                case SkillIdEnum.SKILL_PECHER_GREUVETTE:
+                case SkillIdEnum.SKILL_PECHER_CRABESOURIMI:
+                case SkillIdEnum.SKILL_PECHER_POISSONPANE:
+                case SkillIdEnum.SKILL_PECHER_SARDINEBRILLANTE:
+                case SkillIdEnum.SKILL_PECHER_PICHONEUDCOMPET:
+                case SkillIdEnum.SKILL_PECHER_KRALAMOURE:
+                case SkillIdEnum.SKILL_PECHER_SARDINEBRILLANTE_1:
+                case SkillIdEnum.SKILL_FAUCHER_BLE:
+                case SkillIdEnum.SKILL_FAUCHER_HOUBLON:
+                case SkillIdEnum.SKILL_FAUCHER_LIN:
+                case SkillIdEnum.SKILL_FAUCHER_SEIGLE:
+                case SkillIdEnum.SKILL_FAUCHER_ORGE:
+                case SkillIdEnum.SKILL_FAUCHER_CHANVRE:
+                case SkillIdEnum.SKILL_FAUCHER_AVOINE:
+                case SkillIdEnum.SKILL_FAUCHER_MALT:
+                case SkillIdEnum.SKILL_FAUCHER_RIZ:
+                case SkillIdEnum.SKILL_CUEILLIR_LIN:
+                case SkillIdEnum.SKILL_CUEILLIR_CHANVRE:
+                case SkillIdEnum.SKILL_CUEILLIR_TREFLE:
+                case SkillIdEnum.SKILL_CUEILLIR_MENTHE:
+                case SkillIdEnum.SKILL_CUEILLIR_ORCHIDEE:
+                case SkillIdEnum.SKILL_CUEILLIR_EDELWEISS:
+                case SkillIdEnum.SKILL_CUEILLIR_PANDOUILLE:
+                case SkillIdEnum.SKILL_COLLECTER_FER:
+                case SkillIdEnum.SKILL_COLLECTER_CUIVRE:
+                case SkillIdEnum.SKILL_COLLECTER_BRONZE:
+                case SkillIdEnum.SKILL_COLLECTER_KOBALTE:
+                case SkillIdEnum.SKILL_COLLECTER_ARGENT:
+                case SkillIdEnum.SKILL_COLLECTER_OR:
+                case SkillIdEnum.SKILL_COLLECTER_BAUXITE:
+                case SkillIdEnum.SKILL_COLLECTER_ETAIN:
+                case SkillIdEnum.SKILL_COLLECTER_MANGANESE:
+                case SkillIdEnum.SKILL_COLLECTER_DOLOMITE:
+                case SkillIdEnum.SKILL_COLLECTER_SILICATE:
                     Harvest(character, skill.SkillId);
                     break;
             }
@@ -241,8 +256,6 @@ namespace Codebreak.Service.World.Game.Interactive.Type
             m_currentHarvester.Inventory.AddItem(GeneratedTemplate.Create(m_quantityFarmed));
             m_currentHarvester.CharacterJobs.AddExperience(m_currentJob, (long)exprienceWin);
             m_currentHarvester.Dispatch(WorldMessage.INTERACTIVE_FARMED_QUANTITY(m_currentHarvester.Id, m_quantityFarmed));
-            m_currentHarvester.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_WON_JOB_XP, exprienceWin, m_currentJob.JobId));
-            m_currentHarvester.Dispatch(WorldMessage.JOB_XP(m_currentJob));
             m_currentHarvester.CachedBuffer = false;
 
             base.UpdateFrame(FRAME_FARMING, FRAME_CUT);

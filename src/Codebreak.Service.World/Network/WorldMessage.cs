@@ -90,6 +90,8 @@ namespace Codebreak.Service.World.Network
 
         INFO_FRIEND_ONLINE = 143,
 
+        INFO_CRAFT_FAILED = 118,
+
         INFO_FIGHT_SPECTATOR_JOINED = 36,
         INFO_FIGHT_TOGGLE_PARTY = 93,
         INFO_FIGHT_UNTOGGLE_PARTY = 94,
@@ -2636,6 +2638,88 @@ namespace Codebreak.Service.World.Network
         public static string JOB_NEW_LEVEL(int jobId, int level)
         {
             return "JN" + jobId + "|" + level;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characteId"></param>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string CRAFT_INTERACTIVE_SUCCESS(long characterId, int templateId)
+        {
+            return "IO" + characterId + "|+" + templateId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characteId"></param>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string CRAFT_INTERACTIVE_FAILED(long characterId, int templateId)
+        {
+            return "IO" + characterId + "|-" + templateId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characteId"></param>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string CRAFT_INTERACTIVE_NOTHING(long characterId)
+        {
+            return "IO" + characterId + "|-";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string CRAFT_NO_RESULT()
+        {
+            return "EI";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string CRAFT_TEMPLATE_CREATED(int templateId)
+        {
+            return "EcK;" + templateId; 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <returns></returns>
+        public static string CRAFT_TEMPLATE_FAILED(int templateId)
+        {
+            return "EcEF;" + templateId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static string CRAFT_LOOP_COUNT(int count)
+        {
+            return "EA" + count;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reason"></param>
+        /// <returns></returns>
+        public static string CRAFT_LOOP_END(int reason)
+        {
+            return "Ea" + reason;
         }
     }
 }

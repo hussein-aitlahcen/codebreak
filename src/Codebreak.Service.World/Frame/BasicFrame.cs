@@ -918,6 +918,10 @@ namespace Codebreak.Service.World.Frame
                     case EffectEnum.AddAgility:
                         character.DatabaseRecord.Agility += boostValue;
                         break;
+                        
+                    case EffectEnum.AddChance:
+                        character.DatabaseRecord.Chance += boostValue;
+                        break;
                 }
 
                 character.Statistics.AddBase(effect, boostValue);

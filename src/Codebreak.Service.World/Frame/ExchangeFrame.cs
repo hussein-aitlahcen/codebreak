@@ -82,6 +82,12 @@ namespace Codebreak.Service.World.Frame
                                 case 'O':
                                     return ExchangeMoveObject;
 
+                                case 'R':
+                                    return ExchangeRetry;
+                                    
+                                case 'r':
+                                    return ExchangeCancelRetry;
+
                                 default:
                                     return null;
                             }
@@ -686,6 +692,70 @@ namespace Codebreak.Service.World.Frame
                     ((GameExchangeActionBase)character.CurrentAction).Exchange.AddItem(character, itemId, quantity, price);                
                 else                
                     ((GameExchangeActionBase)character.CurrentAction).Exchange.RemoveItem(character, itemId, quantity);                
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void ExchangeRetry(CharacterEntity character, string message)
+        {
+            var countData = message.Substring(3);
+            var count = -1;
+            if(!int.TryParse(countData, out count))
+            {
+                character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                return;
+            }
+            
+            character.AddMessage(() =>
+            {
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                {
+                    Logger.Debug("ExchangeFrame::MoveObject entity not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var action = character.CurrentAction as GameExchangeActionBase;
+                var exchange = action.Exchange as IRetryableExchange;
+                if (exchange == null)
+                {
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                exchange.Retry(count);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void ExchangeCancelRetry(CharacterEntity character, string message)
+        {
+            character.AddMessage(() =>
+            {
+                if (!character.HasGameAction(GameActionTypeEnum.EXCHANGE))
+                {
+                    Logger.Debug("ExchangeFrame::MoveObject entity not in an exchange : " + character.Name);
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                var action = character.CurrentAction as GameExchangeActionBase;
+                var exchange = action.Exchange as IRetryableExchange;
+                if (exchange == null)
+                {
+                    character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
+
+                exchange.CancelRetry();
             });
         }
     }

@@ -35,16 +35,18 @@ namespace Codebreak.Service.World.Game.ActionEffect
         public override bool Process(Entity.CharacterEntity character, Dictionary<string, string> parameters)
         {
             character.CachedBuffer = true;
-            character.CaractPoint = character.Level * 5;
+            character.CaractPoint = (character.Level - 1) * 5;
             character.Statistics.AddBase(EffectEnum.AddVitality, -character.DatabaseRecord.Vitality);
             character.Statistics.AddBase(EffectEnum.AddWisdom, -character.DatabaseRecord.Wisdom);
             character.Statistics.AddBase(EffectEnum.AddIntelligence, -character.DatabaseRecord.Intelligence);
             character.Statistics.AddBase(EffectEnum.AddStrength, -character.DatabaseRecord.Strength);
+            character.Statistics.AddBase(EffectEnum.AddAgility, -character.DatabaseRecord.Agility);
             character.Statistics.AddBase(EffectEnum.AddChance, -character.DatabaseRecord.Chance);
             character.DatabaseRecord.Vitality = 0;
             character.DatabaseRecord.Wisdom = 0;
             character.DatabaseRecord.Intelligence = 0;
             character.DatabaseRecord.Strength = 0;
+            character.DatabaseRecord.Agility = 0;
             character.DatabaseRecord.Chance = 0;
             character.SendAccountStats();
             character.CachedBuffer = false;

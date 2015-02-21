@@ -833,7 +833,14 @@ namespace Codebreak.Service.World.Command
                     var itemTemplate = ItemTemplateRepository.Instance.GetById(idTemplate);
                     if (itemTemplate != null)
                     {
-                        var instance = itemTemplate.Create(1, ItemSlotEnum.SLOT_INVENTORY, true);
+                        int quantity;
+                        if(!int.TryParse(context.TextCommandArgument.NextWord(), out quantity))
+                        {
+                            context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow quantity"));
+                            return;
+                        }
+
+                        var instance = itemTemplate.Create(quantity, ItemSlotEnum.SLOT_INVENTORY, true);
                         if (instance != null)
                         {
                             context.Character.Inventory.AddItem(instance);

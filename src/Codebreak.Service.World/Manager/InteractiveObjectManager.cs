@@ -49,6 +49,29 @@ namespace Codebreak.Service.World.Manager
             // Craft
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_SCIE, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MACHINE_A_COUDRE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MACHINE_A_COUDRE_1, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MACHINE_A_COUDRE_MAGIQUE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ATELIER, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ETABLI, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ETABLI_EN_BOIS, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME_A_BOUCLIERS, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME_MAGIQUE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL_1, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL_2, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL_3, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ALAMBIC, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ATELIER_DE_BRICOLAGE, (map, cellId) => new CraftPlan(map, cellId));
+
+            // Alchemiste
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_LIN, (map, cellId) => new HarvestableResource(map, cellId, 421, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHANVRE, (map, cellId) => new HarvestableResource(map, cellId, 428, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_TREFLE_A_5_FEUILLES, (map, cellId) => new HarvestableResource(map, cellId, 395, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MENTHE_SAUVAGE, (map, cellId) => new HarvestableResource(map, cellId, 380, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ORCHIDEE_FREYESQUE, (map, cellId) => new HarvestableResource(map, cellId, 593, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_EDELWEISS, (map, cellId) => new HarvestableResource(map, cellId, 594, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PANDOUILLE, (map, cellId) => new HarvestableResource(map, cellId, 7059, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
 
             // Bois
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FRENE, (map, cellId) => new HarvestableResource(map, cellId, 303, 1000 * 60 * 1, 1000 * 60 * 5, 10));
@@ -73,8 +96,6 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ORGE, (map, cellId) => new HarvestableResource(map, cellId, 400, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_AVOINE, (map, cellId) => new HarvestableResource(map, cellId, 533, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_HOUBLON, (map, cellId) => new HarvestableResource(map, cellId, 401, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
-            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CHANVRE, (map, cellId) => new HarvestableResource(map, cellId, 425, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
-            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_LIN, (map, cellId) => new HarvestableResource(map, cellId, 423, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_RIZ, (map, cellId) => new HarvestableResource(map, cellId, 7018, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_SEIGLE, (map, cellId) => new HarvestableResource(map, cellId, 532, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MALT, (map, cellId) => new HarvestableResource(map, cellId, 405, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));
@@ -88,6 +109,19 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_GROS_POISSONS_MER, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POISSONS_GEANTS_RIVIERE, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_POISSONS_GEANTS_MER, (map, cellId) => new HarvestableResource(map, cellId, 289, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+
+            // Mineur
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FER, (map, cellId) => new HarvestableResource(map, cellId, 312, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PIERRE_CUIVREE, (map, cellId) => new HarvestableResource(map, cellId, 441, 1000 * 60 * 1, 1000 * 60 * 1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_BRONZE, (map, cellId) => new HarvestableResource(map, cellId, 442, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PIERRE_DE_KOBALTE, (map, cellId) => new HarvestableResource(map, cellId, 443, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ARGENT, (map, cellId) => new HarvestableResource(map, cellId, 350, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_OR, (map, cellId) => new HarvestableResource(map, cellId, 313, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PIERRE_DE_BAUXITE, (map, cellId) => new HarvestableResource(map, cellId, 446, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ETAIN, (map, cellId) => new HarvestableResource(map, cellId, 444, 1000 *  60 * 1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MANGANESE, (map, cellId) => new HarvestableResource(map, cellId, 445, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_DOLOMITE, (map, cellId) => new HarvestableResource(map, cellId, 7033, 1000 *  60 *  1, 1000 *  60 *  1, 10));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_SILICATE, (map, cellId) => new HarvestableResource(map, cellId, 7032, 1000 *  60 *  1, 1000 *  60 *  1, 10));
 
             // GFX
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
