@@ -65,7 +65,8 @@ namespace Codebreak.Service.World.Game.Entity
         public PersistentInventory(int ownerType, long ownerId)
         {
             m_items = new List<InventoryItemDAO>();
-            m_items.AddRange(InventoryItemRepository.Instance.GetByOwner(ownerType, ownerId));
+            if(ownerType != (int)EntityTypeEnum.TYPE_MONSTER_GROUP)
+                m_items.AddRange(InventoryItemRepository.Instance.GetByOwner(ownerType, ownerId));
 
             OwnerType = ownerType;
             OwnerId = ownerId;
