@@ -25,7 +25,32 @@ namespace Codebreak.Service.World.Game.Map
     /// </summary>
     public sealed class MapInstance : MessageDispatcher, IMovementHandler, IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private static string HASH_CELL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static object SynckLock = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static long m_NextMonsterId;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static long NextMonsterId
+        {
+            get
+            {
+                lock (SynckLock)
+                    return m_NextMonsterId--;
+            }
+        }
 
         /// <summary>
         /// 
@@ -252,7 +277,6 @@ namespace Codebreak.Service.World.Game.Map
         private List<MapCell> m_cells;
         private List<InteractiveObject> m_interactiveObjects;
         private SubAreaInstance m_subArea;
-        private long m_nextMonsterId;
         private bool m_movementInitialized;
         private bool m_subInstance;
         private int m_playerCount;
@@ -293,7 +317,6 @@ namespace Codebreak.Service.World.Game.Map
             m_cellById = new Dictionary<int, MapCell>();
             m_entityById = new Dictionary<long, EntityBase>();
             m_entityByName = new Dictionary<string, EntityBase>();
-            m_nextMonsterId = -1;
 
             FightManager = new FightManager(this);
             SubArea.AddUpdatable(this);
@@ -501,7 +524,7 @@ namespace Codebreak.Service.World.Game.Map
         public void SpawnMonsters()
         {
             if (m_monsters.Count() > 0 && FightTeam1Cells.Count > 0)            
-                SpawnEntity(new MonsterGroupEntity(m_nextMonsterId--, Id, RandomFreeCell, m_monsters, FightTeam1Cells.Count));            
+                SpawnEntity(new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, m_monsters, FightTeam1Cells.Count));            
             m_spawnCounter--;
         }
 
@@ -511,7 +534,7 @@ namespace Codebreak.Service.World.Game.Map
         public void SpawnMonsters(IEnumerable<MonsterGradeDAO> monsters)
         {
             if(monsters.Count() > 0)
-                SpawnEntity(new MonsterGroupEntity(m_nextMonsterId--, Id, RandomFreeCell, monsters, FightTeam1Cells.Count));    
+                SpawnEntity(new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, monsters, FightTeam1Cells.Count));    
         }
         
         /// <summary>
