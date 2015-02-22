@@ -20,8 +20,8 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
             BasicDropBonus = 10;
             BasicXpBonus = 10;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 10;
+            TeamXpBonus = 10;
 
             ShowTarget = false;
             TargetId = 0;

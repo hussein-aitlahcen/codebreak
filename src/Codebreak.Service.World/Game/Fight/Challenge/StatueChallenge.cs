@@ -19,11 +19,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public StatueChallenge()
             : base(ChallengeTypeEnum.STATUE)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 25;
+            BasicXpBonus = 25;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 55;
+            TeamXpBonus = 55;
 
             ShowTarget = false;
             TargetId = 0;

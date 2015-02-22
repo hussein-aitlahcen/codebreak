@@ -17,11 +17,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public BarbarianChallenge()
             : base(ChallengeTypeEnum.BARBARIRAN)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 60;
+            BasicXpBonus = 60;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 75;
+            TeamXpBonus = 75;
 
             ShowTarget = false;
             TargetId = 0;

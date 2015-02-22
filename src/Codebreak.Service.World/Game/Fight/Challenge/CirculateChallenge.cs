@@ -17,11 +17,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public CirculateChallenge()
             : base(ChallengeTypeEnum.CIRCULATE)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 20;
+            BasicXpBonus = 20;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 20;
+            TeamXpBonus = 20;
 
             ShowTarget = false;
             TargetId = 0;

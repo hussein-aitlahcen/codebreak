@@ -18,11 +18,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public TightsChallenge()
             : base(ChallengeTypeEnum.TIGHTS)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 40;
+            BasicXpBonus = 40;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 40;
+            TeamXpBonus = 40;
 
             ShowTarget = false;
             TargetId = 0;

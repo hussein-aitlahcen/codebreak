@@ -18,11 +18,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public AnachoriteChallenge()
             : base(ChallengeTypeEnum.ANACHORITE)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 20;
+            BasicXpBonus = 20;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 30;
+            TeamXpBonus = 30;
 
             ShowTarget = false;
             TargetId = 0;

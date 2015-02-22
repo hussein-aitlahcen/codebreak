@@ -17,11 +17,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public ReprieveChallenge()
             : base(ChallengeTypeEnum.REPRIEVE)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 20;
+            BasicXpBonus = 20;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 55;
+            TeamXpBonus = 55;
 
             ShowTarget = true;
             TargetId = 0;

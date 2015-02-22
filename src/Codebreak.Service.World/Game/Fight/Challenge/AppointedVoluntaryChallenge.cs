@@ -18,11 +18,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public AppointedVoluntaryChallenge()
             : base(ChallengeTypeEnum.APPOINTED_VOLUNTARY)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 30;
+            BasicXpBonus = 30;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 60;
+            TeamXpBonus = 60;
 
             ShowTarget = true;
             TargetId = 0;

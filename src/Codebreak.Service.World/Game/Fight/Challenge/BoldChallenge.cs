@@ -18,11 +18,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public BoldChallenge()
             : base(ChallengeTypeEnum.BOLD)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 25;
+            BasicXpBonus = 25;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 25;
+            TeamXpBonus = 25;
 
             ShowTarget = false;
             TargetId = 0;

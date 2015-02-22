@@ -17,8 +17,8 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public SightLostChallenge()
             : base(ChallengeTypeEnum.LOST_SIGHT)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 15;
+            BasicXpBonus = 15;
 
             TeamDropBonus = 15;
             TeamXpBonus = 15;

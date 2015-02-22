@@ -17,11 +17,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public SurvivorChallenge()
             : base(ChallengeTypeEnum.SURVIVOR)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 30;
+            BasicXpBonus = 30;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 30;
+            TeamXpBonus = 30;
 
             ShowTarget = false;
             TargetId = 0;

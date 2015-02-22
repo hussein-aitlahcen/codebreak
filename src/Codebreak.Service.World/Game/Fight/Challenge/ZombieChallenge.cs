@@ -22,11 +22,11 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         public ZombieChallenge()
             : base(ChallengeTypeEnum.ZOMBIE)
         {
-            BasicDropBonus = 10;
-            BasicXpBonus = 10;
+            BasicDropBonus = 30;
+            BasicXpBonus = 30;
 
-            TeamDropBonus = 15;
-            TeamXpBonus = 15;
+            TeamDropBonus = 50;
+            TeamXpBonus = 50;
 
             ShowTarget = false;
             TargetId = 0;
