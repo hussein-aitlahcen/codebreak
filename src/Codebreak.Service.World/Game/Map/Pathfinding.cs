@@ -762,7 +762,7 @@ namespace Codebreak.Service.World.Game.Map
                 transitCell = decodedPath.TransitCells[index];
                 nextTransitCell = decodedPath.TransitCells[index + 1];
                 direction = decodedPath.GetDirection(transitCell);
-                var length = Pathfinding.IsValidLine(map, finalPath, transitCell, direction, nextTransitCell);
+                var length = Pathfinding.IsValidLine(entity ,map, finalPath, transitCell, direction, nextTransitCell);
                 if (length == -1)
                     return null;
                 else if (length == -2)
@@ -827,7 +827,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="direction"></param>
         /// <param name="endCell"></param>
         /// <returns></returns>
-        public static int IsValidLine(MapInstance map, MovementPath finalPath, int beginCell, int direction, int endCell)
+        public static int IsValidLine(EntityBase entity, MapInstance map, MovementPath finalPath, int beginCell, int direction, int endCell)
         {
             var length = -1;
             var actualCell = beginCell;
@@ -852,7 +852,7 @@ namespace Codebreak.Service.World.Game.Map
                 var mapCell = map.GetCell(actualCell);
                 if (mapCell != null)
                 {
-                    if (mapCell.InteractiveObject != null && !mapCell.InteractiveObject.CanWalkThrough)
+                    if (mapCell.InteractiveObject != null && (!mapCell.InteractiveObject.CanWalkThrough || (actualCell == endCell && mapCell.InteractiveObject.IsActive)))
                     {
                         length = -2;
                         break;

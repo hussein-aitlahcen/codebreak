@@ -50,6 +50,14 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 case SkillIdEnum.SKILL_FORGER_UNE_EPEE:
                 case SkillIdEnum.SKILL_COUDRE_UN_SAC:
                 case SkillIdEnum.SKILL_FORGER_UNE_PELLE:
+                case SkillIdEnum.SKILL_CUIRE_DU_PAIN:
+                case SkillIdEnum.SKILL_EGRENER:
+                case SkillIdEnum.SKILL_MOUDRE:
+                case SkillIdEnum.SKILL_FONDRE:
+                case SkillIdEnum.SKILL_POLIR_UNE_PIERRE:
+                case SkillIdEnum.SKILL_PREPARER_UN_POISSON:
+                case SkillIdEnum.SKILL_PREPARER_UNE_POTION:
+                case SkillIdEnum.SKILL_PREPARER_UNE_VIANDE:
                     Craft(character, skill);
                     break;
             }

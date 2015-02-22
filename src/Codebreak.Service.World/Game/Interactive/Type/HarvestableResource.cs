@@ -210,7 +210,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 return;
             }
 
-            if (!m_active)
+            if (!IsActive)
                 return;
 
             m_currentJob = character.CharacterJobs.GetJob(skill);

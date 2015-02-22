@@ -51,18 +51,20 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MACHINE_A_COUDRE, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MACHINE_A_COUDRE_1, (map, cellId) => new CraftPlan(map, cellId));
-            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_MACHINE_A_COUDRE_MAGIQUE, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ATELIER, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ETABLI, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ETABLI_EN_BOIS, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME_A_BOUCLIERS, (map, cellId) => new CraftPlan(map, cellId));
-            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLUME_MAGIQUE, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL_1, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL_2, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PLAN_DE_TRAVAIL_3, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ALAMBIC, (map, cellId) => new CraftPlan(map, cellId));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ATELIER_DE_BRICOLAGE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_CONCASSEUR, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ETABLI_PYROTECHNIQUE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FILEUSE, (map, cellId) => new CraftPlan(map, cellId));
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_FOUR, (map, cellId) => new CraftPlan(map, cellId));
 
             // Alchemiste
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_LIN, (map, cellId) => new HarvestableResource(map, cellId, 421, 1000 * 60 * 1, 1000 * 60 * 1, 10, true));

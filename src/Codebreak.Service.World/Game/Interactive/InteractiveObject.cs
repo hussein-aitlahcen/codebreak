@@ -158,11 +158,15 @@ namespace Codebreak.Service.World.Game.Interactive
             get;
             private set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
-        protected bool m_active;
+        public bool IsActive
+        {
+            get;
+            protected set;
+        }
 
         /// <summary>
         /// 
@@ -181,7 +185,7 @@ namespace Codebreak.Service.World.Game.Interactive
             CellId = cellId;
 
             // STARTS ON ACTIVE STATE ? YA NIGGAE
-            m_active = true;
+            IsActive = true;
             m_frameId = 0;
         }
         
@@ -193,7 +197,7 @@ namespace Codebreak.Service.World.Game.Interactive
         /// <param name="activated"></param>
         public void UpdateFrame(int currentFrameId, int nextFrameId, bool activated = false)
         {
-            m_active = activated;
+            IsActive = activated;
             m_frameId = currentFrameId;
 
             SendUpdate();
@@ -206,7 +210,7 @@ namespace Codebreak.Service.World.Game.Interactive
         /// </summary>
         public void SendUpdate()
         {
-            base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(CellId, m_frameId, m_active));
+            base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(CellId, m_frameId, IsActive));
         }
 
         /// <summary>
@@ -214,7 +218,7 @@ namespace Codebreak.Service.World.Game.Interactive
         /// </summary>
         public void Activate()
         {
-            m_active = true;
+            IsActive = true;
             SendUpdate();
         }
 
@@ -223,7 +227,7 @@ namespace Codebreak.Service.World.Game.Interactive
         /// </summary>
         public void Deactivate()
         {
-            m_active = false;
+            IsActive = false;
             SendUpdate();
         }
 
@@ -235,7 +239,7 @@ namespace Codebreak.Service.World.Game.Interactive
         {
             message.Append(CellId).Append(';');
             message.Append(m_frameId).Append(';');
-            message.Append(m_active ? '1': '0').Append('|');
+            message.Append(IsActive ? '1' : '0').Append('|');
         }
       
         /// <summary>

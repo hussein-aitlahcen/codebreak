@@ -178,7 +178,18 @@ namespace Codebreak.Service.World
             { JobIdEnum.JOB_FORGEUR_EPEES, new int[] { 494 } },
             { JobIdEnum.JOB_MINEUR, new int[] { 497 } },
             { JobIdEnum.JOB_ALCHIMISTE, new int[] { 1473 } },            
-            { JobIdEnum.JOB_TAILLEUR, new int[] { 951 } }
+            { JobIdEnum.JOB_TAILLEUR, new int[] { 951 } },            
+            { JobIdEnum.JOB_BOULANGER, new int[] { 492 } },            
+            { JobIdEnum.JOB_SCULPTEUR_ARCS, new int[] { 500 } },            
+            { JobIdEnum.JOB_FORGEUR_DE_MARTEAUX, new int[] { 493 } },            
+            { JobIdEnum.JOB_FORGEUR_DE_BOUCLIERS, new int[] { 7098 } },            
+            { JobIdEnum.JOB_CORDONNIER, new int[] { 579 } },            
+            { JobIdEnum.JOB_BIJOUTIER, new int[] { 491 } },          
+            { JobIdEnum.JOB_SCULPTEUR_DE_BATONS, new int[] { 498 } },          
+            { JobIdEnum.JOB_SCULPTEUR_DE_BAGUETTES, new int[] { 499 } },          
+            { JobIdEnum.JOB_FORGEUR_DE_DAGUES, new int[] { 495 } },          
+            { JobIdEnum.JOB_FORGEUR_DE_PELLES, new int[] { 496 } },          
+            { JobIdEnum.JOB_FORGEUR_DE_HACHES, new int[] { 922 } }
         };
 
         public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int, int>()
