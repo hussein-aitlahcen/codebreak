@@ -415,7 +415,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void BeginTurn(FighterBase fighter)
         {
-            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 foreach (var challenge in m_challenges)
                     challenge.BeginTurn(fighter);
         }
@@ -427,7 +426,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="castInfos"></param>
         public void CheckSpell(FighterBase fighter, CastInfos castInfos)
         {
-            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 foreach (var challenge in m_challenges)
                     challenge.CheckSpell(fighter, castInfos);
         }
@@ -439,7 +437,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="movementLength"></param>
         public void CheckMovement(FighterBase fighter, int beginCell, int endCell, int movementLength)
         {
-            if(fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 foreach (var challenge in m_challenges)
                     challenge.CheckMovement(fighter, beginCell, endCell, movementLength);
         }
@@ -451,7 +448,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="weapon"></param>
         public void CheckWeapon(FighterBase fighter, ItemTemplateDAO weapon)
         {
-            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 foreach (var challenge in m_challenges)
                     challenge.CheckWeapon(fighter, weapon);
         }
@@ -462,7 +458,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void CheckDeath(FighterBase fighter)
         {
-            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 foreach (var challenge in m_challenges)
                     challenge.CheckDeath(fighter);
         }
@@ -473,7 +468,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void EndTurn(FighterBase fighter)
         {
-            if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 foreach (var challenge in m_challenges)
                     challenge.EndTurn(fighter);
         }
