@@ -1123,7 +1123,6 @@ namespace Codebreak.Service.World.Game.Fight
         {
             fighter.JoinFight(this, team);
             fighter.TurnReady = true;
-            TurnProcessor.SummonFighter(fighter);
 
             var result = fighter.SetCell(GetCell(cellId));
             if (result != FightActionResultEnum.RESULT_NOTHING)
@@ -1131,12 +1130,24 @@ namespace Codebreak.Service.World.Game.Fight
 
             var message = new StringBuilder("+");
             fighter.SerializeAs_GameMapInformations(OperatorEnum.OPERATOR_ADD, message);
-
+                      
             if (fighter.Invocator != null)
                 base.Dispatch(WorldMessage.GAME_ACTION(fighter.StaticInvocation ? EffectEnum.InvocationStatic : EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
             else
-                base.Dispatch(message.ToString());
-            base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                base.Dispatch("GM|" + message.ToString());
+
+            switch(State)
+            {
+                case FightStateEnum.STATE_PLACEMENT:
+                    // implicit turnready after start fighting
+                    break;
+
+                case FightStateEnum.STATE_FIGHTING:
+                    fighter.TurnReady = true;
+                    TurnProcessor.SummonFighter(fighter);
+                    base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                    break;
+            }
 
             return result;
         }

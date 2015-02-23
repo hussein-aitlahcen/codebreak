@@ -91,7 +91,7 @@ namespace Codebreak.Service.World.Manager
 
             if (!item.Template.Usable && !item.Template.Buff && !item.Template.Targetable && targetId != -1 && targetCell != -1)
             {
-                Logger.Debug("ActionEffectManager::Apply non usable/buff/targetable item=" + item.Template.Name + " character=" + character.Name);                
+                Logger.Info("ActionEffectManager::Apply non usable/buff/targetable item=" + item.Template.Name + " character=" + character.Name);                
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
