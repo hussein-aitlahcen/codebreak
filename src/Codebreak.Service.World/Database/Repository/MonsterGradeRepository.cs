@@ -16,14 +16,14 @@ namespace Codebreak.Service.World.Database.Repository
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, MonsterGradeDAO> m_gradeById;
+        private Dictionary<long, MonsterGradeDAO> m_gradeById;
 
         /// <summary>
         /// 
         /// </summary>
         public MonsterGradeRepository()
         {
-            m_gradeById = new Dictionary<int, MonsterGradeDAO>();
+            m_gradeById = new Dictionary<long, MonsterGradeDAO>();
         }
 
         /// <summary>
@@ -36,6 +36,7 @@ namespace Codebreak.Service.World.Database.Repository
             return m_gradeById[id];
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -45,19 +46,6 @@ namespace Codebreak.Service.World.Database.Repository
             m_gradeById.Add(grade.Id, grade);
 
             MonsterRepository.Instance.GetById(grade.MonsterId).AddGrade(grade);
-        }
-
-
-        public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
-        {
-        }
-
-        public override void DeleteAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
-        {
-        }
-
-        public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
-        {
         }
     }
 }

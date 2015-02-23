@@ -17,21 +17,24 @@ namespace Codebreak.Service.World.Database.Structure
     public sealed class MonsterGradeDAO : DataAccessObject<MonsterGradeDAO>
     {
         [Key]
-        public int Id
+        public long Id
         {
             get;
             set;
         }
+
         public int MonsterId
         {
             get;
             set;
         }
+
         public int Grade
         {
             get;
             set;
         }
+        
         public int Level
         {
             get;

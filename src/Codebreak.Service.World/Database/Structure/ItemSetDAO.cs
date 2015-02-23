@@ -112,9 +112,9 @@ namespace Codebreak.Service.World.Database.Structure
             if(m_statistics == null)
             {
                 m_statistics = new List<GenericStats>();
-                m_statistics.Add(new GenericStats());
-                m_statistics.Add(new GenericStats());
-                AddStats(Effects2);
+                AddStats(string.Empty); // 0 item
+                AddStats(string.Empty); // 1 item
+                AddStats(Effects2); 
                 AddStats(Effects3);
                 AddStats(Effects4);
                 AddStats(Effects5);

@@ -53,8 +53,10 @@ namespace Codebreak.Service.World.Database
             // OLD DATA
             base.AddRepository(MonstersRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
-
+                        
             base.LoadAll(string.IsNullOrWhiteSpace(dbConnection) ? WorldConfig.WORLD_DB_CONNECTION : dbConnection);
+            
+            //MonstersRepository.Instance.Save();
         }
     }
 }
