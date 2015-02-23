@@ -40,6 +40,7 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.BddResetSpells, ResetSpellEffect.Instance);
             m_effectById.Add(EffectEnum.BddAddJob, AddJobEffect.Instance);
             m_effectById.Add(EffectEnum.BddRemoveItem, RemoveItemEffect.Instance);
+            m_effectById.Add(EffectEnum.BddCreateGuild, GuildCreationEffect.Instance);
 
             m_effectById.Add(EffectEnum.AddJob, AddJobEffect.Instance);
 

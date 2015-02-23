@@ -599,6 +599,7 @@ namespace Codebreak.Service.World.Game.Spell
         BddResetSpells = 2007,
         BddAddJob = 2008,
         BddRemoveItem = 2009,
+        BddCreateGuild = 2010,
     }
 
     /// <summary>
