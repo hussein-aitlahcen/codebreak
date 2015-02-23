@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.Spawn
         /// <summary>
         /// 
         /// </summary>
-        private List<MonsterGradeDAO> m_monsters;
+        private List<MonsterSpawnDAO> m_monsters;
 
         /// <summary>
         /// 
@@ -36,10 +36,7 @@ namespace Codebreak.Service.World.Game.Spawn
         public SpawnQueue(IEnumerable<MonsterSpawnDAO> spawns)
         {
             m_maps = new List<MapInstance>();
-            m_monsters = new List<MonsterGradeDAO>();
-
-            foreach (var spawn in spawns)
-                m_monsters.Add(spawn.Grade);
+            m_monsters = new List<MonsterSpawnDAO>(spawns);
 
             base.AddTimer(WorldConfig.SPAWN_CHECK_INTERVAL, InternalUpdate);
         }

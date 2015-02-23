@@ -143,7 +143,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="id"></param>
-        public MonsterGroupEntity(long id, int mapId, int cellId, IEnumerable<MonsterGradeDAO> monsters, int maxSize = 6)
+        public MonsterGroupEntity(long id, int mapId, int cellId, IEnumerable<MonsterSpawnDAO> monsters, int maxSize = 6)
             : base(EntityTypeEnum.TYPE_MONSTER_GROUP, id)
         {
             m_monsters = new List<MonsterEntity>();
@@ -170,7 +170,19 @@ namespace Codebreak.Service.World.Game.Entity
             if (monsters.Count() > 0)
             {
                 while (m_monsters.Count < size)
-                    m_monsters.Add(new MonsterEntity(monsterId--, monsters.ElementAt(Util.Next(0, monsters.Count()))));
+                {
+                    foreach(var spawn in monsters)
+                    {
+                        var chance = Util.Next(0, 100);
+                        if (chance < spawn.Probability * 100)
+                        {
+                            m_monsters.Add(new MonsterEntity(monsterId--, spawn.Grade));
+
+                            if(m_monsters.Count == size)                            
+                                break;                            
+                        }
+                    }
+                }
                 AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             }
 

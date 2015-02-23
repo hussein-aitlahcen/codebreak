@@ -64,6 +64,12 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        public double Probability
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 
         /// </summary>

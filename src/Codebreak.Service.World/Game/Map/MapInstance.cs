@@ -281,7 +281,7 @@ namespace Codebreak.Service.World.Game.Map
         private bool m_subInstance;
         private int m_playerCount;
         private SpawnQueue m_spawnQueue;
-        private List<MonsterGradeDAO> m_monsters;
+        private List<MonsterSpawnDAO> m_monsters;
         private int m_spawnCounter;
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         private void InitEntitiesMovements()
         {
-            m_monsters = new List<MonsterGradeDAO>(MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_MAP, Id).Select(spawn => spawn.Grade));
+            m_monsters = new List<MonsterSpawnDAO>(MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_MAP, Id).OrderBy(spawn => spawn.Probability));
             m_spawnCounter = m_monsters.Count > 0 ? WorldConfig.SPAWN_MAX_GROUP_PER_MAP : 0;    
 
             while (m_spawnCounter > 0)
@@ -531,7 +531,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public void SpawnMonsters(IEnumerable<MonsterGradeDAO> monsters)
+        public void SpawnMonsters(IEnumerable<MonsterSpawnDAO> monsters)
         {
             if(monsters.Count() > 0)
                 SpawnEntity(new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, monsters, FightTeam1Cells.Count));    
@@ -548,15 +548,17 @@ namespace Codebreak.Service.World.Game.Map
                 if (!m_entityById.ContainsKey(entity.Id))
                 {
                     m_entityById.Add(entity.Id, entity);
-
+                    
+                    if (m_subInstance) // For npc etc
+                        entity.SetMap(this);
+                    
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
                     base.AddUpdatable(entity);
 
-                    if (m_subInstance) // For npc etc
-                        entity.SetMap(this);
-
                     if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                     {
+                        entity.CachedBuffer = true;
+
                         m_playerCount++;
                         m_entityByName.Add(entity.Name.ToLower(), entity);
 
@@ -564,8 +566,7 @@ namespace Codebreak.Service.World.Game.Map
                             InitEntitiesMovements();
 
                         base.AddHandler(entity.Dispatch);
-                        entity.CachedBuffer = true;
-                        entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity.Map.Entities.ToArray()));
+                        entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, Entities.ToArray()));
                         entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
                         entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
                         entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
@@ -577,6 +578,12 @@ namespace Codebreak.Service.World.Game.Map
                     {
                         InitEntityMovement(entity);
                     }
+                }
+                else
+                {
+                    Logger.Error("MapInstance::SpawnEntity : an entity with the same id alrezdy exists : " + entity.Name);
+
+                    WorldService.Instance.AddUpdatable(entity);
                 }
             });
         }
