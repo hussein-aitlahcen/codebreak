@@ -382,7 +382,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         private void InitEntitiesMovements()
         {
-            m_monsters = new List<MonsterSpawnDAO>(MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_MAP, Id).OrderBy(spawn => spawn.Probability));
+            m_monsters = new List<MonsterSpawnDAO>(MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_MAP, Id).OrderByDescending(spawn => spawn.Probability));
             m_spawnCounter = m_monsters.Count > 0 ? WorldConfig.SPAWN_MAX_GROUP_PER_MAP : 0;    
 
             while (m_spawnCounter > 0)
