@@ -164,6 +164,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
 
             // Autres
             m_effects.Add(EffectEnum.EcaflipChance, new EcaflipChanceEffect());
+            m_effects.Add(EffectEnum.Perception, new PerceptionEffect());
 
             // Sacrifice
             m_effects.Add(EffectEnum.Sacrifice, new SacrificeEffect());

@@ -672,6 +672,30 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="cellId"></param>
         public void MovementFinish(EntityBase entity, MovementPath path, int cellId)
         {
+            if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
+            {
+                var character = (CharacterEntity)entity;
+                if (character.CanGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
+                    {
+                        if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
+                        {
+                            if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
+                            {
+                                entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
+                            }
+                            else
+                            {
+                                monsterGroup.StopAction(GameActionTypeEnum.MAP);
+                                FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (entity.CellId == cellId)
                 return;
 
@@ -694,27 +718,7 @@ namespace Codebreak.Service.World.Game.Map
                         entity.CellId = cellId;
                         cell.ApplyActions(character);
                         return;
-                    }
-
-                    if (character.CanGameAction(GameActionTypeEnum.FIGHT))
-                    {
-                        foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
-                        {
-                            if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
-                            {
-                                if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
-                                {
-                                    entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
-                                }
-                                else
-                                {
-                                    monsterGroup.StopAction(GameActionTypeEnum.MAP);
-                                    FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
-                                    return;
-                                }
-                            }
-                        }
-                    }
+                    }                    
                 }     
             }
 
