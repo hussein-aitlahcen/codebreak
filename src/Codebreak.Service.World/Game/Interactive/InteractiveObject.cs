@@ -135,6 +135,11 @@ namespace Codebreak.Service.World.Game.Interactive
         /// <summary>
         /// 
         /// </summary>
+        public const int FRAME_NORMAL = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool CanWalkThrough
         {
             get;

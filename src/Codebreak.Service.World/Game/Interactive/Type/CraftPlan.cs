@@ -17,6 +17,21 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
+        public const int FRAME_STOP_CRAFT = 1;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int FRAME_CRAFTING = 2;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private int m_clients;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public CraftPlan(MapInstance map, int cellId)
             : base(map, cellId)
         {
@@ -71,6 +86,21 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         private void Craft(CharacterEntity character, JobSkill skill)
         {
             character.CraftStart(this, skill);
+
+            m_clients++;
+
+            base.UpdateFrame(FRAME_CRAFTING, FRAME_CRAFTING, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void StopCraft()
+        {
+            m_clients--;
+
+            if (m_clients == 0)
+                base.UpdateFrame(FRAME_STOP_CRAFT, FRAME_NORMAL, true);
         }
     }
 }

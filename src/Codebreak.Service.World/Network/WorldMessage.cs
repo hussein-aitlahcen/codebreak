@@ -2679,7 +2679,7 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string CRAFT_NO_RESULT()
         {
-            return "EI";
+            return "EcEI";
         }
 
         /// <summary>

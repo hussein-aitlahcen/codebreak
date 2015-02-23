@@ -23,11 +23,6 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
-        public const int FRAME_NORMAL = 0;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public const int FRAME_FARMING = 3;
         
         /// <summary>

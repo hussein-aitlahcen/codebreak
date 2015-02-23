@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Entity;
+using Codebreak.Service.World.Game.Interactive.Type;
 using Codebreak.Service.World.Game.Job;
 using Codebreak.Service.World.Game.Job.Skill;
 using Codebreak.Service.World.Network;
@@ -67,6 +68,7 @@ namespace Codebreak.Service.World.Game.Exchange
         private ItemTemplateDAO m_craftItem;
         private int m_loopCount;
         private UpdatableTimer m_loopTimer;
+        private CraftPlan m_plan;
 
         /// <summary>
         /// 
@@ -74,11 +76,12 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="character"></param>
         /// <param name="skill"></param>
         /// <param name="type"></param>
-        public CraftPlanExchange(CharacterEntity character, JobSkill skill, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_CRAFTPLAN)
+        public CraftPlanExchange(CharacterEntity character, CraftPlan plan, JobSkill skill, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_CRAFTPLAN)
             : base(type)
         {
             m_caseItems = new Dictionary<long, int>();
             m_templateQuantity = new Dictionary<int, long>();
+            m_plan = plan;
             Character = character;
             Skill = (CraftSkill)skill;
             Job = Character.CharacterJobs.GetJob(skill.SkillId);
@@ -91,6 +94,19 @@ namespace Codebreak.Service.World.Game.Exchange
         protected override string SerializeAs_ExchangeCreate()
         {
             return MaxCase + ";" + (int)Skill.SkillId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
+        public override void Leave(bool success = false)
+        {
+            CancelRetry();
+
+            m_plan.StopCraft();
+
+            base.Leave(success);
         }
 
         /// <summary>

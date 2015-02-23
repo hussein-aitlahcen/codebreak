@@ -1715,7 +1715,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="skill"></param>
         public void CraftStart(CraftPlan plan, JobSkill skill)
         {
-            CurrentAction = new GameCraftPlanExchangeAction(this, skill);
+            CurrentAction = new GameCraftPlanExchangeAction(this, plan, skill);
             StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
