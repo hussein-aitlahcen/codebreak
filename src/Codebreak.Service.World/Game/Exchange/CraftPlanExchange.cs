@@ -232,7 +232,7 @@ namespace Codebreak.Service.World.Game.Exchange
                 if(success)
                 {
                     var item = m_craftItem.Create();
-                    bool merged = Character.Inventory.AddItem(item);
+                    Character.Inventory.AddItem(item);
                     item = Character.Inventory.Items.Find(entry => entry.TemplateId == m_craftItem.Id);
 
                     Character.Dispatch(WorldMessage.EXCHANGE_DISTANT_MOVEMENT(
@@ -250,7 +250,7 @@ namespace Codebreak.Service.World.Game.Exchange
                         Character.Map.Dispatch(WorldMessage.CRAFT_INTERACTIVE_FAILED(Character.Id, m_craftItem.Id));
                 }
 
-                Character.CharacterJobs.AddExperience(Job, (long)(Job.CraftExperience(m_templateQuantity.Count) * WorldConfig.RATE_XP));
+                Character.CharacterJobs.AddExperience(Job, Job.CraftExperience(m_templateQuantity.Count));
             }
             else
             {
