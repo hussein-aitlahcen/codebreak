@@ -320,6 +320,8 @@ namespace Codebreak.Service.World.Game.Fight
                     Result.AddResult(player);
                 }
 
+                MonsterGroup.Inventory.AddKamas(m_kamasLoot);
+
                 Map.SpawnEntity(MonsterGroup);
             }
         }
