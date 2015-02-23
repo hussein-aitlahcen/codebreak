@@ -149,7 +149,7 @@ namespace Codebreak.Service.World.Game.Entity
             m_monsters = new List<MonsterEntity>();
 
             long monsterId = -1;
-            var size = 1;
+            var size = 1;       
             if (monsters.All(monster => monster.Probability == 1))
             {
                 size = monsters.Count();
