@@ -127,6 +127,8 @@ namespace Codebreak.Service.World.Manager
 
             if (used)
                 character.Inventory.RemoveItem(itemId);
+            else
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
         }
 
         /// <summary>

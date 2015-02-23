@@ -114,6 +114,7 @@
     <Compile Include="Database\Structure\CraftEntryDAO.cs" />
     <Compile Include="Database\Structure\DropTemplateDAO.cs" />
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
+    <Compile Include="Database\Structure\FightActionDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
     <Compile Include="Database\Structure\InventoryItemDAO.cs" />
     <Compile Include="Database\Structure\ItemSetDAO.cs" />
