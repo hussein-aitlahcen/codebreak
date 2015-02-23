@@ -85,6 +85,7 @@
     <Compile Include="Database\Repository\CraftEntryRepository.cs" />
     <Compile Include="Database\Repository\DropTemplateRepository.cs" />
     <Compile Include="Database\Repository\ExperienceTemplateRepository.cs" />
+    <Compile Include="Database\Repository\FightActionRepository.cs" />
     <Compile Include="Database\Repository\GuildRepository.cs" />
     <Compile Include="Database\Repository\InventoryItemRepository.cs" />
     <Compile Include="Database\Repository\ItemSetRepository.cs" />

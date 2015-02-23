@@ -52,7 +52,7 @@ namespace Codebreak.Service.World.Game.Area
             get
             {
                 if (m_spawns == null)
-                    m_spawns = MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_AREA, m_areaRecord.Id);
+                    m_spawns = MonsterSpawnRepository.Instance.GetById(ZoneTypeEnum.TYPE_AREA, m_areaRecord.Id);
                 return m_spawns;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Database;
+using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Spell;
 using PropertyChanged;
 using System;
@@ -21,6 +22,14 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        public ZoneTypeEnum Zone
+        {
+            get
+            {
+                return (ZoneTypeEnum)ZoneType;
+            }
+        }
+
         public int ZoneId
         {
             get;
@@ -33,10 +42,26 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        public FightTypeEnum Fight
+        {
+            get
+            {
+                return (FightTypeEnum)FightType;
+            }
+        }
+
         public int FightState
         {
             get;
             set;
+        }
+
+        public FightStateEnum State
+        {
+            get
+            {
+                return (FightStateEnum)FightState;
+            }
         }
 
         public string Conditions

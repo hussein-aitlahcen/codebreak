@@ -16,18 +16,18 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class SpawnManager : Singleton<SpawnManager>
     {
-        private Dictionary<SpawnTypeEnum, Dictionary<int, SpawnQueue>> m_spawnQueueById;
+        private Dictionary<ZoneTypeEnum, Dictionary<int, SpawnQueue>> m_spawnQueueById;
 
         /// <summary>
         /// 
         /// </summary>
         public SpawnManager()
         {
-            m_spawnQueueById = new Dictionary<SpawnTypeEnum, Dictionary<int, SpawnQueue>>();
-            m_spawnQueueById.Add(SpawnTypeEnum.TYPE_SUBAREA, new Dictionary<int, SpawnQueue>());
-            m_spawnQueueById.Add(SpawnTypeEnum.TYPE_AREA, new Dictionary<int, SpawnQueue>());
-            m_spawnQueueById.Add(SpawnTypeEnum.TYPE_SUPERAREA, new Dictionary<int, SpawnQueue>());
-            m_spawnQueueById.Add(SpawnTypeEnum.TYPE_MAP, new Dictionary<int, SpawnQueue>());
+            m_spawnQueueById = new Dictionary<ZoneTypeEnum, Dictionary<int, SpawnQueue>>();
+            m_spawnQueueById.Add(ZoneTypeEnum.TYPE_SUBAREA, new Dictionary<int, SpawnQueue>());
+            m_spawnQueueById.Add(ZoneTypeEnum.TYPE_AREA, new Dictionary<int, SpawnQueue>());
+            m_spawnQueueById.Add(ZoneTypeEnum.TYPE_SUPERAREA, new Dictionary<int, SpawnQueue>());
+            m_spawnQueueById.Add(ZoneTypeEnum.TYPE_MAP, new Dictionary<int, SpawnQueue>());
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Codebreak.Service.World.Manager
                 {
                     var spawnQueue = new SpawnQueue(subArea.Spawns);
                     subArea.AddUpdatable(spawnQueue);
-                    m_spawnQueueById[SpawnTypeEnum.TYPE_SUBAREA].Add(subArea.Id, spawnQueue);
+                    m_spawnQueueById[ZoneTypeEnum.TYPE_SUBAREA].Add(subArea.Id, spawnQueue);
                 }
             }
         }
@@ -52,8 +52,8 @@ namespace Codebreak.Service.World.Manager
         /// <param name="map"></param>
         public void RegisterMap(MapInstance map)
         {
-            if (m_spawnQueueById[SpawnTypeEnum.TYPE_SUBAREA].ContainsKey(map.SubAreaId))
-                m_spawnQueueById[SpawnTypeEnum.TYPE_SUBAREA][map.SubAreaId].RegisterMap(map);
+            if (m_spawnQueueById[ZoneTypeEnum.TYPE_SUBAREA].ContainsKey(map.SubAreaId))
+                m_spawnQueueById[ZoneTypeEnum.TYPE_SUBAREA][map.SubAreaId].RegisterMap(map);
         }
     }
 }

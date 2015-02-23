@@ -479,8 +479,7 @@ namespace Codebreak.Service.World.Game.Entity
                         && HasGameAction(GameActionTypeEnum.FIGHT);
 
                 case GameActionTypeEnum.MAP_TELEPORT:
-                    return (CurrentAction == null || CurrentAction.IsFinished)
-                        && HasGameAction(GameActionTypeEnum.MAP);
+                    return (CurrentAction == null || CurrentAction.IsFinished);
 
                 case GameActionTypeEnum.NPC_DIALOG:
                     return (CurrentAction == null || CurrentAction.IsFinished)

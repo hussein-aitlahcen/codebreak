@@ -1298,17 +1298,6 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 OnFightStart();
 
-                foreach (var fighter in Fighters.OfType<CharacterEntity>())
-                {
-                    fighter.FrameManager.RemoveFrame(FightPlacementFrame.Instance);
-                    fighter.FrameManager.RemoveFrame(InventoryFrame.Instance);
-                    fighter.FrameManager.AddFrame(GameActionFrame.Instance);
-                    fighter.FrameManager.AddFrame(FightFrame.Instance);
-                }
-
-                foreach(var fighter in Fighters.OfType<AIFighter>())                
-                    fighter.TurnReady = true;                
-
                 TurnProcessor.InitTurns(Fighters);
 
                 Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
@@ -2272,15 +2261,19 @@ namespace Codebreak.Service.World.Game.Fight
             LoopState = FightLoopStateEnum.STATE_ENDED;
             
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
+            
+            foreach (var character in Fighters.OfType<CharacterEntity>())
+                // delay execution
+                character.AddMessage(() => Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_ENDED, character));
 
-            foreach (var fighter in m_winnersTeam.Fighters.ToArray())            
-                fighter.EndFight(true);            
+            foreach (var fighter in m_winnersTeam.Fighters.ToArray())
+                fighter.EndFight(true);
 
             foreach (var fighter in m_losersTeam.Fighters.ToArray())
-                fighter.EndFight();            
+                fighter.EndFight();
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
-                spectator.EndFight();            
+                spectator.EndFight();
         }
         
         /// <summary>
@@ -2566,6 +2559,18 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public virtual void OnFightStart()
         {
+            foreach (var character in Fighters.OfType<CharacterEntity>())
+            {
+                character.FrameManager.RemoveFrame(FightPlacementFrame.Instance);
+                character.FrameManager.RemoveFrame(InventoryFrame.Instance);
+                character.FrameManager.AddFrame(GameActionFrame.Instance);
+                character.FrameManager.AddFrame(FightFrame.Instance);
+
+                Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_PLACEMENT, character);
+            }
+
+            foreach (var fighter in Fighters.OfType<AIFighter>())
+                fighter.TurnReady = true;                
         }
 
         /// <summary>
