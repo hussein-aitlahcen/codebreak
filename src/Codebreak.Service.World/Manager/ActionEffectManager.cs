@@ -39,6 +39,8 @@ namespace Codebreak.Service.World.Manager
             m_effectById.Add(EffectEnum.BddResetStats, ResetStatsEffect.Instance);
             m_effectById.Add(EffectEnum.BddResetSpells, ResetSpellEffect.Instance);
             m_effectById.Add(EffectEnum.BddAddJob, AddJobEffect.Instance);
+            m_effectById.Add(EffectEnum.BddRemoveItem, RemoveItemEffect.Instance);
+            m_effectById.Add(EffectEnum.BddCreateGuild, GuildCreationEffect.Instance);
 
             m_effectById.Add(EffectEnum.AddJob, AddJobEffect.Instance);
 
@@ -91,7 +93,7 @@ namespace Codebreak.Service.World.Manager
 
             if (!item.Template.Usable && !item.Template.Buff && !item.Template.Targetable && targetId != -1 && targetCell != -1)
             {
-                Logger.Debug("ActionEffectManager::Apply non usable/buff/targetable item=" + item.Template.Name + " character=" + character.Name);                
+                Logger.Info("ActionEffectManager::Apply non usable/buff/targetable item=" + item.Template.Name + " character=" + character.Name);                
                 character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
@@ -127,6 +129,8 @@ namespace Codebreak.Service.World.Manager
 
             if (used)
                 character.Inventory.RemoveItem(itemId);
+            else
+                character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
         }
 
         /// <summary>

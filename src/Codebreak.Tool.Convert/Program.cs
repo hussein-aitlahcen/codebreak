@@ -46,15 +46,15 @@ namespace Codebreak.Tool.Convert
             ProcessMaps();
             ProcessTriggers();
             ProcessJsons();
-            ProcessMonsters();
+            ProcessMonstersSpawn();
 
             Console.Read();
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
-        private static void ProcessMonsters()
+        private static void ProcessMonstersSpawn()
         {
             Console.WriteLine("Loading monsters ...");
 

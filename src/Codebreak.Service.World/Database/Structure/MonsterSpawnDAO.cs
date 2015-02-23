@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Database.Structure
     /// <summary>
     /// 
     /// </summary>
-    public enum SpawnTypeEnum
+    public enum ZoneTypeEnum
     {
         TYPE_SUBAREA = 0,
         TYPE_AREA = 1,
@@ -38,11 +38,11 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        public SpawnTypeEnum Type
+        public ZoneTypeEnum Type
         {
             get
             {
-                return (SpawnTypeEnum)ZoneType;
+                return (ZoneTypeEnum)ZoneType;
             }
         }
 
@@ -59,6 +59,12 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         public int GradeId
+        {
+            get;
+            set;
+        }
+
+        public double Probability
         {
             get;
             set;

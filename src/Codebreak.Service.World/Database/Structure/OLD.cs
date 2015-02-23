@@ -16,6 +16,24 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        public string Grades
+        {
+            get;
+            set;
+        }
+
+        public string Inits
+        {
+            get;
+            set;
+        }
+
+        public string Stats
+        {
+            get;
+            set;
+        }
+
         public string Spells
         {
             get;

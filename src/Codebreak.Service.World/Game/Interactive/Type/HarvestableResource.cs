@@ -23,11 +23,6 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
-        public const int FRAME_NORMAL = 0;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public const int FRAME_FARMING = 3;
         
         /// <summary>
@@ -250,7 +245,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         {
             m_currentHarvester.StopAction(GameActionTypeEnum.SKILL_HARVEST);
 
-            var exprienceWin = m_quantityFarmed * Experience * WorldConfig.RATE_XP;
+            var exprienceWin = m_quantityFarmed * Experience;
 
             m_currentHarvester.CachedBuffer = true;
             m_currentHarvester.Inventory.AddItem(GeneratedTemplate.Create(m_quantityFarmed));

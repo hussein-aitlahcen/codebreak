@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Exchange;
+using Codebreak.Service.World.Game.Interactive.Type;
 using Codebreak.Service.World.Game.Job;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,8 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public GameCraftPlanExchangeAction(CharacterEntity character, JobSkill skill)
-            : base(new CraftPlanExchange(character, skill), character)
+        public GameCraftPlanExchangeAction(CharacterEntity character, CraftPlan plan, JobSkill skill)
+            : base(new CraftPlanExchange(character, plan, skill), character)
         {
         }
 

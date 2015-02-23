@@ -49,12 +49,15 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(SubAreaRepository.Instance);
             base.AddRepository(AreaRepository.Instance);
             base.AddRepository(SuperAreaRepository.Instance);
+            base.AddRepository(FightActionRepository.Instance);
 
             // OLD DATA
             base.AddRepository(MonstersRepository.Instance);
             base.AddRepository(SortsRepository.Instance);
-
+                        
             base.LoadAll(string.IsNullOrWhiteSpace(dbConnection) ? WorldConfig.WORLD_DB_CONNECTION : dbConnection);
+            
+            //MonstersRepository.Instance.Save();
         }
     }
 }

@@ -92,6 +92,7 @@ namespace Codebreak.Service.World.Manager
                     new HarvestSkill(SkillIdEnum.SKILL_COUPER_KALIPTUS, 75, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_BUCHERON]),
                     new CraftSkill(SkillIdEnum.SKILL_SCIER, 1, new int[]
                         {
+
                         })
                 ));
 

@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <returns></returns>
         public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
-            if (!damageInfos.IsMelee)
+            if (!damageInfos.IsMelee || Pathfinding.GoalDistance(Target.Map, Target.Cell.Id, damageInfos.Caster.Cell.Id) > 1)
                 return FightActionResultEnum.RESULT_NOTHING;
 
             damageValue = 0; // Annihilation des dommages;

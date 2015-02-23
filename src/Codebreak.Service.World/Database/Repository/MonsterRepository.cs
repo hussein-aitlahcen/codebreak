@@ -19,7 +19,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="type"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IEnumerable<MonsterSpawnDAO> GetById(SpawnTypeEnum type, int id)
+        public IEnumerable<MonsterSpawnDAO> GetById(ZoneTypeEnum type, int id)
         {
             return base.FindAll(spawn => spawn.Type == type && spawn.ZoneId == id);
         }

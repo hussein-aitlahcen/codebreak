@@ -38,6 +38,15 @@ namespace Codebreak.Service.World.Game.ActionEffect
             var mapId = int.Parse(parameters["mapId"]);
             var cellId = int.Parse(parameters["cellId"]);
 
+            // Not on map, maybe offline teleport or end fight teleport.
+            if(!character.HasGameAction(GameActionTypeEnum.MAP) && character.CurrentAction == null)
+            {
+                character.MapId = mapId;
+                character.CellId = cellId;
+
+                return true;
+            }
+
             if(!character.CanGameAction(GameActionTypeEnum.MAP_TELEPORT))
             {
                 character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_YOU_ARE_AWAY));

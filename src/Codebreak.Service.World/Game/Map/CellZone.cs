@@ -103,8 +103,17 @@ namespace Codebreak.Service.World.Game.Map
             switch (range[0])
             {
                 case 'C':
-                    foreach (var cell in GetCircleCells(map, cellId, Util.HASH.IndexOf(range[1])))
-                        yield return cell;
+                    if (range[1] == '_')
+                    {
+                        foreach (var cell in map.Cells)
+                            yield return cell.Id;
+                        yield break;
+                    }
+                    else
+                    {
+                        foreach (var cell in GetCircleCells(map, cellId, Util.HASH.IndexOf(range[1])))
+                            yield return cell;
+                    }
                     break;
 
                 case 'X':

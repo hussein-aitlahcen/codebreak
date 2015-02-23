@@ -85,6 +85,7 @@
     <Compile Include="Database\Repository\CraftEntryRepository.cs" />
     <Compile Include="Database\Repository\DropTemplateRepository.cs" />
     <Compile Include="Database\Repository\ExperienceTemplateRepository.cs" />
+    <Compile Include="Database\Repository\FightActionRepository.cs" />
     <Compile Include="Database\Repository\GuildRepository.cs" />
     <Compile Include="Database\Repository\InventoryItemRepository.cs" />
     <Compile Include="Database\Repository\ItemSetRepository.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Database\Structure\CraftEntryDAO.cs" />
     <Compile Include="Database\Structure\DropTemplateDAO.cs" />
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
+    <Compile Include="Database\Structure\FightActionDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
     <Compile Include="Database\Structure\InventoryItemDAO.cs" />
     <Compile Include="Database\Structure\ItemSetDAO.cs" />
@@ -152,11 +154,13 @@
     <Compile Include="Game\ActionEffect\AddSpellpointEffect.cs" />
     <Compile Include="Game\ActionEffect\AddStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\ChangeAlignmentEffect.cs" />
+    <Compile Include="Game\ActionEffect\GuildCreationEffect.cs" />
     <Compile Include="Game\ActionEffect\IActionEffect.cs" />
     <Compile Include="Game\ActionEffect\DialogLeaveEffect.cs" />
     <Compile Include="Game\ActionEffect\DialogReplyEffect.cs" />
     <Compile Include="Game\ActionEffect\OpenBankEffect.cs" />
     <Compile Include="Game\ActionEffect\RecallEffect.cs" />
+    <Compile Include="Game\ActionEffect\RemoveItemEffect.cs" />
     <Compile Include="Game\ActionEffect\ResetSpellEffect.cs" />
     <Compile Include="Game\ActionEffect\ResetStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\TeleportEffect.cs" />
@@ -256,6 +260,7 @@
     <Compile Include="Game\Fight\Effect\Type\DropLifeEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceBuff.cs" />
     <Compile Include="Game\Fight\Effect\Type\EcaflipChanceEffect.cs" />
+    <Compile Include="Game\Fight\Effect\Type\PerceptionEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\SummoningEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\PunishmentDamageEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\PureLifeStealEffect.cs" />

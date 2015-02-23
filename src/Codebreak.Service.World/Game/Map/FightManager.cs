@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Database.Structure;
+using Codebreak.Service.World.Database.Repository;
+using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Game.Condition;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -17,6 +23,7 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         private Dictionary<long, FightBase> m_fightList;
+        private List<FightActionDAO> m_fightActions;
         private MapInstance m_map;
         private long m_fightId = 1;
 
@@ -48,7 +55,8 @@ namespace Codebreak.Service.World.Game.Map
             m_map = map;
             m_map.AddUpdatable(this);
             m_map.SubArea.AddHandler(base.Dispatch);
-            m_fightList = new Dictionary<long, FightBase>();   
+            m_fightList = new Dictionary<long, FightBase>();
+            m_fightActions = new List<FightActionDAO>(FightActionRepository.Instance.GetById(ZoneTypeEnum.TYPE_MAP, m_map.Id));
         }
 
         /// <summary>
@@ -90,6 +98,26 @@ namespace Codebreak.Service.World.Game.Map
         public void StartTaxCollectorAggression(CharacterEntity attacker, TaxCollectorEntity taxCollector)
         {
             Add(new TaxCollectorFight(m_map, m_fightId++, attacker, taxCollector));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fightType"></param>
+        /// <param name="state"></param>
+        /// <param name="characters"></param>
+        public void ExecuteFightActions(FightTypeEnum fightType, FightStateEnum state, CharacterEntity character)
+        {
+            foreach(var fightAction in m_fightActions.Where(faction => faction.Fight == fightType && faction.State == state))
+            {
+                if (ConditionParser.Instance.Check(fightAction.Conditions, character))
+                {
+                    foreach (var action in fightAction.ActionsList)
+                    {
+                        ActionEffectManager.Instance.ApplyEffect(character, action.Key, action.Value);
+                    }
+                }
+            }
         }
 
         /// <summary>

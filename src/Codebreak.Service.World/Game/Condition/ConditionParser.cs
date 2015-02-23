@@ -91,6 +91,8 @@ namespace Codebreak.Service.World.Game.Condition
                         realConditions.Replace("PS", "character.Sex");
                         realConditions.Replace("PZ", "1"); // Abonné
                         realConditions.Replace("PN", "character.Name");
+                        realConditions.Replace("PJ", "0"); // HasJob
+                        realConditions.Replace("MK", "0"); // HasJob
                         realConditions.Replace("Pg", "0"); // Don
                         realConditions.Replace("PR", "0"); // Married
                         realConditions.Replace("PX", "character.Account.Power"); // Admin level

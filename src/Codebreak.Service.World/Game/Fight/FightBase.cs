@@ -1123,7 +1123,6 @@ namespace Codebreak.Service.World.Game.Fight
         {
             fighter.JoinFight(this, team);
             fighter.TurnReady = true;
-            TurnProcessor.SummonFighter(fighter);
 
             var result = fighter.SetCell(GetCell(cellId));
             if (result != FightActionResultEnum.RESULT_NOTHING)
@@ -1131,12 +1130,24 @@ namespace Codebreak.Service.World.Game.Fight
 
             var message = new StringBuilder("+");
             fighter.SerializeAs_GameMapInformations(OperatorEnum.OPERATOR_ADD, message);
-
+                      
             if (fighter.Invocator != null)
                 base.Dispatch(WorldMessage.GAME_ACTION(fighter.StaticInvocation ? EffectEnum.InvocationStatic : EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
             else
-                base.Dispatch(message.ToString());
-            base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                base.Dispatch("GM|" + message.ToString());
+
+            switch(State)
+            {
+                case FightStateEnum.STATE_PLACEMENT:
+                    // implicit turnready after start fighting
+                    break;
+
+                case FightStateEnum.STATE_FIGHTING:
+                    fighter.TurnReady = true;
+                    TurnProcessor.SummonFighter(fighter);
+                    base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                    break;
+            }
 
             return result;
         }
@@ -1286,17 +1297,6 @@ namespace Codebreak.Service.World.Game.Fight
             AddMessage(() =>
             {
                 OnFightStart();
-
-                foreach (var fighter in Fighters.OfType<CharacterEntity>())
-                {
-                    fighter.FrameManager.RemoveFrame(FightPlacementFrame.Instance);
-                    fighter.FrameManager.RemoveFrame(InventoryFrame.Instance);
-                    fighter.FrameManager.AddFrame(GameActionFrame.Instance);
-                    fighter.FrameManager.AddFrame(FightFrame.Instance);
-                }
-
-                foreach(var fighter in Fighters.OfType<AIFighter>())                
-                    fighter.TurnReady = true;                
 
                 TurnProcessor.InitTurns(Fighters);
 
@@ -2261,15 +2261,19 @@ namespace Codebreak.Service.World.Game.Fight
             LoopState = FightLoopStateEnum.STATE_ENDED;
             
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
+            
+            foreach (var character in Fighters.OfType<CharacterEntity>())
+                // delay execution
+                character.AddMessage(() => Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_ENDED, character));
 
-            foreach (var fighter in m_winnersTeam.Fighters.ToArray())            
-                fighter.EndFight(true);            
+            foreach (var fighter in m_winnersTeam.Fighters.ToArray())
+                fighter.EndFight(true);
 
             foreach (var fighter in m_losersTeam.Fighters.ToArray())
-                fighter.EndFight();            
+                fighter.EndFight();
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
-                spectator.EndFight();            
+                spectator.EndFight();
         }
         
         /// <summary>
@@ -2555,6 +2559,18 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public virtual void OnFightStart()
         {
+            foreach (var character in Fighters.OfType<CharacterEntity>())
+            {
+                character.FrameManager.RemoveFrame(FightPlacementFrame.Instance);
+                character.FrameManager.RemoveFrame(InventoryFrame.Instance);
+                character.FrameManager.AddFrame(GameActionFrame.Instance);
+                character.FrameManager.AddFrame(FightFrame.Instance);
+
+                Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_PLACEMENT, character);
+            }
+
+            foreach (var fighter in Fighters.OfType<AIFighter>())
+                fighter.TurnReady = true;                
         }
 
         /// <summary>

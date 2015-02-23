@@ -827,18 +827,15 @@ namespace Codebreak.Service.World.Command
 
             protected override void Process(WorldCommandContext context)
             {
-                int idTemplate;
-                if (Int32.TryParse(context.TextCommandArgument.NextWord(), out idTemplate))
+                int templateId;
+                if (Int32.TryParse(context.TextCommandArgument.NextWord(), out templateId))
                 {
-                    var itemTemplate = ItemTemplateRepository.Instance.GetById(idTemplate);
+                    var itemTemplate = ItemTemplateRepository.Instance.GetById(templateId);
                     if (itemTemplate != null)
                     {
-                        int quantity;
-                        if(!int.TryParse(context.TextCommandArgument.NextWord(), out quantity))
-                        {
-                            context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow quantity"));
-                            return;
-                        }
+                        int quantity = 1;
+                        if (!int.TryParse(context.TextCommandArgument.NextWord(), out quantity) || quantity == templateId)                        
+                            quantity = 1;                        
 
                         var instance = itemTemplate.Create(quantity, ItemSlotEnum.SLOT_INVENTORY, true);
                         if (instance != null)

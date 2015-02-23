@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Game.Area
             get
             {
                 if (m_spawns == null)
-                    m_spawns = MonsterSpawnRepository.Instance.GetById(SpawnTypeEnum.TYPE_SUPERAREA, m_superAreaRecord.Id);
+                    m_spawns = MonsterSpawnRepository.Instance.GetById(ZoneTypeEnum.TYPE_SUPERAREA, m_superAreaRecord.Id);
                 return m_spawns;
             }
         }

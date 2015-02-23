@@ -96,6 +96,8 @@ namespace Codebreak.Service.World.Game.Fight
                         if(Victim.Team.FreePlace != null)
                             SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id); 
             }
+
+            base.OnFightStart();
         }
 
         /// <summary>
