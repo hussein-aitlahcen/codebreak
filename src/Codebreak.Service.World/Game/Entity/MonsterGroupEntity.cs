@@ -150,19 +150,26 @@ namespace Codebreak.Service.World.Game.Entity
 
             long monsterId = -1;
             var size = 1;
-            var rand = Util.Next(0, 100);
-            if (rand < 10) // 10%
-                size = 1;
-            else if (rand < 25)
-                size = 2;
-            else if (rand < 50)
-                size = 3;
-            else if (rand < 75)
-                size = 4;
-            else if (rand < 90)
-                size = 5;
+            if (monsters.All(monster => monster.Probability == 1))
+            {
+                size = monsters.Count();
+            }
             else
-                size = 6;
+            {
+                var rand = Util.Next(0, 100);
+                if (rand < 10) // 10%
+                    size = 1;
+                else if (rand < 25)
+                    size = 2;
+                else if (rand < 50)
+                    size = 3;
+                else if (rand < 75)
+                    size = 4;
+                else if (rand < 90)
+                    size = 5;
+                else
+                    size = 6;
+            }
 
             if (size > maxSize)
                 size = maxSize;

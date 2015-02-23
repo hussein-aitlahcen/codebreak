@@ -728,6 +728,46 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
+        public sealed class OnlineCharacterSubCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases =
+            {
+                "online"
+            };
+
+            public override string[] Aliases
+            {
+                get { return _aliases; }
+            }
+
+            public override string Description
+            {
+                get { return "Check out whos online."; }
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                var message = new StringBuilder("Online players :\n");
+                WorldService.Instance.AddMessage(() =>
+                    {
+                        foreach(var client in ClientManager.Instance.Clients)
+                        {
+                            if(client.CurrentCharacter != null)
+                            {
+                                message.AppendLine(client.CurrentCharacter.Name);
+                            }
+                        }
+                        context.Character.AddMessage(() =>
+                            {
+                                context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE(message.ToString()));
+                            });
+                    });
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class LevelUpSubCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases =

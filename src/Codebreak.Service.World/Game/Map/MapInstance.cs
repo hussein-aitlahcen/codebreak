@@ -438,7 +438,7 @@ namespace Codebreak.Service.World.Game.Map
             (
                 () => Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false)),
                 () => entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT)                
-            );            
+            );
         }
 
         /// <summary>

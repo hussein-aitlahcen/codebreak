@@ -48,6 +48,17 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<WorldClient> Clients
+        {
+            get
+            {
+                return m_clientByAccount.Values;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ClientManager()
         {
             m_accountByTicket = new Dictionary<string, AccountTicket>();
