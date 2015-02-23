@@ -277,7 +277,7 @@ namespace Codebreak.Service.World.Game.Exchange
                 return;
 
             m_loopCount = count;
-            m_loopTimer = base.AddTimer(700, Loop);
+            m_loopTimer = base.AddTimer(1100, Loop);
         }
 
         /// <summary>
