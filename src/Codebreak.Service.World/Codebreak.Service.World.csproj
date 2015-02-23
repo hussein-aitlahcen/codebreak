@@ -159,6 +159,7 @@
     <Compile Include="Game\ActionEffect\DialogReplyEffect.cs" />
     <Compile Include="Game\ActionEffect\OpenBankEffect.cs" />
     <Compile Include="Game\ActionEffect\RecallEffect.cs" />
+    <Compile Include="Game\ActionEffect\RemoveItemEffect.cs" />
     <Compile Include="Game\ActionEffect\ResetSpellEffect.cs" />
     <Compile Include="Game\ActionEffect\ResetStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\TeleportEffect.cs" />

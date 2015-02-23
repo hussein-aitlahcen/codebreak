@@ -598,6 +598,7 @@ namespace Codebreak.Service.World.Game.Spell
         BddResetStats = 2006,
         BddResetSpells = 2007,
         BddAddJob = 2008,
+        BddRemoveItem = 2009,
     }
 
     /// <summary>
