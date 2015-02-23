@@ -183,6 +183,7 @@ namespace Codebreak.Service.World.Game.Entity
                         }
                     }
                 }
+
                 AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             }
 
