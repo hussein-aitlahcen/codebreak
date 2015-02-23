@@ -1585,20 +1585,20 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void Disconnected()
+        public bool Disconnected()
         {
-            if (base.HasGameAction(GameActionTypeEnum.FIGHT))
+            if (HasGameAction(GameActionTypeEnum.FIGHT))
             {
                 if (CurrentAction != null)
                     AbortAction(CurrentAction.Type);
                 AbortAction(GameActionTypeEnum.FIGHT);
-                return;
+                return false;
             }
 
             StopRegeneration();
 
             if (CurrentAction != null)
-                AbortAction(base.CurrentAction.Type, base.Id);
+                AbortAction(CurrentAction.Type, Id);
             if (HasGameAction(GameActionTypeEnum.MAP))
                 AbortAction(GameActionTypeEnum.MAP);
             if (GuildMember != null)
@@ -1614,6 +1614,8 @@ namespace Codebreak.Service.World.Game.Entity
                     merchant.StartAction(GameActionTypeEnum.MAP);
                 });
             }
+
+            return true;
         }
 
         /// <summary>

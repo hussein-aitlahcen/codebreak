@@ -136,9 +136,10 @@ namespace Codebreak.Service.World.Manager
                 
             character.AddMessage(() =>
             {
-                RemoveCharacter(character);
-
-                character.Disconnected();
+                if (character.Disconnected())
+                {
+                    RemoveCharacter(character);
+                }
             });
         }
 
