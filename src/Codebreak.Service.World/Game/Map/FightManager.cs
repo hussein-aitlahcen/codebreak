@@ -10,6 +10,7 @@ using Codebreak.Service.World.Network;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Game.Condition;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -109,9 +110,12 @@ namespace Codebreak.Service.World.Game.Map
         {
             foreach(var fightAction in m_fightActions.Where(faction => faction.Fight == fightType && faction.State == state))
             {
-                foreach (var action in fightAction.ActionsList)
+                if (ConditionParser.Instance.Check(fightAction.Conditions, character))
                 {
-                    ActionEffectManager.Instance.ApplyEffect(character, action.Key, action.Value);
+                    foreach (var action in fightAction.ActionsList)
+                    {
+                        ActionEffectManager.Instance.ApplyEffect(character, action.Key, action.Value);
+                    }
                 }
             }
         }
