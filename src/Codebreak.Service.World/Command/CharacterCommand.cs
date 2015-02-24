@@ -849,6 +849,80 @@ namespace Codebreak.Service.World.Command
         /// <summary>
         /// 
         /// </summary>
+        public sealed class WinFightToCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases =
+            {
+                "winfightto"
+            };
+
+            public override string[] Aliases
+            {
+                get { return _aliases; }
+            }
+
+            public override string Description
+            {
+                get { return "Win the current fight in the choosen player favor."; }
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                if (!context.Character.HasGameAction(GameActionTypeEnum.FIGHT))
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unable to execute this command out of fight."));
+                    return;
+                }
+
+                var target = context.Character.Fight.Fighters.FirstOrDefault(fighter => fighter.Name.Equals(context.TextCommandArgument.NextWord()));
+                if (target == null)
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow character name."));
+                    return;
+                }
+
+                foreach (var fighter in target.Team.OpponentTeam.AliveFighters)
+                    fighter.Life = 0;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class KamasSubCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases =
+            {
+                "kamas"
+            };
+
+            public override string[] Aliases
+            {
+                get { return _aliases; }
+            }
+
+            public override string Description
+            {
+                get { return "Add some kamas to your invotentory. Arguments : %kamas%"; }
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                long kamas;
+                if (long.TryParse(context.TextCommandArgument.NextWord(), out kamas))
+                {
+                    context.Character.Inventory.AddKamas(kamas);
+                }
+                else
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character kamas %kamas%"));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class ItemSubCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases =
@@ -863,7 +937,7 @@ namespace Codebreak.Service.World.Command
 
             public override string Description
             {
-                get { return "Add an item in your invotentory, with max jet. Arguments : %templateId%"; }
+                get { return "Add an item in your inventory, with max jet. Arguments : %templateId%"; }
             }
 
             protected override void Process(WorldCommandContext context)
