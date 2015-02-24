@@ -127,6 +127,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public bool Resurect
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private StringBuilder m_serializedMapInformations;
 
         /// <summary>
@@ -138,17 +147,54 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         private UpdatableTimer m_ageTimer;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private int m_nextMonsterId;
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        public MonsterGroupEntity(long id, int mapId, int cellId, IEnumerable<MonsterSpawnDAO> monsters, int maxSize = 6)
+        /// <param name="mapId"></param>
+        /// <param name="cellId"></param>
+        /// <param name="grade"></param>
+        public MonsterGroupEntity(long id, int mapId, int cellId)
             : base(EntityTypeEnum.TYPE_MONSTER_GROUP, id)
         {
             m_monsters = new List<MonsterEntity>();
+            m_nextMonsterId = -1;
 
-            long monsterId = -1;
+            Resurect = true;
+            MapId = mapId;
+            CellId = cellId;
+
+            Inventory = new EntityInventory(this, (int)EntityTypeEnum.TYPE_MONSTER_GROUP, Id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="mapId"></param>
+        /// <param name="cellId"></param>
+        /// <param name="monsters"></param>
+        public MonsterGroupEntity(long id, int mapId, int cellId, IEnumerable<MonsterGradeDAO> monsters)
+            : this(id, mapId, cellId)
+        {
+            Resurect = false;
+            foreach(var grade in monsters)            
+                m_monsters.Add(new MonsterEntity(m_nextMonsterId--, grade));            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public MonsterGroupEntity(long id, int mapId, int cellId, IEnumerable<MonsterSpawnDAO> monsters, int maxSize = 6)
+            : this(id, mapId, cellId)                
+        {
             var size = 1;       
             if (monsters.All(monster => monster.Probability == 1))
             {
@@ -183,7 +229,7 @@ namespace Codebreak.Service.World.Game.Entity
                         var chance = Util.Next(0, 100);
                         if (chance < spawn.Probability * 100)
                         {
-                            m_monsters.Add(new MonsterEntity(monsterId--, spawn.Grade));
+                            m_monsters.Add(new MonsterEntity(m_nextMonsterId--, spawn.Grade));
 
                             if(m_monsters.Count == size)                            
                                 break;                            
@@ -193,12 +239,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 AggressionRange = m_monsters.Max(monster => monster.Grade.Template.AggressionRange);
             }
-
-            MapId = mapId;
-            CellId = cellId;
-
-            Inventory = new EntityInventory(this, (int)EntityTypeEnum.TYPE_MONSTER_GROUP, Id);
-
+            
             base.AddTimer(m_ageTimer = new UpdatableTimer(1000 * WorldConfig.PVM_STAR_BONUS_PERCENT_SECONDS, UpdateAge));
         }
 

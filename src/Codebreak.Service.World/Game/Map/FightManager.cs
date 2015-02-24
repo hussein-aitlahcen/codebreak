@@ -11,6 +11,7 @@ using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Game.Condition;
+using Codebreak.Service.World.Game.Action;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -62,12 +63,27 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public bool CanStartFight(CharacterEntity character)
+        {
+            if (m_map.FightTeam0Cells.Count == 0 || m_map.FightTeam1Cells.Count == 0)
+            {
+                character.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
         public void StartChallenge(CharacterEntity attacker, CharacterEntity defender)
         {
-            Add(new ChallengerFight(m_map, m_fightId++, attacker, defender));            
+            if(!CanStartFight(attacker))
+                Add(new ChallengerFight(m_map, m_fightId++, attacker, defender));            
         }
 
         /// <summary>
@@ -77,7 +93,8 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="victim"></param>
         public void StartAggression(CharacterEntity aggressor, CharacterEntity victim)
         {
-            Add(new AlignmentFight(m_map, m_fightId++, aggressor, victim));
+            if (!CanStartFight(aggressor))
+                Add(new AlignmentFight(m_map, m_fightId++, aggressor, victim));
         }
 
         /// <summary>
@@ -85,9 +102,21 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         /// <param name="character"></param>
         /// <param name="monsterGroup"></param>
-        public void StartMonsterFight(CharacterEntity character, MonsterGroupEntity monsterGroup)
+        public bool StartMonsterFight(CharacterEntity character, MonsterGroupEntity monsterGroup)
         {
+            if (!CanStartFight(character))
+                return false;
+            
+            if (!character.CanGameAction(GameActionTypeEnum.FIGHT))
+            {
+                character.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_YOU_ARE_AWAY));
+                return false;
+            }
+
+            monsterGroup.StopAction(GameActionTypeEnum.MAP);
             Add(new MonsterFight(m_map, m_fightId++, character, monsterGroup));
+            
+            return true;
         }
 
         /// <summary>
@@ -95,9 +124,14 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="taxCollector"></param>
-        public void StartTaxCollectorAggression(CharacterEntity attacker, TaxCollectorEntity taxCollector)
+        public bool StartTaxCollectorAggression(CharacterEntity attacker, TaxCollectorEntity taxCollector)
         {
+            if (!CanStartFight(attacker))
+                return false;
+
             Add(new TaxCollectorFight(m_map, m_fightId++, attacker, taxCollector));
+
+            return true;
         }
 
         /// <summary>

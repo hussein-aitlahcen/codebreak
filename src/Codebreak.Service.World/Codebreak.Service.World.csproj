@@ -163,6 +163,7 @@
     <Compile Include="Game\ActionEffect\RemoveItemEffect.cs" />
     <Compile Include="Game\ActionEffect\ResetSpellEffect.cs" />
     <Compile Include="Game\ActionEffect\ResetStatsEffect.cs" />
+    <Compile Include="Game\ActionEffect\StartFightEffect.cs" />
     <Compile Include="Game\ActionEffect\TeleportEffect.cs" />
     <Compile Include="Game\Action\GameActionBase.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />

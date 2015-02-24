@@ -569,6 +569,8 @@ namespace Codebreak.Service.World.Game.Spell
 
         LastEat = 808,
 
+        LaunchFight = 905,
+
         AlignmentChange = 188,
         AlignmentId = 960,
         AlignmentGrade = 961,
@@ -600,6 +602,7 @@ namespace Codebreak.Service.World.Game.Spell
         BddAddJob = 2008,
         BddRemoveItem = 2009,
         BddCreateGuild = 2010,
+        BddLaunchFight = 2011,
     }
 
     /// <summary>

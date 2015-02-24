@@ -536,6 +536,16 @@ namespace Codebreak.Service.World.Game.Map
             if(monsters.Count() > 0)
                 SpawnEntity(new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, monsters, FightTeam1Cells.Count));    
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="grades"></param>
+        public bool StartMonsterFight(CharacterEntity character, IEnumerable<MonsterGradeDAO> grades)
+        {
+            return FightManager.StartMonsterFight(character, new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell));
+        }
         
         /// <summary>
         /// 
@@ -681,16 +691,8 @@ namespace Codebreak.Service.World.Game.Map
                     {
                         if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
                         {
-                            if (FightTeam0Cells.Count == 0 || FightTeam1Cells.Count == 0)
-                            {
-                                entity.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Unable to start fight withouth fightCells"));
-                            }
-                            else
-                            {
-                                monsterGroup.StopAction(GameActionTypeEnum.MAP);
-                                FightManager.StartMonsterFight(entity as CharacterEntity, monsterGroup);
+                            if(FightManager.StartMonsterFight(character, monsterGroup))
                                 return;
-                            }
                         }
                     }
                 }
