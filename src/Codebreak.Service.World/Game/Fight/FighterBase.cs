@@ -504,6 +504,7 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => null);
+            SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler == null ? default(Action<string>) : MovementHandler.Dispatch);
             StopAction(GameActionTypeEnum.FIGHT);
                         
             if (SpellManager != null)
