@@ -137,34 +137,12 @@ namespace Codebreak.Service.World.Game.Fight
             switch (State)
             {
                 case FightStateEnum.STATE_PLACEMENT:
-                    if (character.IsLeader)
-                    {
-                        foreach (var teamFighter in character.Team.Fighters)
-                        {
-                            if (base.TryKillFighter(teamFighter, teamFighter.Id, true, true) == FightActionResultEnum.RESULT_END)
-                            {
-                                return FightActionResultEnum.RESULT_END;
-                            }
-                        }
-
-                        return FightActionResultEnum.RESULT_END;
-                    }
-                    else
+                    if (kick)
                     {
                         character.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, character.Team.LeaderId, character));
                         character.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, character));
-                        character.LeaveFight();
+                        character.LeaveFight(true);
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
-
-                        return FightActionResultEnum.RESULT_NOTHING;
-                    }
-
-                case FightStateEnum.STATE_FIGHTING:
-                    if (character.IsSpectating)
-                    {
-                        character.LeaveFight(kick);
-                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
-
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
@@ -172,7 +150,23 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         character.LeaveFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        return FightActionResultEnum.RESULT_DEATH;
+                    }
 
+                    return FightActionResultEnum.RESULT_END;
+
+                case FightStateEnum.STATE_FIGHTING:
+                    if (character.IsSpectating)
+                    {
+                        character.LeaveFight(kick);
+                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
+                        return FightActionResultEnum.RESULT_NOTHING;
+                    }
+
+                    if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
+                    {
+                        character.LeaveFight();
+                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
                         return FightActionResultEnum.RESULT_DEATH;
                     }
 

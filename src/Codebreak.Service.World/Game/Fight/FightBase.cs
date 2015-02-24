@@ -1352,6 +1352,8 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         case EntityTypeEnum.TYPE_CHARACTER:
                             NextLoopState = FightLoopStateEnum.STATE_WAIT_TURN;
+                            if (CurrentFighter.IsDisconnected)
+                                CurrentFighter.TurnPass = true;
                             break;
 
                         default:
