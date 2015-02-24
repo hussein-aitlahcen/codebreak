@@ -286,7 +286,7 @@ namespace Codebreak.Service.World.Game.Entity
                         string mobIds = string.Join(",", m_monsters.Select(monster => monster.Grade.MonsterId.ToString()));
                         string mobGfxs = string.Join(",", m_monsters.Select(monster => monster.Grade.Template.GfxId + "^100"));
                         string mobLevels = string.Join(",", m_monsters.Select(monster => monster.Grade.Level.ToString()));
-                        string mobColors = string.Join("", m_monsters.Select(monster => monster.Grade.Template.Colors + ";0,0,0,0;"));
+                        string mobColors = string.Join(";", m_monsters.Select(monster => monster.Grade.Template.Colors + ";0,0,0,0"));
 
                         m_serializedMapInformations = new StringBuilder();
                         m_serializedMapInformations.Append(Id).Append(";");
