@@ -16,12 +16,14 @@ namespace Codebreak.Service.World.Database.Structure
     [Table("fightaction")]
     public sealed class FightActionDAO : DataAccessObject<FightActionDAO>
     {
+        [Key]
         public int ZoneType
         {
             get;
             set;
         }
 
+        [Write(false)]
         public ZoneTypeEnum Zone
         {
             get
@@ -30,18 +32,21 @@ namespace Codebreak.Service.World.Database.Structure
             }
         }
 
+        [Key]
         public int ZoneId
         {
             get;
             set;
         }
 
+        [Key]
         public int FightType
         {
             get;
             set;
         }
 
+        [Write(false)]
         public FightTypeEnum Fight
         {
             get
@@ -50,12 +55,14 @@ namespace Codebreak.Service.World.Database.Structure
             }
         }
 
+        [Key]
         public int FightState
         {
             get;
             set;
         }
 
+        [Write(false)]
         public FightStateEnum State
         {
             get
@@ -85,7 +92,6 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
-        [DoNotNotify]
         public Dictionary<EffectEnum, Dictionary<string, string>> ActionsList
         {
             get

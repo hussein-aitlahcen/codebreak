@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using Codebreak.Framework.Database;
 using Codebreak.Service.World.Game;
 using Codebreak.Service.World.Network;
@@ -156,6 +158,11 @@ namespace Codebreak.Service.World.Database.Structure
                 }
                 return m_fightTeam1Cells;
             }
+        }
+
+        public override void OnBeforeUpdate()
+        {
+            Places = string.Join("", FightTeam0Cells.Select(x => Util.CellToChar(x))) + "|" + string.Join("", FightTeam1Cells.Select(x => Util.CellToChar(x)));
         }
 
         /// <summary>

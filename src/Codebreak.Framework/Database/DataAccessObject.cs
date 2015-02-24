@@ -101,6 +101,8 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public bool Update()
         {
+            OnBeforeUpdate();
+
             return SqlManager.Instance.Update<T>((T)this);
         }
 
@@ -109,6 +111,8 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public bool Delete()
         {
+            OnBeforeDelete();
+
             return SqlManager.Instance.Delete<T>((T)this);
         }
 
@@ -118,7 +122,9 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public bool Insert()
         {
-            return SqlManager.Instance.Insert((T)this);
+            OnBeforeInsert();
+
+            return SqlManager.Instance.InsertWithKey((T)this);
         }
 
         /// <summary>

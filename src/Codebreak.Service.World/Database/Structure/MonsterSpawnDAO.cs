@@ -38,6 +38,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
         public ZoneTypeEnum Type
         {
             get
@@ -78,6 +79,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
+        [Write(false)]
         public MonsterGradeDAO Grade
         {
             get
