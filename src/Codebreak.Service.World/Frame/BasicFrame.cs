@@ -996,11 +996,13 @@ namespace Codebreak.Service.World.Frame
         {
             var messageData = message.Substring(2).Split('|');
             var channel = messageData[0];
-            var messageContent = string.Join("", messageData.Skip(1));
+            var messageContent = messageData[1];
 
             if (channel.Length == 1)
             {
-                character.AddMessage(() => character.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent));
+                if (messageData.Length > 2)                
+                    messageContent = messageContent + "|" + messageData[2];                
+                character.AddMessage(() => character.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent));                
             }
             else
             {
