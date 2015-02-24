@@ -875,7 +875,7 @@ namespace Codebreak.Service.World.Command
                     return;
                 }
 
-                var target = context.Character.Fight.Fighters.FirstOrDefault(fighter => fighter.Name.Equals(context.TextCommandArgument.NextWord()));
+                var target = context.Character.Fight.Fighters.FirstOrDefault(fighter => fighter.Name.Equals(context.TextCommandArgument.NextToEnd()));
                 if (target == null)
                 {
                     context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow character name."));
