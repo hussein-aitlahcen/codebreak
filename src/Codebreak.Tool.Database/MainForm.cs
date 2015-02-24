@@ -329,6 +329,7 @@ namespace Codebreak.Tool.Database
 
             var npcInstance = new NpcInstanceDAO()
             {
+                Id = NpcInstanceRepository.Instance.All.Max(npc => npc.Id) + 1,
                 TemplateId = templateId,
                 MapId = mapId,
                 CellId = cellId,
