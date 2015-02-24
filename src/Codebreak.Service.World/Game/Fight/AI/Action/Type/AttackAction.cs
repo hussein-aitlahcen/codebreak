@@ -77,7 +77,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
             {
                 case AttackStateEnum.STATE_CALCULATE_CELLS:
                     CastCellList = new Dictionary<int,List<SpellLevel>>();
-                    WeakestEnnemies = Fighter.Team.OpponentTeam.AliveFighters.OrderBy(fighter => fighter.Life);
+                    WeakestEnnemies = Fighter.Team.OpponentTeam.AliveFighters.OrderBy(fighter => Pathfinding.GoalDistance(Map, Fighter.Cell.Id, fighter.Cell.Id));
 
                     foreach(var spellLevel in Fighter.SpellBook.GetSpells())
                     {

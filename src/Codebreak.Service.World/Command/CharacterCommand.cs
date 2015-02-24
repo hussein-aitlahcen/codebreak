@@ -750,11 +750,12 @@ namespace Codebreak.Service.World.Command
                 var message = new StringBuilder("Online players :\n");
                 WorldService.Instance.AddMessage(() =>
                     {
+                        int i = 1;
                         foreach(var client in ClientManager.Instance.Clients)
                         {
                             if(client.CurrentCharacter != null)
                             {
-                                message.AppendLine(client.CurrentCharacter.Name);
+                                message.Append(i++ + " : account(" + client.Account.Name + ") " + client.CurrentCharacter.Name + " map(" + client.CurrentCharacter.MapId + ") ip(" + client.Ip + ")\n");
                             }
                         }
                         context.Character.AddMessage(() =>

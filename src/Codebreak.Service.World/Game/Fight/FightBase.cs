@@ -1740,7 +1740,10 @@ namespace Codebreak.Service.World.Game.Fight
             if(spellLevel.InLine && !Pathfinding.InLine(Map, cellId, castCell))            
                 return FightSpellLaunchResultEnum.RESULT_NEED_MOVE;
 
-            if (!Pathfinding.CheckView(this, cellId, castCell))
+            if (spellLevel.EmptyCell && GetCell(castCell).HasObject(FightObstacleTypeEnum.TYPE_FIGHTER))
+                return FightSpellLaunchResultEnum.RESULT_NO_LOS;
+
+            if (spellLevel.LOS && !Pathfinding.CheckView(this, cellId, castCell))
                 return FightSpellLaunchResultEnum.RESULT_NO_LOS;
 
             if (spellLevel.Effects != null)
