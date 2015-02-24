@@ -1144,6 +1144,7 @@ namespace Codebreak.Service.World.Game.Entity
             Fight.SpectatorTeam.AddHandler(Dispatch);
 
             SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
+            SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
 
             StartAction(GameActionTypeEnum.FIGHT);
         }

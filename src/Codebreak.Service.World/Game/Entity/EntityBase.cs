@@ -336,7 +336,33 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         private MapInstance m_map;
-        private Dictionary<ChatChannelEnum, Func<Action<string>>> m_chatByChannel;
+        private Dictionary<ChatChannelEnum, ChatChannelData> m_chatByChannel;
+
+        private class ChatChannelData
+        {
+            public Func<Action<string>> Dispatcher
+            {
+                get;
+                set;
+            }
+            public long NextTime
+            {
+                get;
+                set;
+            }
+            public string LastMessage
+            {
+                get;
+                set;
+            }
+
+            public ChatChannelData(Func<Action<string>> dispatcher)
+            {
+                Dispatcher = dispatcher;
+                NextTime = 0;
+                LastMessage = string.Empty;
+            }
+        }
 
         /// <summary>
         /// 
@@ -347,17 +373,17 @@ namespace Codebreak.Service.World.Game.Entity
             Type = type;
             Orientation = 1;
 
-            m_chatByChannel = new Dictionary<ChatChannelEnum, Func<Action<string>>>();
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, () => MovementHandler.Dispatch);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, () => Map == null ? default(Action<string>) : Map.SubArea.Area.SuperArea.SafeDispatch);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ADMIN, () => null);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, () => null);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, () => null);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD, () => null);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, () => null);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, () => base.Dispatch);
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, () => base.Dispatch);            
+            m_chatByChannel = new Dictionary<ChatChannelEnum, ChatChannelData>();
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, new ChatChannelData(() => MovementHandler == null ? default(Action<string>) : MovementHandler.Dispatch));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, new ChatChannelData(() => Map == null ? default(Action<string>) : WorldService.Instance.Dispatcher.SafeDispatch));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, new ChatChannelData(() => Map == null ? default(Action<string>) : WorldService.Instance.Dispatcher.SafeDispatch));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ADMIN, new ChatChannelData(() => null));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, new ChatChannelData(() => null));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, new ChatChannelData(() => null));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD,new ChatChannelData(() => null));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, new ChatChannelData(() => null));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, new ChatChannelData(() => base.Dispatch));
+            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, new ChatChannelData(() => base.Dispatch));            
         }
 
         /// <summary>
@@ -376,7 +402,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="channel"></param>
         public void SetChatChannel(ChatChannelEnum channelType, Func<Action<string>> channel)
         {
-            m_chatByChannel[channelType] = channel;
+            m_chatByChannel[channelType].Dispatcher = channel;
         }
 
         /// <summary>
@@ -405,21 +431,37 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="remoteEntity"></param>
         public virtual void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
         {
-            var raiser = m_chatByChannel[channel];
-            if (raiser != null)
+            var channelData = m_chatByChannel[channel];
+            if (channelData != null)
             {
-                var chan = raiser();
-                if (chan != null)
+                if(message.Equals(channelData.LastMessage, StringComparison.OrdinalIgnoreCase))
+                {
+                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CHAT_SAME_MESSAGE));
+                    return;
+                }
+
+                channelData.LastMessage = message;
+
+                if (UpdateTime < channelData.NextTime)
+                {
+                    base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_CHAT_SPAM_RESTRICTED, Math.Ceiling((channelData.NextTime - UpdateTime) * 0.001)));
+                    return;
+                }
+                
+                channelData.NextTime = UpdateTime + WorldConfig.CHAT_RESTRICTED_DELAY[channel];
+          
+                var dispatcher = channelData.Dispatcher();
+                if (dispatcher != null)
                 {
                     switch (channel)
                     {
                         case ChatChannelEnum.CHANNEL_PRIVATE_SEND:
                         case ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE:
-                            chan(WorldMessage.CHAT_MESSAGE(channel, remoteEntity.Id, remoteEntity.Name, message));
+                            dispatcher(WorldMessage.CHAT_MESSAGE(channel, remoteEntity.Id, remoteEntity.Name, message));
                             break;
 
                         default:
-                            chan(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
+                            dispatcher(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
                             break;
                     }
                 }

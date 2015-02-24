@@ -104,6 +104,8 @@ namespace Codebreak.Service.World.Network
         INFO_FIGHT_DISCONNECT_TURN_REMAIN = 162,
         INFO_FIGHT_CHALLENGE_FAILED_DUE_TO = 188,
 
+        INFO_CHAT_SPAM_RESTRICTED = 115,
+
         INFO_GUILD_KICKED_HIMSELF = 176,
         INFO_GUILD_KICKED = 177,
         
@@ -126,6 +128,8 @@ namespace Codebreak.Service.World.Network
         ERROR_CONDITIONS_UNSATISFIED = 19,
 
         ERROR_STORAGE_ALREADY_IN_USE = 20,
+
+        ERROR_CHAT_SAME_MESSAGE = 84,
 
         ERROR_AUCTION_HOUSE_TOO_MANY_ITEMS = 66,
         ERROR_INVALID_PRICE = 99,

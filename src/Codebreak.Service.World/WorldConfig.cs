@@ -1,6 +1,7 @@
 ﻿using Codebreak.Framework.Configuration;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Job;
+using Codebreak.Service.World.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -368,6 +369,17 @@ namespace Codebreak.Service.World
         public static int FIGHT_PUSH_CELL_TIME = 270;
         [Configurable()]
         public static int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
+
+        // ChatRestriction
+        public static Dictionary<ChatChannelEnum, long> CHAT_RESTRICTED_DELAY = new Dictionary<ChatChannelEnum, long>()
+        {
+            { ChatChannelEnum.CHANNEL_GENERAL, 100 },
+            { ChatChannelEnum.CHANNEL_DEALING, 10000 },
+            { ChatChannelEnum.CHANNEL_RECRUITMENT, 10000 },
+            { ChatChannelEnum.CHANNEL_GUILD, 300 },
+            { ChatChannelEnum.CHANNEL_GROUP, 300 },
+            { ChatChannelEnum.CHANNEL_TEAM, 300 },
+        };
 
         [Configurable()]
         public static DateTime REFERENCE_DATE = new DateTime(1970, 1, 1);

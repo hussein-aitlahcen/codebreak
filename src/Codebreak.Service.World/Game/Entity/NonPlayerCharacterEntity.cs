@@ -292,8 +292,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="character"></param>
         public void OnBeginTrade(CharacterEntity character)
         {
-            character.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GENERAL, Id, Name,
-                String.Format(WorldConfig.NPC_BEGIN_TRADE_SPEAK[(m_beginTradeSpeakIndex++ % WorldConfig.NPC_BEGIN_TRADE_SPEAK.Length)], character.Name)));
+            //character.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GENERAL, Id, Name,
+            //    String.Format(WorldConfig.NPC_BEGIN_TRADE_SPEAK[(m_beginTradeSpeakIndex++ % WorldConfig.NPC_BEGIN_TRADE_SPEAK.Length)], character.Name)));
         } 
         
         /// <summary>
@@ -302,8 +302,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="character"></param>
         public void OnBuyTrade(CharacterEntity character)
         {
-            base.DispatchChatMessage(ChatChannelEnum.CHANNEL_GENERAL,
-                String.Format(WorldConfig.NPC_BUY_TRADE_SPEAK[(m_buyTradeSpeakIndex++ % WorldConfig.NPC_BUY_TRADE_SPEAK.Length)], character.Name));
+            //base.DispatchChatMessage(ChatChannelEnum.CHANNEL_GENERAL,  String.Format(WorldConfig.NPC_BUY_TRADE_SPEAK[(m_buyTradeSpeakIndex++ % WorldConfig.NPC_BUY_TRADE_SPEAK.Length)], character.Name));
         } 
         
         /// <summary>
@@ -312,8 +311,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="character"></param>
         public void OnLeaveTrade(CharacterEntity character)
         {
-            character.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GENERAL, Id, Name,
-                String.Format(WorldConfig.NPC_LEAVE_TRADE_SPEAK[(m_leaveTradeSpealIndex++ % WorldConfig.NPC_LEAVE_TRADE_SPEAK.Length)], character.Name)));
+            //character.Dispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GENERAL, Id, Name,
+            //    String.Format(WorldConfig.NPC_LEAVE_TRADE_SPEAK[(m_leaveTradeSpealIndex++ % WorldConfig.NPC_LEAVE_TRADE_SPEAK.Length)], character.Name)));
         }
     }
 }

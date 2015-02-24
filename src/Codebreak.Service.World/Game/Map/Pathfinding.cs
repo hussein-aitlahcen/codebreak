@@ -1272,7 +1272,6 @@ namespace Codebreak.Service.World.Game.Map
                     break; // TODO: might not be correct. Was : Exit While
                 }
 
-                var CurrentBestLocation = -1;
                 for (int i = 0; i <= (Diagonal ? 8 - 1 : 4 - 1); i++)
                 {
                     NewLocation = Location + directions[i];
@@ -1352,17 +1351,10 @@ namespace Codebreak.Service.World.Game.Map
 
             ClosedList.Reverse();
 
-            IEnumerable<PathNode> Result = null;
             if (MovementPoints > 0 && ClosedList.Count - 1 >= MovementPoints)
-            {
-                Result = ClosedList.Take(MovementPoints + 1);
-            }
-            else
-            {
-                Result = ClosedList;
-            }
+                return ClosedList.Take(MovementPoints + 1).Select(node => node.Cell);
 
-            return Result.Select(entry => entry.Cell);
+            return ClosedList.Select(node => node.Cell);
         }
 
         /// <summary>
