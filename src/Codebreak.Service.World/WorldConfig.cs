@@ -378,7 +378,7 @@ namespace Codebreak.Service.World
             { ChatChannelEnum.CHANNEL_RECRUITMENT, 10000 },
             { ChatChannelEnum.CHANNEL_GUILD, 300 },
             { ChatChannelEnum.CHANNEL_GROUP, 300 },
-            { ChatChannelEnum.CHANNEL_TEAM, 300 },
+            { ChatChannelEnum.CHANNEL_TEAM, 300 }
         };
 
         [Configurable()]

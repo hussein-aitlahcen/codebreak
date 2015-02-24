@@ -72,8 +72,13 @@ namespace Codebreak.Service.World.Network
         INFO_JUST_REBORN = 33,
         INFO_ENERGY_LOST = 34,
 
+        INFO_YOU_ARE_AWAY = 37,
+        INFO_YOU_ARE_NOT_AWAY_ANYMORE = 38,
+
         INFO_KAMAS_WON = 45,
         INFO_KAMAS_LOST = 46,
+
+        INFO_YOU_ARE_AWAY_PLAYERS_CANT_RESPOND = 72,
 
         INFO_ALIGNMENT_DISHONOR_UP = 75,
         INFO_ALIGNMENT_DISHONOR_DOWN = 77,
@@ -122,6 +127,8 @@ namespace Codebreak.Service.World.Network
         ERROR_UNABLE_LEARN_JOB = 6,
         ERROR_TOO_MUCH_JOB = 9,
         ERROR_ALREADY_JOB = 11,
+
+        ERROR_PLAYER_AWAY_MESSAGE = 14,
 
         ERROR_UNABLE_LEARN_SPELL = 7,
         

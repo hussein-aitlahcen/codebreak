@@ -149,6 +149,14 @@ namespace Codebreak.Service.World.Frame
 
                         case 'M':
                             return BasicMessage;
+
+                        case 'Y':
+                            switch(message[2])
+                            {
+                                case 'A':
+                                    return BasicAway;
+                            }
+                            break;
                     }
                     break;
 
@@ -164,6 +172,16 @@ namespace Codebreak.Service.World.Frame
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void BasicAway(CharacterEntity character, string message)
+        {
+            character.AddMessage(character.SetAway);
         }
 
         /// <summary>
@@ -995,8 +1013,13 @@ namespace Codebreak.Service.World.Frame
                             return;
                         }
 
-                        character.AddMessage(() => character.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity));
-                        remoteEntity.AddMessage(() => remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, character));
+                        character.AddMessage(() =>
+                        {
+                            if (character.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_SEND, messageContent, remoteEntity))
+                            {
+                                remoteEntity.AddMessage(() => remoteEntity.DispatchChatMessage(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, messageContent, character));
+                            }
+                        });
                     });
             }
         }

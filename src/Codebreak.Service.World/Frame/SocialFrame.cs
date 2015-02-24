@@ -119,13 +119,13 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    if (character.Friends.Any(friend => friend.Pseudo == target.Account.Pseudo))
+                    if (character.HasFriend(target.Pseudo))
                     {
                         character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_ALREADY());
                         return;
                     }
 
-                    if (character.Ennemies.Any(ennemy => ennemy.Pseudo == target.Account.Pseudo))
+                    if (character.HasEnnemy(target.Pseudo))
                     {
                         character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_ALREADY());
                         return;
@@ -211,13 +211,13 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    if (character.Friends.Any(friend => friend.Pseudo == target.Account.Pseudo))
+                    if (character.HasFriend(target.Pseudo))
                     {
                         character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_ALREADY());
                         return;
                     }
 
-                    if (character.Ennemies.Any(ennemy => ennemy.Pseudo == target.Account.Pseudo))
+                    if (character.HasEnnemy(target.Pseudo))
                     {
                         character.SafeDispatch(WorldMessage.ENNEMY_ADD_ERROR_ALREADY());
                         return;

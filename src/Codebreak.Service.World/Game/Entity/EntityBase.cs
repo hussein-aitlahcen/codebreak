@@ -428,16 +428,19 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="message"></param>
-        /// <param name="remoteEntity"></param>
-        public virtual void DispatchChatMessage(ChatChannelEnum channel, string message, EntityBase remoteEntity = null)
+        /// <param name="whispedCharacter"></param>
+        public virtual bool DispatchChatMessage(ChatChannelEnum channel, string message, CharacterEntity whispedCharacter = null)
         {
             var channelData = m_chatByChannel[channel];
-            if (channelData != null)
+            if (channelData == null)            
+                return false;
+            
+            if (channel != ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE)
             {
-                if(message.Equals(channelData.LastMessage, StringComparison.OrdinalIgnoreCase))
+                if (message.Equals(channelData.LastMessage, StringComparison.OrdinalIgnoreCase))
                 {
                     base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CHAT_SAME_MESSAGE));
-                    return;
+                    return false;
                 }
 
                 channelData.LastMessage = message;
@@ -445,27 +448,29 @@ namespace Codebreak.Service.World.Game.Entity
                 if (UpdateTime < channelData.NextTime)
                 {
                     base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_CHAT_SPAM_RESTRICTED, Math.Ceiling((channelData.NextTime - UpdateTime) * 0.001)));
-                    return;
+                    return false;
                 }
-                
-                channelData.NextTime = UpdateTime + WorldConfig.CHAT_RESTRICTED_DELAY[channel];
-          
-                var dispatcher = channelData.Dispatcher();
-                if (dispatcher != null)
-                {
-                    switch (channel)
-                    {
-                        case ChatChannelEnum.CHANNEL_PRIVATE_SEND:
-                        case ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE:
-                            dispatcher(WorldMessage.CHAT_MESSAGE(channel, remoteEntity.Id, remoteEntity.Name, message));
-                            break;
 
-                        default:
-                            dispatcher(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
-                            break;
-                    }
+                var delay = WorldConfig.CHAT_RESTRICTED_DELAY.ContainsKey(channel) ? WorldConfig.CHAT_RESTRICTED_DELAY[channel] : 0;
+                channelData.NextTime = UpdateTime + delay;
+            }
+
+            var dispatcher = channelData.Dispatcher();
+            if (dispatcher != null)
+            {
+                switch (channel)
+                {
+                    case ChatChannelEnum.CHANNEL_PRIVATE_SEND:
+                    case ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE:
+                        dispatcher(WorldMessage.CHAT_MESSAGE(channel, whispedCharacter.Id, whispedCharacter.Name, message));
+                        break;
+
+                    default:
+                        dispatcher(WorldMessage.CHAT_MESSAGE(channel, Id, Name, message));
+                        break;
                 }
             }
+            return true;
         }
 
         /// <summary>

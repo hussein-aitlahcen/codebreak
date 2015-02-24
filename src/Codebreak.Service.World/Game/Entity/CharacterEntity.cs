@@ -736,6 +736,19 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Pseudo
+        {
+            get
+            {
+                if (Account == null)
+                    return "[No Account ?]";
+                return Account.Pseudo;
+            }
+        }
         
         /// <summary>
         /// 
@@ -925,6 +938,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public bool Away
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected string m_guildDisplayInfos;
         protected long m_lastRegenTime;
         protected double m_regenTimer;
@@ -938,6 +960,7 @@ namespace Codebreak.Service.World.Game.Entity
         public CharacterEntity(AccountTicket account, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
             : base(type, characterDAO.Id)
         {
+            Away = false;
             DatabaseRecord = characterDAO;
             Alignment = characterDAO.Alignment;
 
@@ -1654,6 +1677,62 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public void SetAway()
+        {
+            Away = Away == false;
+
+            if (Away)
+                base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY));
+            else
+                base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_NOT_AWAY_ANYMORE));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="message"></param>
+        /// <param name="whispedCharacter"></param>
+        public override bool DispatchChatMessage(ChatChannelEnum channel, string message, CharacterEntity whispedCharacter = null)
+        {
+            if(channel == ChatChannelEnum.CHANNEL_PRIVATE_SEND)
+            {
+                if(whispedCharacter.Away || whispedCharacter.HasEnnemy(Pseudo))
+                {
+                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PLAYER_AWAY_MESSAGE, whispedCharacter.Name));
+                    return false;
+                }
+                if(Away)
+                {
+                    base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY_PLAYERS_CANT_RESPOND));
+                }
+            }
+            return base.DispatchChatMessage(channel, message, whispedCharacter);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pseudo"></param>
+        /// <returns></returns>
+        public bool HasEnnemy(string pseudo)
+        {
+            return Ennemies.Any(ennemy => ennemy.Pseudo.Equals(pseudo, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pseudo"></param>
+        /// <returns></returns>
+        public bool HasFriend(string pseudo)
+        {
+            return Friends.Any(friend => friend.Pseudo.Equals(pseudo, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
         public void DispatchPartyMessage(string message)
         {
@@ -2228,7 +2307,7 @@ namespace Codebreak.Service.World.Game.Entity
         public void SerializeAs_EnnemyInformations(string playerPseudo, StringBuilder message)
         {
             message.Append(';');
-            if (Ennemies.Any(f => f.Pseudo == playerPseudo))
+            if (HasEnnemy(playerPseudo))
             {
                 if (HasGameAction(GameActionTypeEnum.FIGHT))
                     message.Append('2').Append(';');
@@ -2260,7 +2339,7 @@ namespace Codebreak.Service.World.Game.Entity
         public void SerializeAs_FriendInformations(string playerPseudo, StringBuilder message)
         {
             message.Append(';');
-            if (Friends.Any(f => f.Pseudo == playerPseudo))
+            if (HasFriend(playerPseudo))
             {
                 if (HasGameAction(GameActionTypeEnum.FIGHT))
                     message.Append('2').Append(';');
