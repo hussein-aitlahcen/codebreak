@@ -544,7 +544,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="grades"></param>
         public bool StartMonsterFight(CharacterEntity character, IEnumerable<MonsterGradeDAO> grades)
         {
-            return FightManager.StartMonsterFight(character, new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell));
+            return FightManager.StartMonsterFight(character, new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, grades));
         }
         
         /// <summary>
