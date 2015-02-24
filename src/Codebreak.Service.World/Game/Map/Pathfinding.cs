@@ -853,7 +853,7 @@ namespace Codebreak.Service.World.Game.Map
                 var mapCell = map.GetCell(actualCell);
                 if (mapCell != null)
                 {
-                    if (mapCell.InteractiveObject != null && (!mapCell.InteractiveObject.CanWalkThrough || (actualCell == finalCell && mapCell.InteractiveObject.IsActive)))
+                    if (mapCell.InteractiveObject != null && (!mapCell.InteractiveObject.CanWalkThrough || (entity.Type == EntityTypeEnum.TYPE_CHARACTER && actualCell == finalCell && mapCell.InteractiveObject.IsActive)))
                     {
                         length = -2;
                         break;
@@ -861,7 +861,7 @@ namespace Codebreak.Service.World.Game.Map
                 }
 
                 // aggressé par un groupe de mobs
-                if (map.Entities.OfType<MonsterGroupEntity>().Any(monsters => GoalDistance(map, lastCell, monsters.CellId) <= monsters.AggressionRange))
+                if (entity.Type == EntityTypeEnum.TYPE_CHARACTER && map.Entities.OfType<MonsterGroupEntity>().Any(monsters => GoalDistance(map, lastCell, monsters.CellId) <= monsters.AggressionRange))
                 {
                     length = -2;
                     break;
