@@ -747,9 +747,10 @@ namespace Codebreak.Service.World.Command
 
             protected override void Process(WorldCommandContext context)
             {
-                var message = new StringBuilder("Online players :\n");
                 WorldService.Instance.AddMessage(() =>
                     {
+                        var message = new StringBuilder("Online players " + ClientManager.Instance.Clients.Count() + " :\n");
+
                         int i = 1;
                         foreach(var client in ClientManager.Instance.Clients)
                         {
