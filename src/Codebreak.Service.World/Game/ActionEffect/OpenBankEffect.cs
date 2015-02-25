@@ -44,12 +44,20 @@ namespace Codebreak.Service.World.Game.ActionEffect
             var taxe = character.Bank.Items.GroupBy(item => item.TemplateId).Count();
             if(character.Inventory.Kamas < taxe)
             {
-                character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS, taxe));
-                return false;
+                if (character.Bank.Kamas < taxe)
+                {
+                    character.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_NOT_ENOUGH_KAMAS, taxe));
+                    return false;
+                }
+
+                character.Bank.SubKamas(taxe);
+            }
+            else
+            {
+                character.Inventory.SubKamas(taxe);
             }
 
             character.CachedBuffer = true;
-            character.Inventory.SubKamas(taxe);
             character.ExchangeStorage(character.Bank);
             character.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_KAMAS_LOST, taxe));
             character.CachedBuffer = false;
