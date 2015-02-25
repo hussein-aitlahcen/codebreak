@@ -336,6 +336,12 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
+            if(character.Guild.GuildId != -1)
+            {
+                var guild = GuildManager.Instance.GetGuild(character.Guild.GuildId);
+                guild.MemberKick(GuildManager.Instance.GetMember(character.Guild.GuildId, character.Id), character.Name);
+            }
+
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_CHARACTER, character.Id);
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_MERCHANT, character.Id);
 

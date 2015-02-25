@@ -309,7 +309,9 @@ namespace Codebreak.Service.World.Game.Guild
             foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.Guild.GuildId == m_record.Id))            
                 AddMember(new GuildMember(this, character));            
             foreach(var taxCollectorDAO in TaxCollectorRepository.Instance.FindAll(taxC => taxC.GuildId == m_record.Id))            
-                AddTaxCollector(EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO));            
+                AddTaxCollector(EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO));
+
+            CheckIntegrity();
         }
 
         /// <summary>
@@ -894,33 +896,41 @@ namespace Codebreak.Service.World.Game.Guild
             kickedMember.GuildLeave();
 
             base.Dispatch(WorldMessage.GUILD_MEMBER_REMOVE(kickedMember.Id));
-                
+
+            CheckIntegrity();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CheckIntegrity()
+        {
             // guild getting destroyed
-            if(m_members.Count == 0)
+            if (m_members.Count == 0)
             {
                 foreach (var taxCollector in m_taxCollectors)
                     taxCollector.AddMessage(() =>
+                    {
+                        if (taxCollector.HasGameAction(GameActionTypeEnum.MAP))
                         {
-                            if (taxCollector.HasGameAction(GameActionTypeEnum.MAP))
-                            {
-                                taxCollector.StopAction(GameActionTypeEnum.MAP);
-                            }
-                            taxCollector.Map.SubArea.TaxCollector = null;
-                            RemoveTaxCollector(taxCollector);
-                        });
+                            taxCollector.StopAction(GameActionTypeEnum.MAP);
+                        }
+                        taxCollector.Map.SubArea.TaxCollector = null;
+                        RemoveTaxCollector(taxCollector);
+                    });
 
                 IsDeleted = true;
                 GuildRepository.Instance.Removed(m_record);
                 GuildManager.Instance.Destroy(this);
             }
             // new boss
-            else if(!m_members.Any(m => m.Rank == GuildRankEnum.BOSS))
+            else if (!m_members.Any(m => m.Rank == GuildRankEnum.BOSS))
             {
                 var boss = m_members.First();
                 boss.SetBoss();
                 boss.SendGuildStats();
 
-                base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_GUILD_BOSS_LEFT_NEW_BOSS, member.Name, boss.Name));
+                base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_GUILD_BOSS_LEFT_NEW_BOSS, boss.Name, Name));
             }
         }
 
