@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         public override FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
             var buffValue = damageValue / 2; // Divise par deux les stats a boost car c'est un personnage.
-            var statsType = (EffectEnum)CastInfos.Value1 == EffectEnum.Heal ? EffectEnum.AddVitality : (EffectEnum)CastInfos.Value1;
+            var statsType = (EffectEnum)CastInfos.Value1;
             var maxValue = CastInfos.Value2;
             var duration = CastInfos.Value3;
 
@@ -64,9 +64,18 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             {
                 CastInfos.DamageValue += buffValue;
 
-                var BuffStats = new StatsBuff(new CastInfos(statsType, CastInfos.SpellId, CastInfos.SpellId, buffValue, 0, 0, 0, duration, CastInfos.Caster, null), Target);
-                BuffStats.ApplyEffect(ref buffValue);
-                Target.BuffManager.AddBuff(BuffStats);
+                switch(statsType)
+                {
+                    case EffectEnum.Heal:
+                        HealEffect.ApplyHeal(new CastInfos(statsType, CastInfos.SpellId, CastInfos.SpellId, buffValue, 0, 0, 0, duration, CastInfos.Caster, null), Target, ref buffValue);
+                        break;
+                    
+                    default:
+                        var BuffStats = new StatsBuff(new CastInfos(statsType, CastInfos.SpellId, CastInfos.SpellId, buffValue, 0, 0, 0, duration, CastInfos.Caster, null), Target);
+                        BuffStats.ApplyEffect(ref buffValue);
+                        Target.BuffManager.AddBuff(BuffStats);
+                        break;
+                }
             }
 
             return base.ApplyEffect(ref damageValue, damageInfos);
