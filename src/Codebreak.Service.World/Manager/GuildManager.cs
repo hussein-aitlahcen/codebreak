@@ -95,9 +95,19 @@ namespace Codebreak.Service.World.Manager
             var instance = new GuildInstance(record);
             instance.MemberBoss(character);
 
-            AddInstance(new GuildInstance(record));
+            AddInstance(instance);
 
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guild"></param>
+        public void Destroy(GuildInstance guild)
+        {
+            m_guildById.Remove(guild.Id);
+            m_guildByName.Remove(guild.Name.ToLower());
         }
 
         /// <summary>

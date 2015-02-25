@@ -82,7 +82,7 @@ namespace Codebreak.Service.World.Database.Repository
         public override void InsertAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             lock (m_syncLock)
-                m_dataObjects.RemoveAll(item => item.OwnerId == -1 && item.IsNew);
+                m_dataObjects.RemoveAll(item => item.IsNew && item.OwnerId == -1);
 
             base.InsertAll(connection, transaction);
         }

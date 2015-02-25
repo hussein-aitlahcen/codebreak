@@ -221,12 +221,9 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void CharacterConnected(CharacterEntity character)
         {
-            Guild.AddMessage(() =>
-                {
-                    base.AddHandler(character.SafeDispatch);
-                    Character = character;
-                    Character.AddMessage(() => Character.SetCharacterGuild(this));
-                });
+            base.AddHandler(character.SafeDispatch);
+            Character = character;
+            Character.SetCharacterGuild(this);
         }
 
         /// <summary>

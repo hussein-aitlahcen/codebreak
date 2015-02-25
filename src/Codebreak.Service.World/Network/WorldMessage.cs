@@ -164,6 +164,8 @@ namespace Codebreak.Service.World.Network
         ERROR_FIGHTER_RECONNECTED = 184,
         ERROR_FIGHT_WAITING_PLAYERS = 29,
         ERROR_FIGHTER_KICKED_DUE_TO_DISCONNECTION = 30,
+
+        ERROR_GUILD_BOSS_LEFT_NEW_BOSS = 199,
     }
     
     /// <summary>

@@ -261,7 +261,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             base.JoinFight(fight, team);
 
-            SendCollectorAttacked();
+            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_UNDER_ATTACK(Name, Map.X, Map.Y));
         }
 
         /// <summary>
@@ -274,13 +274,25 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (win)
             {
-                StartAction(GameActionTypeEnum.MAP);
-                SendCollectorSurvived();
+                Guild.AddMessage(() =>
+                    {
+                        if (!Guild.IsDeleted)
+                        {
+                            AddMessage(() => StartAction(GameActionTypeEnum.MAP));
+                            Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
+                        }
+                    });
             }
             else
             {
-                Guild.AddMessage(() => Guild.RemoveTaxCollector(this));
-                SendCollectorDied();
+                Guild.AddMessage(() =>
+                    {
+                        if (!Guild.IsDeleted)
+                        {
+                            Guild.RemoveTaxCollector(this);                           
+                            Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DIED(Name, Map.X, Map.Y));
+                        }
+                    });                
             }
 
             Defenders.Clear();
@@ -302,30 +314,6 @@ namespace Codebreak.Service.World.Game.Entity
         public void DefenderLeft(GuildMember member)
         {
             Defenders.Remove(member);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SendCollectorAttacked()
-        {
-            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_UNDER_ATTACK(Name, Map.X, Map.Y));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SendCollectorDied()
-        {
-            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_DIED(Name, Map.X, Map.Y));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SendCollectorSurvived()
-        {
-            Guild.SafeDispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
         }
 
         /// <summary>
