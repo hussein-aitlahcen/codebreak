@@ -401,5 +401,15 @@ namespace Codebreak.Framework.Database
         public virtual void OnObjectRemoved(TDataObject obj)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        public void ImplicitDeletion(TDataObject obj)
+        {
+            lock (m_syncLock)
+                m_dataObjects.Remove(obj);
+        }
     }
 }

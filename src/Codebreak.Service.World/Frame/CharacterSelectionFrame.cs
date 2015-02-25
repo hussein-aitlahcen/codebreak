@@ -345,6 +345,11 @@ namespace Codebreak.Service.World.Frame
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_CHARACTER, character.Id);
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_MERCHANT, character.Id);
 
+            CharacterGuildRepository.Instance.ImplicitDeletion(character.Guild);
+            CharacterAlignmentRepository.Instance.ImplicitDeletion(character.Alignment);
+            foreach (var job in CharacterJobRepository.Instance.GetByCharacterId(character.Id))
+                CharacterJobRepository.Instance.ImplicitDeletion(job);
+
             client.Characters.Remove(character);
 
             client.Send(WorldMessage.CHARACTER_LIST(client.Characters));
