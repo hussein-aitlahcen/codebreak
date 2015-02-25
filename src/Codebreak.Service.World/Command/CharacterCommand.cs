@@ -38,6 +38,52 @@ namespace Codebreak.Service.World.Command
             context.Character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class TitleCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "title"  
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get { return "Change your character title. Arguments : %titleId%"; }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return base.CanExecute(context);
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                int titleId = 0;
+                if (Int32.TryParse(context.TextCommandArgument.NextWord(), out titleId))
+                {
+                    context.Character.TitleId = titleId;
+                    context.Character.RefreshOnMap();
+                }
+                else
+                {
+                    context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Command format : character title %titleId%"));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public sealed class SizeCommand : SubCommand<WorldCommandContext>
         {
             private readonly string[] _aliases = 
