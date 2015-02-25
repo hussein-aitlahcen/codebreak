@@ -1669,14 +1669,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void SetCharacterGuild(GuildMember characterGuild)
         {
-            base.AddMessage(() =>
-                {
-                    GuildMember = characterGuild;
-                    if (GuildMember != null)
-                        m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;
-                    else
-                        m_guildDisplayInfos = null;
-                });
+            GuildMember = characterGuild;
+            if (GuildMember != null)
+                m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;
+            else
+                m_guildDisplayInfos = null;
         }
 
         /// <summary>
