@@ -1167,11 +1167,11 @@ namespace Codebreak.Service.World.Game.Entity
             Fight.SpectatorTeam.AddSpectator(this);
             Fight.SpectatorTeam.AddUpdatable(this);
             Fight.SpectatorTeam.AddHandler(Dispatch);
-
+            
             base.SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
 
-            base.StartAction(GameActionTypeEnum.FIGHT);
+            StartAction(GameActionTypeEnum.FIGHT);
         }
 
         /// <summary>
@@ -1615,10 +1615,17 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (HasGameAction(GameActionTypeEnum.FIGHT))
             {
-                if (CurrentAction != null)
-                    AbortAction(CurrentAction.Type);
-                AbortAction(GameActionTypeEnum.FIGHT);
-                return false;
+                if (IsSpectating)
+                {
+                    Fight.FightQuit(this);
+                }
+                else
+                {
+                    if (CurrentAction != null)
+                        AbortAction(CurrentAction.Type);
+                    AbortAction(GameActionTypeEnum.FIGHT);
+                    return false;
+                }
             }
 
             StopRegeneration();
@@ -2050,15 +2057,22 @@ namespace Codebreak.Service.World.Game.Entity
                     break;
 
                 case GameActionTypeEnum.FIGHT:
-                    StopEmote();
-                    FrameManager.RemoveFrame(MapFrame.Instance);
-                    if (Fight.Map.Id != MapId)
+                    if (IsSpectating)
                     {
-                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
-                        Dispatch(WorldMessage.GAME_DATA_MAP(Fight.Map.Id, Fight.Map.CreateTime, Fight.Map.DataKey));
-                        FrameManager.AddFrame(GameInformationFrame.Instance);
+                        FrameManager.AddFrame(FightFrame.Instance);
                     }
-                    FrameManager.AddFrame(FightPlacementFrame.Instance);
+                    else
+                    {
+                        StopEmote();
+                        FrameManager.RemoveFrame(MapFrame.Instance);
+                        if (Fight.Map.Id != MapId)
+                        {
+                            Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
+                            Dispatch(WorldMessage.GAME_DATA_MAP(Fight.Map.Id, Fight.Map.CreateTime, Fight.Map.DataKey));
+                            FrameManager.AddFrame(GameInformationFrame.Instance);
+                        }
+                        FrameManager.AddFrame(FightPlacementFrame.Instance);
+                    }
                     break;
             }
         }

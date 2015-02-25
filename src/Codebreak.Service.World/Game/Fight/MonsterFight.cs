@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         public MonsterFight(MapInstance map, long id, CharacterEntity character, MonsterGroupEntity monsterGroup)
-            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, 0, character.CellId, monsterGroup.Id, 0, monsterGroup.CellId, WorldConfig.PVM_START_TIMEOUT, WorldConfig.PVM_TURN_TIME)
+            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, -1, character.CellId, monsterGroup.Id, -1, monsterGroup.CellId, WorldConfig.PVM_START_TIMEOUT, WorldConfig.PVM_TURN_TIME)
         {
             Character = character;
             MonsterGroup = monsterGroup;
@@ -341,7 +341,7 @@ namespace Codebreak.Service.World.Game.Fight
             message.Append(Team0.AliveFighters.Count()).Append(';');
 
             message.Append("1,");
-            message.Append(Team1.AlignmentId).Append(',');
+            message.Append(Team0.AlignmentId).Append(',');
             message.Append(Team1.AliveFighters.Count()).Append(';');
             message.Append('|');
         }
@@ -365,7 +365,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 m_serialized.Append(Team1.LeaderId).Append(';');
                 m_serialized.Append(Team1.FlagCellId).Append(';');
-                m_serialized.Append("-1").Append(';');
+                m_serialized.Append("1").Append(';');
                 m_serialized.Append(Team1.AlignmentId);
                 m_serializedFlag = m_serialized.ToString();
             }

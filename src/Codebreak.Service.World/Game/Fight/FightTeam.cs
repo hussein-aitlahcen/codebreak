@@ -366,7 +366,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 case FightTypeEnum.TYPE_PVM:
                 case FightTypeEnum.TYPE_AGGRESSION:
-                    return AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.AlignmentId == AlignmentId;
+                    return AlignmentId <= (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.AlignmentId == AlignmentId;
             }
 
             return true;
