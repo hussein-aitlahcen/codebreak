@@ -539,6 +539,17 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="enabled"></param>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        public static string CHAT_CHANNEL(bool enabled, ChatChannelEnum channel)
+        {
+            return "cC" + (enabled ? "+" : "-") + (char)channel;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public static string INVENTORY_WEIGHT(int pods, int maxPods)
         {

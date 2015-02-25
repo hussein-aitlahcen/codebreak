@@ -45,6 +45,14 @@ namespace Codebreak.Service.World.Frame
 
             switch (message[0])
             {
+                case 'c':
+                    switch(message[1])
+                    {
+                        case 'C':
+                            return ChatChannelEnable;
+                    }
+                    break;
+
                 case 'g':
                     switch (message[1])
                     {
@@ -172,6 +180,18 @@ namespace Codebreak.Service.World.Frame
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void ChatChannelEnable(CharacterEntity character, string message)
+        {
+            var enabled = message[2] == '+';
+            var channel = (ChatChannelEnum)message[3];
+            character.SafeDispatch(WorldMessage.CHAT_CHANNEL(enabled, channel));
         }
 
         /// <summary>

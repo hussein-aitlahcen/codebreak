@@ -960,6 +960,9 @@ namespace Codebreak.Service.World.Game.Entity
         public CharacterEntity(AccountTicket account, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
             : base(type, characterDAO.Id)
         {
+            m_lastRegenTime = -1;
+            m_lastEmoteId = -1;
+            
             Away = false;
             DatabaseRecord = characterDAO;
             Alignment = characterDAO.Alignment;
@@ -971,10 +974,7 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
             NotifyOnFriendConnection = true;
-
-            m_lastRegenTime = -1;
-            m_lastEmoteId = -1;
-
+            
             CharacterJobs = new JobBook(this);
             Statistics = new GenericStats(characterDAO);
             SpellBook = SpellBookFactory.Instance.Create(this);
@@ -999,7 +999,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             CheckRestrictions();
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1149,7 +1149,7 @@ namespace Codebreak.Service.World.Game.Entity
         public override void JoinFight(FightBase fight, FightTeam team)
         {
             LifeBeforeFight = Life;
-
+            
             base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME_FIGHT(Map.InteractiveObjects));
 
             base.JoinFight(fight, team);
@@ -1168,10 +1168,10 @@ namespace Codebreak.Service.World.Game.Entity
             Fight.SpectatorTeam.AddUpdatable(this);
             Fight.SpectatorTeam.AddHandler(Dispatch);
 
-            SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
-            SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
+            base.SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
+            base.SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
 
-            StartAction(GameActionTypeEnum.FIGHT);
+            base.StartAction(GameActionTypeEnum.FIGHT);
         }
 
         /// <summary>
@@ -1238,7 +1238,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 Fight.TurnProcessor.RemoveFighter(this);
             }
-
+            
             base.EndFight();
         }
 
@@ -1669,11 +1669,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void SetCharacterGuild(GuildMember characterGuild)
         {
-            GuildMember = characterGuild;
-            if (GuildMember != null)
-                m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;            
-            else
-                m_guildDisplayInfos = null;            
+            base.AddMessage(() =>
+                {
+                    GuildMember = characterGuild;
+                    if (GuildMember != null)
+                        m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;
+                    else
+                        m_guildDisplayInfos = null;
+                });
         }
 
         /// <summary>

@@ -1107,7 +1107,7 @@ namespace Codebreak.Service.World.Game.Fight
                     fighter.JoinFight(this, team);
                     base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
                 }
-
+                
                 if(fighter.MapId == Map.Id)
                     SendFightJoinInfos(fighter);                
             });
@@ -2316,7 +2316,7 @@ namespace Codebreak.Service.World.Game.Fight
 
             Result.Dispose();
             Result = null;
-
+            
             Map = null;
 
             m_activableObjects.Clear();

@@ -471,6 +471,7 @@ namespace Codebreak.Service.World.Game.Fight
             UsedMP = 0;
 
             Fight = fight;
+
             Team = team;
             TurnReady = false;
             TurnPass = false;

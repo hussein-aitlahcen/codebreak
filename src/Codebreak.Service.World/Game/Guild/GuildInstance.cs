@@ -276,7 +276,7 @@ namespace Codebreak.Service.World.Game.Guild
                 return 1000 + (Level * 100);
             }
         }
-
+                
         /// <summary>
         /// 
         /// </summary>
@@ -295,6 +295,7 @@ namespace Codebreak.Service.World.Game.Guild
             m_members = new List<GuildMember>();
             m_taxCollectors = new List<TaxCollectorEntity>();
             m_taxCollectorDispatcher = new MessageDispatcher();
+
             foreach (var character in CharacterRepository.Instance.FindAll(ch => ch.Guild.GuildId == m_record.Id))            
                 AddMember(new GuildMember(this, character));            
             foreach(var taxCollectorDAO in TaxCollectorRepository.Instance.FindAll(taxC => taxC.GuildId == m_record.Id))            

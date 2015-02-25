@@ -39,7 +39,7 @@ namespace Codebreak.Service.World.Game.Fight
                 return m_spectators;
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -249,7 +249,7 @@ namespace Codebreak.Service.World.Game.Fight
                 return m_challenges.Where(challenge => challenge.Success);
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -270,7 +270,7 @@ namespace Codebreak.Service.World.Game.Fight
             LeaderId = leaderId;
             Alignment = alignment;
             FlagCellId = flagCell;
-
+            
             m_challenges = new List<ChallengeBase>();
             m_fighters = new List<FighterBase>();
             m_places = places;
@@ -573,17 +573,17 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Fight = null;
             OpponentTeam = null;
-            
-            foreach (var challenge in m_challenges)
-                challenge.RemoveHandler(base.Dispatch);
-
+                        
+            m_challenges.ForEach(challenge => challenge.Dispose());
             m_challenges.Clear();
             m_challenges = null;
 
             m_places.Clear();
             m_places = null;
+
             m_fighters.Clear();
             m_fighters = null;
+
             m_blockedOption.Clear();
             m_blockedOption = null;
 

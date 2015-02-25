@@ -587,6 +587,7 @@ namespace Codebreak.Service.World.Game.Map
                             InitEntitiesMovements();
 
                         base.AddHandler(entity.Dispatch);
+
                         entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, Entities.ToArray()));
                         entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
                         entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
@@ -625,6 +626,7 @@ namespace Codebreak.Service.World.Game.Map
                 if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
                     base.RemoveHandler(entity.Dispatch);
+
                     m_entityByName.Remove(entity.Name.ToLower());
                     m_playerCount--;
 
