@@ -1113,20 +1113,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="team"></param>
         public void JoinFight(FighterBase fighter, FightTeam team)
         {
-            AddMessage(() =>
-            {
-                if (team.FreePlace == null)
-                    return;
+            if (team.FreePlace == null)
+                return;
 
-                if (!fighter.IsDisconnected)
-                {
-                    fighter.JoinFight(this, team);
-                    base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
-                }
-                
-                if(fighter.MapId == Map.Id)
-                    SendFightJoinInfos(fighter);                
-            });
+            if (!fighter.IsDisconnected)
+            {
+                fighter.JoinFight(this, team);
+                base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
+            }
+
+            if (fighter.MapId == Map.Id)
+                SendFightJoinInfos(fighter);
         }
 
         /// <summary>
