@@ -126,6 +126,17 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public override int AlignmentId
+        {
+            get
+            {
+                return Grade.Template.Alignment;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="monsterGrade"></param>
         public MonsterEntity(long id, MonsterGradeDAO monsterGrade, FighterBase invocator = null, bool staticInvocation = false)
             : base(EntityTypeEnum.TYPE_MONSTER_FIGHTER, id, staticInvocation)

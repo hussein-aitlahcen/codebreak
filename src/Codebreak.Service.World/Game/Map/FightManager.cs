@@ -100,6 +100,28 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="aggressor"></param>
+        /// <param name="victim"></param>
+        public bool StartAggression(MonsterGroupEntity monsters, CharacterEntity victim)
+        {
+            if (CanStartFight(victim))
+            {
+                monsters.StopAction(GameActionTypeEnum.MAP);
+                monsters.Monsters.First().CellId = monsters.CellId;
+                var fight = new AlignmentFight(m_map, m_fightId++, monsters.Monsters.First(), victim);
+                foreach(var monster in monsters.Monsters.Skip(1))
+                {
+                    fight.JoinFight(monster, fight.Team0);
+                }
+                Add(fight);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         /// <param name="monsterGroup"></param>
         public bool StartMonsterFight(CharacterEntity character, MonsterGroupEntity monsterGroup)

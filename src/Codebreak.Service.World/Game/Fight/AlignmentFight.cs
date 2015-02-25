@@ -24,25 +24,7 @@ namespace Codebreak.Service.World.Game.Fight
             get;
             private set;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CharacterEntity Aggressor
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CharacterEntity Victim
-        {
-            get;
-            private set;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -53,16 +35,32 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="aggressor"></param>
         /// <param name="victim"></param>
-        public AlignmentFight(MapInstance map, long id, CharacterEntity aggressor, CharacterEntity victim)
+        public AlignmentFight(MapInstance map, long id, FighterBase aggressor, CharacterEntity victim)
             : base(FightTypeEnum.TYPE_AGGRESSION, map, id, aggressor.Id, aggressor.AlignmentId, aggressor.CellId, victim.Id, victim.AlignmentId, victim.CellId, WorldConfig.AGGRESSION_START_TIMEOUT, WorldConfig.AGGRESSION_TURN_TIME, false, true)
         {
-            Aggressor = aggressor;
-            Victim = victim;
-            IsNeutralAgression = Victim.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
-            
-            JoinFight(Aggressor, Team0);
-            JoinFight(Victim, Team1);
+            IsNeutralAgression = victim.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+
+            JoinFight(aggressor, Team0);
+            JoinFight(victim, Team1);
                  
+            base.Start();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aggressor"></param>
+        /// <param name="victim"></param>
+        public AlignmentFight(MapInstance map, long id, MonsterGroupEntity monsters, CharacterEntity victim)
+            : base(FightTypeEnum.TYPE_AGGRESSION, map, id, monsters.Id, monsters.AlignmentId, monsters.CellId, victim.Id, victim.AlignmentId, victim.CellId, WorldConfig.AGGRESSION_START_TIMEOUT, WorldConfig.AGGRESSION_TURN_TIME, false, true)
+        {
+            IsNeutralAgression = victim.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+
+            foreach (var monster in monsters.Monsters)
+                JoinFight(monster, Team0);
+
+            JoinFight(victim, Team1);
+
             base.Start();
         }
 
@@ -73,7 +71,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if(IsNeutralAgression)
             {
-                var aggressors = Aggressor.Team.AliveFighters;
+                var aggressors = Team0.AliveFighters;
                 var averageLevel = (int)aggressors.Average(aggressor => aggressor.Level);
                 var knighLevel = 0;
 
@@ -93,8 +91,8 @@ namespace Codebreak.Service.World.Game.Fight
                 var knight = MonsterRepository.Instance.GetById(WorldConfig.AGGRESSION_KNGIHT_MONSTER_ID);
                 if (knight != null)                
                     if (knight.Grades.Count() > knighLevel)                
-                        if(Victim.Team.FreePlace != null)
-                            SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Victim.Team, Victim.Team.FreePlace.Id); 
+                        if(Team1.FreePlace != null)
+                            SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Team1, Team1.FreePlace.Id); 
             }
 
             base.OnFightStart();
@@ -109,7 +107,7 @@ namespace Codebreak.Service.World.Game.Fight
             if (!IsNeutralAgression)
                 character.EnableAlignment();
             else            
-                if (((CharacterEntity)team.Leader).AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                if (team.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                     character.EnableAlignment();            
         }
 
@@ -186,8 +184,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void InitEndCalculation()
         {
-            m_losersLevel = m_losersTeam.Fighters.OfType<CharacterEntity>().Sum(fighter => fighter.Level);
-            m_winnersLevel = m_winnersTeam.Fighters.OfType<CharacterEntity>().Sum(fighter => fighter.Level);                                
+            m_losersLevel = m_losersFighter.Sum(fighter => fighter.Level);
+            m_winnersLevel = m_winnersFighter.Sum(fighter => fighter.Level);                                
         }
 
         /// <summary>
@@ -195,38 +193,51 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void ApplyEndCalculation()
         {
-            foreach (var player in m_winnersTeam.Fighters.OfType<CharacterEntity>())
+            foreach (var fighter in m_winnersTeam.Fighters)
             {
                 var honour = 0;
                 var dishonour = 0;
-                if (player.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
-                    if (!IsNeutralAgression || player.Team.Alignment == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                    var player = (CharacterEntity)fighter;
+
+                    if (player.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
                     {
-                        honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
-                        player.SubstractDishonour(1);
+                        if (!IsNeutralAgression || player.Team.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                        {
+                            honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
+                            player.SubstractDishonour(1);
+                        }
+                        else
+                            dishonour = 1;
+                        player.AddHonour(honour);
+                        player.AddDishonour(dishonour);
                     }
-                    else
-                        dishonour = 1;
-                    player.AddHonour(honour);
-                    player.AddDishonour(dishonour);
                 }
 
-                Result.AddResult(player, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
+                Result.AddResult(fighter, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
             }
 
-            foreach (var player in m_losersTeam.Fighters.OfType<CharacterEntity>())
+            foreach (var fighter in m_losersTeam.Fighters)
             {
                 var honour = 0;
-                var dishonour = 0; 
-                if (player.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                var dishonour = 0;
+                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
-                    if (!IsNeutralAgression || player.Team.Alignment != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
-                        honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
-                    player.SubstractHonour(honour);
+                    var player = (CharacterEntity)fighter;
+                    if (player.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                    {
+                        if (!IsNeutralAgression || player.Team.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                            honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
+                        player.SubstractHonour(honour);
+                    }
                 }
+                Result.AddResult(fighter, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
+            }
 
-                Result.AddResult(player, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
+            if(Team0.Fighters.First().Type == EntityTypeEnum.TYPE_MONSTER_FIGHTER)
+            {
+                Map.SpawnMonsters();
             }
         }
 
@@ -239,10 +250,10 @@ namespace Codebreak.Service.World.Game.Fight
             message.Append(Id.ToString()).Append(';');
             message.Append(UpdateTime).Append(';');
             message.Append("0,");
-            message.Append(Aggressor.AlignmentId).Append(",");
+            message.Append(Team0.AlignmentId).Append(",");
             message.Append(Team0.AliveFighters.Count()).Append(';');
             message.Append("0,");
-            message.Append(Victim.AlignmentId).Append(",");
+            message.Append(Team1.AlignmentId).Append(",");
             message.Append(Team1.AliveFighters.Count()).Append(';');
             message.Append('|');
         }
@@ -258,14 +269,16 @@ namespace Codebreak.Service.World.Game.Fight
                 m_serializedFlag = new StringBuilder();
                 m_serializedFlag.Append(Id).Append(';');
                 m_serializedFlag.Append((int)Type).Append('|');
+
                 m_serializedFlag.Append(Team0.LeaderId).Append(';');
                 m_serializedFlag.Append(Team0.FlagCellId).Append(';');
                 m_serializedFlag.Append('0').Append(';');
-                m_serializedFlag.Append(Aggressor.AlignmentId).Append('|');
+                m_serializedFlag.Append(Team0.AlignmentId).Append('|');
+
                 m_serializedFlag.Append(Team1.LeaderId).Append(';');
                 m_serializedFlag.Append(Team1.FlagCellId).Append(';');
                 m_serializedFlag.Append('0').Append(';');
-                m_serializedFlag.Append(Victim.AlignmentId);
+                m_serializedFlag.Append(Team1.AlignmentId);
             }
             message.Append(m_serializedFlag.ToString());
         }
@@ -275,9 +288,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void Dispose()
         {
-            Aggressor = null;
-            Victim = null;
-
             m_serializedFlag.Clear();
             m_serializedFlag = null;
 

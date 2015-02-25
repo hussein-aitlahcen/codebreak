@@ -192,32 +192,47 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (CanWinHonor)
             {
-                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                switch(fighter.Type)
                 {
-                    var character = (CharacterEntity)fighter;
-                    if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
-                    {
-                        m_message.Append(character.AlignmentExperienceFloorCurrent).Append(';');
-                        m_message.Append(character.Alignment.Honour).Append(';');
-                        m_message.Append(character.AlignmentExperienceFloorNext).Append(';');
-                        m_message.Append(honour).Append(';');
-                        m_message.Append(character.AlignmentLevel).Append(';');
-                        m_message.Append(character.Dishonour).Append(';');
-                        m_message.Append(dishonour).Append(';');
-                    }
-                    else
-                    {
-                        m_message.Append("0;0;0;0;0;0;0;");
-                    }
-                    if (items != null && items.Count > 0)
-                        m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
-                    else
-                        m_message.Append("").Append(';');
-                    m_message.Append(kamas > 0 ? kamas.ToString() : "").Append(';');
-                    m_message.Append(character.ExperienceFloorCurrent).Append(';');
-                    m_message.Append(character.Experience).Append(';');
-                    m_message.Append(character.ExperienceFloorNext).Append(';');
-                    m_message.Append(exp);
+                    case EntityTypeEnum.TYPE_CHARACTER:
+                        var character = (CharacterEntity)fighter;
+                        if (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
+                        {
+                            m_message.Append(character.AlignmentExperienceFloorCurrent).Append(';');
+                            m_message.Append(character.Alignment.Honour).Append(';');
+                            m_message.Append(character.AlignmentExperienceFloorNext).Append(';');
+                            m_message.Append(honour).Append(';');
+                            m_message.Append(character.AlignmentLevel).Append(';');
+                            m_message.Append(character.Dishonour).Append(';');
+                            m_message.Append(dishonour).Append(';');
+                        }
+                        else
+                        {
+                            m_message.Append("0;0;0;0;0;0;0;");
+                        }
+                        if (items != null && items.Count > 0)
+                            m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
+                        else
+                            m_message.Append("").Append(';');
+                        m_message.Append(kamas > 0 ? kamas.ToString() : "").Append(';');
+                        m_message.Append(character.ExperienceFloorCurrent).Append(';');
+                        m_message.Append(character.Experience).Append(';');
+                        m_message.Append(character.ExperienceFloorNext).Append(';');
+                        m_message.Append(exp);
+                        break;
+
+                    case EntityTypeEnum.TYPE_MONSTER_FIGHTER:
+                         m_message.Append("0;0;0;0;0;0;0;");
+                        if (items != null && items.Count > 0)
+                            m_message.Append(string.Join(",", items.Select(itemEntry => itemEntry.Key + "~" + itemEntry.Value))).Append(';');
+                        else
+                            m_message.Append("").Append(';');
+                        m_message.Append(kamas > 0 ? kamas.ToString() : "").Append(';');
+                        m_message.Append(0).Append(';');
+                        m_message.Append(0).Append(';');
+                        m_message.Append(0).Append(';');
+                        m_message.Append(0);
+                        break;
                 }
             }
             else

@@ -717,8 +717,16 @@ namespace Codebreak.Service.World.Game.Map
                     {
                         if (CanBeAggro(character, cellId, monsterGroup))
                         {
-                            if (FightManager.StartMonsterFight(character, monsterGroup))
-                                return;
+                            if (monsterGroup.AlignmentId == -1)
+                            {
+                                if (FightManager.StartMonsterFight(character, monsterGroup))
+                                    return;
+                            }
+                            else
+                            {
+                                if (FightManager.StartAggression(monsterGroup, character))
+                                    return;
+                            }
                         }         
                     }
                 }

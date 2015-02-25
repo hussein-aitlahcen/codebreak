@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Database.Structure;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -220,7 +221,7 @@ namespace Codebreak.Service.World.Game.Fight
             get;
             protected set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -404,6 +405,20 @@ namespace Codebreak.Service.World.Game.Fight
                 if (Fight != null)
                     return Fight;
                 return base.MovementHandler;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual int AlignmentId
+        {
+            get
+            {
+                return (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+            }
+            set
+            {
             }
         }
 

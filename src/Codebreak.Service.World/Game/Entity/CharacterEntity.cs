@@ -305,7 +305,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public int AlignmentId
+        public override int AlignmentId
         {
             get
             {

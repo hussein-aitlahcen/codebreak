@@ -233,7 +233,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public int Alignment
+        public int AlignmentId
         {
             get;
             private set;
@@ -268,7 +268,7 @@ namespace Codebreak.Service.World.Game.Fight
             Id = id;
             Fight = fight;
             LeaderId = leaderId;
-            Alignment = alignment;
+            AlignmentId = alignment;
             FlagCellId = flagCell;
             
             m_challenges = new List<ChallengeBase>();
@@ -327,7 +327,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         public bool CanJoinBeforeStart(CharacterEntity character)
         {
-            if (LeaderId < 0) // cant join taxcollector or monsters
+            if (LeaderId < 0 && AlignmentId == -1) // cant join taxcollector or monsters
                 return false;
 
             // No more fighter accepted
@@ -364,9 +364,9 @@ namespace Codebreak.Service.World.Game.Fight
                     }
                     break;
 
+                case FightTypeEnum.TYPE_PVM:
                 case FightTypeEnum.TYPE_AGGRESSION:
-                    var leader = (CharacterEntity)GetFighter(LeaderId);
-                    return leader.Alignment.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.Alignment.AlignmentId == leader.Alignment.AlignmentId;
+                    return AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || character.AlignmentId == AlignmentId;
             }
 
             return true;
