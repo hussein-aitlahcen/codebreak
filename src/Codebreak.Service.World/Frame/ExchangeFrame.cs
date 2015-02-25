@@ -384,6 +384,13 @@ namespace Codebreak.Service.World.Frame
                             character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                             return;
                         }
+
+                        if(character.GuildMember.HasRight(Game.Guild.GuildRightEnum.COLLECT_TAXCOLLECTOR))
+                        {
+                            character.GuildMember.SendHasNotEnoughRights();
+                            return;
+                        }
+
                         character.ExchangeTaxCollector((TaxCollectorEntity)distantEntity);
                         break;
 
