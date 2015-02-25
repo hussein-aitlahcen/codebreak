@@ -24,6 +24,15 @@ namespace Codebreak.Service.World.Game.Fight
             get;
             private set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MonsterGroupEntity Monsters
+        {
+            get;
+            private set;
+        }
         
         /// <summary>
         /// 
@@ -55,6 +64,7 @@ namespace Codebreak.Service.World.Game.Fight
             : base(FightTypeEnum.TYPE_AGGRESSION, map, id, monsters.Id, monsters.AlignmentId, monsters.CellId, victim.Id, victim.AlignmentId, victim.CellId, WorldConfig.AGGRESSION_START_TIMEOUT, WorldConfig.AGGRESSION_TURN_TIME, false, true)
         {
             IsNeutralAgression = victim.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+            Monsters = monsters;
 
             foreach (var monster in monsters.Monsters)
                 JoinFight(monster, Team0);
@@ -235,9 +245,12 @@ namespace Codebreak.Service.World.Game.Fight
                 Result.AddResult(fighter, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
             }
 
-            if(Team0.Fighters.First().Type == EntityTypeEnum.TYPE_MONSTER_FIGHTER)
+            if(Monsters != null)
             {
-                Map.SpawnMonsters();
+                if(m_winnersTeam == Team1)
+                    Map.SpawnMonsters();
+                else
+                    Map.SpawnEntity(Monsters);
             }
         }
 
@@ -249,7 +262,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             message.Append(Id.ToString()).Append(';');
             message.Append(UpdateTime).Append(';');
-            message.Append("0,");
+            message.Append("0").Append(',');
             message.Append(Team0.AlignmentId).Append(",");
             message.Append(Team0.AliveFighters.Count()).Append(';');
             message.Append("0,");
@@ -272,7 +285,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 m_serializedFlag.Append(Team0.LeaderId).Append(';');
                 m_serializedFlag.Append(Team0.FlagCellId).Append(';');
-                m_serializedFlag.Append('0').Append(';');
+                m_serializedFlag.Append("0").Append(';');
                 m_serializedFlag.Append(Team0.AlignmentId).Append('|');
 
                 m_serializedFlag.Append(Team1.LeaderId).Append(';');

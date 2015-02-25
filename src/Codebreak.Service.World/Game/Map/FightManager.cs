@@ -107,13 +107,7 @@ namespace Codebreak.Service.World.Game.Map
             if (CanStartFight(victim))
             {
                 monsters.StopAction(GameActionTypeEnum.MAP);
-                monsters.Monsters.First().CellId = monsters.CellId;
-                var fight = new AlignmentFight(m_map, m_fightId++, monsters.Monsters.First(), victim);
-                foreach(var monster in monsters.Monsters.Skip(1))
-                {
-                    fight.JoinFight(monster, fight.Team0);
-                }
-                Add(fight);
+                Add(new AlignmentFight(m_map, m_fightId++, monsters, victim));
                 return true;
             }
             return false;

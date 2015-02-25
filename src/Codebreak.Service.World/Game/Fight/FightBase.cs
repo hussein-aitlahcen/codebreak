@@ -802,12 +802,13 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 switch(Type)
                 {
-                    case FightTypeEnum.TYPE_PVT:                        
-                        if (Team0.Fighters.OfType<CharacterEntity>().Count() == 0)
+                    case FightTypeEnum.TYPE_PVT:
+                        return false;
+
+                    case FightTypeEnum.TYPE_AGGRESSION:
+                        if (Team0.Fighters.First().Type == EntityTypeEnum.TYPE_MONSTER_FIGHTER)
                             return false;
-                        if (Team1.Fighters.OfType<CharacterEntity>().Count() == 0)
-                            return false;
-                        return IsAllReady;
+                        break;
                 }
 
                 return IsAllReady;
