@@ -385,7 +385,7 @@ namespace Codebreak.Service.World.Frame
                             return;
                         }
 
-                        if(character.GuildMember.HasRight(Game.Guild.GuildRightEnum.COLLECT_TAXCOLLECTOR))
+                        if(!character.GuildMember.HasRight(Game.Guild.GuildRightEnum.COLLECT_TAXCOLLECTOR))
                         {
                             character.GuildMember.SendHasNotEnoughRights();
                             return;
