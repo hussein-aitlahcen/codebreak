@@ -861,7 +861,7 @@ namespace Codebreak.Service.World.Game.Map
                 }
 
                 // aggressé par un groupe de mobs
-                if (entity.Type == EntityTypeEnum.TYPE_CHARACTER && map.Entities.OfType<MonsterGroupEntity>().Any(monsters => GoalDistance(map, lastCell, monsters.CellId) <= monsters.AggressionRange))
+                if (entity.Type == EntityTypeEnum.TYPE_CHARACTER && map.Entities.OfType<MonsterGroupEntity>().Any(monsters => map.CanBeAggro((CharacterEntity)entity, lastCell, monsters)))
                 {
                     length = -2;
                     break;

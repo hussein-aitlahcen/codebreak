@@ -107,6 +107,15 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int AlignmentId
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IEnumerable<MonsterEntity> Monsters
         {
             get
@@ -166,6 +175,7 @@ namespace Codebreak.Service.World.Game.Entity
             m_monsters = new List<MonsterEntity>();
             m_nextMonsterId = -1;
 
+            AlignmentId = -2;
             Resurect = true;
             MapId = mapId;
             CellId = cellId;
@@ -226,13 +236,19 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     foreach(var spawn in monsters)
                     {
-                        var chance = Util.Next(0, 100);
-                        if (chance < spawn.Probability * 100)
+                        if (AlignmentId == -2 || spawn.Grade.Template.Alignment == AlignmentId)
                         {
-                            m_monsters.Add(new MonsterEntity(m_nextMonsterId--, spawn.Grade));
+                            var chance = Util.Next(0, 100);
+                            if (chance < spawn.Probability * 100)
+                            {
+                                m_monsters.Add(new MonsterEntity(m_nextMonsterId--, spawn.Grade));
 
-                            if(m_monsters.Count == size)                            
-                                break;                            
+                                if (AlignmentId == -2)
+                                    AlignmentId = spawn.Grade.Template.Alignment;
+
+                                if (m_monsters.Count == size)
+                                    break;
+                            }
                         }
                     }
                 }

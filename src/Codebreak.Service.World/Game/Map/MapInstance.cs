@@ -690,6 +690,19 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <param name="monsters"></param>
+        /// <returns></returns>
+        public bool CanBeAggro(CharacterEntity character, int cellId, MonsterGroupEntity monsters)
+        {
+            return Pathfinding.GoalDistance(this, cellId, monsters.CellId) <= monsters.AggressionRange
+                && character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL
+                && monsters.AlignmentId != character.AlignmentId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         /// <param name="path"></param>
         /// <param name="cellId"></param>
@@ -702,11 +715,11 @@ namespace Codebreak.Service.World.Game.Map
                 {
                     foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
                     {
-                        if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
+                        if (CanBeAggro(character, cellId, monsterGroup))
                         {
-                            if(FightManager.StartMonsterFight(character, monsterGroup))
+                            if (FightManager.StartMonsterFight(character, monsterGroup))
                                 return;
-                        }
+                        }         
                     }
                 }
             }
