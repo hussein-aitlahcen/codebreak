@@ -2161,6 +2161,22 @@ namespace Codebreak.Service.World.Network
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="frameId"></param>
+        /// <param name="activated"></param>
+        /// <returns></returns>
+        public static string INTERACTIVE_DATA_FRAME_FIGHT(IEnumerable<InteractiveObject> iobjects)
+        {
+            var message = new StringBuilder("GDF");
+            foreach (var io in iobjects)
+                io.SerializeAs_FightInteractiveListMessage(message);
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="characterId"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>

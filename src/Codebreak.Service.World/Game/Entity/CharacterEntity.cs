@@ -1150,6 +1150,8 @@ namespace Codebreak.Service.World.Game.Entity
         {
             LifeBeforeFight = Life;
 
+            base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME_FIGHT(Map.InteractiveObjects));
+
             base.JoinFight(fight, team);
         }
 

@@ -271,6 +271,17 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<InteractiveObject> InteractiveObjects
+        {
+            get
+            {
+                return m_interactiveObjects;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<long, EntityBase> m_entityById;
         private Dictionary<string, EntityBase> m_entityByName;
         private Dictionary<int, MapCell> m_cellById;

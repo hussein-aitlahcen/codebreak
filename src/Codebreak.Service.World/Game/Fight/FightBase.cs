@@ -1303,8 +1303,9 @@ namespace Codebreak.Service.World.Game.Fight
                 Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
 
                 base.CachedBuffer = true;
-                base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
                 base.Dispatch(WorldMessage.FIGHT_STARTS());
+                base.Dispatch(WorldMessage.FIGHT_TURN_MIDDLE(Fighters));
+                base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
                 base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
                 Team0.SendChallengeInfos();
                 Team1.SendChallengeInfos();
