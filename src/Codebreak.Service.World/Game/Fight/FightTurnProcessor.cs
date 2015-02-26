@@ -32,7 +32,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void SummonFighter(FighterBase fighter)
         {
-            m_fighterTurns.Insert(m_fighterTurns.IndexOf(fighter.Invocator) + 1, fighter);
+            var index = m_fighterTurns.IndexOf(fighter.Invocator) + 1;
+            if (index == 0)
+                index = m_fighterTurns.Count;
+            m_fighterTurns.Insert(index, fighter);
         }
 
         /// <summary>
@@ -41,9 +44,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         public void RemoveFighter(FighterBase fighter)
         {
-            if (m_fighterTurns.Contains(fighter))
-                m_fighterTurns.Remove(fighter);
-            if (m_currentFighter == fighter)
+            var index = m_fighterTurns.IndexOf(fighter);
+            if (index == -1)
+                return;
+            m_fighterTurns.Remove(fighter);
+            if(index <= m_currentIndex)
                 m_currentIndex--;
         }
 

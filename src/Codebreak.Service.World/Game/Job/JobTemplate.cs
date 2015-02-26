@@ -209,7 +209,7 @@ namespace Codebreak.Service.World.Game.Job
         SKILL_VENDRE_1 = 177,
         SKILL_VERROUILLER = 81,
         SKILL_VERROUILLER_1 = 105,
-        SKILL_VIDER = 133,
+        SKILL_VIDER_POISSON = 133,
         SKILL_REF_COFFREMAISON = 185,
         SKILL_REF_MAISON = 186,
 

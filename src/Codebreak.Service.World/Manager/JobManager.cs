@@ -237,7 +237,7 @@ namespace Codebreak.Service.World.Manager
                     new HarvestSkill(SkillIdEnum.SKILL_PECHER_PICHONEUDCOMPET, 1, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
                     new HarvestSkill(SkillIdEnum.SKILL_PECHER_KRALAMOURE, 80, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
                     new HarvestSkill(SkillIdEnum.SKILL_PECHER_SARDINEBRILLANTE_1, 80, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR]),
-                    new CraftSkill(SkillIdEnum.SKILL_VIDER, 1, new int[] 
+                    new CraftSkill(SkillIdEnum.SKILL_VIDER_POISSON, 1, new int[] 
                         {
                             1751, 1755, 1758, 1760, 1761, 1763, 1780, 1781, 1783, 1785, 1787, 1789, 1791, 1793, 1795, 1797, 1798, 1800, 1802, 1804, 1806, 1808, 1845, 1848, 1851, 1852, 1854, 1976
                         }, WorldConfig.JOB_TOOLS[JobIdEnum.JOB_PECHEUR])

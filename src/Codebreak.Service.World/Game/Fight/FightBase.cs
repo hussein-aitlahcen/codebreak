@@ -1231,6 +1231,12 @@ namespace Codebreak.Service.World.Game.Fight
 
                 foreach (var invocation in fighter.Team.AliveFighters.Where(ally => ally.Invocator == fighter))                
                     TryKillFighter(invocation, invocation.Id, true);
+
+                if (fighter.Invocator != null)
+                {
+                    TurnProcessor.RemoveFighter(fighter);
+                    base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                }
                 
                 if (State != FightStateEnum.STATE_PLACEMENT)
                     NextLoopTimeout = CurrentLoopTimeout + 1200; // time delayed because of the death
