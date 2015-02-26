@@ -9,12 +9,7 @@ namespace Codebreak.App.Website
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                        "~/Scripts/bootstrap.css",
-                        "~/Scripts/bootstrap.readable.css",
-                        "~/Scripts/font-awesome.css"));
-
-            bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
-                        "~/Content/bootstrap*"));
+                        "~/Scripts/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
@@ -30,9 +25,13 @@ namespace Codebreak.App.Website
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
-            
+
+            bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
+                        "~/Content/bootstrap*"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                        "~/Content/site.css"));
+                        "~/Content/site.css",
+                        "~/Content/font-awesome.css"));
             
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

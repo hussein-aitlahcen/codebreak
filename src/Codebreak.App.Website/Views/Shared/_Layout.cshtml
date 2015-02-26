@@ -4,8 +4,8 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <title>@ViewBag.Title</title>
-                @Styles.Render("~/Content/css")
-                @Styles.Render("~/Content/bootstrap")
+        @Styles.Render("~/Content/bootstrap")
+        @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
     </head>
 
@@ -23,30 +23,29 @@
                     </button>
                     <a class="navbar-brand" href="/">Earthscape - Origin</a>
                 </div>
-                <div id="navbar" class="navbar-collapse collapse">
+                <div id="navbar" class="navbar-collapse collapse navbar-right">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Nous rejoindre
-                                <span class="glyphicon glyphicon-menu-down"></span>
+                                <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#">Inscription</a></li>
                                 <li><a href="#">Téléchargement</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header">Nav header</li>
-                                <li><a href="#">Separated link</a></li>
-                                <li><a href="#">One more separated link</a></li>
                             </ul>
                         </li>
-                        <li><a href="#about">Communauté</a></li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Communauté
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Forum</a></li>
+                                <li><a href="#">Classement</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#contact">Contact</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="../navbar/">Default</a></li>
-                        <li><a href="../navbar-static-top/">Static top</a></li>
-                        <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -63,9 +62,7 @@
 
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)
-
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>               
+        @RenderSection("scripts", required: false)       
 
     </body>
 </html>
