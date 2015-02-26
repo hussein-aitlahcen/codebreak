@@ -79,30 +79,33 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public override void OnFightStart()
         {
-            if(IsNeutralAgression)
+            if (IsNeutralAgression && Monsters == null)
             {
                 var aggressors = Team0.AliveFighters;
-                var averageLevel = (int)aggressors.Average(aggressor => aggressor.Level);
-                var knighLevel = 0;
+                if (aggressors.Count() > 0)
+                {
+                    var averageLevel = (int)aggressors.Average(aggressor => aggressor.Level);
+                    var knighLevel = 0;
 
-                if (averageLevel < 50)
-                    knighLevel = 0;
-                else if (averageLevel < 80)
-                    knighLevel = 1;
-                else if (averageLevel < 110)
-                    knighLevel = 2;
-                else if (averageLevel < 140)
-                    knighLevel = 3;
-                else if (averageLevel < 170)
-                    knighLevel = 4;
-                else
-                    knighLevel = 5;
+                    if (averageLevel < 50)
+                        knighLevel = 0;
+                    else if (averageLevel < 80)
+                        knighLevel = 1;
+                    else if (averageLevel < 110)
+                        knighLevel = 2;
+                    else if (averageLevel < 140)
+                        knighLevel = 3;
+                    else if (averageLevel < 170)
+                        knighLevel = 4;
+                    else
+                        knighLevel = 5;
 
-                var knight = MonsterRepository.Instance.GetById(WorldConfig.AGGRESSION_KNGIHT_MONSTER_ID);
-                if (knight != null)                
-                    if (knight.Grades.Count() > knighLevel)                
-                        if(Team1.FreePlace != null)
-                            SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Team1, Team1.FreePlace.Id); 
+                    var knight = MonsterRepository.Instance.GetById(WorldConfig.AGGRESSION_KNGIHT_MONSTER_ID);
+                    if (knight != null)
+                        if (knight.Grades.Count() > knighLevel)
+                            if (Team1.FreePlace != null)
+                                SummonFighter(new MonsterEntity(base.NextFighterId, knight.Grades.ElementAt(knighLevel)), Team1, Team1.FreePlace.Id);
+                }
             }
 
             base.OnFightStart();

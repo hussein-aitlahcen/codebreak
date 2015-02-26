@@ -696,7 +696,8 @@ namespace Codebreak.Service.World.Game.Map
         public bool CanBeAggro(CharacterEntity character, int cellId, MonsterGroupEntity monsters)
         {
             return Pathfinding.GoalDistance(this, cellId, monsters.CellId) <= monsters.AggressionRange
-                && (character.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL || monsters.AlignmentId != character.AlignmentId);
+                && ((character.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL && monsters.AlignmentId == -1)
+                || (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL && monsters.AlignmentId != character.AlignmentId));
         }
 
         /// <summary>
