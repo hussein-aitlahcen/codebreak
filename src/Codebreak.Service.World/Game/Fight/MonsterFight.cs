@@ -88,14 +88,14 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         character.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, character.Team.LeaderId, character));
                         character.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, character));
-                        character.LeaveFight(true);
+                        character.EndFight(true);
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
                     if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
                     {
-                        character.LeaveFight();
+                        character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
                         return FightActionResultEnum.RESULT_DEATH;
                     }
@@ -105,7 +105,7 @@ namespace Codebreak.Service.World.Game.Fight
                 case FightStateEnum.STATE_FIGHTING:
                     if (character.IsSpectating)
                     {
-                        character.LeaveFight(kick);
+                        character.EndFight(kick);
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;
@@ -113,7 +113,9 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
                     {
-                        character.LeaveFight();
+                        InitLoots(character);
+                        Result.AddResult(character);
+                        character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_DEATH;
@@ -133,9 +135,9 @@ namespace Codebreak.Service.World.Game.Fight
         private long m_droppersTotalPP;
         private long m_losersTotalLevel;
         private long m_kamasLoot;
-        private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops;
-        private List<FighterBase> m_droppers;
-        private List<InventoryItemDAO> m_itemLoot;
+        private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops = new Dictionary<FighterBase,List<InventoryItemDAO>>();
+        private List<FighterBase> m_droppers = new List<FighterBase>();
+        private List<InventoryItemDAO> m_itemLoot = new List<InventoryItemDAO>();
 
         /// <summary>
         /// 
@@ -156,7 +158,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         private void InitDroppers()
         {
-            m_droppers = new List<FighterBase>();
             m_droppers.AddRange(m_winnersTeam.Fighters.Where
                 (
                     fighter => fighter.Type == EntityTypeEnum.TYPE_CHARACTER ||
@@ -177,8 +178,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void InitLoots()
         {
-            m_itemLoot = new List<InventoryItemDAO>();
-
             if(m_winnersTeam == Team0)
             {
                 m_kamasLoot += MonsterGroup.Inventory.Kamas;
@@ -193,15 +192,22 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             // Players lost
-            foreach (var player in m_losersFighter.OfType<CharacterEntity>())
-            {
-                player.CachedBuffer = true;
-                m_kamasLoot += player.Inventory.Kamas;
-                player.Inventory.Kamas = 0;
-                m_itemLoot.AddRange(player.Inventory.RemoveItems());
-                m_itemLoot.AddRange(player.PersonalShop.RemoveItems());
-                player.CachedBuffer = false;
-            }
+            foreach (var player in m_losersFighter.OfType<CharacterEntity>())            
+                InitLoots(player);            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="looser"></param>
+        private void InitLoots(CharacterEntity looser)
+        {
+            looser.CachedBuffer = true;
+            m_kamasLoot += looser.Inventory.Kamas;
+            looser.Inventory.SubKamas(looser.Inventory.Kamas);
+            m_itemLoot.AddRange(looser.Inventory.RemoveItems());
+            m_itemLoot.AddRange(looser.PersonalShop.RemoveItems());
+            looser.CachedBuffer = false;
         }
 
         /// <summary>

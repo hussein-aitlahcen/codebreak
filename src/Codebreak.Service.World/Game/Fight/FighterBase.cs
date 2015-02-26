@@ -516,6 +516,8 @@ namespace Codebreak.Service.World.Game.Fight
                 Team.RemoveUpdatable(this);
                 Team.RemoveHandler(Dispatch);
 
+                Fight.TurnProcessor.RemoveFighter(this);
+
                 Statistics.ClearDons();
             }
 

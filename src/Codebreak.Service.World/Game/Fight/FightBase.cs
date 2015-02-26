@@ -1239,7 +1239,7 @@ namespace Codebreak.Service.World.Game.Fight
                 }
                 
                 if (State != FightStateEnum.STATE_PLACEMENT)
-                    NextLoopTimeout = CurrentLoopTimeout + 1200; // time delayed because of the death
+                    NextLoopTimeout = CurrentLoopTimeout + 1300; // time delayed because of the death
 
                 if (WillFinish())
                 {
@@ -1568,22 +1568,22 @@ namespace Codebreak.Service.World.Game.Fight
                         m_processingTargets.RemoveFirst();
 
                         CurrentProcessingFighter = castInfos.Target;
-                                                
-                        if (CurrentProcessingFighter != null && !CurrentProcessingFighter.IsFighterDead)
+
+                        if (CurrentProcessingFighter != null)
                         {
-                            Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);                                                        
-                            var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
-                            if (effectResult == FightActionResultEnum.RESULT_END)
-                                break;
-                        }
-                        else
-                        {
-                            if (castInfos.Target == null || !castInfos.Target.IsFighterDead)
+                            if (!CurrentProcessingFighter.IsFighterDead)
                             {
+                                Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
                                 var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
                                 if (effectResult == FightActionResultEnum.RESULT_END)
                                     break;
                             }
+                        }
+                        else
+                        {
+                            var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
+                            if (effectResult == FightActionResultEnum.RESULT_END)
+                                break;
                         }
 
                         LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;

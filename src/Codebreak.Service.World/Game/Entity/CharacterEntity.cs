@@ -1203,53 +1203,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void LeaveFight(bool kicked = false)
-        {
-            if (IsSpectating)
-            {
-                Fight.SpectatorTeam.RemoveSpectator(this);
-                Fight.SpectatorTeam.RemoveUpdatable(this);
-                Fight.SpectatorTeam.RemoveHandler(Dispatch);
-            }
-            else
-            {
-                Team.RemoveFighter(this);
-                Team.RemoveUpdatable(this);
-                Team.RemoveHandler(Dispatch);
-
-                if (!kicked)
-                {
-                    Fight.Result.AddResult(this, FightEndTypeEnum.END_LOSER, true);
-                    switch (Fight.Type)
-                    {
-                        case FightTypeEnum.TYPE_CHALLENGE:
-                            break;
-
-                        case FightTypeEnum.TYPE_AGGRESSION:
-                        case FightTypeEnum.TYPE_PVT:
-                            OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
-                            break;
-
-                        case FightTypeEnum.TYPE_PVM:
-                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
-                            break;
-                    }
-                }
-
-                Fight.TurnProcessor.RemoveFighter(this);
-            }
-            
-            base.EndFight();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="win"></param>
         public override void EndFight(bool win = false)
         {
             if (!IsSpectating)
             {
+
                 if (IsFighterDead)
                 {
                     switch (Fight.Type)
@@ -1282,27 +1241,30 @@ namespace Codebreak.Service.World.Game.Entity
                     case FightTypeEnum.TYPE_CHALLENGE:
                         Life = LifeBeforeFight;
                         break;
-                }
-                
-                base.CachedBuffer = true;
-                var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
-                foreach (var item in items)
-                {
-                    if (item.Statistics.HasEffect(EffectEnum.AddBoost))
-                    {
-                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
-                        effect.Value3--;
-                        item.SaveStats();
-                        if (effect.Value3 <= 0)
-                            Inventory.RemoveItem(item.Id);
-                    }
-                }
-                if (items.Count > 0)
-                {
-                    base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
-                    SendAccountStats();
-                }
-                base.CachedBuffer = false;
+
+                    default:
+                        base.CachedBuffer = true;
+                        var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
+                        foreach (var item in items)
+                        {
+                            if (item.Statistics.HasEffect(EffectEnum.AddBoost))
+                            {
+                                var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
+                                effect.Value3--;
+                                item.SaveStats();
+                                if (effect.Value3 <= 0)
+                                    Inventory.RemoveItem(item.Id);
+                            }
+                        }
+                        if (items.Count > 0)
+                        {
+                            base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
+                            SendAccountStats();
+                        }
+                        base.CachedBuffer = false;
+                        break;
+                }               
+               
             }
             else
             {
