@@ -926,9 +926,9 @@ namespace Codebreak.Service.World.Game.Guild
             // new boss
             else if (!m_members.Any(m => m.Rank == GuildRankEnum.BOSS))
             {
-                var boss = m_members.First();
+                var boss = m_members.OrderBy(m => (int)m.Rank).First();
                 boss.SetBoss();
-                boss.SendGuildStats();
+                boss.Dispatch(WorldMessage.GUILD_STATS(this, boss.Power));
 
                 base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_GUILD_BOSS_LEFT_NEW_BOSS, boss.Name, Name));
             }
