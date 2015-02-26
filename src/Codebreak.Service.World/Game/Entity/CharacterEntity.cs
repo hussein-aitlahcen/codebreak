@@ -2056,15 +2056,15 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.RemoveFrame(MapFrame.Instance);
                     break;
 
-                case GameActionTypeEnum.FIGHT:
+                case GameActionTypeEnum.FIGHT:                    
+                    StopEmote();
+                    FrameManager.RemoveFrame(MapFrame.Instance);
                     if (IsSpectating)
                     {
                         FrameManager.AddFrame(FightFrame.Instance);
                     }
                     else
                     {
-                        StopEmote();
-                        FrameManager.RemoveFrame(MapFrame.Instance);
                         if (Fight.Map.Id != MapId)
                         {
                             Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
