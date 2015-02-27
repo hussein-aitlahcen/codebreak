@@ -1083,6 +1083,9 @@ namespace Codebreak.Service.World.Game.Map
         // Returns the list of points from p0 to p1 
         private static bool BresenhamLine(FightBase fight, int beginCell, int endCell)
         {
+            if (beginCell == endCell)
+                return true;
+
             var begin = GetPoint(fight.Map, beginCell);
             var end = GetPoint(fight.Map, endCell);
             return BresenhamLine(fight, beginCell, endCell, (int)begin.X, (int)begin.Y, (int)end.X, (int)end.Y);
