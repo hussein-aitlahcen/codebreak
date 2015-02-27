@@ -28,6 +28,7 @@ body {
 /* Footer */
 footer {
 	margin-top: 30px;
+	box-shadow: inset 0 0 5px gray;
     background-color: #DBD9D9;
 }
 
@@ -68,8 +69,7 @@ footer {
     width: 100%;
 	padding: 20px 0 10px;
 	background: #3e4753;
-	border: solid 2px #777;	
-    border-radius: 2px;
+    border-bottom: 2px solid ;
 }
 
 .copyright p {    
