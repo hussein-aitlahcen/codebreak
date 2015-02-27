@@ -167,8 +167,8 @@
 
         <!-- Scripts-->
         @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/i18next")
         @Scripts.Render("~/bundles/bootstrap")
-        @Scripts.Render("~/bundles/i18n")
         @RenderSection("scripts", required: false)
 
         <!-- i18n initialisation -->
@@ -181,9 +181,8 @@
             });
 
             function setLang(lang) {
-                location.reload();
                 $.i18n.setLng(lang).done(function (translate) {
-                    $(document).i18n();
+                    location.reload();
                 });
             }
         </script>        
