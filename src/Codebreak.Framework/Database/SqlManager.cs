@@ -13,8 +13,13 @@ namespace Codebreak.Framework.Database
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SqlManager : Singleton<SqlManager>
+    public sealed class SqlManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public static ILog Logger = LogManager.GetLogger(typeof(SqlManager));
+
         /// <summary>
         /// 
         /// </summary>

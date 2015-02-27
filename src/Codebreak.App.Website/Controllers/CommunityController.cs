@@ -6,9 +6,14 @@ using System.Web.Mvc;
 
 namespace Codebreak.App.Website.Controllers
 {
-    public class HomeController : WrappedController
+    public class CommunityController : WrappedController
     {
-        public ActionResult Index()
+        public ActionResult Forum()
+        {
+            return Redirect(GetConfigurationVariable("link"));
+        }
+
+        public ActionResult Ladder()
         {
             return View();
         }

@@ -3,7 +3,9 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>@ViewBag.Title</title>
+        <title data-i18n="[append]@ViewBag.Title.ToLower()">
+            Earthscape -
+        </title>
         @Styles.Render("~/Content/bootstrap")
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
@@ -21,48 +23,169 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Earthscape - Origin</a>
+                    <p>
+                        <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                            Earthscape - Origin
+                        </a> 
+                    </p>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse navbar-right">
                     <ul class="nav navbar-nav">
+                        <li>
+                            <a href="@Url.Action("Index", "Home")" data-i18n="[append]home">
+                                <!-- i18n translation injection-->
+                                <span class="fa fa-lg fa-home"></span>
+                            </a>  
+                        </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Nous rejoindre
-                                <i class="fa fa-angle-down"></i>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-i18n="[prepend]join_us">                              
+                                <!-- i18n translation injection-->
+                                <span class="fa fa-lg fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Inscription</a></li>
-                                <li><a href="#">Téléchargement</a></li>
+                                <li>  
+                                    <a href="@Url.Action("Register", "Join")" data-i18n="[append]register">
+                                        <!-- i18n translation injection-->
+                                        <span class="fa fa-fw fa-user-plus"></span>
+                                    </a>                                  
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Download", "Join")" data-i18n="[append]download">
+                                        <!-- i18n translation injection-->
+                                        <span class="fa fa-fw fa-download"></span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Communauté
-                                <i class="fa fa-angle-down"></i>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-i18n="[prepend]community">
+                                <!-- i18n translation injection-->
+                                <span class="fa fa-lg fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Forum</a></li>
-                                <li><a href="#">Classement</a></li>
+                                <li>
+                                    <a href="@Url.Action("Forum", "Community")" data-i18n="[append]forum">
+                                        <!-- i18n translation injection-->
+                                        <span class="fa fa-fw fa-comments"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Ladder", "Community")" data-i18n="[append]ladder">
+                                        <!-- i18n translation injection-->
+                                        <span class="fa fa-fw fa-line-chart"></span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li>
+                            <a href="@Url.Action("Team", "About")" data-i18n="[append]team">
+                                <!-- i18n translation injection-->
+                                <span class="fa fa-lg fa-group"></span>
+                            </a>  
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Contact", "About")" data-i18n="[append]contact">
+                                <!-- i18n translation injection-->
+                                <span class="fa fa-lg fa-pencil-square-o"></span>
+                            </a>  
+                        </li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
 
+        <!-- Breadcrumb -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <h1 class="pull-left" data-i18n="@ViewBag.Title.ToLower()">   
+                     <!-- i18n translation injection-->
+                </h1>
+                <ul class="breadcrumb pull-right">
+                    @if (ViewContext.RouteData.Values["controller"].ToString() != "Home")
+                    {
+                        <li>
+                            @Html.ActionLink("PLACEHODER", "Index", "Home", null, new { data_i18n = "home" })                            
+                        </li>
+                        
+                        <li class="active" data-i18n="[append]@ViewBag.Title.ToLower()">
+                            <!-- i18n translation injection-->
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="active" data-i18n="home">
+                            <!-- i18n translation injection-->
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
         <!-- Begin page content -->
         <div class="container">
-          
-            @RenderBody()
-                        
-            <footer class="footer">
-            </footer>
-         </div>
+            <div class="content">
+                @RenderBody()
+            </div>
+        </div>
 
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                @RenderSection("footer", false)
+            </div>
+            <div class="container center-block">
+                <ul class="breadcrumb">        
+                    <li>
+                        <a href="#" class="lang-selection" onclick="setLang('fr-FR')">
+                            Français
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="lang-selection" onclick="setLang('en-US')">
+                            English
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </footer>
+
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p data-i18n="all_rights_reserved">
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p data-i18n="conditions_of_use">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts-->
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)       
+        @Scripts.Render("~/bundles/i18n")
+        @RenderSection("scripts", required: false)
 
-    </body>
+        <!-- i18n initialisation -->
+        <script type="text/javascript">
+            $.i18n.init({
+                resGetPath: "/locales/__lng__/__ns__.json",
+                debug: true
+            }).done(function (translate) {
+                $(document).i18n();
+            });
+
+            function setLang(lang) {
+                location.reload();
+                $.i18n.setLng(lang).done(function (translate) {
+                    $(document).i18n();
+                });
+            }
+        </script>        
+</body>
 </html>

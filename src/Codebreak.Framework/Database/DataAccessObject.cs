@@ -72,6 +72,11 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        private SqlManager m_sqlMgr;
+
+        /// <summary>
+        /// 
+        /// </summary>
         static DataAccessObject()
         {
             IsRunning = false;
@@ -84,6 +89,15 @@ namespace Codebreak.Framework.Database
         {
             IsDirty = false;
             IsNew = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sqlMgr"></param>
+        public void Initialize(SqlManager sqlMgr)
+        {
+            m_sqlMgr = sqlMgr;
         }
 
         /// <summary>
@@ -103,7 +117,7 @@ namespace Codebreak.Framework.Database
         {
             OnBeforeUpdate();
 
-            return SqlManager.Instance.Update<T>((T)this);
+            return m_sqlMgr.Update<T>((T)this);
         }
 
         /// <summary>
@@ -113,7 +127,7 @@ namespace Codebreak.Framework.Database
         {
             OnBeforeDelete();
 
-            return SqlManager.Instance.Delete<T>((T)this);
+            return m_sqlMgr.Delete<T>((T)this);
         }
 
         /// <summary>
@@ -124,7 +138,7 @@ namespace Codebreak.Framework.Database
         {
             OnBeforeInsert();
 
-            return SqlManager.Instance.InsertWithKey((T)this);
+            return m_sqlMgr.InsertWithKey((T)this);
         }
 
         /// <summary>

@@ -4276,6 +4276,7 @@ fieldset[disabled] .navbar-inverse .btn-link:hover,
 fieldset[disabled] .navbar-inverse .btn-link:focus {
   color: #cccccc;
 }
+
 .breadcrumb {
   padding: 8px 15px;
   margin-bottom: 22px;
@@ -4283,6 +4284,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   background-color: #f5f5f5;
   border-radius: 4px;
 }
+
 .breadcrumb > li {
   display: inline-block;
 }

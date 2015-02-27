@@ -1,0 +1,30 @@
+﻿{
+    //########################## 
+    //##        Navbar
+    //##########################
+    "home": "Accueil",
+
+    "join_us": "Nous rejoindre",
+    "register": "Inscription",
+    "download": "Téléchargement",
+
+    "community": "Communauté",
+    "forum": "Forum",
+    "ladder": "Classement",
+
+    "team": "L'équipe",
+    "contact": "Nous contacter",
+
+
+    //##########################
+    //##        About/Team
+    //##########################
+    "our_experts": "Nos experts.",
+
+
+    //##########################
+    //##        About/Team
+    //##########################
+    "all_rights_reserved": "2015 Earthscape, © Tout droits réservés.",
+    "conditions_of_use": "Conditions d'utilisations."
+}

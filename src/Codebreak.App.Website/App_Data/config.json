@@ -1,0 +1,3 @@
+{
+  "WEB_DB_CONNECTION_STRING": "Server=localhost;Database=codebreak_web;Uid=root;Pwd=;"
+}

@@ -19,6 +19,11 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         private List<IRepository> m_repositories;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private SqlManager m_sqlMgr;
    
         /// <summary>
         /// 
@@ -26,21 +31,22 @@ namespace Codebreak.Framework.Database
         public DbManager()
         {
             m_repositories = new List<IRepository>();
+            m_sqlMgr = new SqlManager();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void LoadAll(string connectionString)
+        public virtual void LoadAll(string connectionString)
         {
-            SqlManager.Instance.Initialize(connectionString);
+            m_sqlMgr.Initialize(connectionString);
 
             try
             {
                 foreach (var repository in m_repositories)
                 {
                     Logger.Info(repository.GetType().Name + " : loading...");
-                    repository.Initialize();
+                    repository.Initialize(m_sqlMgr);
                     Logger.Info(repository.GetType().Name + " : " + repository.ObjectCount + " record loaded.");
                 }
             }
@@ -64,7 +70,7 @@ namespace Codebreak.Framework.Database
         /// </summary>
         public void UpdateAll()
         {
-            using (var connection = SqlManager.Instance.CreateConnection())
+            using (var connection = m_sqlMgr.CreateConnection())
             {
                 using (var transaction = connection.BeginTransaction())
                 {

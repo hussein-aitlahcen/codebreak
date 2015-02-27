@@ -437,7 +437,7 @@ namespace Codebreak.Service.World.Frame
             WorldService.Instance.AddMessage(() =>
             {
                 SpellBookEntryRepository.Instance.RemoveAll(0, character.Id);
-                SqlManager.Instance.ExecuteQuery("CALL character_generate_spells(" + character.Id + ", " + character.Breed + ");");
+                SpellBookEntryRepository.Instance.SqlMgr.ExecuteQuery("CALL character_generate_spells(" + character.Id + ", " + character.Breed + ");");
                 client.Send(WorldMessage.CHARACTER_LIST(client.Characters));
             });
         }

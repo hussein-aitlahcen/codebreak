@@ -6,9 +6,14 @@ using System.Web.Mvc;
 
 namespace Codebreak.App.Website.Controllers
 {
-    public class HomeController : WrappedController
+    public class AboutController : WrappedController
     {
-        public ActionResult Index()
+        public ActionResult Team()
+        {
+            return View();
+        }
+
+        public ActionResult Contact()
         {
             return View();
         }

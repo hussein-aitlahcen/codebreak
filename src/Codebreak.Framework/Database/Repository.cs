@@ -17,7 +17,7 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        void Initialize();
+        void Initialize(SqlManager sqlManager);
 
         /// <summary>
         /// 
@@ -61,6 +61,15 @@ namespace Codebreak.Framework.Database
         /// 
         /// </summary>
         private static string TableName = SqlMapperExtensions.GetTableName(typeof(TDataObject));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SqlManager SqlMgr
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 
@@ -177,21 +186,37 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        public Repository()
+        public bool LoadOnly
         {
-            m_dataObjects = new List<TDataObject>();
+            get;
+            private set;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void Initialize()
+        public Repository(bool loadOnly = false)
         {
-            IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName);
-            m_dataObjects.AddRange(objects);
-            foreach (var obj in m_dataObjects)
-                OnObjectAdded(obj);
-            DataAccessObject<TDataObject>.IsRunning = true;
+            m_dataObjects = new List<TDataObject>();
+
+            LoadOnly = loadOnly;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Initialize(SqlManager sqlMgr)
+        {
+            SqlMgr = sqlMgr;
+
+            if (!LoadOnly)
+            {
+                IEnumerable<TDataObject> objects = SqlMgr.Query<TDataObject>("select * from " + TableName);
+                m_dataObjects.AddRange(objects);
+                foreach (var obj in m_dataObjects)
+                    OnObjectAdded(obj);
+                DataAccessObject<TDataObject>.IsRunning = true;
+            }
         }
 
         /// <summary>
@@ -211,14 +236,17 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual IEnumerable<TDataObject> LoadMultiple(string query, dynamic param = null)
         {
-            IEnumerable<TDataObject> objects = SqlManager.Instance.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
+            IEnumerable<TDataObject> objects = SqlMgr.Query<TDataObject>("select * from " + TableName + " where " + query, (object)param);
 
-            lock (m_syncLock)
+            if (!LoadOnly)
             {
-                foreach (var obj in objects)
+                lock (m_syncLock)
                 {
-                    m_dataObjects.Add(obj);
-                    OnObjectAdded(obj);
+                    foreach (var obj in objects)
+                    {
+                        m_dataObjects.Add(obj);
+                        OnObjectAdded(obj);
+                    }
                 }
             }
 
@@ -232,7 +260,7 @@ namespace Codebreak.Framework.Database
         public virtual void Update(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
         {
             if (objects.Count() > 0)
-                SqlManager.Instance.Update<TDataObject>(connection, transaction, objects);
+                SqlMgr.Update<TDataObject>(connection, transaction, objects);
         }  
         
         /// <summary>
@@ -242,7 +270,7 @@ namespace Codebreak.Framework.Database
         public virtual void Delete(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
         {
             if (objects.Count() > 0)
-                SqlManager.Instance.Delete<TDataObject>(connection, transaction, objects);
+                SqlMgr.Delete<TDataObject>(connection, transaction, objects);
         }
 
         /// <summary>
@@ -252,7 +280,7 @@ namespace Codebreak.Framework.Database
         public virtual void Insert(MySqlConnection connection, MySqlTransaction transaction, IEnumerable<TDataObject> objects)
         {
             if (objects.Count() > 0)
-                SqlManager.Instance.InsertWithKey<TDataObject>(connection, transaction, objects);
+                SqlMgr.InsertWithKey<TDataObject>(connection, transaction, objects);
         }     
 
         /// <summary>
@@ -261,13 +289,16 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Delete(TDataObject obj)
         {
-            var result = SqlManager.Instance.Delete<TDataObject>(obj);
-            if (result)
+            var result = SqlMgr.Delete<TDataObject>(obj);
+            if (!LoadOnly)
             {
-                lock (m_syncLock)
+                if (result)
                 {
-                    m_dataObjects.Remove(obj);
-                    OnObjectRemoved(obj);
+                    lock (m_syncLock)
+                    {
+                        m_dataObjects.Remove(obj);
+                        OnObjectRemoved(obj);
+                    }
                 }
             }
             return result;                   
@@ -324,13 +355,16 @@ namespace Codebreak.Framework.Database
         /// <returns></returns>
         public virtual bool Insert(TDataObject obj)
         {
-            var result = SqlManager.Instance.InsertWithKey<TDataObject>(obj);
-            if (result)
+            var result = SqlMgr.InsertWithKey<TDataObject>(obj);
+            if (!LoadOnly)
             {
-                lock (m_syncLock)
+                if (result)
                 {
-                    m_dataObjects.Add(obj);
-                    OnObjectAdded(obj);
+                    lock (m_syncLock)
+                    {
+                        m_dataObjects.Add(obj);
+                        OnObjectAdded(obj);
+                    }
                 }
             }
             return result;
