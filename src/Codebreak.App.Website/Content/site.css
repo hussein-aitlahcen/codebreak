@@ -1,4 +1,24 @@
 ﻿
+/* Navbar */
+.navbar-default .navbar-brand {
+  color: #687074;
+  font-weight: bold;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: black;
+  background-color: transparent;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #687074;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: black;
+  background-color: transparent;
+}
+
 /* Body */
 body {
     padding-top: 40px;
