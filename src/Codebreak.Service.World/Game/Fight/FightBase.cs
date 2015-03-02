@@ -1520,209 +1520,219 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="updateDelta"></param>
         public override void Update(long updateDelta)
         {
-            switch (LoopState)
+            try
             {
-                case FightLoopStateEnum.STATE_WAIT_START:
-                    if(IsAllReadyToStart || LoopTimedout)
-                    {
-                        StartFight();
-                    }
-                    break;
-
-                case FightLoopStateEnum.STATE_WAIT_READY:
-                    if (IsAllReady)
-                    {
-                        MiddleTurn();
-                        BeginTurn();
-                    }
-                    else if (SynchronizationTimedout)
-                    {
-                        var fighters = AliveFighters.OfType<CharacterEntity>().Where(fighter => !fighter.TurnReady);
-                        var fightersName = string.Join(", ", fighters.Select(fighter => fighter.Name));
-
-                        base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_WAITING_PLAYERS, fightersName));
-
-                        MiddleTurn();
-                        BeginTurn();
-                    }
-                    break;
-
-                case FightLoopStateEnum.STATE_WAIT_TURN:
-                    if (LoopTimedout) // death time
-                    {
-                        if (TurnTimedout || HasLeft(CurrentFighter) || CurrentFighter.TurnPass || CurrentFighter.IsFighterDead)
+                switch (LoopState)
+                {
+                    case FightLoopStateEnum.STATE_WAIT_START:
+                        if (IsAllReadyToStart || LoopTimedout)
                         {
-                            EndTurn();
+                            StartFight();
                         }
-                        else if (CurrentFighter is AIFighter)
+                        break;
+
+                    case FightLoopStateEnum.STATE_WAIT_READY:
+                        if (IsAllReady)
                         {
-                            LoopState = FightLoopStateEnum.STATE_WAIT_AI;
+                            MiddleTurn();
+                            BeginTurn();
                         }
-                    }
-                    break;
-
-                case FightLoopStateEnum.STATE_PROCESS_EFFECT:
-                    if(m_processingTargets.Count > 0)
-                    {
-                        var castInfos = m_processingTargets.First();
-                        m_processingTargets.RemoveFirst();
-
-                        CurrentProcessingFighter = castInfos.Target;
-
-                        if (CurrentProcessingFighter != null)
+                        else if (SynchronizationTimedout)
                         {
-                            if (!CurrentProcessingFighter.IsFighterDead)
+                            var fighters = AliveFighters.OfType<CharacterEntity>().Where(fighter => !fighter.TurnReady);
+                            var fightersName = string.Join(", ", fighters.Select(fighter => fighter.Name));
+
+                            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_WAITING_PLAYERS, fightersName));
+
+                            MiddleTurn();
+                            BeginTurn();
+                        }
+                        break;
+
+                    case FightLoopStateEnum.STATE_WAIT_TURN:
+                        if (LoopTimedout) // death time
+                        {
+                            if (TurnTimedout || HasLeft(CurrentFighter) || CurrentFighter.TurnPass || CurrentFighter.IsFighterDead)
                             {
-                                Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
+                                EndTurn();
+                            }
+                            else if (CurrentFighter is AIFighter)
+                            {
+                                LoopState = FightLoopStateEnum.STATE_WAIT_AI;
+                            }
+                        }
+                        break;
+
+                    case FightLoopStateEnum.STATE_PROCESS_EFFECT:
+                        if (m_processingTargets.Count > 0)
+                        {
+                            var castInfos = m_processingTargets.First();
+                            m_processingTargets.RemoveFirst();
+
+                            CurrentProcessingFighter = castInfos.Target;
+
+                            if (CurrentProcessingFighter != null)
+                            {
+                                if (!CurrentProcessingFighter.IsFighterDead)
+                                {
+                                    Logger.Debug("Processing effect : " + CurrentProcessingFighter.Name);
+                                    var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
+                                    if (effectResult == FightActionResultEnum.RESULT_END)
+                                        break;
+                                }
+                            }
+                            else
+                            {
                                 var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
                                 if (effectResult == FightActionResultEnum.RESULT_END)
                                     break;
                             }
+
+                            LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;
                         }
                         else
                         {
-                            var effectResult = EffectManager.Instance.TryApplyEffect(castInfos);
-                            if (effectResult == FightActionResultEnum.RESULT_END)
-                                break;
+                            CurrentProcessingFighter = null;
+                            LoopState = NextLoopState;
                         }
+                        break;
 
-                        LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;
-                    }
-                    else
-                    {
-                        CurrentProcessingFighter = null;
-                        LoopState = NextLoopState;
-                    }
-                    break;
-                    
-                case FightLoopStateEnum.STATE_WAIT_ACTION:
-                    if (ActionTimedout || CurrentAction.IsFinished)
-                    {
-                        if (CurrentAction != null && !CurrentAction.IsFinished)
+                    case FightLoopStateEnum.STATE_WAIT_ACTION:
+                        if (ActionTimedout || CurrentAction.IsFinished)
                         {
-                            CurrentFighter.StopAction(CurrentAction.Type);
-
-                            if (CurrentSubAction != null)
+                            if (CurrentAction != null && !CurrentAction.IsFinished)
                             {
-                                LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;
-                                Logger.Debug("FightBase::Update waiting for subaction");
+                                CurrentFighter.StopAction(CurrentAction.Type);
+
+                                if (CurrentSubAction != null)
+                                {
+                                    LoopState = FightLoopStateEnum.STATE_WAIT_SUBACTION;
+                                    Logger.Debug("FightBase::Update waiting for subaction");
+                                    break;
+                                }
+                            }
+
+                            if (m_processingTargets.Count > 0 && LoopState != FightLoopStateEnum.STATE_WAIT_END)
+                            {
+                                LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
+                                NextLoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
                                 break;
                             }
-                        }
 
-                        if (m_processingTargets.Count > 0 && LoopState != FightLoopStateEnum.STATE_WAIT_END)
-                        {
-                            LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
-                            NextLoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
-                            break;
-                        }
-
-                        // THAT WAS THE FUCKING FIX, NICE CLIENT WAITING FOR THAT TO REFHRESH PLAYER STATE !!!!!!!!!!!! ANKAMAAAAAAAAARGHHHHHHHH
-                        if(m_currentApCost != -1)
-                        {
-                            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + m_currentApCost));
-                            m_currentApCost = -1;
-                        }
-
-                        base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
-
-                        if (LoopState == FightLoopStateEnum.STATE_WAIT_END)
-                            break;
-
-                        switch (CurrentFighter.Type)
-                        {
-                            case EntityTypeEnum.TYPE_CHARACTER:
-                                LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
-                                break;
-
-                            default:
-                                LoopState = FightLoopStateEnum.STATE_WAIT_AI;
-                                break;
-                        }
-                    }
-                    break;
-
-                case FightLoopStateEnum.STATE_WAIT_SUBACTION:
-                    if(SubActionTimedout)
-                    {
-                        if (CurrentSubAction == null)
-                        {
-                            LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
-                            NextLoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
-                        }
-                        else
-                        {
-                            var currentAction = CurrentSubAction;
-                            var result = currentAction();
-                            switch (result)
+                            // THAT WAS THE FUCKING FIX, NICE CLIENT WAITING FOR THAT TO REFHRESH PLAYER STATE !!!!!!!!!!!! ANKAMAAAAAAAAARGHHHHHHHH
+                            if (m_currentApCost != -1)
                             {
-                                case FightActionResultEnum.RESULT_END:
-                                    Logger.Debug("FightBase::Update end of fight after subAction.");
-                                    return;
+                                base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + m_currentApCost));
+                                m_currentApCost = -1;
+                            }
 
-                                case FightActionResultEnum.RESULT_DEATH:
-                                    if (CurrentFighter.IsFighterDead)
-                                        CurrentFighter.TurnPass = true;
+                            base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+
+                            if (LoopState == FightLoopStateEnum.STATE_WAIT_END)
+                                break;
+
+                            switch (CurrentFighter.Type)
+                            {
+                                case EntityTypeEnum.TYPE_CHARACTER:
+                                    LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
+                                    break;
+
+                                default:
+                                    LoopState = FightLoopStateEnum.STATE_WAIT_AI;
                                     break;
                             }
+                        }
+                        break;
 
-                            if (CurrentSubAction == currentAction)
+                    case FightLoopStateEnum.STATE_WAIT_SUBACTION:
+                        if (SubActionTimedout)
+                        {
+                            if (CurrentSubAction == null)
                             {
-                                CurrentSubAction = null;
                                 LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
                                 NextLoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
                             }
-                        }
-                    }
-                    break;
-
-                case FightLoopStateEnum.STATE_WAIT_AI:
-                    if (CurrentFighter is AIFighter)
-                    {
-                        try
-                        {
-                            ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
-                        }
-                        catch(Exception ex)
-                        {
-                            Logger.Error(ex.ToString());
-                            CurrentFighter.TurnPass = true;
-                        }
-                    }
-                    LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
-                    break;
-
-                case FightLoopStateEnum.STATE_WAIT_END:
-                    switch (LoopEndState)
-                    {
-                        case FightEndStateEnum.STATE_INIT_CALCULATION:
-                            LoopEndState = FightEndStateEnum.STATE_PROCESS_CALCULATION;
-                            Team0.FightEnd();
-                            Team1.FightEnd(); 
-                            InitEndCalculation();
-                            break;
-
-                        case FightEndStateEnum.STATE_PROCESS_CALCULATION:
-                            LoopEndState = FightEndStateEnum.STATE_END_CALCULATION;
-                            ApplyEndCalculation();
-                            break;
-
-                        case FightEndStateEnum.STATE_END_CALCULATION:
-                            if (LoopTimedout)
+                            else
                             {
-                                FightEnd();
-                                LoopEndState = FightEndStateEnum.STATE_ENDED;
+                                var currentAction = CurrentSubAction;
+                                var result = currentAction();
+                                switch (result)
+                                {
+                                    case FightActionResultEnum.RESULT_END:
+                                        Logger.Debug("FightBase::Update end of fight after subAction.");
+                                        return;
+
+                                    case FightActionResultEnum.RESULT_DEATH:
+                                        if (CurrentFighter.IsFighterDead)
+                                            CurrentFighter.TurnPass = true;
+                                        break;
+                                }
+
+                                if (CurrentSubAction == currentAction)
+                                {
+                                    CurrentSubAction = null;
+                                    LoopState = FightLoopStateEnum.STATE_PROCESS_EFFECT;
+                                    NextLoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
+                                }
                             }
-                            break;
-                    }
-                    break;
+                        }
+                        break;
 
-                case FightLoopStateEnum.STATE_ENDED:
-                    FightEnded();
-                    break;
+                    case FightLoopStateEnum.STATE_WAIT_AI:
+                        if (CurrentFighter is AIFighter)
+                        {
+                            try
+                            {
+                                ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex.ToString());
+                                CurrentFighter.TurnPass = true;
+                            }
+                        }
+                        LoopState = FightLoopStateEnum.STATE_WAIT_TURN;
+                        break;
+
+                    case FightLoopStateEnum.STATE_WAIT_END:
+                        switch (LoopEndState)
+                        {
+                            case FightEndStateEnum.STATE_INIT_CALCULATION:
+                                LoopEndState = FightEndStateEnum.STATE_PROCESS_CALCULATION;
+                                Team0.FightEnd();
+                                Team1.FightEnd();
+                                InitEndCalculation();
+                                break;
+
+                            case FightEndStateEnum.STATE_PROCESS_CALCULATION:
+                                LoopEndState = FightEndStateEnum.STATE_END_CALCULATION;
+                                ApplyEndCalculation();
+                                break;
+
+                            case FightEndStateEnum.STATE_END_CALCULATION:
+                                if (LoopTimedout)
+                                {
+                                    FightEnd();
+                                    LoopEndState = FightEndStateEnum.STATE_ENDED;
+                                }
+                                break;
+                        }
+                        break;
+
+                    case FightLoopStateEnum.STATE_ENDED:
+                        FightEnded();
+                        break;
+                }
+
+                base.Update(updateDelta);
             }
+            catch(Exception ex)
+            {
+                LoopState = FightLoopStateEnum.STATE_WAIT_END;
+                LoopEndState = FightEndStateEnum.STATE_END_CALCULATION;
 
-            base.Update(updateDelta);
+                Logger.Error("Fight ended error : type=" + Type + " message="+ ex.ToString());
+            }
         }
 
         /// <summary>
