@@ -29,13 +29,13 @@ namespace Codebreak.App.Website
         /// Authservice database connection string
         /// </summary>
         [Configurable]
-        public static string AUTH_DB_CONNECTION_STRING = "";
+        public static string AUTH_DB_CONNECTION_STRING = "Database=codebreak_auth;Server=localhost;Uid=root;Pwd=;";
 
         /// <summary>
         /// Worldservice database connection string
         /// </summary>
         [Configurable]
-        public static string WORLD_DB_CONNECTION_STRING = "";
+        public static string WORLD_DB_CONNECTION_STRING = "Database=codebreak_world;Server=localhost;Uid=root;Pwd=;";
 
         /// <summary>
         /// Configuration manager.

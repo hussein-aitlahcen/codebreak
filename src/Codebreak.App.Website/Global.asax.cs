@@ -1,4 +1,5 @@
-﻿using Codebreak.App.Website.Models.Website;
+﻿using Codebreak.App.Website.Models.Authservice;
+using Codebreak.App.Website.Models.Website;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace Codebreak.App.Website
 
             WebConfig.Instance.Initialize(Server);
             WebDbMgr.Instance.LoadAll(WebConfig.WEB_DB_CONNECTION_STRING);
+            AuthDbMgr.Instance.LoadAll(WebConfig.AUTH_DB_CONNECTION_STRING);
         }
     }
 }

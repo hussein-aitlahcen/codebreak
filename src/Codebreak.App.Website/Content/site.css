@@ -34,9 +34,20 @@
         0 19px 76px rgba(0, 0, 0, 0.3);
 }
 
+.bg-gray {
+    background-color: gray;
+}
+
+/* global*/
+
+hr {
+    height: 5px;
+}
+
 /* Navbar */
 .navbar {
-
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .navbar-default .navbar-brand {
@@ -60,14 +71,13 @@
 
 /* Body */
 body {
-    padding-top: 65px;
+    padding-top: 10px;
     font-family:"Open Sans",helvetica,arial !important;
 }
 
 /* Footer */
 footer {
 	margin-top: 30px;
-    background-color: #DBD9D9;
 }
 
 /* Language selection */
@@ -76,12 +86,13 @@ footer {
 }
 
 .lang-selection {
-    color: black;
+    color: gray;
 }
 
 /* Breadcrum */
 .breadcrumbs {
-	padding: 10px 0 6px;
+    margin-top: -12px;
+	padding-bottom: 10px;
 }
 
 .breadcrumbs h1 {
@@ -91,22 +102,26 @@ footer {
 }
 
 .breadcrumb { 
-    top: 8px;
+    top: 10px;
     position: relative;
 	background: none;
 }
 
 /* Content */
 .content {
-
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 /* Copyright */
-.copyright {
+.copyright, footer {
     width: 100%;
-	padding: 20px 0 10px;
+    padding: 20px 0 10px;
+}
+
+.copyright {
 	background: #3e4753;
-    border-bottom: 2px solid ;
+    border-top: 1px solid gray;
 }
 
 .copyright p {    
@@ -114,36 +129,74 @@ footer {
     font-size: 15px;
 }
 
-/* columns of same height styles */
-.row-same-height {
-    display: table;
-    width: 100%;
+
+/* Home serveur desc */
+.server-desc {
+    padding-bottom: 5px;
+    color: gray;
 }
 
-.col-xs-height {
-    display: table-cell;
-    float: none !important;
+.server-desc:hover { 
+    color: black;
 }
 
+.server-desc h4,.server-desc p{
+    line-height: 1.5;
+    padding-left: 65px;
+}
+
+.server-desc h4 {
+    font-size: 25px;
+}
+
+.server-desc p {
+    font-size: 15px;
+}
+
+.server-desc .server-desc-icon {
+    float: left;
+    font-size: 40px;
+    padding-left: 10px;
+}
+
+/* Register */
+.register-form {
+    padding: 30px 30px 30px 30px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.btn-register-validate {
+
+}
+
+.lbl-register-input {
+    padding-left: 20px;
+}
+
+.alert {
+    color: black;
+}
+
+
+/* Loader-spin */
+.loader-spin {
+    z-index: 10;
+    position: fixed;
+    top: 5px;
+    left: 5px;
+}
+
+/* Team */
 .staff-img {
     height: 200px;
-}
-
-@media (min-width: 768px) {
-    .col-sm-height {
-        display: table-cell;
-        float: none !important;
-    }
-}
-@media (min-width: 992px) {
-    .col-md-height {
-        display: table-cell;
-        float: none !important;
-    }
-}
-@media (min-width: 1200px) {
-    .col-lg-height {
-        display: table-cell;
-        float: none !important;
-    }
+    background: 
+        url("../images/staff/no_avatar.jpg");
+    background-position: center;
+    background-size: 200px;
+    background-repeat: no-repeat;
 }

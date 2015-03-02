@@ -2,3 +2,77 @@
 @{
     ViewBag.Title = "Register";
 }
+
+<div class="container z-layer-1">
+    <h3 class="center-block text-center" data-i18n="register.register_and_play"></h3>
+    <h6 class="center-block text-center">
+        <a href="@Url.Action("Login", "Join")" data-i18n="register.login_and_play">
+        </a>
+    </h6>
+    <hr />
+    @foreach (var error in ViewBag.RegisterErrors)
+    {
+        <div class="alert alert-danger small" role="alert">
+            <strong data-i18n="register.@error"></strong>
+        </div>
+    }
+    <form class="register-form" method="POST" action="#">
+        @Html.AntiForgeryToken()
+        <label class="lbl-register-input" data-i18n="register.input_account_name">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+            <input type="text" name="Name" id="Name" value="@ViewBag.Name" class="form-control">
+        </div>
+        <label class="lbl-register-input" data-i18n="register.input_account_pseudo">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-star"></i></span>
+            <input type="text" name="Pseudo" id="Pseudo" value="@ViewBag.Pseudo" class="form-control">
+        </div>
+        <label class="lbl-register-input" data-i18n="register.input_account_password">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+            <input type="password" name="Password" id="Password" value="@ViewBag.Password" class="form-control">
+        </div>
+        <label class="lbl-register-input" data-i18n="register.input_account_password_confirm">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+            <input type="password" name="PasswordConfirmation" id="PasswordConfirmation" class="form-control">
+        </div>
+        <label class="lbl-register-input" data-i18n="register.input_account_email">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+            <input type="text" name="Email" id="Email" value="@ViewBag.Email" class="form-control">
+        </div>        
+        <label class="lbl-register-input" data-i18n="register.input_account_question">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-shield"></i></span>
+            <input type="text" id="Question" name="Question" value="@ViewBag.Question" class="form-control">
+        </div>
+        <label class="lbl-register-input" data-i18n="register.input_account_answer">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-cogs"></i></span>
+            <input type="text" id="Anwser" name="Answer" value="@ViewBag.Answer" class="form-control">
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="alert alert-info" role="alert">
+                    <strong data-i18n="register.alert_agree_terms"></strong>
+                </div>
+            </div> 
+            <div class="col-md-3 text-center">
+                <button class="btn-register-validate btn btn-info" type="submit" formaction="Register" formmethod="post" name="register">
+                    <span class="fa fa-check-square"></span>
+                    <span data-i18n="register.validate"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
