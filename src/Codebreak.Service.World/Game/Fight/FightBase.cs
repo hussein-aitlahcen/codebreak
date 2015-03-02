@@ -68,6 +68,7 @@ namespace Codebreak.Service.World.Game.Fight
         STATE_INIT_CALCULATION,
         STATE_PROCESS_CALCULATION,
         STATE_END_CALCULATION,
+        STATE_END_ERROR,
         STATE_ENDED,
     }
 
@@ -1716,6 +1717,11 @@ namespace Codebreak.Service.World.Game.Fight
                                     LoopEndState = FightEndStateEnum.STATE_ENDED;
                                 }
                                 break;
+
+                            case FightEndStateEnum.STATE_END_ERROR:
+                                FightEndError();
+                                LoopEndState = FightEndStateEnum.STATE_ENDED;
+                                break;
                         }
                         break;
 
@@ -1729,7 +1735,7 @@ namespace Codebreak.Service.World.Game.Fight
             catch(Exception ex)
             {
                 LoopState = FightLoopStateEnum.STATE_WAIT_END;
-                LoopEndState = FightEndStateEnum.STATE_END_CALCULATION;
+                LoopEndState = FightEndStateEnum.STATE_END_ERROR;
 
                 Logger.Error("Fight ended error : type=" + Type + " message="+ ex.ToString());
             }
@@ -2306,6 +2312,28 @@ namespace Codebreak.Service.World.Game.Fight
 
             foreach (var fighter in m_losersTeam.Fighters.ToArray())
                 fighter.EndFight();
+
+            foreach (var spectator in SpectatorTeam.Spectators.ToArray())
+                spectator.EndFight();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void FightEndError()
+        {
+            if (State == FightStateEnum.STATE_PLACEMENT)
+                Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
+
+            State = FightStateEnum.STATE_ENDED;
+            LoopState = FightLoopStateEnum.STATE_ENDED;
+
+            base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
+            
+            foreach (var fighter in Fighters)
+            {
+                fighter.EndFight(true);
+            }
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
                 spectator.EndFight();
