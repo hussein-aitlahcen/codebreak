@@ -1,30 +1,28 @@
 ﻿{
-    //########################## 
-    //##        Navbar
-    //##########################
-    "home": "Accueil",
+    "nav": {
+        "home": "Home",
+        "join_us": "Join us",
+        "register": "Register",
+        "download": "Download",
+        "community": "Community",
+        "forum": "Forum",
+        "ladder": "Ladder",
+        "team": "Staff",
+        "contact": "Contact us"
+    },
 
-    "join_us": "Nous rejoindre",
-    "register": "Inscription",
-    "download": "Téléchargement",
+    "home": {
+        "news": "News"
+    },
 
-    "community": "Communauté",
-    "forum": "Forum",
-    "ladder": "Classement",
+    "team": {
+        "title": "Our experts.",
+        "cliff": "Administrator, web/server/database developper",
+        "flynn": "Administrator, mapper/scripter."
+    },
 
-    "team": "L'équipe",
-    "contact": "Nous contacter",
-
-
-    //##########################
-    //##        About/Team
-    //##########################
-    "our_experts": "Nos experts.",
-
-
-    //##########################
-    //##        About/Team
-    //##########################
-    "all_rights_reserved": "2015 Earthscape, © Tout droits réservés.",
-    "conditions_of_use": "Conditions d'utilisations."
+    "copyright": {
+        "rights_reserved": "2015 © Earthscape, All rights reserved.",
+        "terms": "Terms of use."
+    }
 }

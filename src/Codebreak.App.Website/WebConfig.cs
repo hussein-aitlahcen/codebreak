@@ -3,6 +3,7 @@ using Codebreak.Framework.Configuration.Providers;
 using Codebreak.Framework.Generic;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -22,7 +23,7 @@ namespace Codebreak.App.Website
         /// Website database connection string
         /// </summary>
         [Configurable]
-        public static string WEB_DB_CONNECTION_STRING = "";
+        public static string WEB_DB_CONNECTION_STRING = "Database=codebreak_web;Server=localhost;Uid=root;Pwd=;";
 
         /// <summary>
         /// Authservice database connection string

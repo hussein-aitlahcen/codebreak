@@ -1,6 +1,8 @@
 ﻿using Codebreak.App.Website.Models.Website;
+using log4net.Config;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -17,6 +19,8 @@ namespace Codebreak.App.Website
     {
         protected void Application_Start()
         {
+            XmlConfigurator.Configure(new FileInfo(Server.MapPath("~/Web.config")));
+
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);

@@ -3,8 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title data-i18n="[append]@ViewBag.Title.ToLower()">
-            Earthscape -
+        <title data-i18n="nav.@ViewBag.Title.ToLower()">
         </title>
         @Styles.Render("~/Content/bootstrap")
         @Styles.Render("~/Content/css")
@@ -13,8 +12,8 @@
 
     <body>
 
-        <<!-- Fixed navbar -->
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <!-- Navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top z-layer-3">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -32,98 +31,92 @@
                 <div id="navbar" class="navbar-collapse collapse navbar-right">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="@Url.Action("Index", "Home")" data-i18n="[append]home">
-                                <!-- i18n translation injection-->
+                            <a href="@Url.Action("Index", "Home")">
                                 <span class="fa fa-lg fa-home"></span>
+                                <span data-i18n="nav.home"></span>
                             </a>  
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-i18n="[prepend]join_us">                              
-                                <!-- i18n translation injection-->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span data-i18n="nav.join_us"></span>
                                 <span class="fa fa-lg fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>  
-                                    <a href="@Url.Action("Register", "Join")" data-i18n="[append]register">
-                                        <!-- i18n translation injection-->
+                                    <a href="@Url.Action("Register", "Join")">
                                         <span class="fa fa-fw fa-user-plus"></span>
-                                    </a>                                  
+                                        <span data-i18n="nav.register"></span>
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Download", "Join")" data-i18n="[append]download">
-                                        <!-- i18n translation injection-->
+                                    <a href="@Url.Action("Download", "Join")">
                                         <span class="fa fa-fw fa-download"></span>
+                                        <span data-i18n="nav.download"></span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-i18n="[prepend]community">
-                                <!-- i18n translation injection-->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span data-i18n="nav.community"></span>
                                 <span class="fa fa-lg fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
-                                    <a href="@Url.Action("Forum", "Community")" data-i18n="[append]forum">
-                                        <!-- i18n translation injection-->
+                                    <a href="@Url.Action("Forum", "Community")">
                                         <span class="fa fa-fw fa-comments"></span>
+                                        <span data-i18n="nav.forum"></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Ladder", "Community")" data-i18n="[append]ladder">
-                                        <!-- i18n translation injection-->
+                                    <a href="@Url.Action("Ladder", "Community")">
                                         <span class="fa fa-fw fa-line-chart"></span>
+                                        <span data-i18n="nav.ladder"></span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="@Url.Action("Team", "About")" data-i18n="[append]team">
-                                <!-- i18n translation injection-->
+                            <a href="@Url.Action("Team", "About")">
                                 <span class="fa fa-lg fa-group"></span>
+                                <span data-i18n="nav.team"></span>
                             </a>  
                         </li>
                         <li>
-                            <a href="@Url.Action("Contact", "About")" data-i18n="[append]contact">
-                                <!-- i18n translation injection-->
+                            <a href="@Url.Action("Contact", "About")">                                
                                 <span class="fa fa-lg fa-pencil-square-o"></span>
+                                <span data-i18n="nav.contact"></span>
                             </a>  
                         </li>
                     </ul>
-                </div><!--/.nav-collapse -->
+                </div>
             </div>
         </nav>
 
         <!-- Breadcrumb -->
         <div class="breadcrumbs">
             <div class="container">
-                <h1 class="pull-left" data-i18n="@ViewBag.Title.ToLower()">   
-                     <!-- i18n translation injection-->
-                </h1>
+                <h1 class="pull-left" data-i18n="nav.@ViewBag.Title.ToLower()"></h1>
                 <ul class="breadcrumb pull-right">
                     @if (ViewContext.RouteData.Values["controller"].ToString() != "Home")
                     {
                         <li>
-                            @Html.ActionLink("PLACEHODER", "Index", "Home", null, new { data_i18n = "home" })                            
+                            <a href="@Url.Action("Index", "Home")" data-i18n="nav.home"></a>
                         </li>
-                        
-                        <li class="active" data-i18n="[append]@ViewBag.Title.ToLower()">
-                            <!-- i18n translation injection-->
-                        </li>
+
+                        <li class="active" data-i18n="nav.@ViewBag.Title.ToLower()"></li>
                     }
                     else
                     {
-                        <li class="active" data-i18n="home">
-                            <!-- i18n translation injection-->
-                        </li>
+                        <li class="active" data-i18n="nav.home"></li>
                     }
                 </ul>
             </div>
         </div>
 
-        <!-- Begin page content -->
-        <div class="container">
-            <div class="content">
+        <!-- Content -->
+        <div class="content z-layer-2">
+            <div class="container">
                 @RenderBody()
             </div>
         </div>
@@ -136,12 +129,12 @@
             <div class="container center-block">
                 <ul class="breadcrumb">        
                     <li>
-                        <a href="#" class="lang-selection" onclick="setLang('fr-FR')">
+                        <a href="#" class="lang-selection" onclick="setLang('fr')">
                             Français
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="lang-selection" onclick="setLang('en-US')">
+                        <a href="#" class="lang-selection" onclick="setLang('en')">
                             English
                         </a>
                     </li>
@@ -154,12 +147,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
-                        <p data-i18n="all_rights_reserved">
-                        </p>
+                        <p data-i18n="copyright.rights_reserved"></p>
                     </div>
                     <div class="col-md-4">
-                        <p data-i18n="conditions_of_use">
-                        </p>
+                        <p data-i18n="copyright.terms"></p>
                     </div>
                 </div>
             </div>
@@ -173,18 +164,24 @@
 
         <!-- i18n initialisation -->
         <script type="text/javascript">
-            $.i18n.init({
-                resGetPath: "/locales/__lng__/__ns__.json",
-                debug: true
-            }).done(function (translate) {
-                $(document).i18n();
-            });
+
+            function initLang() {
+                $.i18n.init({
+                    resGetPath: "/locales/__lng__/__ns__.json",
+                    debug: true
+                }).done(function (translate) {
+                    $(document).i18n();
+                });
+            }
 
             function setLang(lang) {
                 $.i18n.setLng(lang).done(function (translate) {
-                    location.reload();
+                    $(document).i18n();
                 });
             }
-        </script>        
+
+            initLang();
+
+        </script>
 </body>
 </html>

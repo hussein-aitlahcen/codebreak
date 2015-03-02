@@ -1,23 +1,28 @@
 ﻿{
-    "home": "Accueil",
+    "nav": {
+        "home": "Accueil",
+        "join_us": "Nous rejoindre",
+        "register": "Inscription",
+        "download": "Téléchargement",
+        "community": "Communauté",
+        "forum": "Forum",
+        "ladder": "Classement",
+        "team": "L'équipe",
+        "contact": "Nous contacter"
+    },
 
-    "join_us": "Nous rejoindre",
-    "register": "Inscription",
-    "download": "Téléchargement",
+    "home": { 
+        "news": "Actualités"
+    },
 
-    "community": "Communauté",
-    "forum": "Forum",
-    "ladder": "Classement",
+    "team": {
+        "title": "Nos experts",
+        "cliff": "Administrateur, développeur web/serveur/base de donnée",
+        "flynn": "Administrateur, concepteur/scénariste."
+    },
 
-    "team": "L'équipe",
-    "team_cliff":  "Administrateur, développeur web/serveur/base de donnée",
-    "team_flynn": "Administrateur, concepteur/scénariste.",
-
-    "contact": "Nous contacter",    
-
-    "our_experts": "Nos experts.",
-
-    "all_rights_reserved": "2015 © Earthscape, Tout droits réservés.",
-    "conditions_of_use": "Conditions d'utilisations.",
-    "lang": "Langue"
+    "copyright": {
+        "rights_reserved": "2015 © Earthscape, Tout droits réservés.",
+        "terms": "Conditions d'utilisations."
+    }
 }

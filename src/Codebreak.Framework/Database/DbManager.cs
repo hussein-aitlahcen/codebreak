@@ -52,7 +52,7 @@ namespace Codebreak.Framework.Database
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)
             {
-                Logger.Error("Fatal error while loading database : " + ex.Message);
+                Logger.Error("Fatal error while loading database : connectionString=" + connectionString + " message=" + ex.ToString());
             }
         }
 
