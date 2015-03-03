@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Codebreak.App.Website.Models.Authservice;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using System.Web.Security;
 
 namespace Codebreak.App.Website.Controllers
 {
@@ -29,17 +34,109 @@ namespace Codebreak.App.Website.Controllers
         [StringLength(50, MinimumLength = 10, ErrorMessage = "error_answer_short")]
         public string Answer { get; set; }
     }
+    
+    public class LoginModel
+    {
+        [Required(AllowEmptyStrings = false, ErrorMessage = "error_no_name")]
+        public string Name { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "error_no_password")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "error_password_short")]
+        public string Password { get; set; }
+    }
+
+    public class AccountTicket : IPrincipal
+    {
+        public IIdentity Identity
+        {
+            get;
+            set;
+        }
+        public bool IsInRole(string role)
+        {
+            return false;
+        }
+
+        public Account Account
+        {
+            get;
+            set;
+        }
+
+        public AccountTicket(string name)
+        {
+            Identity = new GenericIdentity(name);
+            Account = AccountRepository.Instance.GetByName(name);
+        }
+    }
 
     public class JoinController : WrappedController
     {
-        [AllowAnonymous]
         public ActionResult Login()
         {
+            ViewBag.LoginErrors = new List<string>();
+            ViewBag.Name = "";
+            ViewBag.Password = "";
+
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginModel model)
+        {
+            bool valid = false;
+            var errors = new List<string>();
+            Account account = null;
+            ViewBag.LoginErrors = errors;
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                    foreach (var error in state.Value.Errors)
+                        errors.Add(error.ErrorMessage);
+            }
+            else
+            {
+                account = AccountRepository.Instance.GetByName(model.Name);
+                if (account == null)
+                {
+                    errors.Add("error_invalid_credentials");
+                }
+                else
+                {
+                    valid = true;
+                }
+            }
+
+            if (!valid)
+            {
+                ViewBag.Name = model.Name == null ? "" : model.Name;
+
+                return View();
+            }
+            else
+            {
+                FormsAuthentication.SetAuthCookie(account.Name, true);
+                return Redirect(GetRedirectUrl());
+            }
+        }
+
+        [Authorize]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+
+            return RedirectToAction("Index", "Home");
+        }
+               
         
         public ActionResult Register()
         {
+            if (Request.IsAuthenticated)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Register", "Join");
+            }
+
             ViewBag.RegisterErrors = new List<string>();
             ViewBag.Name = "";
             ViewBag.Pseudo = "";
@@ -53,29 +150,58 @@ namespace Codebreak.App.Website.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(AccountModel account)
+        public ActionResult Register(AccountModel model)
         {
-            if(!ModelState.IsValid)
+            bool valid = false;
+            var errors = new List<string>();
+            Account account = null;
+            ViewBag.RegisterErrors = errors;
+
+            if (!ModelState.IsValid)
             {
-                ViewBag.Name = account.Name == null ? "" : account.Name;
-                ViewBag.Pseudo = account.Pseudo == null ? "" : account.Pseudo;
-                ViewBag.Password = account.Password == null ? "" : account.Password;
-                ViewBag.Email = account.Email == null ? "" : account.Email;
-                ViewBag.Question = account.Question == null ? "" : account.Question;
-                ViewBag.Answer = account.Answer == null ? "" : account.Answer;
-                var errors = new List<string>();
-                foreach(var state in ModelState)                
+                foreach (var state in ModelState)
                     foreach (var error in state.Value.Errors)
                         errors.Add(error.ErrorMessage);
+            }
+            else
+            {
+                account = AccountRepository.Instance.GetByName(model.Name);
+                if (account != null)
+                {
+                    errors.Add("error_name_exists");
+                }
+                else if ((account = AccountRepository.Instance.GetByPseudo(model.Pseudo)) != null)
+                {
+                    errors.Add("error_pseudo_exists");
+                }
+                else if ((account = AccountRepository.Instance.Create(model.Name, model.Pseudo, model.Password, model.Email, model.Question, model.Answer)) == null)
+                {
+                    errors.Add("error_database");
+                }
+                else
+                {
+                    valid = true;
+                }
+            }
 
-                ViewBag.RegisterErrors = errors;
+            if (!valid)
+            {
+                ViewBag.Name = model.Name == null ? "" : model.Name;
+                ViewBag.Pseudo = model.Pseudo == null ? "" : model.Pseudo;
+                ViewBag.Password = model.Password == null ? "" : model.Password;
+                ViewBag.Email = model.Email == null ? "" : model.Email;
+                ViewBag.Question = model.Question == null ? "" : model.Question;
+                ViewBag.Answer = model.Answer == null ? "" : model.Answer;
 
                 return View();
             }
+            else
+            {
+                FormsAuthentication.SetAuthCookie(account.Name, true);
 
-            return Redirect(Url.Action("Index", "Home"));
+                return Redirect(GetRedirectUrl());
+            }
         }
 
         public ActionResult Download()

@@ -2,3 +2,40 @@
 @{
     ViewBag.Title = "Login";
 }
+
+<div class="register-container z-layer-1">
+    <h3 class="text-center" data-i18n="auth.login_to_play"></h3>
+    <h6 class="text-center">
+        <a href="@Url.Action("Register", "Join")" data-i18n="auth.register_to_play">
+        </a>
+    </h6>
+    <hr />
+    <form class="login-form" method="POST" action="#">
+        @foreach (var error in ViewBag.LoginErrors)
+        {
+            <div class="alert alert-danger small" role="alert">
+                <strong data-i18n="auth.@error"></strong>
+            </div>
+        }
+        @Html.AntiForgeryToken()
+        <label class="lbl-login-input" data-i18n="auth.input_account_name">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+            <input type="text" name="Name" id="Name" value="@ViewBag.Name" class="form-control">
+        </div>        
+        <label class="lbl-login-input" data-i18n="auth.input_account_password">
+        </label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+            <input type="password" name="Password" id="Password" value="@ViewBag.Password" class="form-control">
+        </div>      
+        <hr>
+        <div class="row text-center">
+            <button class="btn-login-validate btn btn-info" type="submit" formaction="Login" formmethod="post" name="login">
+                <span class="fa fa-check-square"></span>
+                <span data-i18n="auth.validate"></span>
+            </button>
+        </div>
+    </form>
+</div>

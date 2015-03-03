@@ -10,22 +10,7 @@ namespace Codebreak.App.Website.Models.Authservice
     /// 
     /// </summary>
     public sealed class AccountRepository : Repository<AccountRepository, Account>
-    { 
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<long, Account> m_accountById;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<string, Account> m_accountByName;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<string, Account> m_accountByPseudo;
-
+    {        
         /// <summary>
         /// 
         /// </summary>
@@ -47,10 +32,19 @@ namespace Codebreak.App.Website.Models.Authservice
         /// 
         /// </summary>
         public AccountRepository()
+            : base(true)
+        { 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sqlMgr"></param>
+        public override void Initialize(SqlManager sqlMgr)
         {
-            m_accountById = new Dictionary<long, Account>();
-            m_accountByName = new Dictionary<string, Account>();
-            m_accountByPseudo = new Dictionary<string, Account>();
+            base.Initialize(sqlMgr);
+
+            m_nextAccountId = SqlMgr.QuerySingle<long>("select MAX(Id) from account") + 1;
         }
 
         /// <summary>
@@ -58,9 +52,7 @@ namespace Codebreak.App.Website.Models.Authservice
         /// </summary>
         public Account GetById(long accountId)
         {
-            Account account = null;
-            m_accountById.TryGetValue(accountId, out account);
-            return account;
+            return base.Load("id=@Id", new { Id = accountId });
         }
 
         /// <summary>
@@ -68,10 +60,7 @@ namespace Codebreak.App.Website.Models.Authservice
         /// </summary>
         public Account GetByName(string accountName)
         {
-            Account account = null;
-            if (!m_accountByName.TryGetValue(accountName.ToLower(), out account))
-                account = base.Load("upper(name)=upper(@name)", new { name = accountName });
-            return account;
+            return base.Load("upper(name)=upper(@name)", new { name = accountName });
         }
 
         /// <summary>
@@ -79,28 +68,40 @@ namespace Codebreak.App.Website.Models.Authservice
         /// </summary>
         public Account GetByPseudo(string pseudo)
         {
-            Account account = null;
-            if (!m_accountByPseudo.TryGetValue(pseudo.ToLower(), out account))
-                account = base.Load("upper(pseudo)=upper(@pseudo)", new { pseudo = pseudo });
-            return account;
+            return base.Load("upper(pseudo)=upper(@pseudo)", new { pseudo = pseudo });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override void OnObjectAdded(Account account)
+        /// <param name="name"></param>
+        /// <param name="pseudo"></param>
+        /// <param name="password"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public Account Create(string name, string pseudo, string password, string email, string question, string answer)
         {
-            m_accountById.Add(account.Id, account);
-            m_accountByName.Add(account.Name.ToLower(), account);
-        }
+            var account = new Account()
+            {
+                Id = NextAccountId,
+                Name = name,
+                Pseudo = pseudo,
+                Password = password,
+                Email = email,
+                LastConnectionDate = DateTime.Now,
+                LastConnectionIP = "0.0.0.0",
+                CreationDate = DateTime.Now,
+                Power = 0,
+                RemainingSubscription = DateTime.Now,
+                Question = question,
+                Response = answer,
+                Banned = false,
+            };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void OnObjectRemoved(Account account)
-        {
-            m_accountById.Remove(account.Id);
-            m_accountByName.Remove(account.Name.ToLower());
+            if (base.Insert(account))            
+                return account;
+            
+            return null;
         }
     }
 }

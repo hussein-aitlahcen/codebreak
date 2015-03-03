@@ -17,6 +17,8 @@ namespace Codebreak.App.Website.Models.Authservice
         /// <param name="connectionString"></param>
         public override void LoadAll(string connectionString)
         {
+            base.AddRepository(AccountRepository.Instance);
+
             base.LoadAll(connectionString);
         }
     }

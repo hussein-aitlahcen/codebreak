@@ -17,6 +17,8 @@ namespace Codebreak.App.Website.Models.Worldservice
         /// <param name="connectionString"></param>
         public override void LoadAll(string connectionString)
         {
+            base.AddRepository(CharacterRepository.Instance);
+
             base.LoadAll(connectionString);
         }
     }

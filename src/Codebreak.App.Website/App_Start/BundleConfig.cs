@@ -8,6 +8,14 @@ namespace Codebreak.App.Website
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                        "~/Scripts/app*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                        "~/Scripts/angular.js",
+                        "~/Scripts/angular-animate*",
+                        "~/Scripts/loading-bar*"));
+
             bundles.Add(new ScriptBundle("~/bundles/i18next").Include(
                         "~/Scripts/i18next*"));
 
@@ -33,6 +41,7 @@ namespace Codebreak.App.Website
                         "~/Content/bootstrap*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                        "~/Content/loading-bar.css",
                         "~/Content/site.css",
                         "~/Content/font-awesome.css"));
             

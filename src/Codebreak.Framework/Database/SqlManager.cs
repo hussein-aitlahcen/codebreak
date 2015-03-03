@@ -50,11 +50,25 @@ namespace Codebreak.Framework.Database
         /// <param name="query"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public IEnumerable<T> Query<T>(string query, object param = null) where T : DataAccessObject<T>, new()
+        public IEnumerable<T> Query<T>(string query, object param = null)
         {
             using (var connection = CreateConnection())
             {
                 return connection.Query<T>(query, param);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public T QuerySingle<T>(string query, object param = null)
+        {
+            using (var connection = CreateConnection())
+            {
+                return connection.Query<T>(query, param).FirstOrDefault();
             }
         }
 

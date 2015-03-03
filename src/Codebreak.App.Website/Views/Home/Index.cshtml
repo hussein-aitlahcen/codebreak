@@ -27,6 +27,42 @@
 <hr />
 <div class="container">
     <div class="row">
+        <div class="col-md-4 server-desc">
+            <span class="server-desc-icon fa fa-fw fa-server"></span>
+            <h4>
+                <span data-i18n="home.server_desc_unique_emulator_title"></span>
+            </h4>
+            <p data-i18n="home.server_desc_unique_emulator_text">
+            </p>
+        </div>
+        <div class="col-md-4 server-desc">
+            <span class="server-desc-icon fa fa-fw fa-gamepad"></span>
+            <h4>
+                <span data-i18n="home.server_desc_official_gameplay_title"></span>
+            </h4>
+            <p>
+                <span data-i18n="home.server_desc_official_gameplay_text"></span>
+            </p>
+        </div>
+        <div class="col-md-4 server-desc">
+            <span class="server-desc-icon fa fa-fw fa-diamond"></span>
+            <h4>
+                <span data-i18n="home.server_desc_high_quality_title"></span>
+            </h4>
+            <p>
+                <span class="fa fa-quote-left"></span>
+                <span data-i18n="home.server_desc_high_quality_text"></span>
+                <span class="fa fa-quote-right"></span>
+                -
+                <strong>
+                    <a href="@Url.Action("Team", "About")#cliff">
+                        Cliff
+                    </a>
+                </strong>
+            </p>
+        </div>
+    </div>        
+    <div class="row">
         <div class="col-md-6">
             <h2>
                 <span class="fa fa-twitter"></span>
@@ -37,37 +73,6 @@
             <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
         </div>
         <div class="col-md-6">
-            <div class="server-desc">
-                <span class="server-desc-icon fa fa-fw fa-server"></span>
-                <h4>
-                    <span data-i18n="home.server_desc_unique_emulator_title"></span>
-                </h4>
-                <p data-i18n="home.server_desc_unique_emulator_text">
-                </p>
-            </div>
-            <hr />
-            <div class="server-desc">
-                <span class="server-desc-icon fa fa-fw fa-gamepad"></span>
-                <h4>
-                    <span data-i18n="home.server_desc_official_gameplay_title"></span>
-                </h4>
-                <p>
-                    <span data-i18n="home.server_desc_official_gameplay_text"></span>
-                </p>
-            </div>
-            <hr />
-            <div class="server-desc">
-                <span class="server-desc-icon fa fa-fw fa-diamond"></span>
-                <h4>
-                    <span data-i18n="home.server_desc_high_quality_title"></span>
-                </h4>
-                <p>
-                    <span class="fa fa-quote-left"></span>
-                    <span data-i18n="home.server_desc_high_quality_text"></span>
-                    <span class="fa fa-quote-right"></span>
-                     - <strong>@Html.ActionLink("Cliff", "Team", "About")</strong>
-                </p>
-            </div>
-        </div>
-    </div>
+        </div>        
+    </div>    
 </div>

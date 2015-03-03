@@ -186,6 +186,17 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<TDataObject> SelectAll
+        {
+            get
+            {
+                return SqlMgr.Query<TDataObject>("select * from " + TableName);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool LoadOnly
         {
             get;

@@ -142,7 +142,7 @@ footer {
 
 .server-desc h4,.server-desc p{
     line-height: 1.5;
-    padding-left: 65px;
+    padding-left: 75px;
 }
 
 .server-desc h4 {
@@ -156,25 +156,30 @@ footer {
 .server-desc .server-desc-icon {
     float: left;
     font-size: 40px;
-    padding-left: 10px;
+    padding-top: 15px;
 }
 
 /* Register */
-.register-form {
-    padding: 30px 30px 30px 30px;
+.register-container {
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-bottom: 20px;
+    padding-top: 5px;
+}
+
+.register-form label, .login-form label {
+    padding-left:0px;
 }
 
 .input-group {
     margin-bottom: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
 }
 
-.btn-register-validate {
-
+.btn-register-validate, .btn-login-validate {
+    width: 100%;
 }
 
-.lbl-register-input {
+.lbl-register-input, .lbl-login-input {
     padding-left: 20px;
 }
 
@@ -200,3 +205,6 @@ footer {
     background-size: 200px;
     background-repeat: no-repeat;
 }
+
+
+/* Ladder */

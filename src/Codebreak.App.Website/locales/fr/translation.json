@@ -9,7 +9,9 @@
         "ladder": "Classement",
         "team": "L'équipe",
         "contact": "Nous contacter",
-        "login": "Connexion"
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "about": "A propos"
     },
 
     "home": {
@@ -20,19 +22,18 @@
         "step_forum_and_discuss": "Discute sur le forum",
 
         "server_desc_unique_emulator_title": "Services inédits",
-        "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre serveur est un concentré de fonctionnalités, vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
+        "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre émulateur est inédit et basé sur aucun autre. Vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
 
-        "server_desc_official_gameplay_title": "Gameplay officiel",
-        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisants. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
+        "server_desc_official_gameplay_title": "Semi-Heroïque",
+        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisants. Gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
 
         "server_desc_high_quality_title": "Qualité et écoute",
         "server_desc_high_quality_text": "Ouvrir un serveur à des fidèles de la version 1.29. S'entourer d'une équipe à l'écoute des joueurs. Développer des outils robustes. Tels étaient mes objectifs"
     },
 
-    "register": {
-        "register_and_play": "Inscrivez vous et jouez dès maintenant",
-        "login_and_play": "Déjà inscrit ? Connectez vous.",
-
+    "auth": {
+        "register_to_play": "Inscrivez vous et jouez dès maintenant.",
+        "login_to_play": "Connectez vous !",
         "input_account_name": "Nom de compte",
         "input_account_password": "Mot de passe",
         "input_account_password_confirm": "Confirmez votre mot de passe",
@@ -40,22 +41,37 @@
         "input_account_email": "Email",
         "input_account_question": "Question secrète",
         "input_account_answer": "Réponse à la question secrète",
-
-        "alert_agree_terms": "En cliquant sur le bouton Valider vous acceptez les Conditions Générales d'Utilisation",
         "validate": "Valider",
 
-        "error_no_name": "Veuillez saisir un nom de compte",
-        "error_name_short": "Le nom de compte doit contenir au moins 6 caractères",        
-        "error_no_pseudo": "Veuillez saisir un pseudo d'au moins 6 caractères",
-        "error_pseudo_short": "Le pseudo doit contenir au moins 6 caractères",
-        "error_no_password": "Veuillez saisir un mot de passe d'au moins 6 caractères",
-        "error_password_short": "Le mot de passe doit contenir au moins 6 caractères",
+        "error_invalid_credentials": "Nom de compte ou mot de passe inccorect.",
+        "error_no_name": "Veuillez saisir un nom de compte.",
+        "error_name_short": "Le nom de compte doit contenir au moins 6 caractères.",
+        "error_no_pseudo": "Veuillez saisir un pseudo d'au moins 6 caractères.",
+        "error_pseudo_short": "Le pseudo doit contenir au moins 6 caractères.",
+        "error_no_password": "Veuillez saisir un mot de passe d'au moins 6 caractères.",
+        "error_password_short": "Le mot de passe doit contenir au moins 6 caractères.",
         "error_password_confirm": "Le mot de passe de confirmation n'est pas identique.",
         "error_invalid_mail": "Veuillez saisir une addresse mail valide.",
-        "error_no_question": "Veuillez saisir une question secrète",
-        "error_question_short": "La question secrète doit contenir au moins 10 caractères",
-        "error_no_answer": "Veuillez saisir une reponse secrète",
-        "error_answer_short": "La reponse secrète doit contenir au moins 10 caractères"
+        "error_no_question": "Veuillez saisir une question secrète.",
+        "error_question_short": "La question secrète doit contenir au moins 10 caractères.",
+        "error_no_answer": "Veuillez saisir une reponse secrète.",
+        "error_answer_short": "La reponse secrète doit contenir au moins 10 caractères.",
+        "error_name_exists": "Le nom de compte est déjà pris.",
+        "error_pseudo_exists": "Ce pseudo éxiste déjà.",
+        "error_database": "Une erreur est survenue lors de l'enregistrement des données, votre inscription a échouée."
+    },
+
+    "register": {
+        "alert_agree_terms": "En cliquant sur le bouton Valider vous acceptez les Conditions Générales d'Utilisation."
+    },
+
+    "ladder": {
+        "title": "Top 100",
+        "change": "Performance",
+        "rank": "Rang",
+        "name": "Nom",
+        "level": "Niveau",
+        "experience": "Experience"
     },
 
     "team": {

@@ -1,4 +1,5 @@
-﻿using Codebreak.App.Website.Models.Authservice;
+﻿using Codebreak.App.Website.Controllers;
+using Codebreak.App.Website.Models.Authservice;
 using Codebreak.App.Website.Models.Website;
 using Codebreak.App.Website.Models.Worldservice;
 using log4net.Config;
@@ -11,6 +12,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Script.Serialization;
+using System.Web.Security;
 
 namespace Codebreak.App.Website
 {
@@ -34,6 +37,13 @@ namespace Codebreak.App.Website
             WebDbMgr.Instance.LoadAll(WebConfig.WEB_DB_CONNECTION_STRING);
             AuthDbMgr.Instance.LoadAll(WebConfig.AUTH_DB_CONNECTION_STRING);
             WorldDbMgr.Instance.LoadAll(WebConfig.WORLD_DB_CONNECTION_STRING);
+        }
+
+        protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
+        {
+            HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (authCookie != null)
+                HttpContext.Current.User = new AccountTicket(FormsAuthentication.Decrypt(authCookie.Value).Name);            
         }
     }
 }

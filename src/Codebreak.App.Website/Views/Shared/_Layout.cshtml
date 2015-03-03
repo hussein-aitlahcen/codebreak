@@ -7,18 +7,20 @@
         </title>
         @Styles.Render("~/Content/bootstrap")
         @Styles.Render("~/Content/css")
+
         @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/angular")
+        @Scripts.Render("~/bundles/app")
     </head>
 
-    <body>
-
-        <div class="loader-spin">
-            <span class="fa fa-fw fa-lg fa-circle-o-notch fa-spin"></span>
-        </div>
+    <body ng-app="earthscape">
+                
+        <div ng-controller="earthscape.controller.loading"></div>
 
         <!-- Navbar -->
-        <nav class="navbar navbar-default z-layer-2">
-            <div class="container">
+        <nav class="navbar navbar-default z-layer-2">            
+            <div class="container">          
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
@@ -26,12 +28,10 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <p>
-                        <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                            Earthscape
-                        </a> 
-                    </p>
-                </div>
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                        Earthscape
+                    </a>
+                </div>      
                 <div id="navbar" class="navbar-collapse collapse navbar-right">
                     <ul class="nav navbar-nav">
                         <li>
@@ -39,7 +39,34 @@
                                 <span class="fa fa-lg fa-home"></span>
                                 <span data-i18n="nav.home"></span>
                             </a>  
-                        </li>
+                        </li>          
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        <span class="fa fa-lg fa-user"></span>
+                                        @User.Account.Name
+                                        <span class="fa fa-lg fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="@Url.Action("Logout", "Join")">
+                                                <span class="fa fa-fw fa-sign-out"></span>
+                                                <span data-i18n="nav.logout"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="@Url.Action("Login", "Join")">
+                                        <span class="fa fa-lg fa-sign-in"></span>
+                                        <span data-i18n="nav.login"></span>
+                                    </a>
+                                </li>
+                            }
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span data-i18n="nav.join_us"></span>
@@ -60,7 +87,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span data-i18n="nav.community"></span>
                                 <span class="fa fa-lg fa-angle-down"></span>
@@ -80,20 +107,28 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>
-                            <a href="@Url.Action("Team", "About")">
-                                <span class="fa fa-lg fa-group"></span>
-                                <span data-i18n="nav.team"></span>
-                            </a>  
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Contact", "About")">                                
-                                <span class="fa fa-lg fa-pencil-square-o"></span>
-                                <span data-i18n="nav.contact"></span>
-                            </a>  
-                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span data-i18n="nav.about"></span>
+                                <span class="fa fa-lg fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="@Url.Action("Team", "About")">
+                                        <span class="fa fa-fw fa-group"></span>
+                                        <span data-i18n="nav.team"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Contact", "About")">
+                                        <span class="fa fa-fw fa-pencil-square-o"></span>
+                                        <span data-i18n="nav.contact"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>                        
                     </ul>
-                </div>
+                </div>               
             </div>
         </nav>
 
@@ -163,44 +198,14 @@
         </div>
 
         <!-- Scripts-->
-        @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/i18next")
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
 
         <!-- i18n initialisation -->
         <script type="text/javascript">
-
-            function initLang() {
-                $.i18n.init({
-                    resGetPath: "/locales/__lng__/__ns__.json",
-                    debug: true
-                }).done(function (t) {
-                    translate();
-                });
-            }
-
-            function setLang(lang) {
-                enableLoader();
-                $.i18n.setLng(lang).done(function (t) {
-                    translate();
-                });
-            }
-
-            function translate() {
-                $(document).i18n();
-                disableLoader();
-            }
-
-            function enableLoader() {
-                $(".loader-spin").removeClass("hidden");
-            }
-
-            function disableLoader() {
-                $(".loader-spin").addClass("hidden");
-            }
-
-            initLang();
+            
+            appStart();
 
         </script>
 </body>

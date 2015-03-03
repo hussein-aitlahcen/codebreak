@@ -50,7 +50,7 @@ namespace Codebreak.App.Website.Models.Website
         public string GetValue(string key)
         {
             if (!m_variables.ContainsKey(key))
-                return base.Load("@Key = Key", new { Key = key }).Value;
+                return base.Load("Key = @Key", new { Key = key }).Value;
             return m_variables[key];
         }
     }

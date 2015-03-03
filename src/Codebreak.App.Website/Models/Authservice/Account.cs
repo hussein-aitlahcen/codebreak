@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Codebreak.App.Website.Models.Authservice
 {
     /// <summary>
     /// 
     /// </summary>
+    [Table("account")]
     public sealed class Account : DataAccessObject<Account>
     { 
         /// <summary>
@@ -51,7 +51,34 @@ namespace Codebreak.App.Website.Models.Authservice
         /// <summary>
         /// 
         /// </summary>
+        public string Email
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Power
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Question
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Response
         {
             get;
             set;
