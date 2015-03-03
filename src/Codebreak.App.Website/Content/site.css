@@ -44,6 +44,10 @@ hr {
     height: 5px;
 }
 
+.contained {
+    padding: 30px;
+}
+
 /* Navbar */
 .navbar {
     padding-top: 5px;
@@ -160,12 +164,6 @@ footer {
 }
 
 /* Register */
-.register-container {
-    padding-right: 30px;
-    padding-left: 30px;
-    padding-bottom: 20px;
-    padding-top: 5px;
-}
 
 .register-form label, .login-form label {
     padding-left:0px;
@@ -177,10 +175,6 @@ footer {
 
 .btn-register-validate, .btn-login-validate {
     width: 100%;
-}
-
-.lbl-register-input, .lbl-login-input {
-    padding-left: 20px;
 }
 
 .alert {
@@ -208,3 +202,12 @@ footer {
 
 
 /* Ladder */
+.ladder-list {
+    box-sizing: content-box;
+}
+
+.ladder-content {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+}

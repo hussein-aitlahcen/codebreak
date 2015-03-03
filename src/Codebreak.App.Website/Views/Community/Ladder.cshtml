@@ -4,56 +4,65 @@
 }
 
 
-<div class="ladder">
-    <h2 class="text-center" data-i18n="ladder.title">
-    </h2>
-    <hr />
-    <ul class="list-group ladder-list">
-        <li class="list-group-item">
-            <div class="row text-center">
-                <div class="col-md-2" data-i18n="ladder.rank">
-                </div>
-                <div class="col-md-1" data-i18n="ladder.change">
-                </div>
-                <div class="col-md-3" data-i18n="ladder.name">
-                </div>
-                <div class="col-md-3" data-i18n="ladder.level">
-                </div>
-                <div class="col-md-3" data-i18n="ladder.experience">
-                </div>
-            </div>
-        </li>
-        @foreach (var entry in LadderManager.Instance.Entries)
-        {
+<div class="contained z-layer-1">
+    <div class="ladder-content">
+        <h2 class="text-center" data-i18n="ladder.title"></h2>
+        <hr />
+        <div class="alert alert-info text-center small">
+            <p>
+                <span data-i18n="ladder.next_refresh_in"></span>
+                <strong>
+                    @((int)LadderManager.UPDATE_INTERVAL * 0.001)
+                </strong>
+                <span data-i18n="common.seconds"></span>
+            </p>
+        </div>
+        <ul class="list-group ladder-list">
             <li class="list-group-item">
                 <div class="row text-center">
-                    <div class="col-xs-2">
-                        @entry.Index
+                    <div class="col-md-2" data-i18n="ladder.rank">
                     </div>
-                    <div class="col-xs-1">
-                        @if(entry.Index < entry.LastIndex)
-                        {
-                            @(entry.LastIndex - entry.Index)
-                            <span class="fa fa-fw fa-angle-up"></span>
-                        }
-                        else if (entry.Index > entry.LastIndex)
-                        {
-                            @(entry.Index - entry.LastIndex)
-                            <span class="fa fa-fw fa-angle-down"></span>
-                        }
+                    <div class="col-md-1" data-i18n="ladder.change">
                     </div>
-                    <div class="col-xs-3">
-                        @entry.Name
+                    <div class="col-md-3" data-i18n="ladder.name">
                     </div>
-                    <div class="col-xs-3">
-                        @entry.Level
+                    <div class="col-md-3" data-i18n="ladder.level">
                     </div>
-                    <div class="col-xs-3">
-                        @entry.Experience
+                    <div class="col-md-3" data-i18n="ladder.experience">
                     </div>
                 </div>
             </li>
-        }
-    </ul>
+            @foreach (var entry in LadderManager.Instance.Entries)
+            {
+                <li class="list-group-item">
+                    <div class="row text-center">
+                        <div class="col-xs-2">
+                            @entry.Index
+                        </div>
+                        <div class="col-xs-1">
+                            @if (entry.Index < entry.LastIndex)
+                            {
+                                @(entry.LastIndex - entry.Index)
+                                <span class="fa fa-fw fa-angle-up"></span>
+                            }
+                            else if (entry.Index > entry.LastIndex)
+                            {
+                                @(entry.Index - entry.LastIndex)
+                                <span class="fa fa-fw fa-angle-down"></span>
+                            }
+                        </div>
+                        <div class="col-xs-3">
+                            @entry.Name
+                        </div>
+                        <div class="col-xs-3">
+                            @entry.Level
+                        </div>
+                        <div class="col-xs-3">
+                            @entry.Experience
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
 </div>
-

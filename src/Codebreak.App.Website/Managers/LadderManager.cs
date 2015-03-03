@@ -74,8 +74,7 @@ namespace Codebreak.App.Website.Managers
                 return m_nextUpdate < Environment.TickCount;
             }
         }
-
-
+        
         /// <summary>
         /// 
         /// </summary>

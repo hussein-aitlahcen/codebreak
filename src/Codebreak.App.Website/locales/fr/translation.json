@@ -1,4 +1,10 @@
-﻿{
+﻿{    
+    "common": {
+        "or": "our",
+        "and": "et",
+        "seconds": "secondes"
+    },
+
     "nav": {
         "home": "Accueil",
         "join_us": "Nous rejoindre",
@@ -67,6 +73,7 @@
 
     "ladder": {
         "title": "Top 100",
+        "next_refresh_in": "Le classement est mis à jour toutes les",
         "change": "Performance",
         "rank": "Rang",
         "name": "Nom",
