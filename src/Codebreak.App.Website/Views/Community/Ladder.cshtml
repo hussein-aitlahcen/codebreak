@@ -6,7 +6,10 @@
 
 <div class="contained z-layer-1">
     <div class="ladder-content">
-        <h2 class="text-center" data-i18n="ladder.title"></h2>
+        <h2 class="text-center">
+            <span data-i18n="ladder.title"></span>
+            @LadderManager.TOP_LADDER
+        </h2>
         <hr />
         <div class="alert alert-info text-center small">
             <p>
@@ -42,14 +45,22 @@
                         <div class="col-xs-1">
                             @if (entry.Index < entry.LastIndex)
                             {
-                                @(entry.LastIndex - entry.Index)
-                                <span class="fa fa-fw fa-angle-up"></span>
+                                <span class="ladder-change-up">
+                                    @(entry.LastIndex - entry.Index)
+                                    <span class="fa fa-fw fa-arrow-up"></span>
+                                </span>
                             }
                             else if (entry.Index > entry.LastIndex)
                             {
-                                @(entry.Index - entry.LastIndex)
-                                <span class="fa fa-fw fa-angle-down"></span>
+                                <span class="ladder-change-down">
+                                    @(entry.Index - entry.LastIndex)
+                                    <span class="fa fa-fw fa-arrow-down"></span>
+                                </span>
                             }
+                            else
+                            {
+                                <span class="fa fa-fw fa-arrow-right ladder-change-stable"></span>
+                            }                                    
                         </div>
                         <div class="col-xs-3">
                             @entry.Name

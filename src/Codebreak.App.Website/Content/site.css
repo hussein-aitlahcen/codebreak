@@ -165,10 +165,6 @@ footer {
 
 /* Register */
 
-.register-form label, .login-form label {
-    padding-left:0px;
-}
-
 .input-group {
     margin-bottom: 15px;
 }
@@ -206,8 +202,19 @@ footer {
     box-sizing: content-box;
 }
 
-.ladder-content {
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-bottom: 40px;
+.ladder-list li:nth-child(even) {
+    background-color: #F2F2F2;
+}
+
+.ladder-change-up {
+    color: blue;
+}
+
+.ladder-change-down {
+    color: red;
+}
+
+.ladder-change-stable {
+    color: gray;
+    opacity: 0.5;
 }

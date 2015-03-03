@@ -47,7 +47,12 @@ namespace Codebreak.App.Website.Managers
         /// <summary>
         /// 
         /// </summary>
-        public const long UPDATE_INTERVAL = 1000 * 60 * 5;
+        public const long UPDATE_INTERVAL = 1000 * 60 * 10;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int TOP_LADDER = 100;
 
         /// <summary>
         /// 
@@ -106,16 +111,13 @@ namespace Codebreak.App.Website.Managers
         /// </summary>
         private void Update()
         {
-            if(!UpdateNeeded)
-                return;
-
             m_nextUpdate = Environment.TickCount + UPDATE_INTERVAL;
 
             var index = 1;
             var newEntries = new Dictionary<long, LadderEntry>();
-            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance order by level desc limit 100"))
+            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance order by level desc limit " + TOP_LADDER))
             {
-                var entry = GetEntry(character, index);
+                var entry = GetEntry(character);
                 entry.LastIndex = entry.Index;
                 entry.Index = index++;
                 entry.Level = character.Level;
@@ -132,17 +134,17 @@ namespace Codebreak.App.Website.Managers
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        private LadderEntry GetEntry(Character character, int index)
+        private LadderEntry GetEntry(Character character)
         {
             if (m_entryById.ContainsKey(character.Id))
                 return m_entryById[character.Id];
             var entry = new LadderEntry()
             {
-                Index = index,
+                Index = TOP_LADDER,
                 Name = character.Name,
                 Level = character.Level,
                 Experience = character.Experience,
-                LastIndex = index,
+                LastIndex = TOP_LADDER,
             };
             return entry;
         }
