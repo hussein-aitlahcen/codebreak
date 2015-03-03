@@ -8,8 +8,11 @@ namespace Codebreak.App.Website
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                        "~/Scripts/app*"));
+            var appBundle = new ScriptBundle("~/bundles/app").Include(
+                        "~/Scripts/app.js");
+            appBundle.Transforms.Clear();
+
+            bundles.Add(appBundle);
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Scripts/angular.js",

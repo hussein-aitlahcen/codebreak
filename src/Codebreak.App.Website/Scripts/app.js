@@ -5,7 +5,7 @@
         cfpLoadingBarProvider.includeSpinner = true;
     })
 
-    app.controller('earthscape.controller.loading', function ($scope, $http, $timeout, cfpLoadingBar) {
+    app.controller('earthscape.controller.loading', ["$scope", "$http", "$timeout", "cfpLoadingBar", function ($scope, $http, $timeout, cfpLoadingBar) {
         $scope.start = function () {
             cfpLoadingBar.start();
         };
@@ -18,7 +18,7 @@
         $timeout(function () {
             $scope.complete();
         }, 200);
-    });
+    }]);
 }
 
 function initLang() {
