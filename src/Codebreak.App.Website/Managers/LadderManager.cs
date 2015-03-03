@@ -116,7 +116,7 @@ namespace Codebreak.App.Website.Managers
             var newEntries = new Dictionary<long, LadderEntry>();
             foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance order by level desc limit 100"))
             {
-                var entry = GetEntry(character);
+                var entry = GetEntry(character, index);
                 entry.LastIndex = entry.Index;
                 entry.Index = index++;
                 entry.Level = character.Level;
@@ -133,17 +133,17 @@ namespace Codebreak.App.Website.Managers
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        private LadderEntry GetEntry(Character character)
+        private LadderEntry GetEntry(Character character, int index)
         {
             if (m_entryById.ContainsKey(character.Id))
                 return m_entryById[character.Id];
             var entry = new LadderEntry()
             {
-                Index = 51,
+                Index = index,
                 Name = character.Name,
                 Level = character.Level,
                 Experience = character.Experience,
-                LastIndex = 51,
+                LastIndex = index,
             };
             return entry;
         }

@@ -221,7 +221,6 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="App_Data\config.json" />
     <Content Include="images\staff\cliff.jpg" />
     <Content Include="images\staff\no_avatar.jpg" />
     <Content Include="locales\dev\translation.json" />
@@ -1051,7 +1050,9 @@
     <Content Include="Views\Join\Register.cshtml" />
     <Content Include="Scripts\version.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

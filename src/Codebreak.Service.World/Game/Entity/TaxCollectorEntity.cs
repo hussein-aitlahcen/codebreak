@@ -278,7 +278,7 @@ namespace Codebreak.Service.World.Game.Entity
                     {
                         if (!Guild.IsDeleted)
                         {
-                            AddMessage(() => StartAction(GameActionTypeEnum.MAP));
+                            StartAction(GameActionTypeEnum.MAP);
                             Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
                         }
                     });
