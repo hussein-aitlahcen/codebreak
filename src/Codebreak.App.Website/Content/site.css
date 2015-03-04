@@ -148,9 +148,9 @@ footer {
     padding-top: 20px;
     padding-bottom: 20px;
     background:
-        url("../images/breads/sacrier.png") no-repeat right,
-        url("../images/breads/iop.jpg") no-repeat left;
-    background-size: 20% auto, 10% auto;
+        url("../images/breeds/sacrier.png") no-repeat right,
+        url("../images/breeds/iop.jpg") no-repeat left;
+    background-size: 25% auto, 13% auto;
 }
 
 

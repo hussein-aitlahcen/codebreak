@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="src\Web\Codebreak.App.Website" Label="Codebreak.App.Website" Category="Project" />
+    <Node Id="angularjs 1.3.14" Label="angularjs 1.3.14" Category="Package" />
+    <Node Id="angular-loading-bar 0.6.0" Label="angular-loading-bar 0.6.0" Category="Package" />
+    <Node Id="Antlr 3.5.0.2" Label="Antlr 3.5.0.2" Category="Package" />
+    <Node Id="bootstrap 3.3.2" Label="bootstrap 3.3.2" Category="Package" />
+    <Node Id="EntityFramework 6.1.2" Label="EntityFramework 6.1.2" Category="Package" />
+    <Node Id="Font.Awesome 4.3.0.1" Label="Font.Awesome 4.3.0.1" Category="Package" />
+    <Node Id="i18next 1.7.4" Label="i18next 1.7.4" Category="Package" />
+    <Node Id="jQuery 2.1.3" Label="jQuery 2.1.3" Category="Package" />
+    <Node Id="jQuery.UI.Combined 1.11.3" Label="jQuery.UI.Combined 1.11.3" Category="Package" />
+    <Node Id="jQuery.Validation 1.13.1" Label="jQuery.Validation 1.13.1" Category="Package" />
+    <Node Id="knockoutjs 3.2.0" Label="knockoutjs 3.2.0" Category="Package" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.Mvc 5.2.3" Label="Microsoft.AspNet.Mvc 5.2.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.Mvc.FixedDisplayModes 5.0.0" Label="Microsoft.AspNet.Mvc.FixedDisplayModes 5.0.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.Providers.Core 2.0.0" Label="Microsoft.AspNet.Providers.Core 2.0.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.Providers.LocalDB 2.0.0" Label="Microsoft.AspNet.Providers.LocalDB 2.0.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.Razor 3.2.3" Label="Microsoft.AspNet.Razor 3.2.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.Web.Optimization 1.1.3" Label="Microsoft.AspNet.Web.Optimization 1.1.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi 5.2.3" Label="Microsoft.AspNet.WebApi 5.2.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.2.3" Label="Microsoft.AspNet.WebApi.Client 5.2.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.2.3" Label="Microsoft.AspNet.WebApi.Core 5.2.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.2.3" Label="Microsoft.AspNet.WebApi.WebHost 5.2.3" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebPages 3.2.3" Label="Microsoft.AspNet.WebPages 3.2.3" Category="Package" />
+    <Node Id="Microsoft.jQuery.Unobtrusive.Ajax 3.2.3" Label="Microsoft.jQuery.Unobtrusive.Ajax 3.2.3" Category="Package" />
+    <Node Id="Microsoft.jQuery.Unobtrusive.Validation 3.2.3" Label="Microsoft.jQuery.Unobtrusive.Validation 3.2.3" Category="Package" />
+    <Node Id="Microsoft.Web.Infrastructure 1.0.0.0" Label="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package" />
+    <Node Id="Modernizr 2.8.3" Label="Modernizr 2.8.3" Category="Package" />
+    <Node Id="Newtonsoft.Json 6.0.8" Label="Newtonsoft.Json 6.0.8" Category="Package" />
+    <Node Id="Twitter.Bootstrap.Bootswatch.Readable 3.2.0.0" Label="Twitter.Bootstrap.Bootswatch.Readable 3.2.0.0" Category="Package" />
+    <Node Id="WebGrease 1.6.0" Label="WebGrease 1.6.0" Category="Package" />
+    <Node Id="src\Tools\Codebreak.Tool.Database" Label="Codebreak.Tool.Database" Category="Project" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="src\Tools\Codebreak.Tool.Convert" Label="Codebreak.Tool.Convert" Category="Project" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="src\World\Codebreak.App.WorldConsole" Label="Codebreak.App.WorldConsole" Category="Project" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="protobuf-net 2.0.0.668" Label="protobuf-net 2.0.0.668" Category="Package" />
+    <Node Id="src\World\Codebreak.Service.World" Label="Codebreak.Service.World" Category="Project" />
+    <Node Id="Antlr 3.5.0.2" Label="Antlr 3.5.0.2" Category="Package" />
+    <Node Id="ExpressionEvaluator 2.0.2.0" Label="ExpressionEvaluator 2.0.2.0" Category="Package" />
+    <Node Id="Fody 1.27.1" Label="Fody 1.27.1" Category="Package" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="MySql.Data 6.9.5" Label="MySql.Data 6.9.5" Category="Package" />
+    <Node Id="PropertyChanged.Fody 1.49.0" Label="PropertyChanged.Fody 1.49.0" Category="Package" />
+    <Node Id="protobuf-net 2.0.0.668" Label="protobuf-net 2.0.0.668" Category="Package" />
+    <Node Id="src\Auth\Codebreak.Service.Auth" Label="Codebreak.Service.Auth" Category="Project" />
+    <Node Id="Fody 1.27.1" Label="Fody 1.27.1" Category="Package" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="MySql.Data 6.9.5" Label="MySql.Data 6.9.5" Category="Package" />
+    <Node Id="PropertyChanged.Fody 1.49.0" Label="PropertyChanged.Fody 1.49.0" Category="Package" />
+    <Node Id="src\Auth\Codebreak.App.AuthConsole" Label="Codebreak.App.AuthConsole" Category="Project" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="src\Core\Codebreak.Framework" Label="Codebreak.Framework" Category="Project" />
+    <Node Id="Fody 1.27.1" Label="Fody 1.27.1" Category="Package" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="MySql.Data 6.9.5" Label="MySql.Data 6.9.5" Category="Package" />
+    <Node Id="Newtonsoft.Json 6.0.8" Label="Newtonsoft.Json 6.0.8" Category="Package" />
+    <Node Id="PropertyChanged.Fody 1.49.0" Label="PropertyChanged.Fody 1.49.0" Category="Package" />
+    <Node Id="src\Core\Codebreak.RPC.Service" Label="Codebreak.RPC.Service" Category="Project" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+    <Node Id="src\Core\Codebreak.RPC.Protocol" Label="Codebreak.RPC.Protocol" Category="Project" />
+    <Node Id="log4net 2.0.3" Label="log4net 2.0.3" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="bootstrap 3.3.2" Target="jQuery 2.1.3" Category="Package Dependency" />
+    <Link Source="jQuery.UI.Combined 1.11.3" Target="jQuery 2.1.3" Category="Package Dependency" />
+    <Link Source="jQuery.Validation 1.13.1" Target="jQuery 2.1.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Mvc 5.2.3" Target="Microsoft.AspNet.WebPages 3.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Mvc 5.2.3" Target="Microsoft.AspNet.Razor 3.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Mvc.FixedDisplayModes 5.0.0" Target="Microsoft.AspNet.Mvc 5.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Providers.Core 2.0.0" Target="EntityFramework 6.1.2" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Providers.LocalDB 2.0.0" Target="Microsoft.AspNet.Providers.Core 2.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Web.Optimization 1.1.3" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Web.Optimization 1.1.3" Target="WebGrease 1.6.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi 5.2.3" Target="Microsoft.AspNet.WebApi.WebHost 5.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.2.3" Target="Newtonsoft.Json 6.0.8" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.2.3" Target="Newtonsoft.Json 6.0.8" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.2.3" Target="Microsoft.AspNet.WebApi.Client 5.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.2.3" Target="Microsoft.AspNet.WebApi.Core 5.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebPages 3.2.3" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebPages 3.2.3" Target="Microsoft.AspNet.Razor 3.2.3" Category="Package Dependency" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Ajax 3.2.3" Target="jQuery 2.1.3" Category="Package Dependency" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Validation 3.2.3" Target="jQuery 2.1.3" Category="Package Dependency" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Validation 3.2.3" Target="jQuery.Validation 1.13.1" Category="Package Dependency" />
+    <Link Source="WebGrease 1.6.0" Target="Antlr 3.5.0.2" Category="Package Dependency" />
+    <Link Source="WebGrease 1.6.0" Target="Newtonsoft.Json 6.0.8" Category="Package Dependency" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="angularjs 1.3.14" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="angular-loading-bar 0.6.0" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="bootstrap 3.3.2" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Font.Awesome 4.3.0.1" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="i18next 1.7.4" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="jQuery.UI.Combined 1.11.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="knockoutjs 3.2.0" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Microsoft.AspNet.Mvc.FixedDisplayModes 5.0.0" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Microsoft.AspNet.Providers.LocalDB 2.0.0" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Microsoft.AspNet.Web.Optimization 1.1.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Microsoft.AspNet.WebApi 5.2.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Microsoft.jQuery.Unobtrusive.Ajax 3.2.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Microsoft.jQuery.Unobtrusive.Validation 3.2.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Modernizr 2.8.3" Category="Installed Package" />
+    <Link Source="src\Web\Codebreak.App.Website" Target="Twitter.Bootstrap.Bootswatch.Readable 3.2.0.0" Category="Installed Package" />
+    <Link Source="src\Tools\Codebreak.Tool.Database" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\Tools\Codebreak.Tool.Convert" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\World\Codebreak.App.WorldConsole" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\World\Codebreak.App.WorldConsole" Target="protobuf-net 2.0.0.668" Category="Installed Package" />
+    <Link Source="ExpressionEvaluator 2.0.2.0" Target="Antlr 3.5.0.2" Category="Package Dependency" />
+    <Link Source="PropertyChanged.Fody 1.49.0" Target="Fody 1.27.1" Category="Package Dependency" />
+    <Link Source="src\World\Codebreak.Service.World" Target="ExpressionEvaluator 2.0.2.0" Category="Installed Package" />
+    <Link Source="src\World\Codebreak.Service.World" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\World\Codebreak.Service.World" Target="MySql.Data 6.9.5" Category="Installed Package" />
+    <Link Source="src\World\Codebreak.Service.World" Target="PropertyChanged.Fody 1.49.0" Category="Installed Package" />
+    <Link Source="src\World\Codebreak.Service.World" Target="protobuf-net 2.0.0.668" Category="Installed Package" />
+    <Link Source="PropertyChanged.Fody 1.49.0" Target="Fody 1.27.1" Category="Package Dependency" />
+    <Link Source="src\Auth\Codebreak.Service.Auth" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\Auth\Codebreak.Service.Auth" Target="MySql.Data 6.9.5" Category="Installed Package" />
+    <Link Source="src\Auth\Codebreak.Service.Auth" Target="PropertyChanged.Fody 1.49.0" Category="Installed Package" />
+    <Link Source="src\Auth\Codebreak.App.AuthConsole" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="PropertyChanged.Fody 1.49.0" Target="Fody 1.27.1" Category="Package Dependency" />
+    <Link Source="src\Core\Codebreak.Framework" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\Core\Codebreak.Framework" Target="MySql.Data 6.9.5" Category="Installed Package" />
+    <Link Source="src\Core\Codebreak.Framework" Target="Newtonsoft.Json 6.0.8" Category="Installed Package" />
+    <Link Source="src\Core\Codebreak.Framework" Target="PropertyChanged.Fody 1.49.0" Category="Installed Package" />
+    <Link Source="src\Core\Codebreak.RPC.Service" Target="log4net 2.0.3" Category="Installed Package" />
+    <Link Source="src\Core\Codebreak.RPC.Protocol" Target="log4net 2.0.3" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>
