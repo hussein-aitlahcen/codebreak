@@ -12,6 +12,9 @@
     @if (ViewBag.RegisterErrors.Count > 0)
     {
         <div class="alert alert-danger small" role="alert">
+            <strong>
+                <span data-i18n="register.failed"></span> : 
+            </strong>
             <ul>
                 @foreach (var error in ViewBag.RegisterErrors)
                 {

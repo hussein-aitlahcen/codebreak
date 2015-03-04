@@ -21,8 +21,7 @@
     },
 
     "home": {
-
-        "the_best": "Le meilleur",
+        "the_best": "Exigez le meilleur",
 
         "step_register": "Inscris toi",
         "step_download_and_install": "Télécharge et installe",
@@ -69,25 +68,38 @@
     },
 
     "register": {
+        "failed": "L'inscription a échouée",
         "alert_agree_terms": "En cliquant sur le bouton Valider vous acceptez les Conditions Générales d'Utilisation."
     },
 
+    "login": { 
+        "failed": "Connexion impossible"
+    },
+    
     "ladder": {
         "title": "Top",
         "next_refresh": "Prochaine mise à jour du classement à",
-        "last_refresh": "Dernière mise à jour éfféctuée à", 
+        "last_refresh": "Dernière mise à jour éfféctuée à",
         "change": "Performance",
         "rank": "Rang",
         "name": "Nom",
         "level": "Niveau",
         "experience": "Experience",
-        "change_legend": "La performance représente la différence entre le rang actuel précédant"
+        "change_legend": "La performance représente la différence entre le rang actuel et le précédant"
     },
 
     "team": {
         "title": "Nos experts",
         "cliff": "Administrateur, développeur web/serveur/base de donnée",
         "flynn": "Administrateur, concepteur/scénariste."
+    },
+
+    "footer": {
+        "languages": "Langues",
+        "language_fr": "Français",
+        "language_en": "Anglais",
+
+        "servers_status":  "Status des serveurs"
     },
 
     "copyright": {

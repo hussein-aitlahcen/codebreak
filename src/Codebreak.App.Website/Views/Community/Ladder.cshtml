@@ -23,24 +23,24 @@
             </div>
         </div>
         <hr />
-        <ul class="list-group ladder-list">
-            <li class="list-group-item">
+        <div class="list-group ladder-list">
+            <div class="list-group-item">
                 <div class="row text-center">
-                    <div class="col-md-2" data-i18n="ladder.rank">
+                    <div class="col-xs-2" data-i18n="ladder.rank">
                     </div>
-                    <div class="col-md-1" data-i18n="ladder.change">
+                    <div class="col-xs-1" data-i18n="ladder.change">
                     </div>
-                    <div class="col-md-3" data-i18n="ladder.name">
+                    <div class="col-xs-3" data-i18n="ladder.name">
                     </div>
-                    <div class="col-md-3" data-i18n="ladder.level">
+                    <div class="col-xs-3" data-i18n="ladder.level">
                     </div>
-                    <div class="col-md-3" data-i18n="ladder.experience">
+                    <div class="col-xs-2" data-i18n="ladder.experience">
                     </div>
                 </div>
-            </li>
+            </div>
             @foreach (var entry in LadderManager.Instance.Entries)
             {
-                <li class="list-group-item">
+                <a class="list-group-item" href="#">
                     <div class="row text-center">
                         <div class="col-xs-2">
                             @entry.Index
@@ -71,12 +71,12 @@
                         <div class="col-xs-3">
                             @entry.Level
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-xs-2">
                             @entry.Experience
                         </div>
                     </div>
-                </li>
+                </a>
             }
-        </ul>
+        </div>
     </div>
 </div>

@@ -13,6 +13,9 @@
     @if (ViewBag.LoginErrors.Count > 0)
     {
         <div class="alert alert-danger small" role="alert">
+            <strong>
+                <span data-i18n="login.failed"></span> :
+            </strong>
             <ul>
                 @foreach (var error in ViewBag.LoginErrors)
                 {

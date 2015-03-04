@@ -353,7 +353,7 @@ namespace Codebreak.Service.World
         public static int AGGRESSION_TURN_TIME = 30000;
 
         [Configurable()]
-        public static double TAXCOLLECTOR_XP_RATIO = 0.01;
+        public static double TAXCOLLECTOR_XP_RATIO = 0.05;
         [Configurable()]
         public static int TAXCOLLECTOR_MIN_NAME = 1;
         [Configurable()]
