@@ -90,13 +90,7 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public bool Create(CharacterEntity character, string name, int backgroundId, int backgroundColor, int symbolId, int symbolColor)
         {
-            var record = GuildRepository.Instance.Create(name, backgroundId, backgroundColor, symbolId, symbolColor);
-
-            var instance = new GuildInstance(record);
-            instance.MemberBoss(character);
-
-            AddInstance(instance);
-
+            AddInstance(new GuildInstance(GuildRepository.Instance.Create(name, backgroundId, backgroundColor, symbolId, symbolColor), character));
             return true;
         }
 

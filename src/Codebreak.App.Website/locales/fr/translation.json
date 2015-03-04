@@ -1,4 +1,4 @@
-﻿{    
+﻿{
     "common": {
         "or": "our",
         "and": "et",
@@ -21,7 +21,8 @@
     },
 
     "home": {
-        "news": "Actualités",
+
+        "the_best": "Le meilleur",
 
         "step_register": "Inscris toi",
         "step_download_and_install": "Télécharge et installe",
@@ -73,12 +74,14 @@
 
     "ladder": {
         "title": "Top",
-        "next_refresh_in": "Le classement est mis à jour toutes les",
+        "next_refresh": "Prochaine mise à jour du classement à",
+        "last_refresh": "Dernière mise à jour éfféctuée à", 
         "change": "Performance",
         "rank": "Rang",
         "name": "Nom",
         "level": "Niveau",
-        "experience": "Experience"
+        "experience": "Experience",
+        "change_legend": "La performance représente la différence entre le rang actuel précédant"
     },
 
     "team": {
@@ -89,6 +92,6 @@
 
     "copyright": {
         "rights_reserved": "2015 © Earthscape, Tout droits réservés.",
-        "terms": "Conditions générales d'utilisation."
+        "terms": "Conditions Générales d'Utilisation."
     }
 }

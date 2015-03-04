@@ -6,14 +6,23 @@
 <div class="contained z-layer-1">
     <div class="ladder-content">
         <div class="alert alert-info text-center small">
-            <p>
-                <span data-i18n="ladder.next_refresh_in"></span>
+            <div class="row">
+                <span data-i18n="ladder.change_legend"></span>
+            </div>
+            <div class="row">
+                <span data-i18n="ladder.last_refresh"></span>
                 <strong>
-                    @((int)LadderManager.UPDATE_INTERVAL * 0.001)
+                    @LadderManager.Instance.LastUpdate.ToString("HH:mm:ss")
                 </strong>
-                <span data-i18n="common.seconds"></span>
-            </p>
+            </div>
+            <div class="row">
+                <span data-i18n="ladder.next_refresh"></span>
+                <strong>
+                    @LadderManager.Instance.NextUpdate.ToString("HH:mm:ss")
+                </strong>
+            </div>
         </div>
+        <hr />
         <ul class="list-group ladder-list">
             <li class="list-group-item">
                 <div class="row text-center">

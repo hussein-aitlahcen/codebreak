@@ -295,10 +295,11 @@ namespace Codebreak.Service.World.Game.Guild
         private GuildDAO m_record;
         private MessageDispatcher m_taxCollectorDispatcher;
 
+
         /// <summary>
         /// 
         /// </summary>
-        public GuildInstance(GuildDAO record)
+        public GuildInstance(GuildDAO record, bool checkIntegrity = true)
         {
             m_record = record;
             m_members = new List<GuildMember>();
@@ -311,7 +312,19 @@ namespace Codebreak.Service.World.Game.Guild
             foreach(var taxCollectorDAO in TaxCollectorRepository.Instance.FindAll(taxC => taxC.GuildId == m_record.Id))            
                 AddTaxCollector(EntityManager.Instance.CreateTaxCollector(this, taxCollectorDAO));
 
-            CheckIntegrity();
+            if (checkIntegrity)
+                CheckIntegrity();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guild"></param>
+        /// <param name="boss"></param>
+        public GuildInstance(GuildDAO record, CharacterEntity boss)
+            : this(record, false)
+        {
+            MemberBoss(boss);
         }
 
         /// <summary>

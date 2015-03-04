@@ -41,8 +41,22 @@
 /* global*/
 
 hr {
-    height: 5px;
+    padding: 0; 
+    border: none;
+    border-top: thin solid gray;
+    color: gray;
+    text-align: center;
 }
+
+ hr:after { 
+    content: "§"; 
+    display: inline-block; 
+    position: relative;
+    top: -0.7em; 
+    font-size: 1.5em;
+    padding: 0 0.25em;
+    background: white;
+ }
 
 .contained {
     padding: 30px;
@@ -115,6 +129,10 @@ footer {
 .content {
     padding-top: 30px;
     padding-bottom: 30px;
+    background:
+        url("../images/breads/sacrier.png") no-repeat right,
+        url("../images/breads/iop.jpg") no-repeat left;
+    background-size: 25% auto, 12% auto;
 }
 
 /* Copyright */
@@ -217,4 +235,44 @@ footer {
 .ladder-change-stable {
     color: gray;
     opacity: 0.5;
+}
+
+/* Loading bar */
+#loading-bar .bar {
+    -webkit-transition: width 350ms;
+    -moz-transition: width 350ms;
+    -o-transition: width 350ms;
+    transition: width 350ms;
+    background: #29d;
+    position: fixed;
+    z-index: 10002;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-bottom-right-radius: 1px;
+    border-top-right-radius: 1px;
+}
+
+
+#loading-bar-spinner {
+    display: block;
+    position: fixed;
+    z-index: 10002;
+    top: 35px;
+    left: 20px;
+}
+
+#loading-bar-spinner .spinner-icon {
+    width: 20px;
+    height: 20px;
+    border: solid 2px transparent;
+    border-top-color: #29d;
+    border-left-color: #29d;
+    border-radius: 10px;
+    -webkit-animation: loading-bar-spinner 400ms linear infinite;
+    -moz-animation: loading-bar-spinner 400ms linear infinite;
+    -ms-animation: loading-bar-spinner 400ms linear infinite;
+    -o-animation: loading-bar-spinner 400ms linear infinite;
+    animation: loading-bar-spinner 400ms linear infinite;
 }

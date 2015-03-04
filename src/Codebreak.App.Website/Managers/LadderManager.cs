@@ -67,7 +67,34 @@ namespace Codebreak.App.Website.Managers
         /// <summary>
         /// 
         /// </summary>
-        private long m_nextUpdate;
+        private DateTime m_nextUpdate;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private DateTime m_lastUpdate;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime NextUpdate
+        {
+            get
+            {
+                return m_nextUpdate;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime LastUpdate
+        {
+            get
+            {
+                return m_lastUpdate;
+            }
+        }
 
         /// <summary>
         /// 
@@ -76,7 +103,7 @@ namespace Codebreak.App.Website.Managers
         {
             get
             {
-                return m_nextUpdate < Environment.TickCount;
+                return m_nextUpdate < DateTime.Now;
             }
         }
         
@@ -103,7 +130,7 @@ namespace Codebreak.App.Website.Managers
         public LadderManager()
         {
             m_entryById = new Dictionary<long, LadderEntry>();
-            m_nextUpdate = 1;
+            m_nextUpdate = DateTime.Now;
         }
         
         /// <summary>
@@ -111,11 +138,12 @@ namespace Codebreak.App.Website.Managers
         /// </summary>
         private void Update()
         {
-            m_nextUpdate = Environment.TickCount + UPDATE_INTERVAL;
+            m_nextUpdate = DateTime.Now.AddMilliseconds(UPDATE_INTERVAL);
+            m_lastUpdate = DateTime.Now;
 
             var index = 1;
             var newEntries = new Dictionary<long, LadderEntry>();
-            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance order by level desc limit " + TOP_LADDER))
+            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance order by level desc, experience asc, name asc limit " + TOP_LADDER))
             {
                 var entry = GetEntry(character);
                 entry.LastIndex = entry.Index;
