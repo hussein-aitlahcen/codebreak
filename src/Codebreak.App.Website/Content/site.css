@@ -90,11 +90,35 @@ body {
 footer {
 	margin-top: 30px;
     background-color: #F2F2F2;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Copyright */
+.copyright, footer {
+    width: 100%;
+}
+
+.copyright {
+    padding-top: 30px;
+    padding-bottom: 30px;
+	background: #3e4753;
+    border: 1.5px solid black;
+}
+
+.copyright a {    
+    color: #CCCCCC;
+    font-size: 0.8em;
+}
+
+.copyright a:hover {    
+    color: white;
+    font-size: 0.8em;
 }
 
 /* Language selection */
 .lang-selection:hover {
-    color: gray;
+    color: black;
 }
 
 .lang-selection {
@@ -127,23 +151,6 @@ footer {
         url("../images/breads/sacrier.png") no-repeat right,
         url("../images/breads/iop.jpg") no-repeat left;
     background-size: 20% auto, 10% auto;
-}
-
-
-/* Copyright */
-.copyright, footer {
-    width: 100%;
-    padding: 20px 0 10px;
-}
-
-.copyright {
-	background: #3e4753;
-    border-top: 1px solid black;
-}
-
-.copyright p {    
-    color: white;
-    font-size: 12px;
 }
 
 
