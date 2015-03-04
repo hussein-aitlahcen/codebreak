@@ -14,34 +14,11 @@ namespace Codebreak.App.Website.Models.Website
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<string, string> m_variables;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ConfigVariableRepository()
+            : base(true)
         {
-            m_variables = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        public override void OnObjectAdded(ConfigVariable variable)
-        {
-            m_variables.Add(variable.Key, variable.Value);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        public override void OnObjectRemoved(ConfigVariable variable)
-        {
-            m_variables.Remove(variable.Key);
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -49,9 +26,10 @@ namespace Codebreak.App.Website.Models.Website
         /// <returns></returns>
         public string GetValue(string key)
         {
-            if (!m_variables.ContainsKey(key))
-                return base.Load("Key = @Key", new { Key = key }).Value;
-            return m_variables[key];
+            var result = base.Load("upper(configvariable.key) = upper(@Key)", new { Key = key });
+            if (result == null)
+                return "UNKNOW_VARIABLE";
+            return result.Value;
         }
     }
 }

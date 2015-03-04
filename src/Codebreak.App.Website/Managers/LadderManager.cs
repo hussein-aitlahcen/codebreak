@@ -143,7 +143,7 @@ namespace Codebreak.App.Website.Managers
 
             var index = 1;
             var newEntries = new Dictionary<long, LadderEntry>();
-            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance where dead = 0 order by level desc, experience asc, name asc limit " + TOP_LADDER))
+            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance where dead = 0 order by level desc, experience desc, name asc limit " + TOP_LADDER))
             {
                 var entry = GetEntry(character);
                 entry.LastIndex = entry.Index;
@@ -155,6 +155,8 @@ namespace Codebreak.App.Website.Managers
 
             m_entryById.Clear();
             m_entryById = newEntries;
+
+            Logger.Info("LadderManager performing scheduled update : " + DateTime.Now.ToString());
         }
 
         /// <summary>
