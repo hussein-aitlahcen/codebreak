@@ -55,6 +55,11 @@ hr {
     padding: 30px;
 }
 
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 /* Navbar */
 .navbar {
     padding-top: 10px;
@@ -170,6 +175,7 @@ footer {
 }
 
 .well {
+    background: #E8E8E8;
     font-size: 15px;    
     line-height: 1.5;
 }
@@ -219,8 +225,11 @@ footer {
 
 
 /* Ladder */
-.ladder-list {
-    box-sizing: content-box;
+.ladder-breed-img {
+    margin-bottom: -10px;
+}
+
+.list-group-item {
 }
 
 .ladder-list .list-group-item:first-child {
@@ -228,11 +237,11 @@ footer {
     color: white;
 }
 
-.ladder-list a:nth-child(even) {
+.ladder-list .list-group-item:nth-child(even) {
     background-color: #D1F4FF;
 }
 
-.ladder-list a:nth-child(n + 2):hover, .ladder-list a:nth-child(n + 2):hover * {
+.ladder-list .list-group-item:nth-child(n + 2):hover, .ladder-list .list-group-item:nth-child(n + 2):hover * {
     background: #C1022D;
     color: white;
 }
@@ -247,7 +256,7 @@ footer {
 
 .ladder-change-stable {
     color: gray;
-    opacity: 0.2;
+    opacity: 0.4;
 }
 
 /* Loading bar */
@@ -276,19 +285,15 @@ footer {
 }
 
 #loading-bar-spinner .spinner-icon {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     border: solid 2px transparent;
     border-top-color: #29d;
     border-left-color: #29d;
-    border-radius: 10px;
+    border-radius: 20px;
     -webkit-animation: loading-bar-spinner 400ms linear infinite;
     -moz-animation: loading-bar-spinner 400ms linear infinite;
     -ms-animation: loading-bar-spinner 400ms linear infinite;
     -o-animation: loading-bar-spinner 400ms linear infinite;
     animation: loading-bar-spinner 400ms linear infinite;
-}
-
-.join-steps {
-    margin-bottom: 25px;
 }

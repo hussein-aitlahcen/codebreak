@@ -175,6 +175,7 @@
     <Content Include="Content\css\loading-bar.css" />
     <Content Include="Content\css\loading-bar.min.css" />
     <Content Include="Content\css\app.css" />
+    <Content Include="Content\img\dofus\common\background.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />

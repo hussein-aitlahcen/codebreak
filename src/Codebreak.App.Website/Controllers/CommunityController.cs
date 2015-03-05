@@ -23,7 +23,7 @@ namespace Codebreak.App.Website.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = (int)(LadderManager.UPDATE_INTERVAL * 0.001) + 10)]
+        [OutputCache(Duration = (int)(LadderManager.UPDATE_INTERVAL * 0.001) + 1)]
         public ActionResult LadderContent()
         {
             lock (LadderLock)

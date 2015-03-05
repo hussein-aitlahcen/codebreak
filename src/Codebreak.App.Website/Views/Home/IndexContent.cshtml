@@ -1,71 +1,83 @@
 ﻿<div class="row join-steps">
-    <div class="col-md-4">
-        <a href="@Url.Action("Register", "Join")" class="btn btn-info center-block">
-            <span class="badge">1</span>
-            <span data-i18n="home.step_register"></span>
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a href="@Url.Action("Download", "Join")" class="btn btn-info center-block">
-            <span class="badge">2</span>
-            <span data-i18n="home.step_download_and_install"></span>
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a href="@Url.Action("Forum", "Community")" class="btn btn-info center-block">
-            <span class="badge">3</span>
-            <span data-i18n="home.step_forum_and_discuss"></span>
-        </a>
-    </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <h2>
-            <span class="fa fa-twitter"></span>
-            Tweets
-        </h2>
-        <hr />
-        <a class="twitter-timeline" href="https://twitter.com/earthscape101" data-widget-id="572126951629139968">Tweets de @@earthscape101</a>
-        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
-    </div>
-    <div class="col-md-6">
-        <h2>
-            <span class="fa fa-trophy"></span>
-            <span data-i18n="home.the_best"></span>
-        </h2>
-        <hr />
-        <div class="row server-desc">
-            <span class="server-desc-icon fa fa-fw fa-server"></span>
-            <h4>
-                <span data-i18n="home.server_desc_unique_emulator_title"></span>
-            </h4>
-            <div class="well" data-i18n="[html]home.server_desc_unique_emulator_text">
-            </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="@Url.Action("Register", "Join")" class="btn btn-info center-block">
+                <span class="badge">1</span>
+                <span data-i18n="home.step_register"></span>
+            </a>
         </div>
-        <div class="row server-desc">
+        <div class="col-md-4">
+            <a href="@Url.Action("Download", "Join")" class="btn btn-info center-block">
+                <span class="badge">2</span>
+                <span data-i18n="home.step_download_and_install"></span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="@Url.Action("Forum", "Community")" class="btn btn-info center-block">
+                <span class="badge">3</span>
+                <span data-i18n="home.step_forum_and_discuss"></span>
+            </a>
+        </div>
+    </div>
+    <br />
+    <hr />
+</div>
+<div class="row">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>
+                <span class="fa fa-twitter"></span>
+                Tweets
+            </h2>
+            <hr />
+            <a class="twitter-timeline" href="https://twitter.com/earthscape101" data-widget-id="572126951629139968">Tweets de @@earthscape101</a>
+            <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+        </div>
+        <div class="col-md-6 server-desc">
             <span class="server-desc-icon fa fa-fw fa-history"></span>
             <h4>
                 <span data-i18n="home.server_desc_official_gameplay_title"></span>
             </h4>
             <div class="well">
+                <img class="img-responsive img-circle center-block" src="~/Content/img/dofus/common/background.png" />
                 <span data-i18n="[html]home.server_desc_official_gameplay_text"></span>
             </div>
         </div>
-        <div class="row server-desc">
-            <span class="server-desc-icon fa fa-fw fa-diamond"></span>
-            <h4>
-                <span data-i18n="home.server_desc_high_quality_title"></span>
-            </h4>
-            <div class="well">
-                <span class="fa fa-fw fa-quote-left"></span>
-                <span data-i18n="[html]home.server_desc_high_quality_text"></span>
-                <span class="fa fa-fw fa-quote-right"></span>
-                <strong>
-                    <a href="@Url.Action("Team", "About")#cliff">
-                        - Cliff
-                    </a>
-                </strong>
+    </div>
+    <div class="row">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    <span class="fa fa-trophy"></span>
+                    <span data-i18n="home.the_best"></span>
+                </h2>
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 server-desc">
+                <span class="server-desc-icon fa fa-fw fa-server"></span>
+                <h4>
+                    <span data-i18n="home.server_desc_unique_emulator_title"></span>
+                </h4>
+                <div class="well" data-i18n="[html]home.server_desc_unique_emulator_text">
+                </div>
+            </div>
+            <div class="col-md-6 server-desc">
+                <span class="server-desc-icon fa fa-fw fa-diamond"></span>
+                <h4>
+                    <span data-i18n="home.server_desc_high_quality_title"></span>
+                </h4>
+                <div class="well">
+                    <span class="fa fa-fw fa-quote-left"></span>
+                    <span data-i18n="[html]home.server_desc_high_quality_text"></span>
+                    <span class="fa fa-fw fa-quote-right"></span>
+                    <strong>
+                        <a href="@Url.Action("Team", "About")#cliff">
+                            - Cliff
+                        </a>
+                    </strong>
+                </div>
             </div>
         </div>
     </div>
