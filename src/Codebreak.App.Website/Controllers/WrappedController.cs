@@ -16,6 +16,11 @@ namespace Codebreak.App.Website.Controllers
         /// <summary>
         /// 
         /// </summary>
+        public const int GENERIC_CACHE_DURATION = 60 * 60;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual new AccountTicket User
         {
             get

@@ -5,6 +5,7 @@ using Codebreak.App.Website.Models.Worldservice;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -24,6 +25,9 @@ namespace Codebreak.App.Website
     {
         protected void Application_Start()
         {
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new RazorViewEngine());
+
             XmlConfigurator.Configure(new FileInfo(Server.MapPath("~/Web.config")));
 
             AreaRegistration.RegisterAllAreas();

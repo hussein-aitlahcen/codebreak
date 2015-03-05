@@ -36,7 +36,17 @@ namespace Codebreak.App.Website.Managers
         {
             get;
             set;
-        }  
+        }
+        public int Breed
+        {
+            get;
+            set;
+        }
+        public bool Sex
+        {
+            get;
+            set;
+        }
     }
 
     /// <summary>
@@ -47,18 +57,13 @@ namespace Codebreak.App.Website.Managers
         /// <summary>
         /// 
         /// </summary>
-        public const long UPDATE_INTERVAL = 1000 * 60 * 10;
+        public const int UPDATE_INTERVAL = 1000 * 60 * 10;
 
         /// <summary>
         /// 
         /// </summary>
         public const int TOP_LADDER = 100;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private static object m_syncLock = new object();
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -115,12 +120,7 @@ namespace Codebreak.App.Website.Managers
         {
             get
             {
-                lock (m_syncLock)
-                {
-                    if (UpdateNeeded)
-                        Update();
-                    return m_entryById.Values;
-                }
+                return m_entryById.Values;                
             }
         }
 
@@ -130,26 +130,31 @@ namespace Codebreak.App.Website.Managers
         public LadderManager()
         {
             m_entryById = new Dictionary<long, LadderEntry>();
-            m_nextUpdate = DateTime.Now;
+            m_nextUpdate = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
         }
         
         /// <summary>
         /// Update the ladder
         /// </summary>
-        private void Update()
+        public void TryUpdate()
         {
+            if (!UpdateNeeded)
+                return;
+
             m_nextUpdate = DateTime.Now.AddMilliseconds(UPDATE_INTERVAL);
             m_lastUpdate = DateTime.Now;
 
             var index = 1;
             var newEntries = new Dictionary<long, LadderEntry>();
-            foreach(var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance where dead = 0 order by level desc, experience desc, name asc limit " + TOP_LADDER))
+            foreach (var character in CharacterRepository.Instance.SqlMgr.Query<Character>("select * from characterinstance where dead = 0 order by level desc, experience desc, name asc limit " + TOP_LADDER))
             {
                 var entry = GetEntry(character);
                 entry.LastIndex = entry.Index;
                 entry.Index = index++;
                 entry.Level = character.Level;
                 entry.Experience = character.Experience;
+                entry.Breed = character.Breed;
+                entry.Sex = character.Sex;
                 newEntries.Add(character.Id, entry);
             }
 
@@ -174,6 +179,8 @@ namespace Codebreak.App.Website.Managers
                 Name = character.Name,
                 Level = character.Level,
                 Experience = character.Experience,
+                Breed = character.Breed,
+                Sex = character.Sex,
                 LastIndex = TOP_LADDER,
             };
             return entry;

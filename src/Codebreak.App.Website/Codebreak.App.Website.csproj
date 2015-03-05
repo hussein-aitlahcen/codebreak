@@ -221,19 +221,37 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="images\breeds\cra.png" />
-    <Content Include="images\breeds\feca.png" />
-    <Content Include="images\breeds\iop.jpg" />
-    <Content Include="images\breeds\sacrier.png" />
-    <Content Include="images\breeds\sadida.jpg" />
-    <Content Include="images\breeds\xelor.png" />
-    <Content Include="images\common\1_29_original.jpg" />
-    <Content Include="images\common\banner.jpg" />
-    <Content Include="images\common\breads.jpg" />
-    <Content Include="images\common\king.png" />
-    <Content Include="images\common\original.jpg" />
-    <Content Include="images\common\oto_mustam.png" />
-    <Content Include="images\monsters\tofu.png" />
+    <Content Include="images\dofus\breeds\cra.png" />
+    <Content Include="images\dofus\breeds\feca.png" />
+    <Content Include="images\dofus\breeds\heads\small\10.png" />
+    <Content Include="images\dofus\breeds\heads\small\100.png" />
+    <Content Include="images\dofus\breeds\heads\small\101.png" />
+    <Content Include="images\dofus\breeds\heads\small\11.png" />
+    <Content Include="images\dofus\breeds\heads\small\110.png" />
+    <Content Include="images\dofus\breeds\heads\small\111.png" />
+    <Content Include="images\dofus\breeds\heads\small\120.png" />
+    <Content Include="images\dofus\breeds\heads\small\121.png" />
+    <Content Include="images\dofus\breeds\heads\small\20.png" />
+    <Content Include="images\dofus\breeds\heads\small\21.png" />
+    <Content Include="images\dofus\breeds\heads\small\30.png" />
+    <Content Include="images\dofus\breeds\heads\small\31.png" />
+    <Content Include="images\dofus\breeds\heads\small\40.png" />
+    <Content Include="images\dofus\breeds\heads\small\41.png" />
+    <Content Include="images\dofus\breeds\heads\small\50.png" />
+    <Content Include="images\dofus\breeds\heads\small\51.png" />
+    <Content Include="images\dofus\breeds\heads\small\60.png" />
+    <Content Include="images\dofus\breeds\heads\small\61.png" />
+    <Content Include="images\dofus\breeds\heads\small\70.png" />
+    <Content Include="images\dofus\breeds\heads\small\71.png" />
+    <Content Include="images\dofus\breeds\heads\small\80.png" />
+    <Content Include="images\dofus\breeds\heads\small\81.png" />
+    <Content Include="images\dofus\breeds\heads\small\90.png" />
+    <Content Include="images\dofus\breeds\heads\small\91.png" />
+    <Content Include="images\dofus\breeds\iop.jpg" />
+    <Content Include="images\dofus\breeds\sacrier.png" />
+    <Content Include="images\dofus\breeds\sadida.jpg" />
+    <Content Include="images\dofus\breeds\xelor.png" />
+    <Content Include="images\dofus\monsters\tofu.png" />
     <Content Include="images\staff\cliff.jpg" />
     <Content Include="images\staff\no_avatar.jpg" />
     <Content Include="locales\dev\translation.json" />
@@ -1065,7 +1083,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="images\bg\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

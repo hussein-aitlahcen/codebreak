@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.Security;
+using System.Web.UI;
 
 namespace Codebreak.App.Website.Controllers
 {
@@ -71,6 +72,9 @@ namespace Codebreak.App.Website.Controllers
 
     public class JoinController : WrappedController
     {
+        private static object RegisterLock = new object();
+        
+        [OutputCache(Duration = GENERIC_CACHE_DURATION, Location = OutputCacheLocation.Server)]
         public ActionResult Login()
         {
             ViewBag.LoginErrors = new List<string>();
@@ -127,7 +131,6 @@ namespace Codebreak.App.Website.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-               
         
         public ActionResult Register()
         {
@@ -166,22 +169,25 @@ namespace Codebreak.App.Website.Controllers
             }
             else
             {
-                account = AccountRepository.Instance.GetByName(model.Name);
-                if (account != null)
+                lock (RegisterLock)
                 {
-                    errors.Add("error_name_exists");
-                }
-                else if ((account = AccountRepository.Instance.GetByPseudo(model.Pseudo)) != null)
-                {
-                    errors.Add("error_pseudo_exists");
-                }
-                else if ((account = AccountRepository.Instance.Create(model.Name, model.Pseudo, model.Password, model.Email, model.Question, model.Answer)) == null)
-                {
-                    errors.Add("error_database");
-                }
-                else
-                {
-                    valid = true;
+                    account = AccountRepository.Instance.GetByName(model.Name);
+                    if (account != null)
+                    {
+                        errors.Add("error_name_exists");
+                    }
+                    else if ((account = AccountRepository.Instance.GetByPseudo(model.Pseudo)) != null)
+                    {
+                        errors.Add("error_pseudo_exists");
+                    }
+                    else if ((account = AccountRepository.Instance.Create(model.Name, model.Pseudo, model.Password, model.Email, model.Question, model.Answer)) == null)
+                    {
+                        errors.Add("error_database");
+                    }
+                    else
+                    {
+                        valid = true;
+                    }
                 }
             }
 
@@ -204,6 +210,7 @@ namespace Codebreak.App.Website.Controllers
             }
         }
 
+        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
         public ActionResult Download()
         {
             return View();

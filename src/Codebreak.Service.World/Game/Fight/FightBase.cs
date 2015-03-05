@@ -2301,13 +2301,13 @@ namespace Codebreak.Service.World.Game.Fight
             LoopState = FightLoopStateEnum.STATE_ENDED;
             
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
-            
-            foreach (var character in Fighters.OfType<CharacterEntity>())
-                // delay execution
-                character.AddMessage(() => Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_ENDED, character));
 
             foreach (var fighter in m_winnersTeam.Fighters.ToArray())
-                fighter.EndFight(true);
+            {
+                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    fighter.AddMessage(() => Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_ENDED, fighter as CharacterEntity));  
+                fighter.EndFight(true);              
+            }
 
             foreach (var fighter in m_losersTeam.Fighters.ToArray())
                 fighter.EndFight();
@@ -2329,10 +2329,8 @@ namespace Codebreak.Service.World.Game.Fight
 
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
             
-            foreach (var fighter in Fighters)
-            {
-                fighter.EndFight(true);
-            }
+            foreach (var fighter in Fighters)            
+                fighter.EndFight(true);            
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
                 spectator.EndFight();

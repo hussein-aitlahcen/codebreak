@@ -148,8 +148,8 @@ footer {
     padding-top: 20px;
     padding-bottom: 20px;
     background:
-        url("../images/breeds/sacrier.png") no-repeat right,
-        url("../images/breeds/iop.jpg") no-repeat left;
+        url("../images/dofus/breeds/sacrier.png") no-repeat right center,
+        url("../images/dofus/breeds/iop.jpg") no-repeat left center;
     background-size: 25% auto, 13% auto;
 }
 
@@ -164,17 +164,18 @@ footer {
     color: black;
 }
 
-.server-desc h4,.server-desc p{
-    line-height: 1.5;
-    padding-left: 75px;
-}
-
 .server-desc h4 {
     font-size: 25px;
+    line-height: 1.8;
 }
 
-.server-desc p {
-    font-size: 15px;
+.well {
+    font-size: 15px;    
+    line-height: 1.5;
+}
+
+.server-desc-icon {
+    margin-right: 10px;
 }
 
 .server-desc .server-desc-icon {
@@ -223,16 +224,16 @@ footer {
 }
 
 .ladder-list .list-group-item:first-child {
-    background-color: #009AC4;
+    background-color: #546BA8;
     color: white;
 }
 
 .ladder-list a:nth-child(even) {
-    background-color: #F2F2F2;
+    background-color: #D1F4FF;
 }
 
 .ladder-list a:nth-child(n + 2):hover, .ladder-list a:nth-child(n + 2):hover * {
-    background: red;
+    background: #C1022D;
     color: white;
 }
 
@@ -266,7 +267,6 @@ footer {
     border-top-right-radius: 1px;
 }
 
-
 #loading-bar-spinner {
     display: block;
     position: fixed;
@@ -288,7 +288,6 @@ footer {
     -o-animation: loading-bar-spinner 400ms linear infinite;
     animation: loading-bar-spinner 400ms linear infinite;
 }
-
 
 .join-steps {
     margin-bottom: 25px;

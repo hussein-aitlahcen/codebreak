@@ -227,7 +227,6 @@ namespace Codebreak.Service.World.Game.Fight
                         player.AddDishonour(dishonour);
                     }
                 }
-
                 Result.AddResult(fighter, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
             }
 

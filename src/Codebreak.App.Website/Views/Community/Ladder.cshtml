@@ -3,80 +3,88 @@
     ViewBag.Title = "Ladder";
 }
 
-<div class="contained z-layer-1">
-    <div class="ladder-content">
-        <div class="alert alert-info text-center small">
-            <div class="row">
+<div class="ladder-content">
+    <div class="alert alert-info small">
+        <strong>
+            <span data-i18n="ladder.informations"></span> : 
+        </strong>
+        <ul>
+            <li>
                 <span data-i18n="ladder.change_legend"></span>
-            </div>
-            <div class="row">
+            </li>
+            <li>
                 <span data-i18n="ladder.last_refresh"></span>
                 <strong>
-                    @LadderManager.Instance.LastUpdate.ToString("HH:mm:ss")
+                    @ViewBag.LastUpdate
                 </strong>
-            </div>
-            <div class="row">
+            </li>
+            <li>
                 <span data-i18n="ladder.next_refresh"></span>
                 <strong>
-                    @LadderManager.Instance.NextUpdate.ToString("HH:mm:ss")
+                    @ViewBag.NextUpdate
                 </strong>
-            </div>
-        </div>
-        <hr />
-        <div class="list-group ladder-list">
-            <div class="list-group-item">
-                <div class="row text-center">
-                    <div class="col-xs-2" data-i18n="ladder.rank">
-                    </div>
-                    <div class="col-xs-1" data-i18n="ladder.change">
-                    </div>
-                    <div class="col-xs-3" data-i18n="ladder.name">
-                    </div>
-                    <div class="col-xs-3" data-i18n="ladder.level">
-                    </div>
-                    <div class="col-xs-2" data-i18n="ladder.experience">
-                    </div>
+            </li>
+        </ul>
+    </div>
+    <hr />
+    <div class="list-group ladder-list">
+        <div class="list-group-item">
+            <div class="row text-center">
+                <div class="col-md-2" data-i18n="ladder.rank">
+                </div>
+                <div class="col-md-1" data-i18n="ladder.change">
+                </div>
+                <div class="col-md-3" data-i18n="ladder.name">
+                </div>
+                <div class="col-md-1" data-i18n="ladder.breed">
+                </div>                
+                <div class="col-md-2" data-i18n="ladder.level">
+                </div>
+                <div class="col-md-2" data-i18n="ladder.experience">
                 </div>
             </div>
-            @foreach (var entry in LadderManager.Instance.Entries)
-            {
-                <a class="list-group-item" href="#">
-                    <div class="row text-center">
-                        <div class="col-xs-2">
-                            @entry.Index
-                        </div>
-                        <div class="col-xs-1">
-                            @if (entry.Index < entry.LastIndex)
-                            {
-                                <span class="ladder-change-up">
-                                    @(entry.LastIndex - entry.Index)
-                                    <span class="fa fa-fw fa-arrow-up"></span>
-                                </span>
-                            }
-                            else if (entry.Index > entry.LastIndex)
-                            {
-                                <span class="ladder-change-down">
-                                    @(entry.Index - entry.LastIndex)
-                                    <span class="fa fa-fw fa-arrow-down"></span>
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="fa fa-fw fa-arrow-right ladder-change-stable"></span>
-                            }                                    
-                        </div>
-                        <div class="col-xs-3">
-                            @entry.Name
-                        </div>
-                        <div class="col-xs-3">
-                            @entry.Level
-                        </div>
-                        <div class="col-xs-2">
-                            @entry.Experience
-                        </div>
-                    </div>
-                </a>
-            }
         </div>
+        @foreach (var entry in ViewBag.Ladder)
+        {
+            <a class="list-group-item" href="#">
+                <div class="row text-center">
+                    <div class="col-md-2">
+                        @entry.Index
+                    </div>
+                    <div class="col-md-1">
+                        @if (entry.Index < entry.LastIndex)
+                        {
+                            <span class="ladder-change-up">
+                                @(entry.LastIndex - entry.Index)
+                                <span class="fa fa-long-arrow-up"></span>
+                            </span>
+                        }
+                        else if (entry.Index > entry.LastIndex)
+                        {
+                            <span class="ladder-change-down">
+                                @(entry.Index - entry.LastIndex)
+                                <span class="fa fa-long-arrow-down"></span>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="fa fa-long-arrow-right ladder-change-stable"></span>
+                        }
+                    </div>
+                    <div class="col-md-3">
+                        @entry.Name
+                    </div>
+                    <div class="col-md-1">
+                        <img class="" style="" src="~/images/dofus/breeds/heads/small/@(entry.Breed + "" + (entry.Sex ? "1" : "0")).png" />
+                    </div>
+                    <div class="col-md-2">
+                        @entry.Level
+                    </div>
+                    <div class="col-md-2">
+                        @entry.Experience
+                    </div>
+                </div>
+            </a>
+        }
     </div>
 </div>

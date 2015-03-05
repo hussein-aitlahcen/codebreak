@@ -28,13 +28,13 @@
         "step_forum_and_discuss": "Echange sur le forum",
 
         "server_desc_unique_emulator_title": "Services inédits",
-        "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre émulateur est inédit et basé sur aucun autre. Vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
+        "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre émulateur est inédit et basé sur aucun autre.<br/>Vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
 
-        "server_desc_official_gameplay_title": "Semi-Heroïque",
-        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisants. Gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
+        "server_desc_official_gameplay_title": "Revenez à la meilleure des versions",
+        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisants. Mode heroïque, gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
 
         "server_desc_high_quality_title": "Qualité et écoute",
-        "server_desc_high_quality_text": "Ouvrir un serveur à des fidèles de la version 1.29. S'entourer d'une équipe à l'écoute des joueurs. Développer des outils robustes. Tels étaient mes objectifs"
+        "server_desc_high_quality_text": "Ouvrir un serveur à des fidèles de la version 1.29. S'entourer d'une équipe à l'écoute des joueurs. Développer des outils robustes. Tels étaient mes objectifs."
     },
 
     "auth": {
@@ -72,17 +72,19 @@
         "alert_agree_terms": "En cliquant sur le bouton Valider vous acceptez les Conditions Générales d'Utilisation."
     },
 
-    "login": { 
+    "login": {
         "failed": "Connexion impossible"
     },
-    
+
     "ladder": {
         "title": "Top",
+        "informations": "Informations",
         "next_refresh": "Prochaine mise à jour du classement à",
         "last_refresh": "Dernière mise à jour éfféctuée à",
         "change": "Performance",
         "rank": "Rang",
         "name": "Nom",
+        "breed": "Race",
         "level": "Niveau",
         "experience": "Experience",
         "change_legend": "La performance représente la différence entre le rang actuel et le précédant"
@@ -92,6 +94,16 @@
         "title": "Nos experts",
         "cliff": "Administrateur, développeur web/serveur/base de donnée",
         "flynn": "Administrateur, concepteur/scénariste."
+    },
+
+    "download": {
+        "title": "Valider les étapes et jouez !",
+        "step_register": "S'inscrire",
+        "step_register_text": "Inscrivez vous si ce n'est déjà fait.<br>Passez ensuite à l'étape de téléchargement.",
+        "step_register_link_text": "Accédez au formulaire d'inscription",
+        "step_download": "Télécharger le client",
+        "step_download_text": "Cliquez sur le lien ci dessous afin d'enregistrer l'archive, une fois téléchargée, décompressez là.<br>Vous êtes enfin pret a jouer.",
+        "step_download_link_text" : "Télécharger le client Earthscape - Origin"
     },
 
     "footer": {
