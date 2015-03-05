@@ -1420,11 +1420,10 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 if (!HasLeft(CurrentFighter))
                 {
-                    CurrentFighter.Team.EndTurn(CurrentFighter);
-
-                    // fin du combat ?
                     if (!CurrentFighter.IsFighterDead)
                     {
+                        CurrentFighter.Team.EndTurn(CurrentFighter);
+
                         if (CurrentFighter.EndTurn() == FightActionResultEnum.RESULT_END)
                         {
                             Logger.Debug("Fight::EndTurn turn finished and caused the end.");
