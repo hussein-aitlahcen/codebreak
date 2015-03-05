@@ -153,8 +153,8 @@ footer {
     padding-top: 20px;
     padding-bottom: 20px;
     background:
-        url("../img/dofus/breeds/sacrier.png") no-repeat right center,
-        url("../img/dofus/breeds/iop.jpg") no-repeat left center;
+        url('/Content/img/dofus/breeds/sacrier.png') no-repeat right center,
+        url('/Content/img/dofus/breeds/iop.jpg') no-repeat left center;
     background-size: 25% auto, 13% auto;
 }
 
@@ -217,7 +217,7 @@ footer {
 .staff-img {
     height: 200px;
     background: 
-        url("../img/staff/no_avatar.jpg");
+        url('/Content/img/staff/no_avatar.jpg');
     background-position: center;
     background-size: 200px;
     background-repeat: no-repeat;
