@@ -57,8 +57,8 @@ hr {
 
 /* Navbar */
 .navbar {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .navbar-default .navbar-brand {
@@ -148,8 +148,8 @@ footer {
     padding-top: 20px;
     padding-bottom: 20px;
     background:
-        url("../images/dofus/breeds/sacrier.png") no-repeat right center,
-        url("../images/dofus/breeds/iop.jpg") no-repeat left center;
+        url("../img/dofus/breeds/sacrier.png") no-repeat right center,
+        url("../img/dofus/breeds/iop.jpg") no-repeat left center;
     background-size: 25% auto, 13% auto;
 }
 
@@ -211,7 +211,7 @@ footer {
 .staff-img {
     height: 200px;
     background: 
-        url("../images/staff/no_avatar.jpg");
+        url("../img/staff/no_avatar.jpg");
     background-position: center;
     background-size: 200px;
     background-repeat: no-repeat;

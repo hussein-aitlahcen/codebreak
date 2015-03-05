@@ -9,7 +9,6 @@ namespace Codebreak.App.Website.Controllers
 {
     public class HomeController : WrappedController
     {
-        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
         public ActionResult Index()
         {
             return View();

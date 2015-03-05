@@ -9,44 +9,44 @@ namespace Codebreak.App.Website
         public static void RegisterBundles(BundleCollection bundles)
         {
             var appBundle = new ScriptBundle("~/bundles/app").Include(
-                        "~/Scripts/app.js");
+                        "~/Content/js/app.js");
             appBundle.Transforms.Clear();
 
             bundles.Add(appBundle);
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                        "~/Scripts/angular.js",
-                        "~/Scripts/angular-animate*",
-                        "~/Scripts/loading-bar*"));
+                        "~/Content/js/angular.js",
+                        "~/Content/js/angular-animate*",
+                        "~/Content/js/loading-bar*"));
 
             bundles.Add(new ScriptBundle("~/bundles/i18next").Include(
-                        "~/Scripts/i18next*"));
+                        "~/Content/js/i18next*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                        "~/Scripts/bootstrap*"));
+                        "~/Content/js/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Content/js/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/jquery-ui-{version}.js"));
+                        "~/Content/js/jquery-ui-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.unobtrusive*",
-                        "~/Scripts/jquery.validate*"));
+                        "~/Content/js/jquery.unobtrusive*",
+                        "~/Content/js/jquery.validate*"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                        "~/Content/js/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
-                        "~/Content/bootstrap*"));
+                        "~/Content/css/bootstrap*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                        "~/Content/loading-bar.css",
-                        "~/Content/site.css",
-                        "~/Content/font-awesome.css"));
+                        "~/Content/css/loading-bar.css",
+                        "~/Content/css/app.css",
+                        "~/Content/css/font-awesome.css"));
             
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

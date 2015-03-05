@@ -74,7 +74,6 @@ namespace Codebreak.App.Website.Controllers
     {
         private static object RegisterLock = new object();
         
-        [OutputCache(Duration = GENERIC_CACHE_DURATION, Location = OutputCacheLocation.Server)]
         public ActionResult Login()
         {
             ViewBag.LoginErrors = new List<string>();

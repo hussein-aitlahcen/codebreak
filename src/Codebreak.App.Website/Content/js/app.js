@@ -23,7 +23,7 @@
 
 function initLang() {
     $.i18n.init({
-        resGetPath: "/locales/__lng__/__ns__.json",
+        resGetPath: "/Content/lang/__lng__/__ns__.json",
         debug: true
     }).done(function (t) {
         translate();
