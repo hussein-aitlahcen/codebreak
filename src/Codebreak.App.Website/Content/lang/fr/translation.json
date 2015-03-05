@@ -30,7 +30,7 @@
         "server_desc_unique_emulator_title": "Services inédits",
         "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre émulateur est inédit et basé sur aucun autre.<br/>Vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
 
-        "server_desc_official_gameplay_title": "Revenez à la meilleure des versions",
+        "server_desc_official_gameplay_title": "Revivez l'expérience",
         "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisants. Mode heroïque, gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
 
         "server_desc_high_quality_title": "Qualité et écoute",
@@ -97,7 +97,7 @@
     },
 
     "download": {
-        "title": "Valider les étapes et jouez !",
+        "title": "Télécharge et joue dès maintenant !",
         "step_register": "S'inscrire",
         "step_register_text": "Inscrivez vous si ce n'est déjà fait.<br>Passez ensuite à l'étape de téléchargement.",
         "step_register_link_text": "Accédez au formulaire d'inscription",
