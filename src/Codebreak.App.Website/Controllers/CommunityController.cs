@@ -17,9 +17,14 @@ namespace Codebreak.App.Website.Controllers
             return RedirectPermanent(GetConfigurationVariable("link"));
         }
 
-        // Ensure ladder will timeout so we add 10 sec
-        //[OutputCache(Duration = (int)(LadderManager.UPDATE_INTERVAL * 0.001) + 10, Location = OutputCacheLocation.Server)]
         public ActionResult Ladder()
+        {
+            return View();
+        }
+
+        [ChildActionOnly]
+        [OutputCache(Duration = (int)(LadderManager.UPDATE_INTERVAL * 0.001) + 10)]
+        public ActionResult LadderContent()
         {
             lock (LadderLock)
             {
@@ -29,7 +34,7 @@ namespace Codebreak.App.Website.Controllers
                 ViewBag.NextUpdate = LadderManager.Instance.NextUpdate.ToString("HH:mm:ss");
             }
 
-            return View();
+            return PartialView();
         }
     }
 }

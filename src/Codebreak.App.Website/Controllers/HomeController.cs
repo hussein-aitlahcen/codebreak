@@ -13,5 +13,12 @@ namespace Codebreak.App.Website.Controllers
         {
             return View();
         }
+
+        [ChildActionOnly]
+        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
+        public ActionResult IndexContent()
+        {
+            return PartialView();
+        }
     }
 }

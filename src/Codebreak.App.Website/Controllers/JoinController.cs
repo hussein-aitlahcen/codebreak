@@ -83,6 +83,14 @@ namespace Codebreak.App.Website.Controllers
             return View();
         }
 
+
+        [ChildActionOnly]
+        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
+        public ActionResult LoginContent()
+        {
+            return PartialView();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
@@ -151,6 +159,13 @@ namespace Codebreak.App.Website.Controllers
             return View();
         }
 
+        [ChildActionOnly]
+        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
+        public ActionResult RegisterContent()
+        {
+            return PartialView();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(AccountModel model)
@@ -209,10 +224,16 @@ namespace Codebreak.App.Website.Controllers
             }
         }
 
-        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
         public ActionResult Download()
         {
             return View();
+        }
+        
+        [ChildActionOnly]
+        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
+        public ActionResult DownloadContent()
+        {
+            return PartialView();
         }
     }
 }

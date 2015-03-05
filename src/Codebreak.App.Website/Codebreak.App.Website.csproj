@@ -145,6 +145,7 @@
     <Compile Include="Controllers\CommunityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JoinController.cs" />
+    <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\WrappedController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1080,6 +1081,15 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Join\Register.cshtml" />
     <Content Include="Content\js\version.json" />
+    <Content Include="Views\Home\IndexContent.cshtml" />
+    <Content Include="Views\Community\LadderContent.cshtml" />
+    <Content Include="Views\About\TeamContent.cshtml" />
+    <Content Include="Views\About\ContactContent.cshtml" />
+    <Content Include="Views\Join\DownloadContent.cshtml" />
+    <Content Include="Views\Join\LoginContent.cshtml" />
+    <Content Include="Views\Join\RegisterContent.cshtml" />
+    <Content Include="Views\Layout\Header.cshtml" />
+    <Content Include="Views\Layout\Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

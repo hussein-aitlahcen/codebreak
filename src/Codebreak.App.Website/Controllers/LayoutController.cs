@@ -3,32 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
 
 namespace Codebreak.App.Website.Controllers
 {
-    public class AboutController : WrappedController
+    public class LayoutController : WrappedController
     {
-        public ActionResult Team()
-        {
-            return View();
-        }
-
         [ChildActionOnly]
         [OutputCache(Duration = GENERIC_CACHE_DURATION)]
-        public ActionResult TeamContent()
+        public ActionResult Header()
         {
             return PartialView();
         }
 
-        public ActionResult Contact()
-        {
-            return View();
-        }
-
         [ChildActionOnly]
         [OutputCache(Duration = GENERIC_CACHE_DURATION)]
-        public ActionResult ContactContent()
+        public ActionResult Footer()
         {
             return PartialView();
         }
