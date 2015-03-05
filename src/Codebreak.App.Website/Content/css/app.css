@@ -297,3 +297,13 @@ footer {
     -o-animation: loading-bar-spinner 400ms linear infinite;
     animation: loading-bar-spinner 400ms linear infinite;
 }
+
+.dalai-lama {
+    margin-bottom: 20px;
+    color: lightgray;
+}
+
+.dalai-lama-text {
+    font-size: 1.05em;
+    font-style: italic;
+}
