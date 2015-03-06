@@ -46,7 +46,7 @@ namespace Codebreak.App.Website
             bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
                         "~/Content/css/bootstrap*"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/Content/styles").Include(
                         "~/Content/css/loading-bar.css",
                         "~/Content/css/app.css",
                         "~/Content/css/font-awesome.css"));
