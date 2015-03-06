@@ -60,6 +60,13 @@ hr {
     margin-right: 0px;
 }
 
+.btn-info {
+    background-color: #546BA8;
+}
+
+.btn-info:hover {
+    background-color: #C1022D;
+}
 /* Navbar */
 .navbar {
     padding-top: 10px;
@@ -93,10 +100,15 @@ body {
 
 /* Footer */
 footer {
+    color: gray;
 	margin-top: 30px;
     background-color: white;
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+footer h4 {
+    color: #646464;
 }
 
 /* Copyright */
@@ -301,7 +313,7 @@ footer {
 
 .dalai-lama {
     margin-bottom: 20px;
-    color: lightgray;
+    color: slategray;
 }
 
 .dalai-lama-text {
