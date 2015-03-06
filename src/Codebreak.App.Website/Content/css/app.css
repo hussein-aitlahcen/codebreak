@@ -39,7 +39,8 @@
 }
 
 hr { 
-    margin-top:30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     border: 1px solid #D9D9D9;
 } 
 
@@ -101,7 +102,7 @@ body {
 /* Footer */
 footer {
     color: gray;
-	margin-top: 30px;
+	margin-top: 50px;
     background-color: white;
     padding-top: 20px;
     padding-bottom: 20px;

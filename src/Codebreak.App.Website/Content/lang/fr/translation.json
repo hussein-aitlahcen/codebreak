@@ -104,7 +104,18 @@
         "step_register_link_text": "Accédez au formulaire d'inscription",
         "step_download": "Télécharger le client",
         "step_download_text": "Cliquez sur le lien ci dessous afin d'enregistrer l'archive, une fois téléchargée, décompressez là.<br>Vous êtes enfin pret a jouer.",
-        "step_download_link_text" : "Télécharger le client Earthscape - Origin"
+        "step_download_link_text": "Télécharger le client Earthscape - Origin"
+    },
+
+    "contact": {
+        "feedback_suggestions_title": "Réactions & Suggestions",
+        "feedback_suggestions_text": "Une question, une suggestion ou une demande spécifique ? N'hésitez pas à adresser vos requêtes par mail ou sur le forum.<br>Nous y répondrons dans les meilleurs délais.",
+
+        "need_help_title": "Besoin d'aide ou d'astuces ?",
+        "need_help_text": "Vous êtes bloqué ou vous avez un problème avec notre client. Dirigez vous sur le forum afin de nous contacter, des dizaines de joueurs vous apporteront leur aide.",
+
+        "we_recruit_title": "Nous recrutons !",
+        "we_recruit_text": "Nous recherchons des animateurs et modérateurs très actifs pour gérer le forum. Leur travail sera de passer quotidiennement sur le forum pour le contrôler, l'animer et répondre aux questions des joueurs.<br>C'est un travail sérieux car ceux qui seront pris, seront en contact direct avec les joueurs. Nous attendons donc des personnes motivées et prêtes à s'investir. Veuillez nous transmettre vos candidatures par mail."
     },
 
     "footer": {
