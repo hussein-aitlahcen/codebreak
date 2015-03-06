@@ -21,6 +21,19 @@
     }]);
 }
 
+function bootSignalR() {
+    var statisticProxy = $.connection.statisticHub;
+    statisticProxy.client.notifyVisitorCount = function (count) {
+        $("#visitor-count").text(count);
+    };
+    statisticProxy.client.notifyPlayersConnected = function (count, players) {
+        $("#players-connected").html(count + " <br> " + players);
+    };
+    $.connection.hub.start().done(function () {
+
+    });
+}
+
 function initLang() {
     $.i18n.init({
         resGetPath: "/Content/lang/__lng__/__ns__.json",
@@ -41,6 +54,7 @@ function translate() {
 }
 
 function appStart() {
-    bootAngular();
     initLang();
+    bootAngular();
+    bootSignalR();
 }

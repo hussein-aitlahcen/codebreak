@@ -70,6 +70,19 @@ namespace Codebreak.App.Website.Controllers
         }
     }
 
+    public class AccountComparer : IEqualityComparer<AccountTicket>
+    {        
+        public bool Equals(AccountTicket x, AccountTicket y)
+        {
+            return x.Account.Id == y.Account.Id;
+        }
+
+        public int GetHashCode(AccountTicket obj)
+        {
+            return obj.Account.Id.GetHashCode();
+        }
+    }
+
     public class JoinController : WrappedController
     {
         private static object RegisterLock = new object();

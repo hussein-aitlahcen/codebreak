@@ -3,6 +3,7 @@ using Codebreak.App.Website.Models.Authservice;
 using Codebreak.App.Website.Models.Website;
 using Codebreak.App.Website.Models.Worldservice;
 using log4net.Config;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +17,8 @@ using System.Web.Routing;
 using System.Web.Script.Serialization;
 using System.Web.Security;
 
+
+[assembly: OwinStartup(typeof(Codebreak.App.Website.Signalr.Startup))]
 namespace Codebreak.App.Website
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -36,7 +39,7 @@ namespace Codebreak.App.Website
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            
             WebConfig.Instance.Initialize(Server);
             WebDbMgr.Instance.LoadAll(WebConfig.WEB_DB_CONNECTION_STRING);
             AuthDbMgr.Instance.LoadAll(WebConfig.AUTH_DB_CONNECTION_STRING);

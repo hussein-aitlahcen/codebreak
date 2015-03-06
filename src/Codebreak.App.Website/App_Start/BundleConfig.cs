@@ -19,6 +19,9 @@ namespace Codebreak.App.Website
                         "~/Content/js/angular-animate*",
                         "~/Content/js/loading-bar*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
+                        "~/Content/js/jquery.signalR*"));
+
             bundles.Add(new ScriptBundle("~/bundles/i18next").Include(
                         "~/Content/js/i18next*"));
 

@@ -1,5 +1,6 @@
 ﻿using Codebreak.App.Website.Models.Authservice;
 using Codebreak.App.Website.Models.Website;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,14 @@ namespace Codebreak.App.Website.Controllers
     /// <summary>
     /// 
     /// </summary>
+    //[Compress]
     public abstract class WrappedController : Controller
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public static ILog Logger = LogManager.GetLogger(typeof(WrappedController));
+
         /// <summary>
         /// 
         /// </summary>

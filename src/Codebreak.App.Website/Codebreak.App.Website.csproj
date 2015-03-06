@@ -55,10 +55,28 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -143,14 +161,17 @@
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\BaseViewPage.cs" />
     <Compile Include="Controllers\CommunityController.cs" />
+    <Compile Include="Controllers\CompressAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JoinController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
+    <Compile Include="Controllers\WorldController.cs" />
     <Compile Include="Controllers\WrappedController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Managers\LadderManager.cs" />
+    <Compile Include="Managers\WorldManager.cs" />
     <Compile Include="Models\Authservice\Account.cs" />
     <Compile Include="Models\Authservice\AccountRepository.cs" />
     <Compile Include="Models\Authservice\AuthDbMgr.cs" />
@@ -161,6 +182,9 @@
     <Compile Include="Models\Worldservice\CharacterRepository.cs" />
     <Compile Include="Models\Worldservice\WorldDbMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Signalr\ConnectionMapping.cs" />
+    <Compile Include="Signalr\Startup.cs" />
+    <Compile Include="Signalr\StatisticHub.cs" />
     <Compile Include="WebConfig.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +200,161 @@
     <Content Include="Content\css\loading-bar.min.css" />
     <Content Include="Content\css\app.css" />
     <Content Include="Content\img\dofus\common\background.png" />
+    <Content Include="Content\img\icons\social2\aim.png" />
+    <Content Include="Content\img\icons\social2\apple.png" />
+    <Content Include="Content\img\icons\social2\behance.png" />
+    <Content Include="Content\img\icons\social2\blogger.png" />
+    <Content Include="Content\img\icons\social2\cargo.png" />
+    <Content Include="Content\img\icons\social2\delicious.png" />
+    <Content Include="Content\img\icons\social2\deviantart.png" />
+    <Content Include="Content\img\icons\social2\digg.png" />
+    <Content Include="Content\img\icons\social2\dopplr.png" />
+    <Content Include="Content\img\icons\social2\dribbble.png" />
+    <Content Include="Content\img\icons\social2\ember.png" />
+    <Content Include="Content\img\icons\social2\evernote.png" />
+    <Content Include="Content\img\icons\social2\facebook.png" />
+    <Content Include="Content\img\icons\social2\flickr.png" />
+    <Content Include="Content\img\icons\social2\forrst.png" />
+    <Content Include="Content\img\icons\social2\github.png" />
+    <Content Include="Content\img\icons\social2\google.png" />
+    <Content Include="Content\img\icons\social2\googleplus.png" />
+    <Content Include="Content\img\icons\social2\gowalla.png" />
+    <Content Include="Content\img\icons\social2\grooveshark.png" />
+    <Content Include="Content\img\icons\social2\html5.png" />
+    <Content Include="Content\img\icons\social2\icloud.png" />
+    <Content Include="Content\img\icons\social2\lastfm.png" />
+    <Content Include="Content\img\icons\social2\linkedin.png" />
+    <Content Include="Content\img\icons\social2\metacafe.png" />
+    <Content Include="Content\img\icons\social2\mixx.png" />
+    <Content Include="Content\img\icons\social2\myspace.png" />
+    <Content Include="Content\img\icons\social2\netvibes.png" />
+    <Content Include="Content\img\icons\social2\newsvine.png" />
+    <Content Include="Content\img\icons\social2\orkut.png" />
+    <Content Include="Content\img\icons\social2\paypal.png" />
+    <Content Include="Content\img\icons\social2\picasa.png" />
+    <Content Include="Content\img\icons\social2\pinterest.png" />
+    <Content Include="Content\img\icons\social2\plurk.png" />
+    <Content Include="Content\img\icons\social2\posterous.png" />
+    <Content Include="Content\img\icons\social2\reddit.png" />
+    <Content Include="Content\img\icons\social2\rss.png" />
+    <Content Include="Content\img\icons\social2\skype.png" />
+    <Content Include="Content\img\icons\social2\stumbleupon.png" />
+    <Content Include="Content\img\icons\social2\technorati.png" />
+    <Content Include="Content\img\icons\social2\tumblr.png" />
+    <Content Include="Content\img\icons\social2\twitter.png" />
+    <Content Include="Content\img\icons\social2\vimeo.png" />
+    <Content Include="Content\img\icons\social2\wordpress.png" />
+    <Content Include="Content\img\icons\social2\yahoo.png" />
+    <Content Include="Content\img\icons\social2\yelp.png" />
+    <Content Include="Content\img\icons\social2\youtube.png" />
+    <Content Include="Content\img\icons\social2\zerply.png" />
+    <Content Include="Content\img\icons\social2\zootool.png" />
+    <Content Include="Content\img\icons\social\amazon.png" />
+    <Content Include="Content\img\icons\social\behance.png" />
+    <Content Include="Content\img\icons\social\blogger.png" />
+    <Content Include="Content\img\icons\social\deviantart.png" />
+    <Content Include="Content\img\icons\social\dribbble.png" />
+    <Content Include="Content\img\icons\social\dropbox.png" />
+    <Content Include="Content\img\icons\social\evernote.png" />
+    <Content Include="Content\img\icons\social\facebook.png" />
+    <Content Include="Content\img\icons\social\forrst.png" />
+    <Content Include="Content\img\icons\social\github.png" />
+    <Content Include="Content\img\icons\social\googleplus.png" />
+    <Content Include="Content\img\icons\social\instagram.png" />
+    <Content Include="Content\img\icons\social\jolicloud.png" />
+    <Content Include="Content\img\icons\social\last-fm.png" />
+    <Content Include="Content\img\icons\social\linkedin.png" />
+    <Content Include="Content\img\icons\social\picasa.png" />
+    <Content Include="Content\img\icons\social\pintrest.png" />
+    <Content Include="Content\img\icons\social\rss.png" />
+    <Content Include="Content\img\icons\social\skype.png" />
+    <Content Include="Content\img\icons\social\spotify.png" />
+    <Content Include="Content\img\icons\social\stumbleupon.png" />
+    <Content Include="Content\img\icons\social\tumblr.png" />
+    <Content Include="Content\img\icons\social\twitter.png" />
+    <Content Include="Content\img\icons\social\vimeo.png" />
+    <Content Include="Content\img\icons\social\wordpress.png" />
+    <Content Include="Content\img\icons\social\xing.png" />
+    <Content Include="Content\img\icons\social\yahoo.png" />
+    <Content Include="Content\img\icons\social\youtube.png" />
+    <Content Include="Content\img\icons\social_big\amazon_grey.png" />
+    <Content Include="Content\img\icons\social_big\amazon_white.png" />
+    <Content Include="Content\img\icons\social_big\apple_grey.png" />
+    <Content Include="Content\img\icons\social_big\apple_white.png" />
+    <Content Include="Content\img\icons\social_big\delicious_grey.png" />
+    <Content Include="Content\img\icons\social_big\delicious_white.png" />
+    <Content Include="Content\img\icons\social_big\deviantart_grey.png" />
+    <Content Include="Content\img\icons\social_big\deviantart_white.png" />
+    <Content Include="Content\img\icons\social_big\digg_grey.png" />
+    <Content Include="Content\img\icons\social_big\digg_white.png" />
+    <Content Include="Content\img\icons\social_big\dribbble_grey.png" />
+    <Content Include="Content\img\icons\social_big\dribbble_white.png" />
+    <Content Include="Content\img\icons\social_big\facebook_grey.png" />
+    <Content Include="Content\img\icons\social_big\facebook_white.png" />
+    <Content Include="Content\img\icons\social_big\flickr_grey.png" />
+    <Content Include="Content\img\icons\social_big\flickr_white.png" />
+    <Content Include="Content\img\icons\social_big\html5_grey.png" />
+    <Content Include="Content\img\icons\social_big\html5_white.png" />
+    <Content Include="Content\img\icons\social_big\lastfm_grey.png" />
+    <Content Include="Content\img\icons\social_big\lastfm_white.png" />
+    <Content Include="Content\img\icons\social_big\linkedin_grey.png" />
+    <Content Include="Content\img\icons\social_big\linkedin_white.png" />
+    <Content Include="Content\img\icons\social_big\myspace_grey.png" />
+    <Content Include="Content\img\icons\social_big\myspace_white.png" />
+    <Content Include="Content\img\icons\social_big\paypal_grey.png" />
+    <Content Include="Content\img\icons\social_big\paypal_white.png" />
+    <Content Include="Content\img\icons\social_big\rss_grey.png" />
+    <Content Include="Content\img\icons\social_big\rss_white.png" />
+    <Content Include="Content\img\icons\social_big\skype_grey.png" />
+    <Content Include="Content\img\icons\social_big\skype_white.png" />
+    <Content Include="Content\img\icons\social_big\stumbleupon_white.png" />
+    <Content Include="Content\img\icons\social_big\tumblr_grey.png" />
+    <Content Include="Content\img\icons\social_big\tumblr_white.png" />
+    <Content Include="Content\img\icons\social_big\twitter_grey.png" />
+    <Content Include="Content\img\icons\social_big\twitter_white.png" />
+    <Content Include="Content\img\icons\social_big\vimeo_grey.png" />
+    <Content Include="Content\img\icons\social_big\vimeo_white.png" />
+    <Content Include="Content\img\icons\social_big\youtube_grey.png" />
+    <Content Include="Content\img\icons\social_big\youtube_white.png" />
+    <Content Include="Content\img\icons\social_small\amazon_grey.png" />
+    <Content Include="Content\img\icons\social_small\amazon_white.png" />
+    <Content Include="Content\img\icons\social_small\apple_grey.png" />
+    <Content Include="Content\img\icons\social_small\apple_white.png" />
+    <Content Include="Content\img\icons\social_small\delicious_grey.png" />
+    <Content Include="Content\img\icons\social_small\delicious_white.png" />
+    <Content Include="Content\img\icons\social_small\deviantart_grey.png" />
+    <Content Include="Content\img\icons\social_small\deviantart_white.png" />
+    <Content Include="Content\img\icons\social_small\digg_grey.png" />
+    <Content Include="Content\img\icons\social_small\digg_white.png" />
+    <Content Include="Content\img\icons\social_small\dribbble_grey.png" />
+    <Content Include="Content\img\icons\social_small\dribbble_white.png" />
+    <Content Include="Content\img\icons\social_small\facebook_grey.png" />
+    <Content Include="Content\img\icons\social_small\facebook_white.png" />
+    <Content Include="Content\img\icons\social_small\flickr_grey.png" />
+    <Content Include="Content\img\icons\social_small\flickr_white.png" />
+    <Content Include="Content\img\icons\social_small\html5_grey.png" />
+    <Content Include="Content\img\icons\social_small\html5_white.png" />
+    <Content Include="Content\img\icons\social_small\lastfm_grey.png" />
+    <Content Include="Content\img\icons\social_small\lastfm_white.png" />
+    <Content Include="Content\img\icons\social_small\linkedin_grey.png" />
+    <Content Include="Content\img\icons\social_small\linkedin_white.png" />
+    <Content Include="Content\img\icons\social_small\myspace_grey.png" />
+    <Content Include="Content\img\icons\social_small\myspace_white.png" />
+    <Content Include="Content\img\icons\social_small\paypal_grey.png" />
+    <Content Include="Content\img\icons\social_small\paypal_white.png" />
+    <Content Include="Content\img\icons\social_small\rss_grey.png" />
+    <Content Include="Content\img\icons\social_small\rss_white.png" />
+    <Content Include="Content\img\icons\social_small\skype_grey.png" />
+    <Content Include="Content\img\icons\social_small\skype_white.png" />
+    <Content Include="Content\img\icons\social_small\stumbleupon_white.png" />
+    <Content Include="Content\img\icons\social_small\tumblr_grey.png" />
+    <Content Include="Content\img\icons\social_small\tumblr_white.png" />
+    <Content Include="Content\img\icons\social_small\twitter_grey.png" />
+    <Content Include="Content\img\icons\social_small\twitter_white.png" />
+    <Content Include="Content\img\icons\social_small\vimeo_grey.png" />
+    <Content Include="Content\img\icons\social_small\vimeo_white.png" />
+    <Content Include="Content\img\icons\social_small\youtube_grey.png" />
+    <Content Include="Content\img\icons\social_small\youtube_white.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -1063,6 +1242,8 @@
     <Content Include="Content\js\modernizr-2.8.3.js" />
     <Content Include="Content\js\npm.js" />
     <Content Include="Content\js\_references.js" />
+    <Content Include="Content\js\jquery.signalR-2.2.0.js" />
+    <Content Include="Content\js\jquery.signalR-2.2.0.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1094,6 +1275,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\World\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

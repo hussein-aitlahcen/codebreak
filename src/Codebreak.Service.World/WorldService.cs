@@ -1,26 +1,28 @@
-﻿using System.Text;
-using System.Threading;
-using Codebreak.Framework.Command;
+﻿using Codebreak.Framework.Command;
 using Codebreak.Framework.Configuration;
 using Codebreak.Framework.Configuration.Providers;
+using Codebreak.Framework.Database;
+using Codebreak.Framework.Generic;
 using Codebreak.Framework.Network;
+using Codebreak.Framework.Util;
+using Codebreak.RPC.Protocol;
 using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Database;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game;
+using Codebreak.Service.World.Game.Job;
 using Codebreak.Service.World.Manager;
+using Codebreak.Service.World.Network;
 using Codebreak.Service.World.RPC;
 using System;
-using Codebreak.Framework.Database;
-using System.Diagnostics;
-using Codebreak.RPC.Protocol;
-using System.Threading.Tasks;
-using Codebreak.Framework.Generic;
-using Codebreak.Service.World.Network;
-using Codebreak.Service.World.Game.Job;
 using System.Collections.Generic;
-using Codebreak.Framework.Util;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codebreak.Service.World
 {
@@ -72,7 +74,9 @@ namespace Codebreak.Service.World
 
             base.AddUpdatable(Dispatcher = new MessageDispatcher());
             base.AddUpdatable(RPCManager.Instance);
+
             base.AddTimer(WorldConfig.WORLD_SAVE_INTERVAL, SaveWorld);
+            base.AddTimer(WorldConfig.WEB_PLAYERS_CONNECTED_UPDATE_INTERVAL, UpdateOnlinePlayers);
 
             Crypt.GenerateNetworkKey();            
             WorldDbMgr.Instance.Initialize();
@@ -181,6 +185,24 @@ namespace Codebreak.Service.World
             );
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateOnlinePlayers()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadString(WorldConfig.WEB_PLAYERS_CONNECTED_UPDATE_URL + ClientManager.Instance.Clients.Count());
+                }
+            }
+            catch(Exception ex)
+            {
+            }
+        }
+
         #endregion
+
     }
 }

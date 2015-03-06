@@ -112,7 +112,14 @@
         "language_fr": "Français",
         "language_en": "Anglais",
 
-        "servers_status":  "Status des serveurs"
+        "servers_status": "Status des serveurs",
+
+        "socials": "Réseaux sociaux",
+
+        "live_data": "Statistiques live",
+        "live_players_playing": "Joueur(s) en jeu",
+        "live_visitor_count": "Visiteur(s) en ligne",
+        "live_players_connected": "Utilisateur(s) connécté(s)"
     },
 
     "copyright": {

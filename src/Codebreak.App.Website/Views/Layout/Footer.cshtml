@@ -1,40 +1,4 @@
-﻿<!-- Footer -->
-<footer class="footer z-layer-3">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <blockquote>
-                    <span class="fa fa-plug"></span>
-                    <span data-i18n="footer.servers_status"></span>
-                </blockquote>
-                <p class="small">
-                    WebService : <span class="fa fa-check green"></span>
-                    <br />
-                    AuthService : <span class="fa fa-check green"></span>
-                    <br />
-                    WorldService : <span class="fa fa-check green"></span>
-                </p>
-            </div>
-            <div class="col-md-6">
-                <blockquote>
-                    <span class="fa fa-globe"></span>
-                    <span data-i18n="footer.languages"></span>
-                </blockquote>
-                <p class="small">
-                    <a href="#" class="lang-selection" data-i18n="footer.language_fr" onclick="setLang('fr')">
-                        fr
-                    </a>
-                    /
-                    <a href="#" class="lang-selection" data-i18n="footer.language_en" onclick="setLang('en')">
-                        en
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- Copyright -->
+﻿<!-- Copyright -->
 <div class="copyright z-layer-3">
     <div class="container">
         <div class="row">
@@ -54,8 +18,14 @@
 </div>
 
 <!-- Scripts-->
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/angular")
+@Scripts.Render("~/bundles/app")
 @Scripts.Render("~/bundles/i18next")
 @Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/signalr")
+<script src="~/signalr/hubs"></script>
 
 <!-- i18n boot -->
 <script type="text/javascript">
