@@ -373,13 +373,12 @@ namespace Codebreak.Service.World
         public static int FIGHT_PUSH_CELL_TIME = 270;
         [Configurable()]
         public static int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
-
+        
+        [Configurable()]
+        public static int WEB_PLAYERS_CONNECTED_UPDATE_INTERVAL = 1000 * 60;
 
         [Configurable()]
-        public static int WEB_PLAYERS_CONNECTED_UPDATE_INTERVAL = 1000 * 20;
-
-        [Configurable()]
-        public static string WEB_PLAYERS_CONNECTED_UPDATE_URL = "http://localhost:53011/World/UpdateConnected/";
+        public static string WEB_PLAYERS_CONNECTED_UPDATE_URL = "http://origin.earthscape.fr/World/UpdateConnected/";
 
         // ChatRestriction
         public static Dictionary<ChatChannelEnum, long> CHAT_RESTRICTED_DELAY = new Dictionary<ChatChannelEnum, long>()
