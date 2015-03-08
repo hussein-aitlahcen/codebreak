@@ -17,6 +17,7 @@
         "contact": "Nous contacter",
         "login": "Connexion",
         "logout": "Déconnexion",
+        "chat": "Chat",
         "about": "A propos"
     },
 
@@ -32,7 +33,7 @@
         "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre émulateur est inédit et basé sur aucun autre.<br/>Vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
 
         "server_desc_official_gameplay_title": "Revivez l'expérience",
-        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisants. Mode heroïque, gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
+        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisans. Mode heroïque, gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
 
         "server_desc_high_quality_title": "Qualité et écoute",
         "server_desc_high_quality_text": "Ouvrir un serveur à des fidèles de la version 1.29. S'entourer d'une équipe à l'écoute des joueurs. Développer des outils robustes. Tels étaient mes objectifs."
@@ -81,14 +82,18 @@
         "title": "Top",
         "informations": "Informations",
         "next_refresh": "Prochaine mise à jour du classement à",
-        "last_refresh": "Dernière mise à jour éfféctuée à",
+        "last_refresh": "Dernière mise à jour efféctuée à",
         "change": "Performance",
         "rank": "Rang",
         "name": "Nom",
         "breed": "Race",
         "level": "Niveau",
         "experience": "Experience",
-        "change_legend": "La performance représente la différence entre le rang actuel et le précédant"
+        "change_legend": "La performance représente la différence entre le rang actuel et le précédent"
+    },
+
+    "chat": { 
+        "title": "Chat communautaire"
     },
 
     "team": {
@@ -123,14 +128,14 @@
         "language_fr": "Français",
         "language_en": "Anglais",
 
-        "servers_status": "Status des serveurs",
+        "servers_status": "Statut des serveurs",
 
         "socials": "Réseaux sociaux",
 
         "live_data": "Statistiques live",
         "live_players_playing": "Joueur(s) en jeu",
         "live_visitor_count": "Visiteur(s) en ligne",
-        "live_players_connected": "Utilisateur(s) connécté(s)"
+        "live_players_connected": "Utilisateur(s) connecté(s)"
     },
 
     "copyright": {

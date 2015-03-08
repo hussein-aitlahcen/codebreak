@@ -160,6 +160,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\BaseViewPage.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CommunityController.cs" />
     <Compile Include="Controllers\CompressAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Models\Worldservice\CharacterRepository.cs" />
     <Compile Include="Models\Worldservice\WorldDbMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Signalr\ChatHub.cs" />
     <Compile Include="Signalr\ConnectionMapping.cs" />
     <Compile Include="Signalr\Startup.cs" />
     <Compile Include="Signalr\StatisticHub.cs" />
@@ -1272,6 +1274,8 @@
     <Content Include="Views\Join\RegisterContent.cshtml" />
     <Content Include="Views\Layout\Header.cshtml" />
     <Content Include="Views\Layout\Footer.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\Chat\IndexContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

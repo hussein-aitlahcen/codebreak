@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
 
 namespace Codebreak.App.Website.Controllers
 {
-    public class HomeController : WrappedController
+    [Authorize]
+    public class ChatController : WrappedController
     {
         public ActionResult Index()
         {
@@ -15,7 +15,7 @@ namespace Codebreak.App.Website.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
+        //[OutputCache(Duration = GENERIC_CACHE_DURATION)]
         public ActionResult IndexContent()
         {
             return PartialView();

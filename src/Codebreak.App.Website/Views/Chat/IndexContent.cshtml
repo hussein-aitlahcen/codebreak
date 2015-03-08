@@ -1,0 +1,35 @@
+﻿
+
+<h4 class="text-center" data-i18n="chat.title">
+</h4>
+<hr />
+<div class="row chat-container">
+    <div class="col-md-9">
+        <div class="row chat-content">
+        </div>
+        <div class="row chat-input">
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div id="users-list" class="list-group chat-users ladder-list text-center">
+            <div class="list-group-item" data-i18n="chat.users">
+            </div>
+            <a class="list-group-item chat-user" href="#">
+                <div class="row">
+                    [Admin] Smarken123
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Chat script -->
+<script type="text/javascript">
+    var current = document.onload;
+    document.onload = function () {
+        if (current != null)
+            current();
+
+        $("#users-list").append("Salut");
+    }
+</script>
