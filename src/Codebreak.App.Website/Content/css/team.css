@@ -1,0 +1,8 @@
+﻿.staff-img {
+    height: 200px;
+    background: 
+        url('/Content/img/staff/no_avatar.jpg');
+    background-position: center;
+    background-size: 200px;
+    background-repeat: no-repeat;
+}

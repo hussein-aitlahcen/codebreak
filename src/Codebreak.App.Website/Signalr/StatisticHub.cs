@@ -31,7 +31,7 @@ namespace Codebreak.App.Website.Signalr
         public readonly static ConnectionMapping<AccountTicket> Users = new ConnectionMapping<AccountTicket>(new AccountComparer());
 
         /// <summary>
-        /// Interlocked increment ensure thread safety
+        ///
         /// </summary>
         /// <returns></returns>
         public override System.Threading.Tasks.Task OnConnected()
@@ -65,7 +65,7 @@ namespace Codebreak.App.Website.Signalr
         }
 
         /// <summary>
-        /// Interlocked decrement ensure thread safety
+        ///
         /// </summary>
         /// <param name="stopCalled"></param>
         /// <returns></returns>

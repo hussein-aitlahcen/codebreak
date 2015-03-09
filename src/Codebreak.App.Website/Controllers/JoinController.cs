@@ -87,31 +87,30 @@ namespace Codebreak.App.Website.Controllers
     {
         private static object RegisterLock = new object();
         
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
             ViewBag.LoginErrors = new List<string>();
-            ViewBag.Name = "";
-            ViewBag.Password = "";
+            ViewBag.Name = string.Empty;
+            ViewBag.Password = string.Empty;
+            ViewBag.ReturnUrl = returnUrl;
 
+            if (string.IsNullOrEmpty(returnUrl) && Request.UrlReferrer != null)
+                ViewBag.ReturnURL = Server.UrlEncode(Request.UrlReferrer.PathAndQuery);
+            else
+                ViewBag.LoginErrors.Add("error_need_connect");
+            
             return View();
         }
-
-
-        [ChildActionOnly]
-        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
-        public ActionResult LoginContent()
-        {
-            return PartialView();
-        }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel model)
+        public ActionResult Login(LoginModel model, string returnUrl)
         {
             bool valid = false;
             var errors = new List<string>();
             Account account = null;
             ViewBag.LoginErrors = errors;
+
             if (!ModelState.IsValid)
             {
                 foreach (var state in ModelState)
@@ -140,7 +139,19 @@ namespace Codebreak.App.Website.Controllers
             else
             {
                 FormsAuthentication.SetAuthCookie(account.Name, true);
-                return Redirect(GetRedirectUrl());
+                
+                string decodedUrl = "";
+                if (!string.IsNullOrEmpty(returnUrl))
+                    decodedUrl = Server.UrlDecode(returnUrl);
+
+                if (Url.IsLocalUrl(decodedUrl))
+                {
+                    return Redirect(decodedUrl);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
         }
 
@@ -161,24 +172,17 @@ namespace Codebreak.App.Website.Controllers
             }
 
             ViewBag.RegisterErrors = new List<string>();
-            ViewBag.Name = "";
-            ViewBag.Pseudo = "";
-            ViewBag.Password = "";
-            ViewBag.Confirm = "";
-            ViewBag.Email = "";
-            ViewBag.Question = "";
-            ViewBag.Answer = "";
+            ViewBag.Name = string.Empty;
+            ViewBag.Pseudo = string.Empty;
+            ViewBag.Password = string.Empty;
+            ViewBag.Confirm = string.Empty;
+            ViewBag.Email = string.Empty;
+            ViewBag.Question = string.Empty;
+            ViewBag.Answer = string.Empty; 
 
             return View();
         }
-
-        [ChildActionOnly]
-        [OutputCache(Duration = GENERIC_CACHE_DURATION)]
-        public ActionResult RegisterContent()
-        {
-            return PartialView();
-        }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(AccountModel model)

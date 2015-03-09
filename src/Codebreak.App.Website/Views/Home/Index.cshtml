@@ -2,4 +2,8 @@
     ViewBag.Title = "Home";
 }
 
+@section styles {
+    @Styles.Render("~/Content/home")
+}
+
 @Html.Action("IndexContent", "Home")

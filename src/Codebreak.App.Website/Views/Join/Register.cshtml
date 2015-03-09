@@ -26,5 +26,58 @@
 }
 <form class="register-form" method="POST" action="#">        
     @Html.AntiForgeryToken()
-    @Html.Action("RegisterContent", "Join")
+    <label class="lbl-register-input" data-i18n="auth.input_account_name">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+        <input type="text" name="Name" id="Name" value="@ViewBag.Name" class="form-control">
+    </div>
+    <label class="lbl-register-input" data-i18n="auth.input_account_pseudo">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-star"></i></span>
+        <input type="text" name="Pseudo" id="Pseudo" value="@ViewBag.Pseudo" class="form-control">
+    </div>
+    <label class="lbl-register-input" data-i18n="auth.input_account_password">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+        <input type="password" name="Password" id="Password" value="@ViewBag.Password" class="form-control">
+    </div>
+    <label class="lbl-register-input" data-i18n="auth.input_account_password_confirm">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+        <input type="password" name="PasswordConfirmation" id="PasswordConfirmation" class="form-control">
+    </div>
+    <label class="lbl-register-input" data-i18n="auth.input_account_email">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+        <input type="text" name="Email" id="Email" value="@ViewBag.Email" class="form-control">
+    </div>
+    <label class="lbl-register-input" data-i18n="auth.input_account_question">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-shield"></i></span>
+        <input type="text" id="Question" name="Question" value="@ViewBag.Question" class="form-control">
+    </div>
+    <label class="lbl-register-input" data-i18n="auth.input_account_answer">
+    </label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-fw fa-cogs"></i></span>
+        <input type="text" id="Anwser" name="Answer" value="@ViewBag.Answer" class="form-control">
+    </div>
+    <hr>
+    <div class="row text-center">
+        <div class="alert alert-info" role="alert">
+            <strong data-i18n="register.alert_agree_terms"></strong>
+        </div>
+    </div>
+    <div class="row text-center">
+        <button class="btn-register-validate btn btn-info" type="submit" formaction="Register" formmethod="post" name="register">
+            <span class="fa fa-check-square"></span>
+            <span data-i18n="auth.validate"></span>
+        </button>
+    </div>
 </form>
