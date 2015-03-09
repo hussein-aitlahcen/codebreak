@@ -83,8 +83,8 @@ namespace Codebreak.Service.World.Game.Condition
 
                         // Perso
                         realConditions.Replace("Ps", "character.AlignmentId");
-                        realConditions.Replace("Pa", "character.AlignmentLevel");
-                        realConditions.Replace("PP", "character.AlignmentPromotion");
+                        realConditions.Replace("Pa", "character.AlignmentPromotion");
+                        realConditions.Replace("PP", "character.AlignmentLevel");
                         realConditions.Replace("PL", "character.Level");
                         realConditions.Replace("PK", "character.Inventory.Kamas");
                         realConditions.Replace("PG", "character.BreedId");

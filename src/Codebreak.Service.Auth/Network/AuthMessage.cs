@@ -105,7 +105,7 @@ namespace Codebreak.Service.Auth.Network
         /// <returns></returns>
         public static string ACCOUNT_RIGHT(int right)
         {
-            return "AlK" + right;
+            return "AlK" + (right > 0 ? 1 : 0);
         }
 
         /// <summary>

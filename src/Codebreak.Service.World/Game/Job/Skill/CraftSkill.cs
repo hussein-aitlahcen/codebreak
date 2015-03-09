@@ -34,7 +34,11 @@ namespace Codebreak.Service.World.Game.Job.Skill
         {
             Craftables = new List<ItemTemplateDAO>();
             foreach (var craftableItem in craftables)
-                Craftables.Add(ItemTemplateRepository.Instance.GetById(craftableItem));
+            {
+                var template = ItemTemplateRepository.Instance.GetById(craftableItem);
+                if(template != null)
+                    Craftables.Add(template);
+            }
         }
 
         /// <summary>

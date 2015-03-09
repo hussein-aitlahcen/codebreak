@@ -1,0 +1,160 @@
+﻿{
+    "common": {
+        "or": "our",
+        "and": "et",
+        "seconds": "secondes"
+    },
+
+    "nav": {
+        "home": "Accueil",
+        "join_us": "Nous rejoindre",
+        "register": "Inscription",
+        "download": "Téléchargement",
+        "community": "Communauté",
+        "forum": "Forum",
+        "ladder": "Classement",
+        "team": "L'équipe",
+        "contact": "Nous contacter",
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "chat": "Chat",
+        "about": "A propos"
+    },
+
+    "home": {
+        "dalai_lama": "Il n'y a personne qui soit né sous une mauvaise étoile, il n'y a que des gens qui ne savent pas lire le ciel.",
+        "the_best": "Exigez le meilleur",
+
+        "step_register": "Inscris toi",
+        "step_download_and_install": "Télécharge et installe",
+        "step_forum_and_discuss": "Echange sur le forum",
+
+        "server_desc_unique_emulator_title": "Services inédits",
+        "server_desc_unique_emulator_text": "Développé par des professionnels, pour des joueurs. Notre émulateur est inédit et basé sur aucun autre.<br/>Vous ne soupçonnez pas ce qu'il est possible de faire. Prenez le temps de jouer, vous ne saurez vous en aller.",
+
+        "server_desc_official_gameplay_title": "Revivez l'expérience",
+        "server_desc_official_gameplay_text": "Les metiers sont plus que jamais présents, farmez, fabriquez et devenez le meilleur des artisans. Mode heroïque, gagnez des objets après la mort d'autres joueurs. Nostalgiques de la version 1.29, nous vous assurons des sensations oubliées.",
+
+        "server_desc_high_quality_title": "Qualité et écoute",
+        "server_desc_high_quality_text": "Ouvrir un serveur à des fidèles de la version 1.29. S'entourer d'une équipe à l'écoute des joueurs. Développer des outils robustes. Tels étaient mes objectifs."
+    },
+
+    "auth": {
+        "register_to_play": "Inscrivez vous et jouez dès maintenant.",
+        "login_to_play": "Connectez vous !",
+        "input_account_name": "Nom de compte",
+        "input_account_password": "Mot de passe",
+        "input_account_password_confirm": "Confirmez votre mot de passe",
+        "input_account_pseudo": "Pseudo",
+        "input_account_email": "Email",
+        "input_account_question": "Question secrète",
+        "input_account_answer": "Réponse à la question secrète",
+        "validate": "Valider",
+
+        "error_banned": "Vous ête banni.",
+        "error_need_connect": "Vous devez vous authentifier pour accéder à cette ressource.",
+        "error_invalid_credentials": "Nom de compte ou mot de passe inccorect.",
+        "error_no_name": "Veuillez saisir un nom de compte.",
+        "error_name_short": "Le nom de compte doit contenir au moins 6 caractères.",
+        "error_no_pseudo": "Veuillez saisir un pseudo d'au moins 6 caractères.",
+        "error_pseudo_short": "Le pseudo doit contenir au moins 6 caractères.",
+        "error_no_password": "Veuillez saisir un mot de passe d'au moins 6 caractères.",
+        "error_password_short": "Le mot de passe doit contenir au moins 6 caractères.",
+        "error_password_confirm": "Le mot de passe de confirmation n'est pas identique.",
+        "error_invalid_mail": "Veuillez saisir une addresse mail valide.",
+        "error_no_question": "Veuillez saisir une question secrète.",
+        "error_question_short": "La question secrète doit contenir au moins 10 caractères.",
+        "error_no_answer": "Veuillez saisir une reponse secrète.",
+        "error_answer_short": "La reponse secrète doit contenir au moins 10 caractères.",
+        "error_name_exists": "Le nom de compte est déjà pris.",
+        "error_pseudo_exists": "Ce pseudo éxiste déjà.",
+        "error_database": "Une erreur est survenue lors de l'enregistrement des données, votre inscription a échouée."
+    },
+
+    "register": {
+        "failed": "L'inscription a échouée",
+        "alert_agree_terms": "En cliquant sur le bouton Valider vous acceptez les Conditions Générales d'Utilisation."
+    },
+
+    "login": {
+        "failed": "Connexion impossible"
+    },
+
+    "ladder": {
+        "title": "Top",
+        "informations": "Informations",
+        "next_refresh": "Prochaine mise à jour du classement à",
+        "last_refresh": "Dernière mise à jour efféctuée à",
+        "change": "Performance",
+        "rank": "Rang",
+        "name": "Nom",
+        "breed": "Race",
+        "level": "Niveau",
+        "experience": "Experience",
+        "change_legend": "La performance représente la différence entre le rang actuel et le précédent"
+    },
+
+    "chat": {
+        "title": "Chat communautaire",
+        "users": "Utilisateurs",
+        "moderator": "<strong>[Moderateur]</strong>",
+        "animator": "<strong>[Animateur]</strong>",
+        "administrator": "<strong>[Administrateur]</strong>",
+        "boss": "<strong>[Boss]</strong>",
+        "send": "Envoyer",
+        "write": "Saisissez un message ...",
+        "user_left": "__user__ s'est déconnecté",
+        "user_join": "__user__ viens de rejoindre le chat",
+
+        "error_disconnected": "Vous êtes déconnecté, reconnexion en cours...",
+        "error_connecting": "Connexion en cours...",
+        "error_connected": "Vous êtes connecté"
+    },
+
+    "team": {
+        "title": "Nos experts",
+        "cliff": "Administrateur, développeur web/serveur/base de donnée",
+        "flynn": "Administrateur, concepteur/scénariste."
+    },
+
+    "download": {
+        "title": "Télécharge et joue dès maintenant !",
+        "step_register": "S'inscrire",
+        "step_register_text": "Inscrivez vous si ce n'est déjà fait.<br>Passez ensuite à l'étape de téléchargement.",
+        "step_register_link_text": "Accédez au formulaire d'inscription",
+        "step_download": "Télécharger le client",
+        "step_download_text": "Cliquez sur le lien ci dessous afin d'enregistrer l'archive, une fois téléchargée, décompressez là.<br>Vous êtes enfin pret a jouer.",
+        "step_download_link_text": "Télécharger le client Earthscape - Origin"
+    },
+
+    "contact": {
+        "feedback_suggestions_title": "Réactions & Suggestions",
+        "feedback_suggestions_text": "Une question, une suggestion ou une demande spécifique ? N'hésitez pas à adresser vos requêtes par mail ou sur le forum.<br>Nous y répondrons dans les meilleurs délais.",
+
+        "need_help_title": "Besoin d'aide ou d'astuces ?",
+        "need_help_text": "Vous êtes bloqué ou vous avez un problème avec notre client. Dirigez vous sur le forum afin de nous contacter, des dizaines de joueurs vous apporteront leur aide.",
+
+        "we_recruit_title": "Nous recrutons !",
+        "we_recruit_text": "Nous recherchons des animateurs et modérateurs très actifs pour gérer le forum. Leur travail sera de passer quotidiennement sur le forum pour le contrôler, l'animer et répondre aux questions des joueurs.<br>C'est un travail sérieux car ceux qui seront pris, seront en contact direct avec les joueurs. Nous attendons donc des personnes motivées et prêtes à s'investir. Veuillez nous transmettre vos candidatures par mail."
+    },
+
+    "footer": {
+        "languages": "Langues",
+        "language_fr": "Français",
+        "language_en": "Anglais",
+
+        "servers_status": "Statut des serveurs",
+
+        "socials": "Réseaux sociaux",
+
+        "live_data": "Statistiques live",
+        "live_players_playing": "Joueur(s) en jeu",
+        "live_visitor_count": "Visiteur(s) en ligne",
+        "live_players_connected": "Utilisateur(s) connecté(s)"
+    },
+
+    "copyright": {
+        "rights_reserved": "2015 © Earthscape, Tout droits réservés.",
+        "terms": "Conditions Générales d'Utilisation."
+    }
+}

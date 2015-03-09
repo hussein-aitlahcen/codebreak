@@ -336,8 +336,19 @@ namespace Codebreak.Service.World.Frame
                 return;
             }
 
+            if(character.Guild.GuildId != -1)
+            {
+                var guild = GuildManager.Instance.GetGuild(character.Guild.GuildId);
+                guild.MemberKick(GuildManager.Instance.GetMember(character.Guild.GuildId, character.Id), character.Name);
+            }
+
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_CHARACTER, character.Id);
             InventoryItemRepository.Instance.EntityRemoved((int)EntityTypeEnum.TYPE_MERCHANT, character.Id);
+
+            CharacterGuildRepository.Instance.ImplicitDeletion(character.Guild);
+            CharacterAlignmentRepository.Instance.ImplicitDeletion(character.Alignment);
+            foreach (var job in CharacterJobRepository.Instance.GetByCharacterId(character.Id))
+                CharacterJobRepository.Instance.ImplicitDeletion(job);
 
             client.Characters.Remove(character);
 
@@ -426,7 +437,7 @@ namespace Codebreak.Service.World.Frame
             WorldService.Instance.AddMessage(() =>
             {
                 SpellBookEntryRepository.Instance.RemoveAll(0, character.Id);
-                SqlManager.Instance.ExecuteQuery("CALL character_generate_spells(" + character.Id + ", " + character.Breed + ");");
+                SpellBookEntryRepository.Instance.SqlMgr.ExecuteQuery("CALL character_generate_spells(" + character.Id + ", " + character.Breed + ");");
                 client.Send(WorldMessage.CHARACTER_LIST(client.Characters));
             });
         }

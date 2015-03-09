@@ -1,0 +1,28 @@
+﻿{
+    "nav": {
+        "home": "Home",
+        "join_us": "Join us",
+        "register": "Register",
+        "download": "Download",
+        "community": "Community",
+        "forum": "Forum",
+        "ladder": "Ladder",
+        "team": "Staff",
+        "contact": "Contact us"
+    },
+
+    "home": {
+        "news": "News"
+    },
+
+    "team": {
+        "title": "Our experts.",
+        "cliff": "Administrator, web/server/database developper",
+        "flynn": "Administrator, mapper/scripter."
+    },
+
+    "copyright": {
+        "rights_reserved": "2015 © Earthscape, All rights reserved.",
+        "terms": "Terms of use."
+    }
+}

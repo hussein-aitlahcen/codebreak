@@ -73,6 +73,10 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 case SkillIdEnum.SKILL_PREPARER_UN_POISSON:
                 case SkillIdEnum.SKILL_PREPARER_UNE_POTION:
                 case SkillIdEnum.SKILL_PREPARER_UNE_VIANDE:
+                case SkillIdEnum.SKILL_CONFECTIONNER_UNE_CLEF:
+                case SkillIdEnum.SKILL_BRICOLER:
+                case SkillIdEnum.SKILL_PREPARER:
+                case SkillIdEnum.SKILL_VIDER_POISSON:
                     Craft(character, skill);
                     break;
             }

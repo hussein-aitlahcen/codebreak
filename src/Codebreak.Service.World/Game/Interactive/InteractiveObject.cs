@@ -246,6 +246,17 @@ namespace Codebreak.Service.World.Game.Interactive
             message.Append(m_frameId).Append(';');
             message.Append(IsActive ? '1' : '0').Append('|');
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SerializeAs_FightInteractiveListMessage(StringBuilder message)
+        {
+            message.Append(CellId).Append(';');
+            message.Append(m_frameId).Append(';');
+            message.Append('0').Append('|'); // not activated for fights
+        }
       
         /// <summary>
         /// 

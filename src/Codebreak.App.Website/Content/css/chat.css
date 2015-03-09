@@ -1,0 +1,31 @@
+﻿/* Chat */
+.chat-content, .chat-users-list {
+    height: 600px;    
+    overflow-y: scroll;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.chat-message {
+    border-bottom: 1px solid lightgray;
+}
+
+.chat-message-content {
+    padding-bottom: 10px;
+}
+
+.chat-message:hover {
+    background-color: beige;
+}
+
+.chat-user-img {
+    height: 48px;
+    width: 48px;
+    margin-top: 4px;
+    margin-left: 4px;
+}
+
+
+.chat-users-list .list-group-item:nth-child(even) {
+    background-color: #D1F4FF;
+}

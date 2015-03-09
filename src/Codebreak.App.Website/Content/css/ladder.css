@@ -1,0 +1,31 @@
+﻿/* Ladder */
+.ladder-breed-img {
+    margin-bottom: -10px;
+}
+
+.ladder-list .list-group-item:first-child {
+    background-color: #546BA8;
+    color: white;
+}
+
+.ladder-list .list-group-item:nth-child(even) {
+    background-color: #D1F4FF;
+}
+
+.ladder-list .list-group-item:nth-child(n + 2):hover, .ladder-list .list-group-item:nth-child(n + 2):hover * {
+    background: #C1022D;
+    color: white;
+}
+
+.ladder-change-up {
+    color: green;
+}
+
+.ladder-change-down {
+    color: red;
+}
+
+.ladder-change-stable {
+    color: gray;
+    opacity: 0.4;
+}

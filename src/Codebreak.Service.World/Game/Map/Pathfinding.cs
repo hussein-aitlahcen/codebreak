@@ -861,7 +861,7 @@ namespace Codebreak.Service.World.Game.Map
                 }
 
                 // aggressé par un groupe de mobs
-                if (entity.Type == EntityTypeEnum.TYPE_CHARACTER && map.Entities.OfType<MonsterGroupEntity>().Any(monsters => GoalDistance(map, lastCell, monsters.CellId) <= monsters.AggressionRange))
+                if (entity.Type == EntityTypeEnum.TYPE_CHARACTER && map.Entities.OfType<MonsterGroupEntity>().Any(monsters => map.CanBeAggro((CharacterEntity)entity, lastCell, monsters)))
                 {
                     length = -2;
                     break;
@@ -1072,6 +1072,78 @@ namespace Codebreak.Service.World.Game.Map
         //    return true;
         //}
 
+        // Swap the values of A and B
+        private static void Swap<T>(ref T a, ref T b)
+        {
+            T c = a;
+            a = b;
+            b = c;
+        }
+
+        // Returns the list of points from p0 to p1 
+        private static bool BresenhamLine(FightBase fight, int beginCell, int endCell)
+        {
+            if (beginCell == endCell)
+                return true;
+
+            var begin = GetPoint(fight.Map, beginCell);
+            var end = GetPoint(fight.Map, endCell);
+            return BresenhamLine(fight, beginCell, endCell, (int)begin.X, (int)begin.Y, (int)end.X, (int)end.Y);
+        }
+
+        private static bool BresenhamLine(FightBase fight, int beginCell, int endCell, int x0, int y0, int x1, int y1)
+        {
+            bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            if (steep)
+            {
+                Swap(ref x0, ref y0);
+                Swap(ref x1, ref y1);
+            }
+            if (x0 > x1)
+            {
+                Swap(ref x0, ref x1);
+                Swap(ref y0, ref y1);
+            }
+
+            int deltax = x1 - x0;
+            int deltay = Math.Abs(y1 - y0);
+            int error = 0;
+            int ystep;
+            int y = y0;
+            if (y0 < y1) ystep = 1; else ystep = -1;
+            for (int x = x0; x <= x1; x++)
+            {
+                int cellId = -1;
+                if (steep)
+                { 
+                    cellId = GetCell(fight.Map, y, x);
+                }
+                else
+                {
+                    cellId = GetCell(fight.Map, x, y);
+                }
+                if (cellId != beginCell && cellId != endCell)
+                {
+                    var fightCell = fight.GetCell(cellId);
+                    if (fightCell == null)
+                        return false;
+                    if (!fightCell.LineOfSight)
+                        return false;
+                    if (fightCell.HasObject(FightObstacleTypeEnum.TYPE_FIGHTER))
+                        return false;
+                }
+
+                error += deltay;
+                if (2 * error >= deltax)
+                {
+                    y += ystep;
+                    error -= deltax;
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1081,6 +1153,8 @@ namespace Codebreak.Service.World.Game.Map
         /// <returns></returns>
         public static bool CheckView(FightBase fight, int beginCell, int endCell)
         {
+            return BresenhamLine(fight, beginCell, endCell);
+
             var begin = GetPoint(fight.Map, beginCell);
             var end = GetPoint(fight.Map, endCell);
             var deltax = Math.Abs(end.X - begin.X);

@@ -82,7 +82,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="defender"></param>
         public void StartChallenge(CharacterEntity attacker, CharacterEntity defender)
         {
-            if(!CanStartFight(attacker))
+            if(CanStartFight(attacker))
                 Add(new ChallengerFight(m_map, m_fightId++, attacker, defender));            
         }
 
@@ -93,8 +93,24 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="victim"></param>
         public void StartAggression(CharacterEntity aggressor, CharacterEntity victim)
         {
-            if (!CanStartFight(aggressor))
+            if (CanStartFight(aggressor))
                 Add(new AlignmentFight(m_map, m_fightId++, aggressor, victim));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aggressor"></param>
+        /// <param name="victim"></param>
+        public bool StartAggression(MonsterGroupEntity monsters, CharacterEntity victim)
+        {
+            if (CanStartFight(victim))
+            {
+                monsters.StopAction(GameActionTypeEnum.MAP);
+                Add(new AlignmentFight(m_map, m_fightId++, monsters, victim));
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

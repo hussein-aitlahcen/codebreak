@@ -172,8 +172,8 @@ namespace Codebreak.Service.World
         [Configurable()]
         public static int CELL_START_XELOR = 286;
 
-        public static Dictionary<JobIdEnum, int[]> JOB_TOOLS = new Dictionary<JobIdEnum,int[]>() { 
-            { JobIdEnum.JOB_BUCHERON, new int[] { 454, 456, 478, 502, 673, 674, 675, 676, 771, 2587, 2592, 2593, 2600, 7212 } },
+        public static Dictionary<JobIdEnum, int[]> JOB_TOOLS = new Dictionary<JobIdEnum, int[]>() { 
+            { JobIdEnum.JOB_BUCHERON, new int[] { 454, 8539, 1378, 2608, 478, 2593, 2592, 2600, 2604, 456, 502, 675, 674, 923, 927, 515, 782, 673, 676, 771 } },
             { JobIdEnum.JOB_PAYSAN, new int[] { 577, 765, 8127, 8540, 8992, 12006 } },
             { JobIdEnum.JOB_PECHEUR, new int[] { 596, 1860, 1863, 1865, 1866, 1867, 1868, 2188, 2366, 8541 } },
             { JobIdEnum.JOB_FORGEUR_EPEES, new int[] { 494 } },
@@ -190,7 +190,11 @@ namespace Codebreak.Service.World
             { JobIdEnum.JOB_SCULPTEUR_DE_BAGUETTES, new int[] { 499 } },          
             { JobIdEnum.JOB_FORGEUR_DE_DAGUES, new int[] { 495 } },          
             { JobIdEnum.JOB_FORGEUR_DE_PELLES, new int[] { 496 } },          
-            { JobIdEnum.JOB_FORGEUR_DE_HACHES, new int[] { 922 } }
+            { JobIdEnum.JOB_FORGEUR_DE_HACHES, new int[] { 922 } },         
+            { JobIdEnum.JOB_BRICOLEUR, new int[] { 7650 } },    
+            { JobIdEnum.JOB_CHASSEUR, new int[] { } },
+            { JobIdEnum.JOB_BOUCHER, new int[] { 1945 } },
+            { JobIdEnum.JOB_POISSONNIER, new int[] { 1946 } },
         };
 
         public static Dictionary<int, int> BOOST_ITEMS = new Dictionary<int, int>()
@@ -349,7 +353,7 @@ namespace Codebreak.Service.World
         public static int AGGRESSION_TURN_TIME = 30000;
 
         [Configurable()]
-        public static double TAXCOLLECTOR_XP_RATIO = 0.01;
+        public static double TAXCOLLECTOR_XP_RATIO = 0.05;
         [Configurable()]
         public static int TAXCOLLECTOR_MIN_NAME = 1;
         [Configurable()]
@@ -369,6 +373,12 @@ namespace Codebreak.Service.World
         public static int FIGHT_PUSH_CELL_TIME = 270;
         [Configurable()]
         public static int FIGHT_PANDA_LAUNCH_CELL_TIME = 250;
+        
+        [Configurable()]
+        public static int WEB_PLAYERS_CONNECTED_UPDATE_INTERVAL = 1000 * 60;
+
+        [Configurable()]
+        public static string WEB_PLAYERS_CONNECTED_UPDATE_URL = "http://origin.earthscape.fr/World/UpdateConnected/";
 
         // ChatRestriction
         public static Dictionary<ChatChannelEnum, long> CHAT_RESTRICTED_DELAY = new Dictionary<ChatChannelEnum, long>()

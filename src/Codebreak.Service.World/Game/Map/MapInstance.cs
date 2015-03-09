@@ -271,6 +271,17 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<InteractiveObject> InteractiveObjects
+        {
+            get
+            {
+                return m_interactiveObjects;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<long, EntityBase> m_entityById;
         private Dictionary<string, EntityBase> m_entityByName;
         private Dictionary<int, MapCell> m_cellById;
@@ -576,6 +587,7 @@ namespace Codebreak.Service.World.Game.Map
                             InitEntitiesMovements();
 
                         base.AddHandler(entity.Dispatch);
+
                         entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, Entities.ToArray()));
                         entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
                         entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
@@ -614,6 +626,7 @@ namespace Codebreak.Service.World.Game.Map
                 if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
                     base.RemoveHandler(entity.Dispatch);
+
                     m_entityByName.Remove(entity.Name.ToLower());
                     m_playerCount--;
 
@@ -677,6 +690,19 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="character"></param>
+        /// <param name="monsters"></param>
+        /// <returns></returns>
+        public bool CanBeAggro(CharacterEntity character, int cellId, MonsterGroupEntity monsters)
+        {
+            return Pathfinding.GoalDistance(this, cellId, monsters.CellId) <= monsters.AggressionRange
+                && ((character.AlignmentId == (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL && monsters.AlignmentId == -1)
+                || (character.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL && monsters.AlignmentId != character.AlignmentId));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="entity"></param>
         /// <param name="path"></param>
         /// <param name="cellId"></param>
@@ -689,11 +715,20 @@ namespace Codebreak.Service.World.Game.Map
                 {
                     foreach (var monsterGroup in m_entityById.Values.OfType<MonsterGroupEntity>())
                     {
-                        if (Pathfinding.GoalDistance(this, cellId, monsterGroup.CellId) <= monsterGroup.AggressionRange)
+                        if (CanBeAggro(character, cellId, monsterGroup))
                         {
-                            if(FightManager.StartMonsterFight(character, monsterGroup))
-                                return;
-                        }
+                            entity.CellId = cellId;
+                            if (monsterGroup.AlignmentId == -1)
+                            {
+                                if (FightManager.StartMonsterFight(character, monsterGroup))
+                                    return;
+                            }
+                            else
+                            {
+                                if (FightManager.StartAggression(monsterGroup, character))
+                                    return;
+                            }
+                        }         
                     }
                 }
             }

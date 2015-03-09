@@ -151,9 +151,9 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public GuildMember(GuildInstance guild, CharacterDAO character)
         {
+            m_character = character;
             TaxCollectorJoinedId = -1;
             Guild = guild;
-            m_character = character;
         }
 
         /// <summary>

@@ -1,0 +1,173 @@
+﻿<div class="row chat-container">
+    <div class="col-md-8">
+        <div class="panel-primary">
+            <div id="chat-header" class="panel-heading text-center" data-i18n="chat.title">
+            </div>
+            <div id="chat-content" class="panel-body chat-content">
+                <ul id="chat-messages" class="media-list chat-messages">                    
+                </ul>
+            </div>
+            <div class="panel-footer chat-input">
+                <div id="chat-input-group" class="input-group">
+                    <input id="chat-input" disabled="disabled" type="text" class="form-control" data-i18n="[placeholder]chat.write" />
+                    <span class="input-group-btn">
+                        <button id="chat-button" class="btn btn-info" type="button" disabled="disabled" data-i18n="chat.send"></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel-primary chat-users text-center">
+            <div class="panel-heading" data-i18n="chat.users">
+            </div>
+            <div id="chat-users-list" class="list-group chat-users-list">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var current = window.onload;
+    window.onload = function () {
+        if (current != null)
+            current();
+
+        var chatPlayers = {};
+        var chatMessages = [];
+
+        function getTitle(power) {
+            switch (power) {
+                case 0: return "";
+                case 1: return i18n.t("chat.animator") + " ";
+                case 2: return i18n.t("chat.moderator") + " ";
+                case 3: return i18n.t("chat.administrator") + " ";
+                default: return i18n.t("chat.boss") + " ";
+            }
+        }
+
+        function addPlayer(player, init) {
+            chatPlayers[player.Id] = player;
+            player.Title = getTitle(player.Power);
+
+            $("#chat-users-list").append('<a id="chat-user-' + player.Id + '" class="list-group-item chat-user" href="#"> \
+                                        <div class="row">'
+                                            + player.Title + player.Pseudo +
+                                        '</div> \
+                                    </a>');
+
+            if (!init)
+                addServerMessage(i18n.t("chat.user_join", { user: player.Pseudo }));
+        }
+
+        function removePlayer(playerId) {
+            $("#chat-user-" + playerId).remove();
+
+            var player = chatPlayers[playerId];
+
+            addServerMessage(i18n.t("chat.user_left", { user: player.Pseudo }));
+
+            delete chatPlayers[playerId];
+        }
+
+        function addServerMessage(message) {
+            $("#chat-messages").append(' <li class="media">\
+                                            <div class="media-body"> \
+                                                <div class="media"> \
+                                                    <div class="media-body small text-muted"> \
+                                                        # ' + message + ' \
+                                                    </div> \
+                                                </div> \
+                                            </div> \
+                                        </li>');
+            $("#chat-content").scrollTop($("#chat-content")[0].scrollHeight);
+        }
+
+        function addMessage(message) {
+            chatMessages.push(message);
+            $("#chat-messages").append('<li class="media highlight chat-message">\
+                                            <div class="media-body"> \
+                                                <div class="media small"> \
+                                                    <a class="pull-left" href="#"> \
+                                                        <img class="media-object img-rounded chat-user-img" ' + (message.Power > 0 ? 'src="/Content/img/chat/cliff.png"' : 'src="/Content/img/chat/questionmark.png"') + '/> \
+                                                    </a> \
+                                                    <div class="media-body chat-message-content"> \
+                                                        <b>' + getTitle(message.Power) + message.Pseudo + '</b><br/>'
+                                                            + message.Content + ' \
+                                                        <br /> \
+                                                        <small class="text-muted">'
+                                                            + message.Time +
+                                                        '</small>  \
+                                                    </div> \
+                                                </div> \
+                                            </div> \
+                                        </li>');
+            $("#chat-content").scrollTop($("#chat-content")[0].scrollHeight);
+        }
+
+        var chatProxy = $.connection.chatHub;
+        chatProxy.client.notifyPlayersConnected = function (players) {
+            $('#chat-users-list').empty();
+            for (var i = 0; i < players.length; i++)
+                addPlayer(players[i], true);
+        };
+
+        chatProxy.client.notifyPlayerConnected = function (player) {
+            addPlayer(player, false);
+        };
+
+        chatProxy.client.notifyPlayerDisconnected = function (playerId) {
+            removePlayer(playerId);
+        };
+
+        chatProxy.client.notifyChatMessages = function (messages) {
+            $('#chat-messages').empty();
+            for (var i = 0; i < messages.length; i++)
+                addMessage(messages[i]);
+            addServerMessage(i18n.t("chat.error_connected"));
+        };
+
+        chatProxy.client.notifyChatMessage = function (message) {
+            addMessage(message);
+        };
+
+        $("#chat-input-group").on("click", "#chat-button", function (e) {
+            if ($('#chat-input').val() != "") {
+                chatProxy.server.sendMessage($('#chat-input').val());
+                $('#chat-input').val("");
+            }
+        });
+
+        $('#chat-input').keypress(function (e) {
+            if (e.which == 13) {
+                $(this).blur();
+                $('#chat-button').click();
+                $(this).focus();
+                return false;
+            }
+        });
+
+        $.connection.hub.stateChanged(function (obj) {
+            switch (obj.newState) {
+                case $.signalR.connectionState.reconnected:
+                case $.signalR.connectionState.connected:
+                    $('#chat-input').prop('disabled', false);
+                    $('#chat-button').prop('disabled', false);
+                    break;
+
+                case $.signalR.connectionState.reconnecting:
+                case $.signalR.connectionState.disconnected:
+                    $('#chat-input').prop('disabled', true);
+                    $('#chat-button').prop('disabled', true);
+                    
+                    addServerMessage(i18n.t("chat.error_disconnected"));
+                    break;
+
+
+                case $.signalR.connectionState.connecting:
+                    addServerMessage(i18n.t("chat.error_connecting"));
+                    break;
+            }
+        });
+    }
+</script>

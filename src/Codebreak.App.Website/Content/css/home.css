@@ -1,0 +1,41 @@
+﻿/* Home serveur desc */
+.server-desc {
+    padding-bottom: 5px;
+    color: gray;
+}
+
+.server-desc:hover { 
+    color: black;
+    background: none repeat scroll 0% 0% #FCFCFC;
+}
+
+.server-desc h4 {
+    font-size: 25px;
+    line-height: 1.8;
+}
+
+.well {
+    background: #E8E8E8;
+    font-size: 15px;    
+    line-height: 1.5;
+}
+
+.server-desc-icon {
+    margin-right: 10px;
+}
+
+.server-desc .server-desc-icon {
+    float: left;
+    font-size: 40px;
+    padding-top: 15px;
+}
+
+.dalai-lama {
+    margin-bottom: 20px;
+    color: slategray;
+}
+
+.dalai-lama-text {
+    font-size: 1.05em;
+    font-style: italic;
+}

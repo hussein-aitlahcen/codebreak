@@ -39,13 +39,13 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        private StringBuilder m_serializedFlag;
+        private string m_serializedFlag;
 
         /// <summary>
         /// 
         /// </summary>
         public MonsterFight(MapInstance map, long id, CharacterEntity character, MonsterGroupEntity monsterGroup)
-            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, 0, character.CellId, monsterGroup.Id, monsterGroup.Monsters.First().Grade.Template.Alignment, monsterGroup.CellId, WorldConfig.PVM_START_TIMEOUT, WorldConfig.PVM_TURN_TIME)
+            : base(FightTypeEnum.TYPE_PVM, map, id, character.Id, -1, character.CellId, monsterGroup.Id, -1, monsterGroup.CellId, WorldConfig.PVM_START_TIMEOUT, WorldConfig.PVM_TURN_TIME)
         {
             Character = character;
             MonsterGroup = monsterGroup;
@@ -88,14 +88,14 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         character.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, character.Team.LeaderId, character));
                         character.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, character));
-                        character.LeaveFight(true);
+                        character.EndFight(true);
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
                     if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
                     {
-                        character.LeaveFight();
+                        character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
                         return FightActionResultEnum.RESULT_DEATH;
                     }
@@ -105,7 +105,7 @@ namespace Codebreak.Service.World.Game.Fight
                 case FightStateEnum.STATE_FIGHTING:
                     if (character.IsSpectating)
                     {
-                        character.LeaveFight(kick);
+                        character.EndFight(kick);
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_NOTHING;
@@ -113,7 +113,9 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
                     {
-                        character.LeaveFight();
+                        InitLoots(character);
+                        Result.AddResult(character);
+                        character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
 
                         return FightActionResultEnum.RESULT_DEATH;
@@ -133,9 +135,9 @@ namespace Codebreak.Service.World.Game.Fight
         private long m_droppersTotalPP;
         private long m_losersTotalLevel;
         private long m_kamasLoot;
-        private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops;
-        private List<FighterBase> m_droppers;
-        private List<InventoryItemDAO> m_itemLoot;
+        private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops = new Dictionary<FighterBase,List<InventoryItemDAO>>();
+        private List<FighterBase> m_droppers = new List<FighterBase>();
+        private List<InventoryItemDAO> m_itemLoot = new List<InventoryItemDAO>();
 
         /// <summary>
         /// 
@@ -156,7 +158,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// <returns></returns>
         private void InitDroppers()
         {
-            m_droppers = new List<FighterBase>();
             m_droppers.AddRange(m_winnersTeam.Fighters.Where
                 (
                     fighter => fighter.Type == EntityTypeEnum.TYPE_CHARACTER ||
@@ -177,8 +178,6 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void InitLoots()
         {
-            m_itemLoot = new List<InventoryItemDAO>();
-
             if(m_winnersTeam == Team0)
             {
                 m_kamasLoot += MonsterGroup.Inventory.Kamas;
@@ -193,15 +192,22 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             // Players lost
-            foreach (var player in m_losersFighter.OfType<CharacterEntity>())
-            {
-                player.CachedBuffer = true;
-                m_kamasLoot += player.Inventory.Kamas;
-                player.Inventory.Kamas = 0;
-                m_itemLoot.AddRange(player.Inventory.RemoveItems());
-                m_itemLoot.AddRange(player.PersonalShop.RemoveItems());
-                player.CachedBuffer = false;
-            }
+            foreach (var player in m_losersFighter.OfType<CharacterEntity>())            
+                InitLoots(player);            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="looser"></param>
+        private void InitLoots(CharacterEntity looser)
+        {
+            looser.CachedBuffer = true;
+            m_kamasLoot += looser.Inventory.Kamas;
+            looser.Inventory.SubKamas(looser.Inventory.Kamas);
+            m_itemLoot.AddRange(looser.Inventory.RemoveItems());
+            m_itemLoot.AddRange(looser.PersonalShop.RemoveItems());
+            looser.CachedBuffer = false;
         }
 
         /// <summary>
@@ -335,10 +341,13 @@ namespace Codebreak.Service.World.Game.Fight
         {
             message.Append(Id.ToString()).Append(';');
             message.Append(UpdateTime).Append(';');
-            message.Append("0,-1,");
+
+            message.Append("0,");
+            message.Append(Team0.AlignmentId).Append(',');
             message.Append(Team0.AliveFighters.Count()).Append(';');
+
             message.Append("1,");
-            message.Append(MonsterGroup.Monsters.ElementAt(0).Grade.Template.Alignment).Append(',');
+            message.Append(Team0.AlignmentId).Append(',');
             message.Append(Team1.AliveFighters.Count()).Append(';');
             message.Append('|');
         }
@@ -351,20 +360,23 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (m_serializedFlag == null)
             {
-                m_serializedFlag = new StringBuilder();
-                m_serializedFlag.Append(Id).Append(';');
-                m_serializedFlag.Append((int)Type).Append('|');
-                m_serializedFlag.Append(Team0.LeaderId).Append(';');
-                m_serializedFlag.Append(Team0.FlagCellId).Append(';');
-                m_serializedFlag.Append('0').Append(';');
-                m_serializedFlag.Append("-1").Append('|');
-                m_serializedFlag.Append(Team1.LeaderId).Append(';');
-                m_serializedFlag.Append(Team1.FlagCellId).Append(';');
-                m_serializedFlag.Append('1').Append(';');
-                m_serializedFlag.Append(MonsterGroup.Monsters.ElementAt(0).Grade.Template.Alignment);
+                var m_serialized = new StringBuilder();
+                m_serialized.Append(Id).Append(';');
+                m_serialized.Append((int)Type).Append('|');
+
+                m_serialized.Append(Team0.LeaderId).Append(';');
+                m_serialized.Append(Team0.FlagCellId).Append(';');
+                m_serialized.Append('0').Append(';');
+                m_serialized.Append(Team0.AlignmentId).Append('|');
+
+                m_serialized.Append(Team1.LeaderId).Append(';');
+                m_serialized.Append(Team1.FlagCellId).Append(';');
+                m_serialized.Append("1").Append(';');
+                m_serialized.Append(Team1.AlignmentId);
+                m_serializedFlag = m_serialized.ToString();
             }
 
-            message.Append(m_serializedFlag.ToString());
+            message.Append(m_serializedFlag);
         }
 
         /// <summary>
@@ -375,7 +387,6 @@ namespace Codebreak.Service.World.Game.Fight
             Character = null;
             MonsterGroup = null;
             
-            m_serializedFlag.Clear();
             m_serializedFlag = null;
 
             base.Dispose();

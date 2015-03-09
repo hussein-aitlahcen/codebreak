@@ -164,6 +164,8 @@ namespace Codebreak.Service.World.Network
         ERROR_FIGHTER_RECONNECTED = 184,
         ERROR_FIGHT_WAITING_PLAYERS = 29,
         ERROR_FIGHTER_KICKED_DUE_TO_DISCONNECTION = 30,
+
+        ERROR_GUILD_BOSS_LEFT_NEW_BOSS = 199,
     }
     
     /// <summary>
@@ -534,6 +536,17 @@ namespace Codebreak.Service.World.Network
         public static string CHAT_ENABLED_CHANNELS()
         {
             return "cC+i*?:#@$%!TF";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        public static string CHAT_CHANNEL(bool enabled, ChatChannelEnum channel)
+        {
+            return "cC" + (enabled ? "+" : "-") + (char)channel;
         }
 
         /// <summary>
@@ -2154,6 +2167,22 @@ namespace Codebreak.Service.World.Network
             var message = new StringBuilder("GDF");
             foreach (var io in iobjects)
                 io.SerializeAs_InteractiveListMessage(message);
+            message.Remove(message.Length - 1, 1);
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="frameId"></param>
+        /// <param name="activated"></param>
+        /// <returns></returns>
+        public static string INTERACTIVE_DATA_FRAME_FIGHT(IEnumerable<InteractiveObject> iobjects)
+        {
+            var message = new StringBuilder("GDF");
+            foreach (var io in iobjects)
+                io.SerializeAs_FightInteractiveListMessage(message);
             message.Remove(message.Length - 1, 1);
             return message.ToString();
         }

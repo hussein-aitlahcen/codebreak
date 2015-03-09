@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Database.Structure;
 
 namespace Codebreak.Service.World.Game.Fight
 {
@@ -220,7 +221,7 @@ namespace Codebreak.Service.World.Game.Fight
             get;
             protected set;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -410,6 +411,20 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        public virtual int AlignmentId
+        {
+            get
+            {
+                return (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+            }
+            set
+            {
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public FighterBase(EntityTypeEnum type, long id, bool staticInvocation = false)
             : base(type, id)
         {
@@ -471,6 +486,7 @@ namespace Codebreak.Service.World.Game.Fight
             UsedMP = 0;
 
             Fight = fight;
+
             Team = team;
             TurnReady = false;
             TurnPass = false;
@@ -499,6 +515,8 @@ namespace Codebreak.Service.World.Game.Fight
                 Team.RemoveFighter(this);
                 Team.RemoveUpdatable(this);
                 Team.RemoveHandler(Dispatch);
+
+                Fight.TurnProcessor.RemoveFighter(this);
 
                 Statistics.ClearDons();
             }

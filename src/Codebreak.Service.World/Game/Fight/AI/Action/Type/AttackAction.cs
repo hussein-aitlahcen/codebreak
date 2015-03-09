@@ -197,7 +197,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                             currentScore -= 50 + effect.Value1 + effect.Value2 + effect.Value3;
                                         else
                                             if (effect.TypeEnum == EffectEnum.Heal)
-                                                currentScore += 50 + (effect.Value1 + effect.Value2 + effect.Value3) * (1 + ((fighter.MaxLife / 100) * fighter.Life));
+                                                currentScore += 50 + (effect.Value1 + effect.Value2 + effect.Value3) * (100 - (int)((double)fighter.Life / fighter.MaxLife));
                                             else
                                                 currentScore += 50 + effect.Value1 + effect.Value2 + effect.Value3;
                                     }

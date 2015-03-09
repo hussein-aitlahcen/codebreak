@@ -305,7 +305,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public int AlignmentId
+        public override int AlignmentId
         {
             get
             {
@@ -960,6 +960,9 @@ namespace Codebreak.Service.World.Game.Entity
         public CharacterEntity(AccountTicket account, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
             : base(type, characterDAO.Id)
         {
+            m_lastRegenTime = -1;
+            m_lastEmoteId = -1;
+            
             Away = false;
             DatabaseRecord = characterDAO;
             Alignment = characterDAO.Alignment;
@@ -971,10 +974,7 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
             NotifyOnFriendConnection = true;
-
-            m_lastRegenTime = -1;
-            m_lastEmoteId = -1;
-
+            
             CharacterJobs = new JobBook(this);
             Statistics = new GenericStats(characterDAO);
             SpellBook = SpellBookFactory.Instance.Create(this);
@@ -999,7 +999,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             CheckRestrictions();
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1149,6 +1149,8 @@ namespace Codebreak.Service.World.Game.Entity
         public override void JoinFight(FightBase fight, FightTeam team)
         {
             LifeBeforeFight = Life;
+            
+            base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME_FIGHT(Map.InteractiveObjects));
 
             base.JoinFight(fight, team);
         }
@@ -1165,9 +1167,9 @@ namespace Codebreak.Service.World.Game.Entity
             Fight.SpectatorTeam.AddSpectator(this);
             Fight.SpectatorTeam.AddUpdatable(this);
             Fight.SpectatorTeam.AddHandler(Dispatch);
-
-            SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
-            SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
+            
+            base.SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
+            base.SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
 
             StartAction(GameActionTypeEnum.FIGHT);
         }
@@ -1201,53 +1203,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void LeaveFight(bool kicked = false)
-        {
-            if (IsSpectating)
-            {
-                Fight.SpectatorTeam.RemoveSpectator(this);
-                Fight.SpectatorTeam.RemoveUpdatable(this);
-                Fight.SpectatorTeam.RemoveHandler(Dispatch);
-            }
-            else
-            {
-                Team.RemoveFighter(this);
-                Team.RemoveUpdatable(this);
-                Team.RemoveHandler(Dispatch);
-
-                if (!kicked)
-                {
-                    Fight.Result.AddResult(this, FightEndTypeEnum.END_LOSER, true);
-                    switch (Fight.Type)
-                    {
-                        case FightTypeEnum.TYPE_CHALLENGE:
-                            break;
-
-                        case FightTypeEnum.TYPE_AGGRESSION:
-                        case FightTypeEnum.TYPE_PVT:
-                            OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
-                            break;
-
-                        case FightTypeEnum.TYPE_PVM:
-                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
-                            break;
-                    }
-                }
-
-                Fight.TurnProcessor.RemoveFighter(this);
-            }
-
-            base.EndFight();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="win"></param>
         public override void EndFight(bool win = false)
         {
             if (!IsSpectating)
             {
+
                 if (IsFighterDead)
                 {
                     switch (Fight.Type)
@@ -1280,27 +1241,30 @@ namespace Codebreak.Service.World.Game.Entity
                     case FightTypeEnum.TYPE_CHALLENGE:
                         Life = LifeBeforeFight;
                         break;
-                }
-                
-                base.CachedBuffer = true;
-                var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
-                foreach (var item in items)
-                {
-                    if (item.Statistics.HasEffect(EffectEnum.AddBoost))
-                    {
-                        var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
-                        effect.Value3--;
-                        item.SaveStats();
-                        if (effect.Value3 <= 0)
-                            Inventory.RemoveItem(item.Id);
-                    }
-                }
-                if (items.Count > 0)
-                {
-                    base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
-                    SendAccountStats();
-                }
-                base.CachedBuffer = false;
+
+                    default:
+                        base.CachedBuffer = true;
+                        var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
+                        foreach (var item in items)
+                        {
+                            if (item.Statistics.HasEffect(EffectEnum.AddBoost))
+                            {
+                                var effect = item.Statistics.GetEffect(EffectEnum.AddBoost);
+                                effect.Value3--;
+                                item.SaveStats();
+                                if (effect.Value3 <= 0)
+                                    Inventory.RemoveItem(item.Id);
+                            }
+                        }
+                        if (items.Count > 0)
+                        {
+                            base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
+                            SendAccountStats();
+                        }
+                        base.CachedBuffer = false;
+                        break;
+                }               
+               
             }
             else
             {
@@ -1613,10 +1577,17 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (HasGameAction(GameActionTypeEnum.FIGHT))
             {
-                if (CurrentAction != null)
-                    AbortAction(CurrentAction.Type);
-                AbortAction(GameActionTypeEnum.FIGHT);
-                return false;
+                if (IsSpectating)
+                {
+                    Fight.FightQuit(this);
+                }
+                else
+                {
+                    if (CurrentAction != null)
+                        AbortAction(CurrentAction.Type);
+                    AbortAction(GameActionTypeEnum.FIGHT);
+                    return false;
+                }
             }
 
             StopRegeneration();
@@ -1669,9 +1640,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             GuildMember = characterGuild;
             if (GuildMember != null)
-                m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;            
+                m_guildDisplayInfos = GuildMember.Guild.Name + ";" + GuildMember.Guild.DisplayEmblem;
             else
-                m_guildDisplayInfos = null;            
+                m_guildDisplayInfos = null;
         }
 
         /// <summary>
@@ -2047,16 +2018,23 @@ namespace Codebreak.Service.World.Game.Entity
                     FrameManager.RemoveFrame(MapFrame.Instance);
                     break;
 
-                case GameActionTypeEnum.FIGHT:
+                case GameActionTypeEnum.FIGHT:                    
                     StopEmote();
                     FrameManager.RemoveFrame(MapFrame.Instance);
-                    if (Fight.Map.Id != MapId)
+                    if (IsSpectating)
                     {
-                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
-                        Dispatch(WorldMessage.GAME_DATA_MAP(Fight.Map.Id, Fight.Map.CreateTime, Fight.Map.DataKey));
-                        FrameManager.AddFrame(GameInformationFrame.Instance);
+                        FrameManager.AddFrame(FightFrame.Instance);
                     }
-                    FrameManager.AddFrame(FightPlacementFrame.Instance);
+                    else
+                    {
+                        if (Fight.Map.Id != MapId)
+                        {
+                            Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.MAP_TELEPORT, Id));
+                            Dispatch(WorldMessage.GAME_DATA_MAP(Fight.Map.Id, Fight.Map.CreateTime, Fight.Map.DataKey));
+                            FrameManager.AddFrame(GameInformationFrame.Instance);
+                        }
+                        FrameManager.AddFrame(FightPlacementFrame.Instance);
+                    }
                     break;
             }
         }

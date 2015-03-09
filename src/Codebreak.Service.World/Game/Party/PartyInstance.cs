@@ -26,12 +26,6 @@ namespace Codebreak.Service.World.Game.Party
         /// <summary>
         /// 
         /// </summary>
-        private CharacterEntity m_leader;
-        private Dictionary<long, CharacterEntity> m_memberById;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public int MemberCount
         {
             get
@@ -39,7 +33,13 @@ namespace Codebreak.Service.World.Game.Party
                 return m_memberById.Count;
             }
         }
-                
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private CharacterEntity m_leader;
+        private Dictionary<long, CharacterEntity> m_memberById;
+                        
         /// <summary>
         /// 
         /// </summary>
@@ -51,7 +51,7 @@ namespace Codebreak.Service.World.Game.Party
             Id = id;
             m_memberById = new Dictionary<long, CharacterEntity>();
             m_leader = master;
-
+            
             AddMember(master);
             AddMember(member);
         }
@@ -97,7 +97,7 @@ namespace Codebreak.Service.World.Game.Party
             member.PartyId = Id;
             member.SafeDispatch(WorldMessage.PARTY_CREATE_SUCCESS(m_leader.Name));
             member.SafeDispatch(WorldMessage.PARTY_SET_LEADER(m_leader.Id));
-            member.SafeDispatch(WorldMessage.PARTY_MEMBER_LIST(m_memberById.Values.ToArray()));
+            member.SafeDispatch(WorldMessage.PARTY_MEMBER_LIST(m_memberById.Values.ToArray())); 
         }
 
         /// <summary>
@@ -117,7 +117,9 @@ namespace Codebreak.Service.World.Game.Party
                 member.SafeDispatch(WorldMessage.PARTY_LEAVE(kickerId));
 
                 if (m_memberById.Count == 1)
-                    Destroy();
+                {
+                    Dispose();
+                }
                 else if (member.Id == m_leader.Id)
                 {
                     m_leader = m_memberById.First().Value;
@@ -126,25 +128,27 @@ namespace Codebreak.Service.World.Game.Party
                 }
             }
         }
-    
 
         /// <summary>
         /// 
         /// </summary>
-        public void Destroy()
+        public override void Dispose()
         {
             base.Dispatch(WorldMessage.PARTY_LEAVE());
 
-            foreach(var member in m_memberById.Values)
+            foreach (var member in m_memberById.Values)
             {
                 member.PartyId = -1;
             }
-                    
-            m_leader = null;
+
             m_memberById.Clear();
             m_memberById = null;
 
+            m_leader = null;
+
             PartyManager.Instance.RemoveParty(this);
-        }
+
+            base.Dispose();
+        }    
     }
 }
