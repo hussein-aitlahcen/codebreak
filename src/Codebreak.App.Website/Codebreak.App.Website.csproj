@@ -208,6 +208,8 @@
     <Content Include="Content\img\chat\cliff.png" />
     <Content Include="Content\img\chat\questionmark.png" />
     <Content Include="Content\img\dofus\common\background.png" />
+    <Content Include="Content\img\earthscape\favicon.png" />
+    <Content Include="Content\img\earthscape\logo_proto.jpg" />
     <Content Include="Content\img\icons\social2\aim.png" />
     <Content Include="Content\img\icons\social2\apple.png" />
     <Content Include="Content\img\icons\social2\behance.png" />
