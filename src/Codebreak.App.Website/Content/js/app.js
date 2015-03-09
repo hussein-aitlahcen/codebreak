@@ -1,11 +1,13 @@
-﻿function bootAngular() {
-    var app = angular.module('earthscape', ['chieffancypants.loadingBar', 'ngAnimate']);
+﻿var mainApp = null;
 
-    app.config(function (cfpLoadingBarProvider) {
+function bootAngular() {
+    mainApp = angular.module('earthscape', ['chieffancypants.loadingBar', 'ngAnimate']);
+
+    mainApp.config(function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = true;
     })
 
-    app.controller('earthscape.controller.loading', ["$scope", "$http", "$timeout", "cfpLoadingBar", function ($scope, $http, $timeout, cfpLoadingBar) {
+    mainApp.controller('earthscape.controller.loading', ["$scope", "$http", "$timeout", "cfpLoadingBar", function ($scope, $http, $timeout, cfpLoadingBar) {
         $scope.start = function () {
             cfpLoadingBar.start();
         };
@@ -30,8 +32,10 @@ function bootSignalR() {
         $("#players-connected").html(count + " <br> " + players);
     };
     $.connection.hub.start().done(function () {
-
     });
+}
+
+function bootAjax() {
 }
 
 function initLang() {
@@ -57,4 +61,5 @@ function appStart() {
     initLang();
     bootAngular();
     bootSignalR();
+    bootAjax();
 }

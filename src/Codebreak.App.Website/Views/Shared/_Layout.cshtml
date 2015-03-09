@@ -3,252 +3,253 @@
 
     @Html.Action("Header", "Layout")
 
-    <body ng-app="earthscape">
-                
-        <!-- Loading bar controller -->
-        <div ng-controller="earthscape.controller.loading">
-        </div>
 
-        <!-- Navbar -->
-        <nav class="navbar navbar-default z-layer-2">            
-            <div class="container">          
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                        Earthscape
-                    </a>
-                </div>      
-                <div id="navbar" class="navbar-collapse collapse navbar-right">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="@Url.Action("Index", "Home")">
-                                <span class="fa fa-lg fa-home"></span>
-                                <span data-i18n="nav.home"></span>
-                            </a>  
-                        </li>          
-                            @if (Request.IsAuthenticated)
-                            {
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        <span class="fa fa-lg fa-user"></span>
-                                        @User.Account.Pseudo
-                                        <span class="fa fa-lg fa-angle-down"></span>
-                                    </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <a href="@Url.Action("Logout", "Join")">
-                                                <span class="fa fa-fw fa-sign-out"></span>
-                                                <span data-i18n="nav.logout"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            }
-                            else
-                            {
-                                <li>
-                                    <a href="@Url.Action("Login", "Join")">
-                                        <span class="fa fa-lg fa-sign-in"></span>
-                                        <span data-i18n="nav.login"></span>
-                                    </a>
-                                </li>
-                            }
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span data-i18n="nav.join_us"></span>
-                                <span class="fa fa-lg fa-angle-down"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="@Url.Action("Download", "Join")">
-                                        <span class="fa fa-fw fa-download"></span>
-                                        <span data-i18n="nav.download"></span>
-                                    </a>
-                                </li>
-                                <li>  
-                                    <a href="@Url.Action("Register", "Join")">
-                                        <span class="fa fa-fw fa-user-plus"></span>
-                                        <span data-i18n="nav.register"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span data-i18n="nav.community"></span>
-                                <span class="fa fa-lg fa-angle-down"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="@Url.Action("Ladder", "Community")">
-                                        <span class="fa fa-fw fa-line-chart"></span>
-                                        <span data-i18n="nav.ladder"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Forum", "Community")">
-                                        <span class="fa fa-fw fa-comments"></span>
-                                        <span data-i18n="nav.forum"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span data-i18n="nav.about"></span>
-                                <span class="fa fa-lg fa-angle-down"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="@Url.Action("Team", "About")">
-                                        <span class="fa fa-fw fa-group"></span>
-                                        <span data-i18n="nav.team"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Contact", "About")">
-                                        <span class="fa fa-fw fa-pencil-square-o"></span>
-                                        <span data-i18n="nav.contact"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>                        
-                    </ul>
-                </div>               
+<body ng-app="earthscape">
+
+    <!-- Loading bar -->
+    <div ng-controller="earthscape.controller.loading"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default z-layer-2">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                    Earthscape
+                </a>
             </div>
-        </nav>
-
-        <!-- Breadcrumb -->
-        <div class="breadcrumbs">
-            <div class="container">
-                <h1 class="pull-left" data-i18n="nav.@ViewBag.Title.ToLower()"></h1>
-                <ul class="breadcrumb pull-right">
-                    @if (ViewContext.RouteData.Values["controller"].ToString() != "Home")
+            <div id="navbar" class="navbar-collapse collapse navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="@Url.Action("Index", "Home")">
+                            <span class="fa fa-lg fa-home"></span>
+                            <span data-i18n="nav.home"></span>
+                        </a>
+                    </li>
+                    @if (Request.IsAuthenticated)
                     {
-                        <li>
-                            <a href="@Url.Action("Index", "Home")" data-i18n="nav.home"></a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span class="fa fa-lg fa-user"></span>
+                                @User.Account.Pseudo
+                                <span class="fa fa-lg fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="@Url.Action("Logout", "Join")">
+                                        <span class="fa fa-fw fa-sign-out"></span>
+                                        <span data-i18n="nav.logout"></span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-
-                        <li class="active" data-i18n="nav.@ViewBag.Title.ToLower()"></li>
                     }
                     else
                     {
-                        <li class="active" data-i18n="nav.home"></li>
+                        <li>
+                            <a href="@Url.Action("Login", "Join")">
+                                <span class="fa fa-lg fa-sign-in"></span>
+                                <span data-i18n="nav.login"></span>
+                            </a>
+                        </li>
                     }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span data-i18n="nav.join_us"></span>
+                            <span class="fa fa-lg fa-angle-down"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="@Url.Action("Download", "Join")">
+                                    <span class="fa fa-fw fa-download"></span>
+                                    <span data-i18n="nav.download"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Register", "Join")">
+                                    <span class="fa fa-fw fa-user-plus"></span>
+                                    <span data-i18n="nav.register"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span data-i18n="nav.community"></span>
+                            <span class="fa fa-lg fa-angle-down"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="@Url.Action("Ladder", "Community")">
+                                    <span class="fa fa-fw fa-line-chart"></span>
+                                    <span data-i18n="nav.ladder"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Forum", "Community")">
+                                    <span class="fa fa-fw fa-comments"></span>
+                                    <span data-i18n="nav.forum"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span data-i18n="nav.about"></span>
+                            <span class="fa fa-lg fa-angle-down"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="@Url.Action("Team", "About")">
+                                    <span class="fa fa-fw fa-group"></span>
+                                    <span data-i18n="nav.team"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Contact", "About")">
+                                    <span class="fa fa-fw fa-pencil-square-o"></span>
+                                    <span data-i18n="nav.contact"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
-                
-        <!-- Content -->
-        <div class="content z-layer-2">
-            <div class="container">
-                <div class="contained z-layer-1">
-                    @RenderBody()
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h1 class="pull-left" data-i18n="nav.@ViewBag.Title.ToLower()"></h1>
+            <ul class="breadcrumb pull-right">
+                @if (ViewContext.RouteData.Values["controller"].ToString() != "Home")
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Home")" data-i18n="nav.home"></a>
+                    </li>
+
+                    <li class="active" data-i18n="nav.@ViewBag.Title.ToLower()"></li>
+                }
+                else
+                {
+                    <li class="active" data-i18n="nav.home"></li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content z-layer-2">
+        <div class="container">
+            <div id="main-content" class="contained z-layer-1">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer z-layer-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>
+                        <span class="fa fa-plug"></span>
+                        <span data-i18n="footer.live_data"></span>
+                    </h4>
+                    <hr />
+                    <p class="small">
+                        <span data-i18n="footer.live_players_playing"></span> :
+                        <strong>@WorldManager.Instance.PlayersConnected</strong>
+                    </p>
+                    <p class="small">
+                        <span data-i18n="footer.live_players_connected"></span> :
+                        <strong><span id="players-connected"></span></strong>
+                    </p>
+                    <p class="small">
+                        <span data-i18n="footer.live_visitor_count"></span> : <strong><span id="visitor-count"></span></strong>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h4>
+                        <span class="fa fa-comments-o"></span>
+                        <span data-i18n="footer.socials"></span>
+                    </h4>
+                    <hr />
+                    <ul class="social-grid">
+                        <li>
+                            <div class="social-item">
+                                <div class="social-info-wrap">
+                                    <div class="social-info">
+                                        <div class="social-info-front social-twitter">
+                                            <a href="http://twitter.com/earthscape101"></a>
+                                        </div>
+                                        <div class="social-info-back social-twitter-hover">
+                                            <a href="http://twitter.com/earthscape101"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="social-item">
+                                <div class="social-info-wrap">
+                                    <div class="social-info">
+                                        <div class="social-info-front social-facebook">
+                                            <a href="http://facebook.com/earthscapeofficiel"></a>
+                                        </div>
+                                        <div class="social-info-back social-facebook-hover">
+                                            <a href="http://facebook.com/earthscapeofficiel"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>
+                        <span class="fa fa-sitemap"></span>
+                        <span data-i18n="footer.servers_status"></span>
+                    </h4>
+                    <hr />
+                    <p class="small">
+                        WebService : <span class="fa fa-check green"></span>
+                        <br />
+                        AuthService : <span class="fa fa-check green"></span>
+                        <br />
+                        WorldService : <span class="fa fa-check green"></span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h4>
+                        <span class="fa fa-globe"></span>
+                        <span data-i18n="footer.languages"></span>
+                    </h4>
+                    <hr />
+                    <p class="small">
+                        <a href="#" class="lang-selection" data-i18n="footer.language_fr" onclick="setLang('fr')">
+                            fr
+                        </a>
+                        /
+                        <a href="#" class="lang-selection" data-i18n="footer.language_en" onclick="setLang('en')">
+                            en
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
+    </footer>
 
-        <!-- Footer -->
-        <footer class="footer z-layer-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>
-                            <span class="fa fa-plug"></span>
-                            <span data-i18n="footer.live_data"></span>
-                        </h4>
-                        <hr />
-                        <p class="small">
-                            <span data-i18n="footer.live_players_playing"></span> :
-                            <strong>@WorldManager.Instance.PlayersConnected</strong>
-                        </p>
-                        <p class="small">
-                            <span data-i18n="footer.live_players_connected"></span> :
-                            <strong><span id="players-connected"></span></strong>
-                        </p>
-                        <p class="small">
-                            <span data-i18n="footer.live_visitor_count"></span> : <strong><span id="visitor-count"></span></strong>
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>
-                            <span class="fa fa-comments-o"></span>
-                            <span data-i18n="footer.socials"></span>
-                        </h4>
-                        <hr />
-                        <ul class="social-grid">
-                            <li>
-                                <div class="social-item">
-                                    <div class="social-info-wrap">
-                                        <div class="social-info">
-                                            <div class="social-info-front social-twitter">
-                                                <a href="http://twitter.com/earthscape101"></a>
-                                            </div>
-                                            <div class="social-info-back social-twitter-hover">
-                                                <a href="http://twitter.com/earthscape101"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="social-item">
-                                    <div class="social-info-wrap">
-                                        <div class="social-info">
-                                            <div class="social-info-front social-facebook">
-                                                <a href="http://facebook.com/earthscapeofficiel"></a>
-                                            </div>
-                                            <div class="social-info-back social-facebook-hover">
-                                                <a href="http://facebook.com/earthscapeofficiel"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>
-                            <span class="fa fa-sitemap"></span>
-                            <span data-i18n="footer.servers_status"></span>
-                        </h4>
-                        <hr />
-                        <p class="small">
-                            WebService : <span class="fa fa-check green"></span>
-                            <br />
-                            AuthService : <span class="fa fa-check green"></span>
-                            <br />
-                            WorldService : <span class="fa fa-check green"></span>
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>
-                            <span class="fa fa-globe"></span>
-                            <span data-i18n="footer.languages"></span>
-                        </h4>
-                        <hr />
-                        <p class="small">
-                            <a href="#" class="lang-selection" data-i18n="footer.language_fr" onclick="setLang('fr')">
-                                fr
-                            </a>
-                            /
-                            <a href="#" class="lang-selection" data-i18n="footer.language_en" onclick="setLang('en')">
-                                en
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
-        @Html.Action("Footer", "Layout")
+    @Html.Action("Footer", "Layout")
 
 </body>
+
 </html>

@@ -29,7 +29,8 @@ namespace Codebreak.App.Website
                         "~/Content/js/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Content/js/jquery-{version}.js"));
+                        "~/Content/js/jquery-{version}.js",
+                        "~/Content/js/jquery.unobtrusive-ajax*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Content/js/jquery-ui-{version}.js"));
