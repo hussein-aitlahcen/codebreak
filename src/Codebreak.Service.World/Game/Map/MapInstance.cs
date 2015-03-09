@@ -717,6 +717,7 @@ namespace Codebreak.Service.World.Game.Map
                     {
                         if (CanBeAggro(character, cellId, monsterGroup))
                         {
+                            entity.CellId = cellId;
                             if (monsterGroup.AlignmentId == -1)
                             {
                                 if (FightManager.StartMonsterFight(character, monsterGroup))

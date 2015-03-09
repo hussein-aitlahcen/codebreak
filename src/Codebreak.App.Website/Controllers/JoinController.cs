@@ -111,6 +111,9 @@ namespace Codebreak.App.Website.Controllers
             Account account = null;
             ViewBag.LoginErrors = errors;
 
+            if (string.IsNullOrEmpty(returnUrl))
+                returnUrl = string.Empty;
+
             if (!ModelState.IsValid)
             {
                 foreach (var state in ModelState)
@@ -120,9 +123,13 @@ namespace Codebreak.App.Website.Controllers
             else
             {
                 account = AccountRepository.Instance.GetByName(model.Name);
-                if (account == null)
+                if (account == null || account.Password != model.Password)
                 {
                     errors.Add("error_invalid_credentials");
+                }
+                else if(account.Banned)
+                {
+                    errors.Add("error_banned");
                 }
                 else
                 {
@@ -133,6 +140,7 @@ namespace Codebreak.App.Website.Controllers
             if (!valid)
             {
                 ViewBag.Name = model.Name == null ? "" : model.Name;
+                ViewBag.ReturnUrl = returnUrl;
 
                 return View();
             }
@@ -230,7 +238,6 @@ namespace Codebreak.App.Website.Controllers
                 ViewBag.Email = model.Email == null ? "" : model.Email;
                 ViewBag.Question = model.Question == null ? "" : model.Question;
                 ViewBag.Answer = model.Answer == null ? "" : model.Answer;
-
                 return View();
             }
             else

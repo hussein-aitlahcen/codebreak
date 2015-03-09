@@ -51,6 +51,7 @@
         "input_account_answer": "Réponse à la question secrète",
         "validate": "Valider",
 
+        "error_banned": "Vous ête banni.",
         "error_need_connect": "Vous devez vous authentifier pour accéder à cette ressource.",
         "error_invalid_credentials": "Nom de compte ou mot de passe inccorect.",
         "error_no_name": "Veuillez saisir un nom de compte.",

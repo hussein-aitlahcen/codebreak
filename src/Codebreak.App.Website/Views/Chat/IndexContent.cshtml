@@ -84,16 +84,15 @@
         }
 
         function addMessage(message) {
-            var player = chatPlayers[message.PlayerId];
             chatMessages.push(message);
-            $("#chat-messages").append('<li class="media highlight">\
+            $("#chat-messages").append('<li class="media highlight chat-message">\
                                             <div class="media-body"> \
                                                 <div class="media small"> \
                                                     <a class="pull-left" href="#"> \
-                                                        <img class="media-object img-circle chat-user-img" ' + (player.Power > 0 ? 'src="/Content/img/staff/admin.jpg"' : '') + '/> \
+                                                        <img class="media-object img-rounded chat-user-img" ' + (message.Power > 0 ? 'src="/Content/img/chat/cliff.png"' : 'src="/Content/img/chat/questionmark.png"') + '/> \
                                                     </a> \
-                                                    <div class="media-body"> \
-                                                        <b>' + player.Title + player.Pseudo + '</b><br/>'
+                                                    <div class="media-body chat-message-content"> \
+                                                        <b>' + getTitle(message.Power) + message.Pseudo + '</b><br/>'
                                                             + message.Content + ' \
                                                         <br /> \
                                                         <small class="text-muted">'
@@ -108,6 +107,7 @@
 
         var chatProxy = $.connection.chatHub;
         chatProxy.client.notifyPlayersConnected = function (players) {
+            $('#chat-users-list').empty();
             for (var i = 0; i < players.length; i++)
                 addPlayer(players[i], true);
         };
@@ -121,8 +121,10 @@
         };
 
         chatProxy.client.notifyChatMessages = function (messages) {
+            $('#chat-messages').empty();
             for (var i = 0; i < messages.length; i++)
                 addMessage(messages[i]);
+            addServerMessage(i18n.t("chat.error_connected"));
         };
 
         chatProxy.client.notifyChatMessage = function (message) {
@@ -151,18 +153,13 @@
                 case $.signalR.connectionState.connected:
                     $('#chat-input').prop('disabled', false);
                     $('#chat-button').prop('disabled', false);
-
-                    addServerMessage(i18n.t("chat.error_connected"));
                     break;
 
                 case $.signalR.connectionState.reconnecting:
                 case $.signalR.connectionState.disconnected:
                     $('#chat-input').prop('disabled', true);
                     $('#chat-button').prop('disabled', true);
-
-                    $('#chat-users-list').empty();
-                    $('#chat-messages').empty();
-
+                    
                     addServerMessage(i18n.t("chat.error_disconnected"));
                     break;
 

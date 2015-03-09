@@ -13,8 +13,15 @@ namespace Codebreak.App.Website.Signalr
     [Authorize]
     public sealed class ChatHub : Hub
     {
+        public const int CACHE_MESSAGE_COUNT = 15;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public class ChatMessage {
             public long PlayerId;
+            public int Power;
+            public string Pseudo;
             public string Content;
             public string Time;
         }
@@ -132,7 +139,7 @@ namespace Codebreak.App.Website.Signalr
         public static void NotifyChatMessages(string connectionId)
         {
             lock(ChatMessages)
-                ctx.Value.Clients.Client(connectionId).notifyChatMessages(ChatMessages.Take(10));
+                ctx.Value.Clients.Client(connectionId).notifyChatMessages(ChatMessages.Take(CACHE_MESSAGE_COUNT));
         }
 
         /// <summary>
@@ -142,10 +149,18 @@ namespace Codebreak.App.Website.Signalr
         /// <param name="content"></param>
         public static void NotifyChatMessage(AccountTicket ticket, string content)
         {
-            var message = new ChatMessage() { PlayerId = ticket.Account.Id, Content = content, Time = DateTime.Now.ToString("HH:mm:ss") };
+            var message = new ChatMessage() 
+            { 
+                PlayerId = ticket.Account.Id,
+                Pseudo = ticket.Account.Pseudo,
+                Power = ticket.Account.Power,
+                Content = content, 
+                Time = DateTime.Now.ToString("HH:mm:ss") 
+            };
+
             lock (ChatMessages)
             {
-                if (ChatMessages.Count > 10)
+                if (ChatMessages.Count > CACHE_MESSAGE_COUNT)
                     ChatMessages.RemoveAt(0);
                 ChatMessages.Add(message);
             }
