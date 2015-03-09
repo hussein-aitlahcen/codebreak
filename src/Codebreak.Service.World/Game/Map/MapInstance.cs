@@ -250,7 +250,7 @@ namespace Codebreak.Service.World.Game.Map
                 MapCell freeCell = null;
                 do
                 {
-                    freeCell = m_cells[Util.Next(0, m_cells.Count - 100)];
+                    freeCell = m_cells[Util.Next(0, m_cells.Count)];
                 }
                 while (freeCell == null || !freeCell.Walkable);
                 return freeCell.Id;
