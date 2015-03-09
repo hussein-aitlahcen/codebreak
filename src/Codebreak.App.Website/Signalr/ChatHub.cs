@@ -132,7 +132,7 @@ namespace Codebreak.App.Website.Signalr
         public static void NotifyChatMessages(string connectionId)
         {
             lock(ChatMessages)
-                ctx.Value.Clients.Client(connectionId).notifyChatMessages(ChatMessages.Take(8));
+                ctx.Value.Clients.Client(connectionId).notifyChatMessages(ChatMessages.Take(10));
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Codebreak.App.Website.Signalr
             var message = new ChatMessage() { PlayerId = ticket.Account.Id, Content = content, Time = DateTime.Now.ToString("HH:mm:ss") };
             lock (ChatMessages)
             {
-                if (ChatMessages.Count > 8)
+                if (ChatMessages.Count > 10)
                     ChatMessages.RemoveAt(0);
                 ChatMessages.Add(message);
             }
