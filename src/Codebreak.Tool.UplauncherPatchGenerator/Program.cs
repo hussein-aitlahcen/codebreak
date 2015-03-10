@@ -33,7 +33,7 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
 
                 files.Add(new file()
                 {
-                    nameTo = fileUri.MakeRelativeUri(fullPath).ToString() + infos.Name,
+                    nameTo = fullPath.MakeRelativeUri(fileUri).ToString(),
                     nameFrom = infos.Name,
                     action = "add",
                     crc = hash.ToString().ToUpper()
@@ -55,7 +55,8 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
                 {
                     var infos = new FileInfo(file);
                     var fileUri = new Uri(infos.FullName);
-                    patchFile.CreateEntryFromFile(file, fileUri.MakeRelativeUri(fullPath).ToString().Substring(2) + infos.Name);
+                    var relative = fullPath.MakeRelativeUri(fileUri).ToString();
+                    patchFile.CreateEntryFromFile(file, relative);
                 }
             }
 
