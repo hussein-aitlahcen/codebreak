@@ -49,6 +49,7 @@
         function addPlayer(player, init) {
             chatPlayers[player.Id] = player;
             player.Title = getTitle(player.Power);
+            player.Color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
 
             $("#chat-users-list").append('<a id="chat-user-' + player.Id + '" class="list-group-item chat-user" href="#"> \
                                         <div class="row">'
@@ -71,11 +72,11 @@
         }
 
         function addServerMessage(message) {
-            $("#chat-messages").append(' <li class="media">\
+            $("#chat-messages").append(' <li class="media chat-server-message">\
                                             <div class="media-body"> \
                                                 <div class="media"> \
-                                                    <div class="media-body small text-muted"> \
-                                                        # ' + message + ' \
+                                                    <div class="media-body small"> \
+                                                        &nbsp;&nbsp;' + message + ' \
                                                     </div> \
                                                 </div> \
                                             </div> \
@@ -83,21 +84,25 @@
             $("#chat-content").scrollTop($("#chat-content")[0].scrollHeight);
         }
 
+        // TODO : Chat Avatar
+        //<a class="pull-left" href="#"> \
+        //    <img class="media-object img-rounded chat-user-img" ' + (message.Power > 0 ? 'src="/Content/img/chat/cliff.png"' : 'src="/Content/img/chat/questionmark.png"') + '/> \
+        //</a> \
+
         function addMessage(message) {
             chatMessages.push(message);
             $("#chat-messages").append('<li class="media highlight chat-message">\
                                             <div class="media-body"> \
                                                 <div class="media small"> \
-                                                    <a class="pull-left" href="#"> \
-                                                        <img class="media-object img-rounded chat-user-img" ' + (message.Power > 0 ? 'src="/Content/img/chat/cliff.png"' : 'src="/Content/img/chat/questionmark.png"') + '/> \
-                                                    </a> \
-                                                    <div class="media-body chat-message-content"> \
-                                                        <b>' + getTitle(message.Power) + message.Pseudo + '</b><br/>'
-                                                            + message.Content + ' \
-                                                        <br /> \
-                                                        <small class="text-muted">'
+                                                    <div class="media-body"> \
+                                                        <b class="chat-message-pseudo">' +
+                                                            getTitle(message.Power) + message.Pseudo +
+                                                       '</b><br/><div class="chat-message-content">' +
+                                                            message.Content +
+                                                        '<br /></div> \
+                                                        <small class="text-muted chat-message-time pull-right">'
                                                             + message.Time +
-                                                        '</small>  \
+                                                        '</small> \
                                                     </div> \
                                                 </div> \
                                             </div> \
