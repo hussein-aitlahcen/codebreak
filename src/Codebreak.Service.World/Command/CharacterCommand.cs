@@ -731,7 +731,7 @@ namespace Codebreak.Service.World.Command
                         int cellId;
                         if (Int32.TryParse(context.TextCommandArgument.NextWord(), out cellId))
                         {
-                            var cell = context.Character.Map.GetCell(cellId);
+                            var cell = map.GetCell(cellId);
                             if (cell == null || !cell.Walkable)
                             {                                
                                 context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Null cell or not walkable"));
