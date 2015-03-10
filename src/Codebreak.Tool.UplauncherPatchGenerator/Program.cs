@@ -33,8 +33,8 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
 
                 files.Add(new file()
                 {
-                    nameTo = fullPath.MakeRelativeUri(fileUri).ToString(),
-                    nameFrom = infos.Name,
+                    nameTo = "./" + fullPath.MakeRelativeUri(fileUri).ToString(),
+                    nameFrom = fullPath.MakeRelativeUri(fileUri).ToString(),
                     action = "add",
                     crc = hash.ToString().ToUpper()
                 });
