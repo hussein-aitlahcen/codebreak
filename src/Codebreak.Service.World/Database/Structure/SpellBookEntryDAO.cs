@@ -89,28 +89,5 @@ namespace Codebreak.Service.World.Database.Structure
                 return m_level;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ownerType"></param>
-        /// <param name="ownerId"></param>
-        /// <param name="spellId"></param>
-        /// <param name="level"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public static SpellBookEntryDAO Create(int ownerType, long ownerId, int spellId, int level, int position)
-        {
-            var instance = new SpellBookEntryDAO()
-            {
-                OwnerType = ownerType,
-                OwnerId = ownerId,
-                SpellId = spellId,
-                Level = level,
-                Position = position
-            };
-            SpellBookEntryRepository.Instance.Created(instance);
-            return instance;
-        }
     }
 }

@@ -844,10 +844,6 @@ namespace Codebreak.Service.World.Game.Map
                     return -1;
 
                 actualCell = Pathfinding.NextCell(map, actualCell, direction);
-                if (!map.IsWalkable(actualCell))
-                {
-                    return -2;
-                }
 
                 // io
                 var mapCell = map.GetCell(actualCell);
@@ -858,6 +854,12 @@ namespace Codebreak.Service.World.Game.Map
                         length = -2;
                         break;
                     }
+                }
+
+                if (!mapCell.Walkable)
+                {
+                    length = -2;
+                    break;
                 }
 
                 // aggressé par un groupe de mobs
