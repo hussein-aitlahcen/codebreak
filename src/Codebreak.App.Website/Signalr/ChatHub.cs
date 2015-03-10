@@ -160,7 +160,7 @@ namespace Codebreak.App.Website.Signalr
 
             lock (ChatMessages)
             {
-                if (ChatMessages.Count > CACHE_MESSAGE_COUNT)
+                if (ChatMessages.Count >= CACHE_MESSAGE_COUNT)
                     ChatMessages.RemoveAt(0);
                 ChatMessages.Add(message);
             }
