@@ -856,6 +856,7 @@ namespace Codebreak.Service.World.Game.Map
                     }
                 }
 
+                // impossible de marcher
                 if (!mapCell.Walkable)
                 {
                     length = -2;
