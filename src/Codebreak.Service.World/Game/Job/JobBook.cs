@@ -166,7 +166,10 @@ namespace Codebreak.Service.World.Game.Job
         /// <param name="experience"></param>
         public void AddExperience(CharacterJobDAO job, long experience)
         {
-            job.Experience += (long)(experience * WorldConfig.RATE_XP);
+            // rate
+            experience = (long)(experience * WorldConfig.RATE_XP);
+
+            job.Experience += experience;
 
             var currentLevel = job.Level;
 

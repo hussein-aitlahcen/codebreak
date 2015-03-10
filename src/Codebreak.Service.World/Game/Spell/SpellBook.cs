@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codebreak.Service.World.Game.Entity;
 
 namespace Codebreak.Service.World.Game.Spell
 {
@@ -45,7 +46,7 @@ namespace Codebreak.Service.World.Game.Spell
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, SpellBookEntryDAO> m_spellById = new Dictionary<int, SpellBookEntryDAO>();
+        private Dictionary<int, SpellBookEntryDAO> m_spellById;
         private long m_entityId;
         private int m_entityType;
 
@@ -57,7 +58,16 @@ namespace Codebreak.Service.World.Game.Spell
         {
             m_entityType = type;
             m_entityId = id;
-            foreach (var spellEntry in SpellBookEntryRepository.Instance.GetSpellEntries(type, id))
+            Initialize();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Initialize()
+        {
+            m_spellById = new Dictionary<int, SpellBookEntryDAO>();
+            foreach (var spellEntry in SpellBookEntryRepository.Instance.GetSpellEntries(m_entityType, m_entityId))
                 if (!m_spellById.ContainsKey(spellEntry.SpellId))
                     m_spellById.Add(spellEntry.SpellId, spellEntry);
                 else
@@ -91,7 +101,7 @@ namespace Codebreak.Service.World.Game.Spell
         {
             if (!HasSpell(spellId))
             {
-                var spellBookEntry = SpellBookEntryDAO.Create(m_entityType, m_entityId, spellId,  level, position);
+                var spellBookEntry = SpellBookEntryRepository.Instance.Create(m_entityType, m_entityId, spellId,  level, position);
                 if(spellBookEntry != null)
                     m_spellById.Add(spellId, spellBookEntry);
             }
@@ -111,6 +121,16 @@ namespace Codebreak.Service.World.Game.Spell
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Reset(CharacterBreedEnum breed)
+        {
+            SpellBookEntryRepository.Instance.RemoveAll(m_entityType, m_entityId);
+            SpellBookEntryRepository.Instance.GenerateForBreed(m_entityId, breed);
+            Initialize();
         }
 
         /// <summary>

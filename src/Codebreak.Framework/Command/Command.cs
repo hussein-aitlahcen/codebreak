@@ -84,8 +84,9 @@ namespace Codebreak.Framework.Command
                             }
                         }
                     }
-                    context.TextCommandArgument.Position -= word.Length + 1;
                 }
+
+                context.TextCommandArgument.Position--;
 
                 Process(context);
                 return true;

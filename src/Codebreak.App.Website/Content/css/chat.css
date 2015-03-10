@@ -8,10 +8,26 @@
 
 .chat-message {
     border-bottom: 1px solid lightgray;
+    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.chat-server-message {
+    background-color: #C1022D;
+    color: white;
+    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.chat-message-pseudo {
+    padding-left: 5px;
+    font-size: 1.1em;
 }
 
 .chat-message-content {
-    padding-bottom: 10px;
+    padding-left: 20px;
 }
 
 .chat-message:hover {
@@ -24,7 +40,6 @@
     margin-top: 4px;
     margin-left: 4px;
 }
-
 
 .chat-users-list .list-group-item:nth-child(even) {
     background-color: #D1F4FF;

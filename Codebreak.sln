@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{75FE8306-0DA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreak.App.Website", "src\Codebreak.App.Website\Codebreak.App.Website.csproj", "{5DE51486-B5D2-487B-BB6E-A2638FAFF239}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreak.Tool.UplauncherPatchGenerator", "src\Codebreak.Tool.UplauncherPatchGenerator\Codebreak.Tool.UplauncherPatchGenerator.csproj", "{F7ABDFDB-E9E6-4746-B734-744DA7F98346}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,16 @@ Global
 		{5DE51486-B5D2-487B-BB6E-A2638FAFF239}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5DE51486-B5D2-487B-BB6E-A2638FAFF239}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5DE51486-B5D2-487B-BB6E-A2638FAFF239}.Release|x86.ActiveCfg = Release|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,6 +186,7 @@ Global
 		{1BC48EEB-91A2-4A1B-ACCC-E9888668D159} = {942DDF78-31BE-45C8-BDEB-B7339FECF547}
 		{75FE8306-0DA2-4DC3-886E-C0C0C5732D16} = {8C7D82DE-7697-4585-B7DE-1863592590FD}
 		{5DE51486-B5D2-487B-BB6E-A2638FAFF239} = {75FE8306-0DA2-4DC3-886E-C0C0C5732D16}
+		{F7ABDFDB-E9E6-4746-B734-744DA7F98346} = {942DDF78-31BE-45C8-BDEB-B7339FECF547}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItems = $0

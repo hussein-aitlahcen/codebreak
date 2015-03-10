@@ -48,7 +48,8 @@ namespace Codebreak.App.Website.Signalr
         /// <param name="content"></param>
         public void SendMessage(string content)
         {
-            NotifyChatMessage(Context.User as AccountTicket, content);
+            var ticket = Context.User as AccountTicket;
+            NotifyChatMessage(ticket, ticket.Account.Power > 0 ? content : HttpUtility.HtmlEncode(content));
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Codebreak.App.Website.Signalr
 
             lock (ChatMessages)
             {
-                if (ChatMessages.Count > CACHE_MESSAGE_COUNT)
+                if (ChatMessages.Count >= CACHE_MESSAGE_COUNT)
                     ChatMessages.RemoveAt(0);
                 ChatMessages.Add(message);
             }

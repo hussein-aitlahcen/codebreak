@@ -155,6 +155,7 @@ namespace Codebreak.App.Website.Managers
                 entry.Experience = character.Experience;
                 entry.Breed = character.Breed;
                 entry.Sex = character.Sex;
+                entry.Name = character.Name;
                 newEntries.Add(character.Id, entry);
             }
 

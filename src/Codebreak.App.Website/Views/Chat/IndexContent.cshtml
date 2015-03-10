@@ -35,6 +35,9 @@
 
         var chatPlayers = {};
         var chatMessages = [];
+        var MESSAGE_INTERVAL = 2500;
+        var lastMessage = "";
+        var nextMessageTime = new Date;
 
         function getTitle(power) {
             switch (power) {
@@ -49,6 +52,7 @@
         function addPlayer(player, init) {
             chatPlayers[player.Id] = player;
             player.Title = getTitle(player.Power);
+            player.Color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
 
             $("#chat-users-list").append('<a id="chat-user-' + player.Id + '" class="list-group-item chat-user" href="#"> \
                                         <div class="row">'
@@ -71,11 +75,11 @@
         }
 
         function addServerMessage(message) {
-            $("#chat-messages").append(' <li class="media">\
+            $("#chat-messages").append(' <li class="media chat-server-message">\
                                             <div class="media-body"> \
                                                 <div class="media"> \
-                                                    <div class="media-body small text-muted"> \
-                                                        # ' + message + ' \
+                                                    <div class="media-body small"> \
+                                                        &nbsp;&nbsp;' + message + ' \
                                                     </div> \
                                                 </div> \
                                             </div> \
@@ -83,21 +87,25 @@
             $("#chat-content").scrollTop($("#chat-content")[0].scrollHeight);
         }
 
+        // TODO : Chat Avatar
+        //<a class="pull-left" href="#"> \
+        //    <img class="media-object img-rounded chat-user-img" ' + (message.Power > 0 ? 'src="/Content/img/chat/cliff.png"' : 'src="/Content/img/chat/questionmark.png"') + '/> \
+        //</a> \
+
         function addMessage(message) {
             chatMessages.push(message);
             $("#chat-messages").append('<li class="media highlight chat-message">\
                                             <div class="media-body"> \
                                                 <div class="media small"> \
-                                                    <a class="pull-left" href="#"> \
-                                                        <img class="media-object img-rounded chat-user-img" ' + (message.Power > 0 ? 'src="/Content/img/chat/cliff.png"' : 'src="/Content/img/chat/questionmark.png"') + '/> \
-                                                    </a> \
-                                                    <div class="media-body chat-message-content"> \
-                                                        <b>' + getTitle(message.Power) + message.Pseudo + '</b><br/>'
-                                                            + message.Content + ' \
-                                                        <br /> \
-                                                        <small class="text-muted">'
+                                                    <div class="media-body"> \
+                                                        <b class="chat-message-pseudo">' +
+                                                            getTitle(message.Power) + message.Pseudo +
+                                                       '</b><br/><div class="chat-message-content"><p>' +
+                                                            message.Content +
+                                                        '</p></div> \
+                                                        <small class="text-muted chat-message-time pull-right">'
                                                             + message.Time +
-                                                        '</small>  \
+                                                        '</small> \
                                                     </div> \
                                                 </div> \
                                             </div> \
@@ -132,9 +140,27 @@
         };
 
         $("#chat-input-group").on("click", "#chat-button", function (e) {
-            if ($('#chat-input').val() != "") {
-                chatProxy.server.sendMessage($('#chat-input').val());
-                $('#chat-input').val("");
+            var message = $('#chat-input').val();
+            if (message != "") {
+                if (/\S/.test(message)) {
+                    if (message != lastMessage) {
+                        var currentDate = new Date;
+                        if (currentDate > nextMessageTime) {
+                            nextMessageTime = new Date(+currentDate + MESSAGE_INTERVAL);
+                            lastMessage = message;
+                            chatProxy.server.sendMessage(message);
+                            $('#chat-input').val("");
+                        } else {
+                            addServerMessage($.i18n.t("chat.error_spam", { time: (+nextMessageTime - currentDate) / 1000 }));
+                        }
+                    } else {
+                        addServerMessage($.i18n.t("chat.error_same_message"));
+                    }
+                } else {
+                    addServerMessage($.i18n.t("chat.error_empty"));
+                }
+            } else {
+                addServerMessage($.i18n.t("chat.error_empty"));
             }
         });
 
