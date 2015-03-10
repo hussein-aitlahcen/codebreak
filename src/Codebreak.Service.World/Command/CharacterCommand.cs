@@ -162,7 +162,7 @@ namespace Codebreak.Service.World.Command
                 }
 
                 var parameters = new Dictionary<string, string>();
-                foreach(var parameter in context.TextCommandArgument.NextToEnd().Split(','))
+                foreach(var parameter in context.TextCommandArgument.NextWord().Split(','))
                 {
                     if (parameter.Contains('='))
                     {
@@ -245,7 +245,7 @@ namespace Codebreak.Service.World.Command
             protected override void Process(WorldCommandContext context)
             {
                 var characterName = context.TextCommandArgument.NextWord();
-                var reason = context.TextCommandArgument.NextToEnd();
+                var reason = context.TextCommandArgument.NextWord();
 
                 WorldService.Instance.AddMessage(() =>
                 {
@@ -450,7 +450,7 @@ namespace Codebreak.Service.World.Command
             protected override void Process(WorldCommandContext context)
             {
                 var characterName = context.TextCommandArgument.NextWord();
-                var reason = context.TextCommandArgument.NextToEnd();
+                var reason = context.TextCommandArgument.NextWord();
 
                 WorldService.Instance.AddMessage(() =>
                 {
@@ -921,7 +921,8 @@ namespace Codebreak.Service.World.Command
                     return;
                 }
 
-                var target = context.Character.Fight.Fighters.FirstOrDefault(fighter => fighter.Name.Equals(context.TextCommandArgument.NextToEnd()));
+                var targetName = context.TextCommandArgument.NextWord().Trim();
+                var target = context.Character.Fight.Fighters.FirstOrDefault(fighter => fighter.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
                 if (target == null)
                 {
                     context.Character.Dispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Unknow character name."));

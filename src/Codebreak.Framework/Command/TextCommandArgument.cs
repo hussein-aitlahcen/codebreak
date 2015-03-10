@@ -10,14 +10,14 @@ namespace Codebreak.Framework.Command
         /// <summary>
         /// 
         /// </summary>
-        private readonly string m_data;
+        private readonly string[] m_data;
 
         /// <summary>
         /// 
         /// </summary>
         public int Position
         {
-            get; 
+            get;
             set;
         }
 
@@ -27,7 +27,7 @@ namespace Codebreak.Framework.Command
         /// <param name="line"></param>
         public TextCommandArgument(string line)
         {
-            m_data = line;
+            m_data = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             Position = 0;
         }
 
@@ -37,54 +37,9 @@ namespace Codebreak.Framework.Command
         /// <returns></returns>
         public string NextWord()
         {
-            return NextWord(" ");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string NextToEnd()
-        {
-            int length = m_data.Length;
-            if (Position >= length)
-                return "";
-
-            return m_data.Substring(Position, length - Position);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="separator"></param>
-        /// <returns></returns>
-        public string NextWord(string separator)
-        {
-            int length = m_data.Length;
-            if (Position >= length)
-                return "";
-
-            int x;
-            if ((x = m_data.IndexOf(separator, Position, StringComparison.Ordinal)) == Position)
-            {
-                Position += separator.Length;
-                return m_data.Substring(Position, m_data.Length - Position);
-            }
-
-            if (x < 0)
-            {
-                if (Position == length)
-                    return null;
-                x = length;
-            }
-
-            var word = m_data.Substring(Position, x - Position);
-
-            Position = x + separator.Length;
-            if (Position > length)
-                Position = length;
-
-            return word;
+            if (Position >= m_data.Length)
+                return string.Empty;
+            return m_data[Position++];
         }
     }
 }
