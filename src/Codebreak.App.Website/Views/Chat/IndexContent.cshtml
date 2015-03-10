@@ -35,6 +35,9 @@
 
         var chatPlayers = {};
         var chatMessages = [];
+        var MESSAGE_INTERVAL = 2500;
+        var lastMessage = "";
+        var nextMessageTime = new Date;
 
         function getTitle(power) {
             switch (power) {
@@ -137,9 +140,27 @@
         };
 
         $("#chat-input-group").on("click", "#chat-button", function (e) {
-            if ($('#chat-input').val() != "") {
-                chatProxy.server.sendMessage($('#chat-input').val());
-                $('#chat-input').val("");
+            var message = $('#chat-input').val();
+            if (message != "") {
+                if (/\S/.test(message)) {
+                    if (message != lastMessage) {
+                        var currentDate = new Date;
+                        if (currentDate > nextMessageTime) {
+                            nextMessageTime = new Date(+currentDate + MESSAGE_INTERVAL);
+                            lastMessage = message;
+                            chatProxy.server.sendMessage(message);
+                            $('#chat-input').val("");
+                        } else {
+                            addServerMessage($.i18n.t("chat.error_spam", { time: (+nextMessageTime - currentDate) / 1000 }));
+                        }
+                    } else {
+                        addServerMessage($.i18n.t("chat.error_same_message"));
+                    }
+                } else {
+                    addServerMessage($.i18n.t("chat.error_empty"));
+                }
+            } else {
+                addServerMessage($.i18n.t("chat.error_empty"));
             }
         });
 

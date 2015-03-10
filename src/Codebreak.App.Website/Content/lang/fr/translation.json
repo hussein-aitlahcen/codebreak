@@ -108,7 +108,10 @@
 
         "error_disconnected": "Vous êtes déconnecté, reconnexion en cours...",
         "error_connecting": "Connexion en cours...",
-        "error_connected": "Vous êtes connecté"
+        "error_connected": "Vous êtes connecté",
+        "error_empty": "Votre message est vide",
+        "error_same_message": "Votre message est identique au précédent",
+        "error_spam": "Par soucis de lisibilité, vous devez attendre __time__ secondes afin de pouvoir envoyer un nouveau message"
     },
 
     "team": {
