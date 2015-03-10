@@ -48,7 +48,7 @@ namespace Codebreak.App.Website.Signalr
         /// <param name="content"></param>
         public void SendMessage(string content)
         {
-            NotifyChatMessage(Context.User as AccountTicket, content);
+            NotifyChatMessage(Context.User as AccountTicket, HttpUtility.HtmlEncode(content));
         }
 
         /// <summary>
