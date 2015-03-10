@@ -23,14 +23,11 @@
 
 .chat-message-pseudo {
     padding-left: 5px;
+    font-size: 1.1em;
 }
 
 .chat-message-content {
     padding-left: 20px;
-}
-
-.chat-message-content:before {
-    font-family: FontAwesome;
 }
 
 .chat-message:hover {
