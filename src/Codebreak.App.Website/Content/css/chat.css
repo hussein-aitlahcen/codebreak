@@ -27,6 +27,7 @@
 
 .chat-message-content {
     padding-left: 20px;
+    color: #3F4042;
 }
 
 .chat-message:hover {
