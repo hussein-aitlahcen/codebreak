@@ -149,7 +149,6 @@
                             nextMessageTime = new Date(+currentDate + MESSAGE_INTERVAL);
                             lastMessage = message;
                             chatProxy.server.sendMessage(message);
-                            $('#chat-input').val("");
                         } else {
                             addServerMessage($.i18n.t("chat.error_spam", { time: (+nextMessageTime - currentDate) / 1000 }));
                         }
@@ -159,6 +158,7 @@
                 } else {
                     addServerMessage($.i18n.t("chat.error_empty"));
                 }
+                $('#chat-input').val("");
             } else {
                 addServerMessage($.i18n.t("chat.error_empty"));
             }

@@ -3,6 +3,10 @@
     margin-bottom: -10px;
 }
 
+.ladder-list .list-group-item {
+    color: #3F4042;
+}
+
 .ladder-list .list-group-item:first-child {
     background-color: #546BA8;
     color: white;

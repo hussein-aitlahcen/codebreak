@@ -16,15 +16,14 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
 
         static void Main(string[] args)
         {
-            Console.Write("Version courante : ");
+            Console.Write("Version actuelle : ");
             var currentVersion = Console.ReadLine();
 
-            Console.Write("Version suivante : ");
+            Console.Write("Nouvelle version : ");
             var nextVersion = Console.ReadLine();
 
             var patchFileName = "dofus_" + currentVersion + "_to_" + nextVersion + ".zip";
-
-
+            
             using (var stream = new FileStream("./input/games.xml", FileMode.Create))
             {
                 var serializer = new XmlSerializer(typeof(GamesConfigurations));

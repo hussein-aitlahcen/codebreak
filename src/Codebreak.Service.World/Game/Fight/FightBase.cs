@@ -1025,10 +1025,8 @@ namespace Codebreak.Service.World.Game.Fight
                 if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
                     return;
 
-                for (int i = SpectatorTeam.Spectators.Count() - 1; i > -1; i--)
-                {
-                    FightQuit(SpectatorTeam.Spectators.ElementAt(i), true);
-                }
+                for (int i = SpectatorTeam.Spectators.Count() - 1; i > -1; i--)                
+                    FightQuit(SpectatorTeam.Spectators.ElementAt(i), true);                
             });
         }
 
