@@ -198,7 +198,17 @@ namespace Codebreak.Service.World.Frame
 
             WorldService.Instance.AddMessage(() =>
                 {
-                    var target = EntityManager.Instance.GetCharacterByName(name);
+                    CharacterEntity target = null;
+                    if(name[0] == '%')
+                    {
+                        name = name.Substring(1);
+                        target = EntityManager.Instance.GetCharacterByName(name);
+                        if (target == null)
+                            target = EntityManager.Instance.GetCharacterByPseudo(name);
+                    }
+                    else
+                        target = EntityManager.Instance.GetCharacterByName(name);
+
                     if (target == null || target.Account == null)
                     {
                         character.SafeDispatch(WorldMessage.FRIEND_ADD_ERROR_UNKNOW_PLAYER());
