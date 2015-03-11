@@ -795,9 +795,6 @@ namespace Codebreak.Service.World.Game.Stats
                 case EffectEnum.AddMP:
                     total += GetTotal(EffectEnum.MPBonus);
                     break;
-                case EffectEnum.AddReflectDamage:
-                    total += GetTotal(EffectEnum.AddReflectDamageItem);
-                    break;
             }
 
             if (OppositeStats.ContainsKey(effectType))            
