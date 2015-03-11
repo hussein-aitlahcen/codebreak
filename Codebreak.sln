@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreak.App.Website", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codebreak.Tool.UplauncherPatchGenerator", "src\Codebreak.Tool.UplauncherPatchGenerator\Codebreak.Tool.UplauncherPatchGenerator.csproj", "{F7ABDFDB-E9E6-4746-B734-744DA7F98346}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "EarthscapeSetup", "src\EarthscapeSetup\EarthscapeSetup.wixproj", "{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +168,16 @@ Global
 		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F7ABDFDB-E9E6-4746-B734-744DA7F98346}.Release|x86.ActiveCfg = Release|Any CPU
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Debug|x86.ActiveCfg = Debug|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Debug|x86.Build.0 = Debug|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Release|Any CPU.ActiveCfg = Release|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Release|Mixed Platforms.Build.0 = Release|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Release|x86.ActiveCfg = Release|x86
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,6 +199,7 @@ Global
 		{75FE8306-0DA2-4DC3-886E-C0C0C5732D16} = {8C7D82DE-7697-4585-B7DE-1863592590FD}
 		{5DE51486-B5D2-487B-BB6E-A2638FAFF239} = {75FE8306-0DA2-4DC3-886E-C0C0C5732D16}
 		{F7ABDFDB-E9E6-4746-B734-744DA7F98346} = {942DDF78-31BE-45C8-BDEB-B7339FECF547}
+		{02CD6F0C-68DA-4D05-B5CD-94123B86CC27} = {942DDF78-31BE-45C8-BDEB-B7339FECF547}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItems = $0
