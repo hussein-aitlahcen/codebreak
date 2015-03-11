@@ -1100,9 +1100,7 @@ namespace Codebreak.Service.World.Game.Fight
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
-
-                    OnCharacterJoin(character, team);
-
+                    
                     JoinFight(character, team);
                 });
         }
@@ -1119,6 +1117,9 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (!fighter.IsDisconnected)
             {
+                if(fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    OnCharacterJoin(fighter as CharacterEntity, team);
+
                 fighter.JoinFight(this, team);
                 base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
             }

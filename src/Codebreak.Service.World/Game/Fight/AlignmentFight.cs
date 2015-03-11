@@ -119,9 +119,12 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (!IsNeutralAgression)
                 character.EnableAlignment();
-            else            
+            else
                 if (team.AlignmentId != (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL)
-                    character.EnableAlignment();            
+                {
+                    character.EnableAlignment();
+                    character.AddDishonour(1);
+                } 
         }
 
         /// <summary>
@@ -224,7 +227,6 @@ namespace Codebreak.Service.World.Game.Fight
                         else
                             dishonour = 1;
                         player.AddHonour(honour);
-                        player.AddDishonour(dishonour);
                     }
                 }
                 Result.AddResult(fighter, FightEndTypeEnum.END_WINNER, false, 0, 0, honour, dishonour);
@@ -243,6 +245,8 @@ namespace Codebreak.Service.World.Game.Fight
                             honour = Util.CalculWinHonor(player.Level, m_winnersLevel, m_losersLevel);
                         player.SubstractHonour(honour);
                     }
+                    else
+                        dishonour = 1;
                 }
                 Result.AddResult(fighter, FightEndTypeEnum.END_LOSER, false, 0, 0, -honour, dishonour);
             }
