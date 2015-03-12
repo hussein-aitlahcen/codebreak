@@ -201,7 +201,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return ((1 + (Statistics.GetTotal(EffectEnum.AddWisdom) / 100)) * Statistics.GetTotal(EffectEnum.AddReflectDamage)) + Statistics.GetTotal(EffectEnum.AddReflectDamageItem);
+                return 
+                    ((1 + (Statistics.GetTotal(EffectEnum.AddWisdom) / 100))
+                    * Statistics.GetTotal(EffectEnum.AddReflectDamage)) + Statistics.GetTotal(EffectEnum.AddReflectDamageItem);
             }
         }
 

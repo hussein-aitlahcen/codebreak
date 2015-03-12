@@ -1025,10 +1025,8 @@ namespace Codebreak.Service.World.Game.Fight
                 if (LoopState == FightLoopStateEnum.STATE_WAIT_END || LoopState == FightLoopStateEnum.STATE_ENDED)
                     return;
 
-                for (int i = SpectatorTeam.Spectators.Count() - 1; i > -1; i--)
-                {
-                    FightQuit(SpectatorTeam.Spectators.ElementAt(i), true);
-                }
+                for (int i = SpectatorTeam.Spectators.Count() - 1; i > -1; i--)                
+                    FightQuit(SpectatorTeam.Spectators.ElementAt(i), true);                
             });
         }
 
@@ -1100,9 +1098,7 @@ namespace Codebreak.Service.World.Game.Fight
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                         return;
                     }
-
-                    OnCharacterJoin(character, team);
-
+                    
                     JoinFight(character, team);
                 });
         }
@@ -1119,6 +1115,9 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (!fighter.IsDisconnected)
             {
+                if(fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
+                    OnCharacterJoin(fighter as CharacterEntity, team);
+
                 fighter.JoinFight(this, team);
                 base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
             }

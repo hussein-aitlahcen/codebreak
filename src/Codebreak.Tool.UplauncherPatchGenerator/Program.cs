@@ -16,6 +16,20 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
 
         static void Main(string[] args)
         {
+            Console.Write("Version actuelle : ");
+            var currentVersion = Console.ReadLine();
+
+            Console.Write("Nouvelle version : ");
+            var nextVersion = Console.ReadLine();
+
+            var patchFileName = "dofus_" + currentVersion + "_to_" + nextVersion + ".zip";
+            
+            using (var stream = new FileStream("./input/games.xml", FileMode.Create))
+            {
+                var serializer = new XmlSerializer(typeof(GamesConfigurations));
+                serializer.Serialize(stream, new GamesConfigurations() { dofus = new dofus() { version = nextVersion } });
+            }
+
             var fullPath = new Uri(Path.GetFullPath("./input/"));
             var files = new List<file>();
             foreach (var file in Directory.GetFiles("./input", "*.*", SearchOption.AllDirectories))
@@ -46,9 +60,9 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
                 serializer.Serialize(stream, new Modifications() { files = files.ToArray() });
             }
 
-            if (File.Exists("./output/patch.zip"))
-                File.Delete("./output/patch.zip");
-            using (ZipArchive patchFile = ZipFile.Open("./output/patch.zip", ZipArchiveMode.Create))
+            if (File.Exists("./output/" + patchFileName))
+                File.Delete("./output/" + patchFileName);
+            using (ZipArchive patchFile = ZipFile.Open("./output/" + patchFileName, ZipArchiveMode.Create))
             {
                 patchFile.CreateEntryFromFile("./output/manifest.xml", "manifest.xml");
                 foreach (var file in Directory.GetFiles("./input", "*.*", SearchOption.AllDirectories))
@@ -63,19 +77,31 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
             {
                 Crc32Algorithm crc32 = new Crc32Algorithm();
                 StringBuilder hash = new StringBuilder();
-                using (FileStream fs = File.Open("./output/patch.zip", FileMode.Open))
+                using (FileStream fs = File.Open("./output/" + patchFileName, FileMode.Open))
                     foreach (byte b in crc32.ComputeHash(fs))
                         hash.Append(b.ToString("x2").ToLower());
-
-
-                using (var stream = new FileStream("./output/patch.xml", FileMode.Create))
+                
+                using (var stream = new FileStream("./output/dofus_" + currentVersion + ".xml", FileMode.Create))
                 {
                     var serializer = new XmlSerializer(typeof(Uplauncher));
-                    serializer.Serialize(stream, new Uplauncher() { patchs = new patch[] { new patch() { path = new path() { crc = hash.ToString().ToUpper(), url = "http://staticdata.earthscape.fr/client/patch.zip" } } } });
+                    serializer.Serialize(stream, new Uplauncher() { version = nextVersion, patchs = new patch[] { new patch() { path = new path() { crc = hash.ToString().ToUpper(), url = "http://staticdata.earthscape.fr/client/" + patchFileName } } } });
                 }
             }
 
             Console.ReadLine();
+        }
+
+        [Serializable]
+        public class GamesConfigurations
+        {
+            public dofus dofus;            
+        }
+        
+        [Serializable]
+        public class dofus
+        {
+            public string path = ".";
+            public string version = "";
         }
 
         [XmlRoot("UpLauncher")]
