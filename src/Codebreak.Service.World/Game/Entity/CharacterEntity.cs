@@ -1069,6 +1069,24 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public void HardResetSpells()
+        {
+            SpellBook.Reset(Breed);
+
+            for (int i = 1; i < Level; i++)
+                SpellBook.GenerateLevelUpSpell(Breed, i);
+
+            SpellPoint = Level - 1;
+
+            CachedBuffer = true;
+            SendAccountStats();
+            Dispatch(WorldMessage.SPELLS_LIST(SpellBook));
+            CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void FreeSoul()
         {
             switch(DeathType)
