@@ -57,7 +57,7 @@ namespace Codebreak.App.Website.Managers
         /// <summary>
         /// 
         /// </summary>
-        public const int UPDATE_INTERVAL = 1000 * 60 * 10;
+        public const int UPDATE_INTERVAL = 1000 * 60 * 60 * 12;
 
         /// <summary>
         /// 
@@ -176,13 +176,13 @@ namespace Codebreak.App.Website.Managers
                 return m_entryById[character.Id];
             var entry = new LadderEntry()
             {
-                Index = TOP_LADDER,
+                Index = m_entryById.Count,
                 Name = character.Name,
                 Level = character.Level,
                 Experience = character.Experience,
                 Breed = character.Breed,
                 Sex = character.Sex,
-                LastIndex = TOP_LADDER,
+                LastIndex = m_entryById.Count,
             };
             return entry;
         }

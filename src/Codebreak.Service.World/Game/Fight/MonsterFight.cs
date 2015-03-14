@@ -136,6 +136,7 @@ namespace Codebreak.Service.World.Game.Fight
         private long m_losersTotalLevel;
         private long m_kamasLoot;
         private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops = new Dictionary<FighterBase,List<InventoryItemDAO>>();
+        private Dictionary<FighterBase, long> m_distributedExp = new Dictionary<FighterBase, long>();
         private List<FighterBase> m_droppers = new List<FighterBase>();
         private List<InventoryItemDAO> m_itemLoot = new List<InventoryItemDAO>();
 
@@ -192,8 +193,8 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             // Players lost
-            foreach (var player in m_losersFighter.OfType<CharacterEntity>())            
-                InitLoots(player);            
+            foreach (var player in m_losersFighter.OfType<CharacterEntity>())
+                InitLoots(player);
         }
 
         /// <summary>
@@ -215,7 +216,21 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void InitDistribution()
         {
-            m_distributedDrops = DropManager.Instance.Distribute(m_droppers, m_droppersTotalPP, m_itemLoot);  
+            m_distributedDrops = DropManager.Instance.Distribute(m_droppers, m_droppersTotalPP, m_itemLoot);
+            
+            foreach(var fighter in m_droppers)
+            {
+                switch(fighter.Type)
+                {
+                    case EntityTypeEnum.TYPE_CHARACTER:
+                        m_distributedExp.Add(fighter, Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_droppers, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom), m_challengeXpBonus, MonsterGroup.AgeBonus));
+                        break;
+
+                    case EntityTypeEnum.TYPE_TAX_COLLECTOR:
+                        m_distributedExp.Add(fighter, Util.CalculPVMExperienceTaxCollector(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom), m_challengeXpBonus, MonsterGroup.AgeBonus));
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -240,9 +255,9 @@ namespace Codebreak.Service.World.Game.Fight
             {
                 foreach (var fighter in m_droppers)
                 {
-                    long exp = 0;
                     long kamas = 0;
                     var items = m_distributedDrops[fighter];
+                    long exp = 0;
                     Dictionary<int, int> itemCount = new Dictionary<int, int>();
 
                     fighter.CachedBuffer = true;
@@ -250,8 +265,8 @@ namespace Codebreak.Service.World.Game.Fight
                     switch(fighter.Type)
                     {
                         case EntityTypeEnum.TYPE_CHARACTER:
-                            var character = fighter as CharacterEntity;
-                            exp = Util.CalculPVMExperience(m_losersFighter.OfType<MonsterEntity>(), m_droppers, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom), m_challengeXpBonus, MonsterGroup.AgeBonus);
+                            var character = fighter as CharacterEntity; 
+                            exp = m_distributedExp[fighter];
                             kamas = Util.CalculPVMKamas(m_kamasLoot, fighter.Prospection, m_droppersTotalPP);
                             character.Inventory.AddKamas(kamas);
                             character.AddExperience(exp);
@@ -279,7 +294,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                         case EntityTypeEnum.TYPE_TAX_COLLECTOR:
                             var taxCollector = fighter as TaxCollectorEntity;
-                            exp = Util.CalculPVMExperienceTaxCollector(m_losersFighter.OfType<MonsterEntity>(), m_winnersFighter, fighter.Level, fighter.Statistics.GetTotal(EffectEnum.AddWisdom), m_challengeXpBonus, MonsterGroup.AgeBonus);          
+                            exp = m_distributedExp[fighter];
                             kamas = Util.CalculPVMKamas(m_kamasLoot, fighter.Prospection, m_droppersTotalPP);
                             taxCollector.Storage.AddKamas(kamas);
                             taxCollector.ExperienceGathered += exp;
@@ -323,7 +338,6 @@ namespace Codebreak.Service.World.Game.Fight
                                 
                 foreach (var player in m_losersFighter.OfType<CharacterEntity>())
                 {
-                    player.Energy = 1;
                     Result.AddResult(player);
                 }
 
