@@ -682,6 +682,57 @@ namespace Codebreak.Service.World.Command
                     });                
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public sealed class ResetSpellCommand : SubCommand<WorldCommandContext>
+        {
+            private readonly string[] _aliases = 
+            {
+                "resetspell"
+            };
+
+            public override string[] Aliases
+            {
+                get
+                {
+                    return _aliases;
+                }
+            }
+
+            public override string Description
+            {
+                get
+                {
+                    return "Reset the spells of a player. Arguments : %playerName%";
+                }
+            }
+
+            protected override bool CanExecute(WorldCommandContext context)
+            {
+                return true;
+            }
+
+            protected override void Process(WorldCommandContext context)
+            {
+                string characterName = context.TextCommandArgument.NextWord();
+                WorldService.Instance.AddMessage(() =>
+                {
+                    var character = EntityManager.Instance.GetCharacterByName(characterName);
+                    if (character == null)
+                    {
+                        context.Character.SafeDispatch(WorldMessage.BASIC_CONSOLE_MESSAGE("Player not found."));
+                        return;
+                    }
+
+                    character.AddMessage(() =>
+                    {
+                        character.HardResetSpells();
+                    });
+                });
+            }
+        }
  
         /// <summary>
         /// 

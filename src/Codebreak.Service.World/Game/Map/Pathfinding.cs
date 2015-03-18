@@ -519,7 +519,7 @@ namespace Codebreak.Service.World.Game.Map
 
             Pathfinding.GenerateGrid(map.Width, map.Cells.Count);
 
-            return CellPoints[map.Cells.Count][cell];
+            return GetPoint(map, cell);
         }
 
         /// <summary>

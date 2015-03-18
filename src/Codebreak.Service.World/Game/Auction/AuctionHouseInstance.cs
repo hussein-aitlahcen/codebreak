@@ -461,10 +461,11 @@ namespace Codebreak.Service.World.Game.Auction
                 var type = entry.Item.Template.Type;
                 if (!m_templatesByType.ContainsKey(type))
                     m_templatesByType.Add(type, new List<int>());
+                if(!m_templatesByType[type].Contains(templateId))
+                    m_templatesByType[type].Add(templateId);
 
                 m_categoriesByTemplate[templateId].Add(category);
                 m_categoryById.Add(category.Id, category);
-                m_templatesByType[type].Add(templateId);
 
                 category.Add(entry);
 

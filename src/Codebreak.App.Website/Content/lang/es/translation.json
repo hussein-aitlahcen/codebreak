@@ -1,0 +1,164 @@
+﻿{
+    "common": {
+            "or": "our",
+            "and": "y",
+            "seconds": "segundo"
+        },
+
+    "nav": {
+        "home": "Casa",
+        "join_us": "Contáctenos",
+        "register": "Registro",
+        "download": "Descarga",
+        "community": "Comunidad",
+        "forum": "Foro",
+        "ladder": "Clasificación",
+        "team": "El equipo",
+        "contact": "Contáctenos",
+        "login": "Iniciar Sesión",
+        "logout": "Desconectar",
+        "chat": "Chat",
+        "about": "Acerca"
+    },
+
+    "home": {
+        "dalai_lama": "No hay nadie que haya nacido bajo una mala estrella, sólo hay personas que no leen el cielo.",
+        "the_best": "Exigir el mejor",
+
+        "step_register": "Nuevo Registro",
+        "step_download_and_install": "Descarga e instala",
+        "step_forum_and_discuss": "Cambio en el foro",
+
+        "server_desc_unique_emulator_title": "Nuevos servicios",
+        "server_desc_unique_emulator_text": "Desarrollado por profesionales para los jugadores. Nuestra emulador es nuevo y basado en ningún otro. <br/> No sospecha de que es posible hacer. Tómese el tiempo para jugar, sabes que vaya.",
+
+        "server_desc_official_gameplay_title": "Revive la experiencia",
+        "server_desc_official_gameplay_text": "Las artesanías son siempre presente farm, fabricación y se convierten en los mejores artesanos. El modo heroico, ganar objetos después de la muerte de otros jugadores. Versión nostálgica 1.29, le aseguramos sensaciones olvidadas.",
+
+        "server_desc_high_quality_title": "Calidad y escucha",
+        "server_desc_high_quality_text": "Abra un servidor fiel a la versión 1.29 Se rodeó de un equipo que escucha jugadores. Desarrollar herramientas robustas. Tales eran mis metas."
+    },
+
+    "auth": {
+        "register_to_play": "Regístrese y jugar ahora.",
+        "login_to_play": "Iniciar sesión !",
+        "input_account_name": "Nombre de la cuenta",
+        "input_account_password": "Contraseña",
+        "input_account_password_confirm": "Confirme su contraseña",
+        "input_account_pseudo": "Apodo",
+        "input_account_email": "Correo electrónico",
+        "input_account_question": "Pregunta secreta",
+        "input_account_answer": "Respuesta a la pregunta secreta",
+        "validate": "Validar",
+
+        "error_banned": "Usted está prohibido.",
+        "error_need_connect": "Debes iniciar sesión para acceder a este recurso.",
+        "error_invalid_credentials": "Nombre de cuenta o contraseña Inccorect.",
+        "error_no_name": "Por favor, introduzca un nombre de usuario.",
+        "error_name_short": "El nombre de la cuenta debe tener como mínimo 6 caracteres.",
+        "error_no_pseudo": "Por favor ingrese un apodo al menos 6 caracteres.",
+        "error_pseudo_short": "El apodo debe tener como mínimo 6 caracteres.",
+        "error_no_password": "Por favor, introduzca una contraseña de al menos 6 caracteres.",
+        "error_password_short": "La contraseña debe contener como mínimo 6 caractere.",
+        "error_password_confirm": "La confirmación de contraseña no coincide.",
+        "error_invalid_mail": "Por favor, introduce una dirección de correo electrónico válida.",
+        "error_no_question": "Por favor introduzca una pregunta secreta.",
+        "error_question_short": "La pregunta secreta debe contener al menos 10 caracteres.",
+        "error_no_answer": "Por favor introduzca una respuesta secreta.",
+        "error_answer_short": "La respuesta secreta debe contener al menos 10 caracteres.",
+        "error_name_exists": "El nombre de la cuenta ya está en uso.",
+        "error_pseudo_exists": "Ya existe este nombre de usuario.",
+        "error_database": "Se produjo un error al guardar los datos,registro ha fallado ."
+    },
+
+    "register": {
+        "failed": "Registro ha fallado",
+        "alert_agree_terms": "Al hacer clic en el botón Enviar, usted acepta los Términos y condiciones."
+    },
+
+    "login": {
+        "failed": "No se puede conectar"
+    },
+
+    "ladder": {
+        "title": "Superior",
+        "informations": "Informacions",
+        "next_refresh": "Próxima actualización de la clasificación en",
+        "last_refresh": "Fecha actualización asistieron hasta",
+        "change": "Rendimiento",
+        "rank": "Rango",
+        "name": "Nombre",
+        "breed": "Raze",
+        "level": "Nivel",
+        "experience": "Experiencia",
+        "change_legend": "El rendimiento representa la diferencia entre la corriente y la fila anterior"
+    },
+
+    "chat": {
+        "title": "Chat comunidad",
+        "users": "Usuarios",
+        "moderator": "<strong>[Moderador]</strong>",
+        "animator": "<strong>[Animador]</strong>",
+        "administrator": "<strong>[Administrador]</strong>",
+        "boss": "<strong>[jefe]</strong>",
+        "send": "Enviar",
+        "write": "Escribir un mensaje ...",
+        "user_left": "__user__ desconectado",
+        "user_join": "__user__ acaba de unirse al chat",
+
+        "error_disconnected": "Se ha desconectado durante la reconexión...",
+        "error_connecting": "Conexión actual...",
+        "error_connected": "Usted está en el sistema",
+        "error_empty": "Su mensaje está vacío",
+        "error_same_message": "Su mensaje es idéntica a la anterior",
+        "error_spam": "En aras de la legibilidad,debe esperar  __time__ segundo con el fin de enviar un nuevo mensaje"
+    },
+
+    "team": {
+        "title": "Nuestros expertos",
+        "cliff": "Administrador, desarrollador web / servidor / base de datos",
+        "flynn": "Administrador, diseñador / escritor."
+    },
+
+    "download": {
+        "title": "Descarga y juega ahora !",
+        "step_register": "Registrarse",
+        "step_register_text": "Regístrese si aún no lo ha hecho.<br>Luego continuar la descarga de paso.",
+        "step_register_link_text": "Ir al formulario de inscripción",
+        "step_download": "Descarga Cliente",
+        "step_download_text": "Haga clic en el siguiente enlace para guardar el archivo, Una vez descargado,desempaquetar aquí.<br>Usted está finalmente listo para jugar.",
+        "step_download_link_text": "Descargar cliente Earthscape- Origin"
+    },
+
+    "contact": {
+        "feedback_suggestions_title": "Comentarios y Sugerencias",
+        "feedback_suggestions_text": "Una pregunta, una sugerencia o una petición específica ? No dude en enviarnos su consulta por correo electrónico o en el foro.<br>Nous y répondrons dans les meilleurs délais.",
+
+        "need_help_title": "Necesita ayuda o consejos?",
+        "need_help_text": "Usted está bloqueado o si tiene un problema con el client.Dirígete a la foro comunicarse con nosotros,decenas de jugadores le traerá su ayuda .",
+
+        "we_recruit_title": "Estamos contratando!",
+        "we_recruit_text": "Estamos buscando a facilitadores altamente activos y moderadores para gestionar el foro. Su trabajo consistirá en el foro diariamente para controlar, animar y responder las preguntas de los jugadores.<br>Este es un trabajo serio para los que se tomará, Estará en contacto directo con los jugadores. Esperamos motivados y dispuestos a invertir. Por favor envíe sus solicitudes por correo electrónico."
+    },
+
+    "footer": {
+        "languages": "Idiomas",
+        "language_fr": "Francès",
+        "language_en": "Ingles",
+        "language_es": "Espagnoles",
+
+        "servers_status": "Estado del servidor",
+
+        "socials": "Redes Sociales",
+
+        "live_data": "Estadísticas en directo",
+        "live_players_playing": "Jugadore(s)en partido",
+        "live_visitor_count": "(los)Visitantes en linéa",
+        "live_players_connected": "El/los usuarios es/son"
+    },
+
+    "copyright": {
+        "rights_reserved": "2015 © Earthscape, Reservados todos los derechos.",
+        "terms": "Términos y condiciones."
+    }
+}

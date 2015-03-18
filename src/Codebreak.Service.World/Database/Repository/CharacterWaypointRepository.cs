@@ -59,7 +59,10 @@ namespace Codebreak.Service.World.Database.Repository
             // NO UPDATE
         }
 
-
+        public void RemoveAll(long characterId)
+        {
+            base.Removed(GetByCharacterId(characterId));
+        }
 
         /// <summary>
         /// 

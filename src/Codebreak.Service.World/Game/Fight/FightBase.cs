@@ -2327,9 +2327,12 @@ namespace Codebreak.Service.World.Game.Fight
             LoopState = FightLoopStateEnum.STATE_ENDED;
 
             base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
-            
-            foreach (var fighter in Fighters)            
-                fighter.EndFight(true);            
+
+            foreach (var fighter in Fighters.ToArray())
+            {
+                fighter.Dispatch(WorldMessage.SERVER_ERROR_MESSAGE("Fight error, we have stopped it for safety reasons."));
+                fighter.EndFight(true);
+            }      
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
                 spectator.EndFight();
