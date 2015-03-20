@@ -456,6 +456,7 @@
     <Content Include="Content\lang\fr\translation.json" />
     <Content Include="Content\lang\en\translation.json" />
     <Content Include="Content\lang\es\translation.json" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\Earthscape.pubxml" />
     <None Include="Properties\PublishProfiles\origin.earthscape.fr.pubxml" />
     <Content Include="Content\js\angular-animate.js" />

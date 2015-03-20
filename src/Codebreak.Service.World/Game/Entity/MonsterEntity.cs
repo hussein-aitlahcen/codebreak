@@ -91,7 +91,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return 100;
+                return Grade.Template.SkinSize;
             }
             set { }
         }

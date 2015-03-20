@@ -31,6 +31,11 @@ namespace Codebreak.Service.World.Database.Structure
             get;
             set;
         }
+        public int SkinSize
+        {
+            get;
+            set;
+        }
         public int Alignment
         {
             get;

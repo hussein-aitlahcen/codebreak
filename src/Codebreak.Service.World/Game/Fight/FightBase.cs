@@ -1347,6 +1347,12 @@ namespace Codebreak.Service.World.Game.Fight
             AddMessage(() =>
                 {
                     CurrentFighter = TurnProcessor.NextFighter;
+                    if(CurrentFighter == null)
+                    {
+                        LoopState = FightLoopStateEnum.STATE_WAIT_END;
+                        LoopEndState = FightEndStateEnum.STATE_END_ERROR;
+                        return;
+                    }
                     
                     base.Dispatch(WorldMessage.FIGHT_TURN_STARTS(CurrentFighter.Id, TurnTime));
 
