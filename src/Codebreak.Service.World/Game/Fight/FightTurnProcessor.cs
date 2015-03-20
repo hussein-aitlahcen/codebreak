@@ -108,6 +108,9 @@ namespace Codebreak.Service.World.Game.Fight
                 {
                     if (m_currentFighter == null || m_currentIndex >= m_fighterTurns.Count - 1)
                     {
+                        if (m_fighterTurns.Count == 0)
+                            return null;
+
                         m_currentFighter = m_fighterTurns[0];
                         m_currentIndex = 0;
                     }

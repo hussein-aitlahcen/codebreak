@@ -100,7 +100,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     if (Fighter.CurrentAction != null)
                         Fighter.CurrentAction.Stop();
 
-                    if (!Fighter.IsFighterDead && Fighter.Fight.CurrentFighter == Fighter && Fighter.Cell.Id != CellId && Fighter.MP > 0)
+                    if (!Fighter.IsFighterDead && Fighter.Fight.CurrentFighter == Fighter && Fighter.Cell.Id != CellId && Fighter.Fight.GetCell(CellId).CanWalk)
                         return Initialize();
                     
                     return AIActionResult.SUCCESS;
