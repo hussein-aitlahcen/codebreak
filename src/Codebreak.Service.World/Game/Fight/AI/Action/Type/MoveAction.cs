@@ -81,7 +81,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
 
                 case MoveStateEnum.STATE_MOVE:
 
-                    if (StringPath == null || StringPath == string.Empty || Path == null)
+                    if (StringPath == null || StringPath == string.Empty || Path == null || Path.MovementLength == 0)
                         return AIActionResult.FAILURE;
 
                     CellId = Path.EndCell;
