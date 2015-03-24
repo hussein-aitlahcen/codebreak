@@ -94,6 +94,8 @@ namespace Codebreak.Tool.UplauncherPatchGenerator
         [Serializable]
         public class GamesConfigurations
         {
+            [XmlAttribute("version")]
+            public string version = "1.0";
             public dofus dofus;            
         }
         
