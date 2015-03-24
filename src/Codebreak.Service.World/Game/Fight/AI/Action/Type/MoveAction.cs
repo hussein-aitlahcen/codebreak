@@ -70,7 +70,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                         if (StringPath == string.Empty)
                             continue;
 
-                        Path = Fighter.Fight.Map.DecodeMovement(Fighter, ennemy.Cell.Id, StringPath);
+                        Path = Fighter.Fight.Map.DecodeMovement(Fighter, Fighter.Cell.Id, StringPath);
                         if (Path != null)
                             break;
                     }
