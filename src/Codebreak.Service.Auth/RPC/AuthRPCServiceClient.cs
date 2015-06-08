@@ -35,7 +35,10 @@ namespace Codebreak.Service.Auth.RPC
             get;
             set;
         }
-
+                
+        /// <summary>
+        /// 
+        /// </summary>
         public List<long> Players
         {
             get;
