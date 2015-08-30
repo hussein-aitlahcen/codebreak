@@ -288,9 +288,9 @@ namespace Codebreak.Service.World.Game.Map
         private List<MapCell> m_cells;
         private List<InteractiveObject> m_interactiveObjects;
         private SubAreaInstance m_subArea;
-        private bool m_movementInitialized;
         private bool m_subInstance;
         private int m_playerCount;
+        private bool m_initialized;
         private SpawnQueue m_spawnQueue;
         private List<MonsterSpawnDAO> m_monsters;
         private int m_spawnCounter;
@@ -322,12 +322,12 @@ namespace Codebreak.Service.World.Game.Map
             FightTeam1Cells = f1teamCells;
 
             m_subInstance = subInstance;
-            m_movementInitialized = false;
             m_cells = new List<MapCell>();
             m_interactiveObjects = new List<InteractiveObject>();
             m_cellById = new Dictionary<int, MapCell>();
             m_entityById = new Dictionary<long, EntityBase>();
             m_entityByName = new Dictionary<string, EntityBase>();
+            m_initialized = false;
 
             FightManager = new FightManager(this);
             SubArea.AddUpdatable(this);
@@ -365,9 +365,7 @@ namespace Codebreak.Service.World.Game.Map
             }            
 
             Pathmaker = new Pathmaker(this);
-            int nextNpcId = 1;
-            foreach(var npc in NpcManager.Instance.GetByMapId(Id))            
-                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));
+            
         }
 
         /// <summary>
@@ -391,43 +389,70 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        private void InitEntitiesMovements()
+        private void InitializeOnFirstPlayerEnter()
+        {
+            if (m_initialized)
+                return;
+            m_initialized = true;
+            InitNpcsSpawn();
+            InitMonstersSpawn();
+            InitEntitiesMovements();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitNpcsSpawn()
+        {
+            int nextNpcId = 1;
+            foreach (var npc in NpcManager.Instance.GetByMapId(Id))
+                SpawnEntity(new NonPlayerCharacterEntity(npc, nextNpcId++));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitMonstersSpawn()
         {
             m_monsters = new List<MonsterSpawnDAO>(MonsterSpawnRepository.Instance.GetById(ZoneTypeEnum.TYPE_MAP, Id).OrderByDescending(spawn => spawn.Probability));
             m_spawnCounter = m_monsters.Count > 0 ? WorldConfig.SPAWN_MAX_GROUP_PER_MAP : 0;    
 
             while (m_spawnCounter > 0)
                 SpawnMonsters();
-
-            m_movementInitialized = true;
-            foreach (var entity in m_entityById.Values.Where(entry => entry.CanBeMoved()))
-                InitEntityMovement(entity);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
-        private void InitEntityMovement(EntityBase entity)
+        private void InitEntitiesMovements()
         {
-            entity.AddTimer(Util.Next(1000, 10000), () =>
-            {
-                var timer = new UpdatableTimer(Util.Next(20000, 38000), () => MoveEntity(entity));
-                entity.MovementTimer = timer;
-                entity.AddTimer(timer);
-            }, true);
+            AddTimer(5000, ProcessEntitiesMovements);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ProcessEntitiesMovements()
+        {
+            foreach (var entity in m_entityById.Values.Where(entry => entry.CanBeMoved()))            
+                MoveEntity(entity);            
+        }
+        
         /// <summary>
         /// 
         /// </summary>
         public void MoveEntity(EntityBase entity)
         {
-            if(!entity.HasGameAction(GameActionTypeEnum.MAP))
-            {
-                entity.RemoveTimer(entity.MovementTimer);
+            if (entity.MovementInterval == 0)
+                entity.MovementInterval = Util.Next(10000, 25000);
+
+            if(entity.NextMovementTime == 0)            
+                entity.NextMovementTime = UpdateTime + entity.MovementInterval;
+            
+            if (entity.NextMovementTime > UpdateTime)
                 return;
-            }
+
+            entity.NextMovementTime = UpdateTime + entity.MovementInterval;
 
             // Move only if there is a player on the map, else it is useless
             if (m_playerCount == 0)
@@ -445,11 +470,8 @@ namespace Codebreak.Service.World.Game.Map
             if (cellId < 1)
                 return;
 
-            AddLinkedMessages
-            (
-                () => Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false)),
-                () => entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT)                
-            );
+            Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false));
+            entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT);
         }
 
         /// <summary>
@@ -573,21 +595,19 @@ namespace Codebreak.Service.World.Game.Map
                     if (m_subInstance) // For npc etc
                         entity.SetMap(this);
                     
-                    base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
-                    base.AddUpdatable(entity);
+                    Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, entity));
+                    AddUpdatable(entity);
 
                     if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                     {
-                        entity.CachedBuffer = true;
-
+                        InitializeOnFirstPlayerEnter();
+                        
                         m_playerCount++;
                         m_entityByName.Add(entity.Name.ToLower(), entity);
+                        
+                        AddHandler(entity.Dispatch);
 
-                        if(!m_movementInitialized)                        
-                            InitEntitiesMovements();
-
-                        base.AddHandler(entity.Dispatch);
-
+                        entity.CachedBuffer = true;
                         entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, Entities.ToArray()));
                         entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
                         entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
@@ -595,10 +615,6 @@ namespace Codebreak.Service.World.Game.Map
                         foreach (var fight in FightManager.Fights)                        
                             fight.SendMapFightInfos(entity);                        
                         entity.CachedBuffer = false;
-                    }
-                    else if(entity.CanBeMoved() && m_movementInitialized)
-                    {
-                        InitEntityMovement(entity);
                     }
                 }
                 else

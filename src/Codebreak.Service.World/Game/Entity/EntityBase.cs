@@ -328,11 +328,20 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public UpdatableTimer MovementTimer
+        public long NextMovementTime
         {
             get;
             set;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long MovementInterval
+        {
+            get;
+            set;
+        }
+
 
         /// <summary>
         /// 

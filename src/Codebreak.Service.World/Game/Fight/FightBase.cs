@@ -1571,7 +1571,7 @@ namespace Codebreak.Service.World.Game.Fight
                     case FightLoopStateEnum.STATE_PROCESS_EFFECT:
                         if (m_processingTargets.Count > 0)
                         {
-                            var castInfos = m_processingTargets.First();
+                            var castInfos = m_processingTargets.First.Value;
                             m_processingTargets.RemoveFirst();
 
                             CurrentProcessingFighter = castInfos.Target;

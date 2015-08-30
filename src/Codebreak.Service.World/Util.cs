@@ -184,6 +184,12 @@ namespace Codebreak.Service.World
         /// <returns></returns>
         public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
         {
+            if (monsters.Count() == 0)
+                return 0;
+
+            if (droppers.Count() == 0)
+                return 0;
+            
             var monstersExperience = monsters.Sum(monster => monster.Grade.Experience);
             var monstersTotalLevel = monsters.Sum(monster => monster.Grade.Level);
             var monstersMaxLevel = monsters.Max(monster => monster.Grade.Level);

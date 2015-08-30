@@ -147,6 +147,7 @@ namespace Codebreak.Service.World.Game.Entity
             SpellBook = SpellBookFactory.Instance.Create(this);
 
             RealLife = MaxLife;
+            SkinSize = 100;
             Invocator = invocator;
         }
 

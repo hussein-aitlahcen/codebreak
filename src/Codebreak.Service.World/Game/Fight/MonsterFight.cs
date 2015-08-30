@@ -312,10 +312,8 @@ namespace Codebreak.Service.World.Game.Fight
                     fighter.CachedBuffer = false;
                 }
 
-                foreach (var fighter in m_losersFighter.OfType<MonsterEntity>())
-                {
-                    Result.AddResult(fighter);
-                }
+                foreach (var fighter in m_losersFighter.OfType<MonsterEntity>())                
+                    Result.AddResult(fighter);                
 
                 Map.SpawnMonsters();
             }
@@ -333,16 +331,13 @@ namespace Codebreak.Service.World.Game.Fight
                         MonsterGroup.Inventory.AddItem(item);
                     }
                     monster.Life = monster.MaxLife;
-                    Result.AddResult(monster, FightEndTypeEnum.END_WINNER, false, (long)(m_kamasLoot / m_winnersFighter.Count()), 0, 0, 0, 0, 0, itemCount);
+                    Result.AddResult(monster, FightEndTypeEnum.END_WINNER, false, (long)((double)m_kamasLoot / m_winnersFighter.Count()), 0, 0, 0, 0, 0, itemCount);
                 }
                                 
                 foreach (var player in m_losersFighter.OfType<CharacterEntity>())
-                {
-                    Result.AddResult(player);
-                }
+                    Result.AddResult(player);                
 
                 MonsterGroup.Inventory.AddKamas(m_kamasLoot);
-
                 Map.SpawnEntity(MonsterGroup);
             }
         }
