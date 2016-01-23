@@ -37,8 +37,10 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="parameters"></param>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
-            ((GameNpcDialogAction)character.CurrentAction).Dialog.SendQuestion(NpcQuestionRepository.Instance.GetById(int.Parse(parameters["questionId"])));
-
+            var question = NpcQuestionRepository.Instance.GetById(int.Parse(parameters["questionId"]));
+            if (question == null)
+                return false;
+            ((GameNpcDialogAction)character.CurrentAction).Dialog.SendQuestion(question);
             return true;
         }
     }

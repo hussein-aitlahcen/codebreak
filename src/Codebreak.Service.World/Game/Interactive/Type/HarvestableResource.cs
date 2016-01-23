@@ -249,7 +249,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
 
             m_currentHarvester.CachedBuffer = true;
             m_currentHarvester.Inventory.AddItem(GeneratedTemplate.Create(m_quantityFarmed));
-            m_currentHarvester.CharacterJobs.AddExperience(m_currentJob, (long)exprienceWin);
+            m_currentHarvester.CharacterJobs.AddExperience(m_currentJob, exprienceWin);
             m_currentHarvester.Dispatch(WorldMessage.INTERACTIVE_FARMED_QUANTITY(m_currentHarvester.Id, m_quantityFarmed));
             m_currentHarvester.CachedBuffer = false;
 
