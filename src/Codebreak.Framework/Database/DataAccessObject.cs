@@ -34,6 +34,15 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
+        public static SqlManager SqlMgr
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -68,12 +77,7 @@ namespace Codebreak.Framework.Database
             get;
             set;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private SqlManager m_sqlMgr;
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -94,15 +98,6 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sqlMgr"></param>
-        public void Initialize(SqlManager sqlMgr)
-        {
-            m_sqlMgr = sqlMgr;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="propertyName"></param>
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
@@ -116,8 +111,7 @@ namespace Codebreak.Framework.Database
         public bool Update()
         {
             OnBeforeUpdate();
-
-            return m_sqlMgr.Update<T>((T)this);
+            return SqlMgr.Update((T)this);
         }
 
         /// <summary>
@@ -126,8 +120,7 @@ namespace Codebreak.Framework.Database
         public bool Delete()
         {
             OnBeforeDelete();
-
-            return m_sqlMgr.Delete<T>((T)this);
+            return SqlMgr.Delete((T)this);
         }
 
         /// <summary>
@@ -137,8 +130,7 @@ namespace Codebreak.Framework.Database
         public bool Insert()
         {
             OnBeforeInsert();
-
-            return m_sqlMgr.InsertWithKey((T)this);
+            return SqlMgr.InsertWithKey((T)this);
         }
 
         /// <summary>

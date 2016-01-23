@@ -227,6 +227,7 @@ namespace Codebreak.Framework.Database
                 foreach (var obj in m_dataObjects)
                     OnObjectAdded(obj);
                 DataAccessObject<TDataObject>.IsRunning = true;
+                DataAccessObject<TDataObject>.SqlMgr = SqlMgr;
             }
         }
 
