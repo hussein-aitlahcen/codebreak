@@ -88,7 +88,7 @@ namespace Codebreak.Service.World.Game.Map
         public void ApplyActions(CharacterEntity character)
         {
             foreach (var action in Trigger.ActionsList)
-                ActionEffectManager.Instance.ApplyEffect(character, action.Key, action.Value);
+                ActionEffectManager.Instance.ApplyEffect(character, action.Effect, action.Parameters);
         }
     }
 }

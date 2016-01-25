@@ -164,7 +164,7 @@ namespace Codebreak.Service.World.Game.Map
                 {
                     foreach (var action in fightAction.ActionsList)
                     {
-                        ActionEffectManager.Instance.ApplyEffect(character, action.Key, action.Value);
+                        ActionEffectManager.Instance.ApplyEffect(character, action.Effect, action.Parameters);
                     }
                 }
             }

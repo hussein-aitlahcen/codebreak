@@ -89,7 +89,7 @@ namespace Codebreak.Service.World.Game.Dialog
                 return;
             }
             foreach(var action in response.ActionsList)            
-                ActionEffectManager.Instance.ApplyEffect(Character, action.Key, action.Value);            
+                ActionEffectManager.Instance.ApplyEffect(Character, action.Effect, action.Parameters);            
         }
 
         /// <summary>
