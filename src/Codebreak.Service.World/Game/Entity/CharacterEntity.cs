@@ -1016,7 +1016,6 @@ namespace Codebreak.Service.World.Game.Entity
                 if(mount.OwnerId == Id)
                 {
                     m_mount = mount;
-                    SendMountEquipped();
                 }
                 else
                 {
@@ -1033,7 +1032,7 @@ namespace Codebreak.Service.World.Game.Entity
 
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
-
+            
             RefreshPersonalShopTaxe();
             CheckRestrictions();
         }

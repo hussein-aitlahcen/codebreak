@@ -536,6 +536,8 @@ namespace Codebreak.Service.World.Frame
                         ));
                     client.CurrentCharacter.Dispatch(WorldMessage.FRIENDS_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Friends));
                     client.CurrentCharacter.Dispatch(WorldMessage.ENNEMIES_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Ennemies));
+                    client.CurrentCharacter.SendMountEquipped();
+                    client.CurrentCharacter.SendMountXpShare();
                     client.CurrentCharacter.Inventory.SendSets();
                     client.CurrentCharacter.Dispatch(WorldMessage.SERVER_INFO_MESSAGE(EntityManager.Instance.OnlinePlayers + " player(s) connected."));
                     client.CurrentCharacter.CachedBuffer = false;
