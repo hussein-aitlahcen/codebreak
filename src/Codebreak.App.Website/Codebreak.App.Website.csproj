@@ -1244,6 +1244,8 @@
     <Content Include="Content\js\knockout-3.4.0.js" />
     <Content Include="Content\js\loading-bar.js" />
     <Content Include="Content\js\loading-bar.min.js" />
+    <Content Include="Content\js\jquery.signalR-2.1.2.js" />
+    <Content Include="Content\js\jquery.signalR-2.1.2.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

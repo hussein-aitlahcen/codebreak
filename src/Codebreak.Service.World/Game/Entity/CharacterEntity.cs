@@ -2350,7 +2350,10 @@ namespace Codebreak.Service.World.Game.Entity
                     //    message.Append(Statistics.GetTotal(EffectEnum.AddMPDodge)).Append(';');
                     //    message.Append(Team.Id).Append(';');
                     //}
-                    message.Append(Cell.Id).Append(';');
+                    if(HasGameAction(GameActionTypeEnum.FIGHT))
+                        message.Append(Cell.Id).Append(';');
+                    else
+                        message.Append(CellId).Append(';');
                     message.Append(Orientation).Append(';'); // Direction
                     message.Append((int)Type).Append(';');
                     message.Append(Id).Append(';');
@@ -2362,10 +2365,14 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(TitleId).Append('*');
                         message.Append(TitleParams);//  Goule de %1 = Goule de Tamere ?
                     }
-                    message.Append(Skin).Append('^');
-                    message.Append(SkinSize).Append(';');
+                    message.Append(';');
+                    if (HasGameAction(GameActionTypeEnum.FIGHT))
+                        message.Append(Skin).Append('^').Append(SkinSize).Append(';');
+                    else
+                        message.Append(SkinBase).Append('^').Append(SkinSizeBase).Append(';');
                     message.Append(Sex).Append(';');
-                    message.Append(Level).Append(';');
+                    if(HasGameAction(GameActionTypeEnum.FIGHT))
+                        message.Append(Level).Append(';');
                     message.Append(AlignmentId).Append(',');
                     message.Append(AlignmentId).Append(',');
                     if (AlignmentEnabled)
