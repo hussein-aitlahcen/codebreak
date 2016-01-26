@@ -102,7 +102,7 @@ namespace Codebreak.Service.World.RPC
 
             AuthState = AuthStateEnum.NEGOTIATING;
 
-            m_rpcConnection.Send(new AuthentificationMessage(WorldConfig.RPC_PASSWORD));
+            m_rpcConnection.Send(new AuthentificationMessage(WorldConfig.RPC_PASSWORD, WorldConfig.RPC_REMOTE_IP));
         }
 
         /// <summary>

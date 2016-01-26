@@ -92,6 +92,7 @@ namespace Codebreak.Service.Auth.RPC
                 client.AuthState = AuthStateEnum.SUCCESS;
                 result = AuthResultEnum.SUCCESS;
 
+                client.RemoteIp = authMessage.RemoteIp;
                 Logger.Info(string.Format("AuthServiceRPC [{0}] Authed sucessfully", client.Ip));
             }
             

@@ -1,4 +1,5 @@
 ﻿using Codebreak.Framework.Database;
+using Codebreak.Service.World.Game.ActionEffect;
 using Codebreak.Service.World.Game.Condition;
 using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Spell;
@@ -37,31 +38,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<EffectEnum, Dictionary<string, string>> m_actions;
+        private ActionList m_actions;
 
         /// <summary>
         /// 
         /// </summary>
         [Write(false)]
-        public Dictionary<EffectEnum, Dictionary<string, string>> ActionsList
+        public ActionList ActionsList
         {
             get
             {
                 if (m_actions == null)
                 {
-                    m_actions = new Dictionary<EffectEnum, Dictionary<string, string>>();
-                    foreach (var action in Actions.Split('|'))
-                    {
-                        var actionData = action.Split(':');
-                        var actionId = (EffectEnum)int.Parse(actionData[0]);
-                        var actionParams = new Dictionary<string, string>();
-                        foreach (var param in actionData[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            var paramData = param.Split('=');
-                            actionParams.Add(paramData[0], paramData[1]);
-                        }
-                        m_actions.Add(actionId, actionParams);
-                    }
+                    m_actions = ActionList.Deserialize(Actions);
                 }
                 return m_actions;
             }

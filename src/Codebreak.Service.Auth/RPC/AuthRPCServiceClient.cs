@@ -27,6 +27,12 @@ namespace Codebreak.Service.Auth.RPC
             set;
         }
 
+        public string RemoteIp
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 
         /// </summary>

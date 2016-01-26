@@ -147,6 +147,7 @@
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
+    <Compile Include="Game\ActionEffect\ActionList.cs" />
     <Compile Include="Game\ActionEffect\AddBoostEffect.cs" />
     <Compile Include="Game\ActionEffect\AddEnergyEffect.cs" />
     <Compile Include="Game\ActionEffect\AddExperienceEffect.cs" />

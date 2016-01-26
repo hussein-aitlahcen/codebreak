@@ -84,7 +84,7 @@ namespace Codebreak.Service.Auth.Frames
 
                     AuthService.Instance.AddMessage(() =>
                     {
-                        client.Send(AuthMessage.WORLD_SELECTION_SUCCESS(world.Ip, WorldGamePort, client.Ticket));
+                        client.Send(AuthMessage.WORLD_SELECTION_SUCCESS(world.RemoteIp, WorldGamePort, client.Ticket));
                     });
                 });
         }
