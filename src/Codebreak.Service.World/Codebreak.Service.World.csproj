@@ -39,8 +39,8 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="ExpressionEvaluator, Version=2.0.3.0, Culture=neutral, PublicKeyToken=90d9f15d622e2348, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ExpressionEvaluator.2.0.3.0\lib\net40\ExpressionEvaluator.dll</HintPath>
+    <Reference Include="ExpressionEvaluator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=90d9f15d622e2348, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ExpressionEvaluator.2.0.4.0\lib\net40\ExpressionEvaluator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -130,6 +130,7 @@
     <Compile Include="Database\Structure\MonsterRaceDAO.cs" />
     <Compile Include="Database\Structure\MonsterSpawnDAO.cs" />
     <Compile Include="Database\Structure\MonsterSuperRaceDAO.cs" />
+    <Compile Include="Database\Structure\MountDAO.cs" />
     <Compile Include="Database\Structure\NpcInstanceDAO.cs" />
     <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
     <Compile Include="Database\Structure\NpcResponseDAO.cs" />
@@ -202,20 +203,20 @@
     <Compile Include="Game\Auction\AuctionHouseInstance.cs" />
     <Compile Include="Game\Condition\ConditionParser.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
-    <Compile Include="Game\Entity\BankInventory.cs" />
-    <Compile Include="Game\Entity\CharacterInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\BankInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\CharacterInventory.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
-    <Compile Include="Game\Entity\EntityInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\EntityInventory.cs" />
     <Compile Include="Game\Entity\EntityBase.cs" />
-    <Compile Include="Game\Entity\InventoryBag.cs" />
+    <Compile Include="Game\Entity\Inventory\InventoryBag.cs" />
     <Compile Include="Game\Entity\MerchantEntity.cs" />
     <Compile Include="Game\Entity\MonsterEntity.cs" />
     <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
-    <Compile Include="Game\Entity\PersistentInventory.cs" />
-    <Compile Include="Game\Entity\StorageInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\PersistentInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\StorageInventory.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
-    <Compile Include="Game\Entity\TaxCollectorInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\TaxCollectorInventory.cs" />
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseSellExchange.cs" />
@@ -411,9 +412,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
-    <Content Include="LICENSE.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Game\Mount\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

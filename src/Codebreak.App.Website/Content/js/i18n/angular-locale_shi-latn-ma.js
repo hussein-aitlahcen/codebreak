@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "asimwas",
       "asi\u1e0dyas"
     ],
+    "ERANAMES": [
+      "dat n \u025bisa",
+      "dffir n \u025bisa"
+    ],
+    "ERAS": [
+      "da\u025b",
+      "df\u025b"
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "innayr",
       "b\u1e5bay\u1e5b",
@@ -70,6 +79,24 @@ $provide.value("$locale", {
       "ktu",
       "nuw",
       "duj"
+    ],
+    "STANDALONEMONTH": [
+      "innayr",
+      "b\u1e5bay\u1e5b",
+      "ma\u1e5b\u1e63",
+      "ibrir",
+      "mayyu",
+      "yunyu",
+      "yulyuz",
+      "\u0263uct",
+      "cutanbir",
+      "ktubr",
+      "nuwanbir",
+      "dujanbir"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE d MMMM y",
     "longDate": "d MMMM y",

@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "Murwa wa Katano",
       "Jumamosi"
     ],
+    "ERANAMES": [
+      "Imberi ya Kuuza Kwa",
+      "Muhiga Kuvita Kuuza"
+    ],
+    "ERAS": [
+      "BC",
+      "AD"
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "Januari",
       "Februari",
@@ -70,6 +79,24 @@ $provide.value("$locale", {
       "Okt",
       "Nov",
       "Des"
+    ],
+    "STANDALONEMONTH": [
+      "Januari",
+      "Februari",
+      "Machi",
+      "Aprili",
+      "Mei",
+      "Juni",
+      "Julai",
+      "Agosti",
+      "Septemba",
+      "Oktoba",
+      "Novemba",
+      "Desemba"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE, d MMMM y",
     "longDate": "d MMMM y",

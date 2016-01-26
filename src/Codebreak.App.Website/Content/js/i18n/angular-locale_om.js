@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "Jimaata",
       "Sanbata"
     ],
+    "ERANAMES": [
+      "KD",
+      "KB"
+    ],
+    "ERAS": [
+      "KD",
+      "KB"
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "Amajjii",
       "Guraandhala",
@@ -71,6 +80,24 @@ $provide.value("$locale", {
       "Sad",
       "Mud"
     ],
+    "STANDALONEMONTH": [
+      "Amajjii",
+      "Guraandhala",
+      "Bitooteessa",
+      "Elba",
+      "Caamsa",
+      "Waxabajjii",
+      "Adooleessa",
+      "Hagayya",
+      "Fuulbana",
+      "Onkololeessa",
+      "Sadaasa",
+      "Muddee"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
+    ],
     "fullDate": "EEEE, MMMM d, y",
     "longDate": "dd MMMM y",
     "medium": "dd-MMM-y h:mm:ss a",
@@ -102,7 +129,7 @@ $provide.value("$locale", {
         "maxFrac": 2,
         "minFrac": 2,
         "minInt": 1,
-        "negPre": "\u00a4-",
+        "negPre": "-\u00a4",
         "negSuf": "",
         "posPre": "\u00a4",
         "posSuf": ""

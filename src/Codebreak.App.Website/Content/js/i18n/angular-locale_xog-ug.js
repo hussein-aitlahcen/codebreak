@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "Olokutaanu",
       "Olomukaaga"
     ],
+    "ERANAMES": [
+      "Kulisto nga azilawo",
+      "Kulisto nga affile"
+    ],
+    "ERAS": [
+      "AZ",
+      "AF"
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "Janwaliyo",
       "Febwaliyo",
@@ -70,6 +79,24 @@ $provide.value("$locale", {
       "Oki",
       "Nov",
       "Des"
+    ],
+    "STANDALONEMONTH": [
+      "Janwaliyo",
+      "Febwaliyo",
+      "Marisi",
+      "Apuli",
+      "Maayi",
+      "Juuni",
+      "Julaayi",
+      "Agusito",
+      "Sebuttemba",
+      "Okitobba",
+      "Novemba",
+      "Desemba"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE, d MMMM y",
     "longDate": "d MMMM y",

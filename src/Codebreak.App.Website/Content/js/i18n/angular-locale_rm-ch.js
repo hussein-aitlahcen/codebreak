@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "venderdi",
       "sonda"
     ],
+    "ERANAMES": [
+      "avant Cristus",
+      "suenter Cristus"
+    ],
+    "ERAS": [
+      "av. Cr.",
+      "s. Cr."
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "schaner",
       "favrer",
@@ -70,6 +79,24 @@ $provide.value("$locale", {
       "oct.",
       "nov.",
       "dec."
+    ],
+    "STANDALONEMONTH": [
+      "schaner",
+      "favrer",
+      "mars",
+      "avrigl",
+      "matg",
+      "zercladur",
+      "fanadur",
+      "avust",
+      "settember",
+      "october",
+      "november",
+      "december"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE, 'ils' d 'da' MMMM y",
     "longDate": "d 'da' MMMM y",

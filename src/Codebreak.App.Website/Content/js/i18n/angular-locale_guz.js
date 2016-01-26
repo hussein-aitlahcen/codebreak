@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "Ichuma",
       "Esabato"
     ],
+    "ERANAMES": [
+      "Yeso ataiborwa",
+      "Yeso kaiboirwe"
+    ],
+    "ERAS": [
+      "YA",
+      "YK"
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "Chanuari",
       "Feburari",
@@ -71,6 +80,24 @@ $provide.value("$locale", {
       "Nob",
       "Dis"
     ],
+    "STANDALONEMONTH": [
+      "Chanuari",
+      "Feburari",
+      "Machi",
+      "Apiriri",
+      "Mei",
+      "Juni",
+      "Chulai",
+      "Agosti",
+      "Septemba",
+      "Okitoba",
+      "Nobemba",
+      "Disemba"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
+    ],
     "fullDate": "EEEE, d MMMM y",
     "longDate": "d MMMM y",
     "medium": "d MMM y h:mm:ss a",
@@ -102,7 +129,7 @@ $provide.value("$locale", {
         "maxFrac": 2,
         "minFrac": 2,
         "minInt": 1,
-        "negPre": "\u00a4-",
+        "negPre": "-\u00a4",
         "negSuf": "",
         "posPre": "\u00a4",
         "posSuf": ""

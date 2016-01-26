@@ -34,6 +34,15 @@ $provide.value("$locale", {
       "Ijumaa",
       "Jumamosi"
     ],
+    "ERANAMES": [
+      "Ashanali uKilisito",
+      "Pamwandi ya Kilisto"
+    ],
+    "ERAS": [
+      "AK",
+      "PK"
+    ],
+    "FIRSTDAYOFWEEK": 0,
     "MONTH": [
       "Mupalangulwa",
       "Mwitope",
@@ -70,6 +79,24 @@ $provide.value("$locale", {
       "Mok",
       "Mus",
       "Muh"
+    ],
+    "STANDALONEMONTH": [
+      "Mupalangulwa",
+      "Mwitope",
+      "Mushende",
+      "Munyi",
+      "Mushende Magali",
+      "Mujimbi",
+      "Mushipepo",
+      "Mupuguto",
+      "Munyense",
+      "Mokhu",
+      "Musongandembwe",
+      "Muhaano"
+    ],
+    "WEEKENDRANGE": [
+      5,
+      6
     ],
     "fullDate": "EEEE, d MMMM y",
     "longDate": "d MMMM y",
