@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetCell"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public override bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(CharacterEntity character, ItemDAO item, GenericEffect effect, long targetId, int targetCell)
         {            
             if(targetId != -1)
             {

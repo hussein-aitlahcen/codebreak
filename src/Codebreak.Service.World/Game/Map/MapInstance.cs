@@ -193,7 +193,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<EntityBase> Entities
+        public IEnumerable<AbstractEntity> Entities
         {
             get
             {
@@ -282,8 +282,8 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, EntityBase> m_entityById;
-        private Dictionary<string, EntityBase> m_entityByName;
+        private Dictionary<long, AbstractEntity> m_entityById;
+        private Dictionary<string, AbstractEntity> m_entityByName;
         private Dictionary<int, MapCell> m_cellById;
         private List<MapCell> m_cells;
         private List<InteractiveObject> m_interactiveObjects;
@@ -325,8 +325,8 @@ namespace Codebreak.Service.World.Game.Map
             m_cells = new List<MapCell>();
             m_interactiveObjects = new List<InteractiveObject>();
             m_cellById = new Dictionary<int, MapCell>();
-            m_entityById = new Dictionary<long, EntityBase>();
-            m_entityByName = new Dictionary<string, EntityBase>();
+            m_entityById = new Dictionary<long, AbstractEntity>();
+            m_entityByName = new Dictionary<string, AbstractEntity>();
             m_initialized = false;
 
             FightManager = new FightManager(this);
@@ -441,7 +441,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public void MoveEntity(EntityBase entity)
+        public void MoveEntity(AbstractEntity entity)
         {
             if (entity.MovementInterval == 0)
                 entity.MovementInterval = Util.Next(10000, 25000);
@@ -544,7 +544,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public EntityBase GetEntity(long id)
+        public AbstractEntity GetEntity(long id)
         {
             if (m_entityById.ContainsKey(id))
                 return m_entityById[id];
@@ -584,7 +584,7 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="entity"></param>
-        public void SpawnEntity(EntityBase entity)
+        public void SpawnEntity(AbstractEntity entity)
         {
             AddMessage(() =>
             {
@@ -630,7 +630,7 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="entity"></param>
-        public void DestroyEntity(EntityBase entity)
+        public void DestroyEntity(AbstractEntity entity)
         {
             if (m_entityById.ContainsKey(entity.Id))
             {
@@ -682,7 +682,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="cellId"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public MovementPath DecodeMovement(EntityBase entity, int cellId, string path)
+        public MovementPath DecodeMovement(AbstractEntity entity, int cellId, string path)
         {
             return Pathfinding.IsValidPath(entity, this, cellId, path);
         }
@@ -693,7 +693,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="entity"></param>
         /// <param name="cellId"></param>
         /// <param name="movementPath"></param>
-        public void Move(EntityBase entity, int cellId, string movementPath)
+        public void Move(AbstractEntity entity, int cellId, string movementPath)
         {
             AddMessage(() =>
                 {
@@ -722,7 +722,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="entity"></param>
         /// <param name="path"></param>
         /// <param name="cellId"></param>
-        public void MovementFinish(EntityBase entity, MovementPath path, int cellId)
+        public void MovementFinish(AbstractEntity entity, MovementPath path, int cellId)
         {
             if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
             {

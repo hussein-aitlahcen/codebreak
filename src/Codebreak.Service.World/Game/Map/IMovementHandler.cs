@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="entity"></param>
         /// <param name="cellId"></param>
         /// <param name="movementPath"></param>
-        void Move(EntityBase entity, int cellId, string movementPath);
+        void Move(AbstractEntity entity, int cellId, string movementPath);
 
         /// <summary>
         /// 
@@ -52,7 +52,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="entity"></param>
         /// <param name="path"></param>
         /// <param name="cellId"></param>
-        void MovementFinish(EntityBase entity, MovementPath path, int cellId);
+        void MovementFinish(AbstractEntity entity, MovementPath path, int cellId);
 
         /// <summary>
         /// 

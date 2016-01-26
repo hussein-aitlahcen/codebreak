@@ -525,7 +525,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <summary>
         /// 
         /// </summary>
-        private List<Tuple<EffectEnum, int, int>> m_effects;
+        private RandomStatistics m_effects;
         private string m_rangeType;
 
         /// <summary>
@@ -566,39 +566,13 @@ namespace Codebreak.Service.World.Database.Structure
         /// </summary>
         [Write(false)]
         [DoNotNotify]
-        public List<Tuple<EffectEnum, int, int>> GenericEffects
+        public RandomStatistics RandomEffects
         {
             get
             {
                 if (m_effects == null)
-                    Initialize();
+                    m_effects = RandomStatistics.Deserialize(Effects);
                 return m_effects;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void Initialize()
-        {
-            m_effects = new List<Tuple<EffectEnum, int, int>>();
-            if (Effects != "")
-            {
-                foreach (var effect in Effects.Split(','))
-                {
-                    try
-                    {
-                        var effectDatas = effect.Split('#');
-                        var effectType = (EffectEnum)int.Parse(effectDatas[0], System.Globalization.NumberStyles.HexNumber);
-                        var effectMinJet = int.Parse(effectDatas[1], System.Globalization.NumberStyles.HexNumber);
-                        var effectMaxJet = int.Parse(effectDatas[2], System.Globalization.NumberStyles.HexNumber);                        
-                        m_effects.Add(new Tuple<EffectEnum, int, int>(effectType, effectMinJet, effectMaxJet));
-                    }
-                    catch
-                    {
-                        Logger.Info("Error while parsing item template effect. Id=" + Id + " Effect=" + effect);
-                    }
-                }
             }
         }
 
@@ -609,26 +583,14 @@ namespace Codebreak.Service.World.Database.Structure
         public GenericStats GenerateStats(bool max = false)
         {
             var generatedStats = new GenericStats();
-            foreach (var effect in GenericEffects)
+            foreach (var effect in RandomEffects)
             {
-                if (Usable || IsWeaponEffect(effect.Item1))
-                {
-                    generatedStats.AddEffect(effect.Item1, effect.Item2, effect.Item3);
-                }
-                else if (effect.Item1 == EffectEnum.AddBoost)
-                {
-                    if (effect.Item3 > effect.Item2)
-                        generatedStats.AddEffect(effect.Item1, 0, 0, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
-                    else
-                        generatedStats.AddEffect(effect.Item1, 0, 0, effect.Item2);
-                }
+                if (Usable || IsWeaponEffect(effect.Type))                
+                    generatedStats.AddEffect(effect.Type, effect.Minimum, effect.Maximum);                
+                else if (effect.Type == EffectEnum.AddBoost)                
+                    generatedStats.AddEffect(effect.Type, 0, 0, max ? effect.Maximum : effect.Random);                
                 else
-                {
-                    if(effect.Item3 > effect.Item2)
-                        generatedStats.AddEffect(effect.Item1, max ? effect.Item3 : Util.NextJet(effect.Item2, effect.Item3));
-                    else
-                        generatedStats.AddEffect(effect.Item1, effect.Item2);
-                }
+                    generatedStats.AddEffect(effect.Type, max ? effect.Maximum : effect.Random);                
             }
             return generatedStats;
         }
@@ -640,7 +602,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="slot"></param>
         /// <param name="maxJet"></param>
         /// <returns></returns>
-        public InventoryItemDAO Create(int quantity = 1, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY, bool maxJet = false)
+        public ItemDAO Create(int quantity = 1, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY, bool maxJet = false)
         {
             return InventoryItemRepository.Instance.Create(Id, -1, quantity, GenerateStats(maxJet), slot);
         }

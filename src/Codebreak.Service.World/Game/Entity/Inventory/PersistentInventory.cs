@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override List<InventoryItemDAO> Items
+        public override List<ItemDAO> Items
         {
             get 
             { 
@@ -55,7 +55,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private List<InventoryItemDAO> m_items;
+        private List<ItemDAO> m_items;
 
         /// <summary>
         /// 
@@ -64,7 +64,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="ownerId"></param>
         public PersistentInventory(int ownerType, long ownerId)
         {
-            m_items = new List<InventoryItemDAO>();
+            m_items = new List<ItemDAO>();
             m_items.AddRange(InventoryItemRepository.Instance.GetByOwner(ownerType, ownerId));
 
             OwnerType = ownerType;
@@ -75,7 +75,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public override void OnOwnerChange(InventoryItemDAO item)
+        public override void OnOwnerChange(ItemDAO item)
         {
             item.OwnerId = OwnerId;
             item.OwnerType = OwnerType;

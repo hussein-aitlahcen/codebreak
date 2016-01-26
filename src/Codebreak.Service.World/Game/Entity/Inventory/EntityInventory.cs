@@ -33,7 +33,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public EntityBase Entity
+        public AbstractEntity Entity
         {
             get;
             private set;
@@ -58,7 +58,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="character"></param>
-        public EntityInventory(EntityBase entity, int type, long id)
+        public EntityInventory(AbstractEntity entity, int type, long id)
             : base(type, id)
         {
             m_equippedSets = new Dictionary<int, int>();
@@ -100,7 +100,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="id"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public override IEnumerable<InventoryItemDAO> RemoveItems()
+        public override IEnumerable<ItemDAO> RemoveItems()
         {
             foreach (var item in Items.ToArray())
             {
@@ -124,7 +124,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="id"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public override InventoryItemDAO RemoveItem(long itemId, int quantity = 1)
+        public override ItemDAO RemoveItem(long itemId, int quantity = 1)
         {
             var item = Items.Find(entry => entry.Id == itemId);
             if (item == null)
@@ -141,7 +141,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="item"></param>
         /// <param name="slot"></param>
-        public void MoveItem(InventoryItemDAO item, ItemSlotEnum slot, int quantity = 1)
+        public void MoveItem(ItemDAO item, ItemSlotEnum slot, int quantity = 1)
         {
             if (slot == item.Slot)
                 return;
@@ -149,7 +149,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (quantity > item.Quantity || quantity < 1)
                 quantity = item.Quantity;
 
-            if (item.IsEquiped && !InventoryItemDAO.IsEquipedSlot(slot))
+            if (item.IsEquiped && !ItemDAO.IsEquipedSlot(slot))
             {
                 if (item.IsBoostEquiped)
                     Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
@@ -182,7 +182,7 @@ namespace Codebreak.Service.World.Game.Entity
                 }
                 return;
             }
-            else if (!item.IsEquiped && InventoryItemDAO.IsEquipedSlot(slot))
+            else if (!item.IsEquiped && ItemDAO.IsEquipedSlot(slot))
             {
                 if (!ItemTemplateDAO.CanPlaceInSlot((ItemTypeEnum)item.Template.Type, slot))
                 {
@@ -279,7 +279,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void AddSet(InventoryItemDAO item)
+        public void AddSet(ItemDAO item)
         {
             if (item.Template.SetId == 0 || item.Template.Set == null)
                 return;
@@ -299,7 +299,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void RemoveSet(InventoryItemDAO item)
+        public void RemoveSet(ItemDAO item)
         {
             if (item.Template.SetId == 0 || item.Template.Set == null)
                 return;

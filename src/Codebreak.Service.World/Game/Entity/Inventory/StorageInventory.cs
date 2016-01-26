@@ -35,7 +35,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public override void OnItemAdded(InventoryItemDAO item)
+        public override void OnItemAdded(ItemDAO item)
         {
             base.Dispatch(WorldMessage.EXCHANGE_STORAGE_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.ToExchangeString()));
         }

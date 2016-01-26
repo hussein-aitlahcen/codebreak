@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public sealed class MonsterGroupEntity : EntityBase
+    public sealed class MonsterGroupEntity : AbstractEntity
     {
         /// <summary>
         /// 

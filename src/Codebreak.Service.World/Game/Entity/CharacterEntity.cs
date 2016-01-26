@@ -938,6 +938,21 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public int EquippedMount
+        {
+            get
+            {
+                return DatabaseRecord.EquippedMount;
+            }
+            set
+            {
+                DatabaseRecord.EquippedMount = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Away
         {
             get;
@@ -947,10 +962,20 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
+        public bool RidingMount
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected string m_guildDisplayInfos;
         protected long m_lastRegenTime;
         protected double m_regenTimer;
         protected int m_lastEmoteId;
+        protected MountEntity m_mount;
 
         /// <summary>
         /// 
@@ -985,8 +1010,20 @@ namespace Codebreak.Service.World.Game.Entity
             PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, Id);
             Relations = SocialRelationRepository.Instance.GetByAccountId(AccountId);
 
-            RefreshPersonalShopTaxe();
-            
+            if(EquippedMount != -1)
+            {
+                var mount = EntityManager.Instance.GetMountById(EquippedMount);
+                if(mount.OwnerId == Id)
+                {
+                    m_mount = mount;
+                    SendMountEquipped();
+                }
+                else
+                {
+                    Logger.Info("CharacterEntity::() mount equipped by not owned " + Name);
+                }
+            }
+                        
             var guildMember = GuildManager.Instance.GetMember(characterDAO.Guild.GuildId, Id);
             if (guildMember != null)
                 if (type == EntityTypeEnum.TYPE_CHARACTER)
@@ -997,6 +1034,7 @@ namespace Codebreak.Service.World.Game.Entity
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
             base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
 
+            RefreshPersonalShopTaxe();
             CheckRestrictions();
         }
         
@@ -1026,10 +1064,8 @@ namespace Codebreak.Service.World.Game.Entity
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_PRISM, true);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);
-                
+                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);                
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, true);
-
                 base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
             else if (IsGhost)
@@ -1037,13 +1073,10 @@ namespace Codebreak.Service.World.Game.Entity
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, false);
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_SLOWED, true);
                 base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_FORCEWALK, true);
-
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, false);
                 base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, true);
-
                 base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
             }
-
             base.SafeDispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
         }
 
@@ -1056,9 +1089,7 @@ namespace Codebreak.Service.World.Game.Entity
             Energy = 1000;
             Restriction = (int)PlayerRestrictionEnum.RESTRICTION_NEW_CHARACTER;
             EntityRestriction = 0;
-
             RefreshOnMap();
-
             base.CachedBuffer = true;
             base.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
             base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_JUST_REBORN));
@@ -1072,12 +1103,9 @@ namespace Codebreak.Service.World.Game.Entity
         public void HardResetSpells()
         {
             SpellBook.Reset(Breed);
-
             for (int i = 1; i < Level; i++)
                 SpellBook.GenerateLevelUpSpell(Breed, i);
-
             SpellPoint = Level - 1;
-
             CachedBuffer = true;
             SendAccountStats();
             Dispatch(WorldMessage.SPELLS_LIST(SpellBook));
@@ -1203,7 +1231,6 @@ namespace Codebreak.Service.World.Game.Entity
                 if (DisconnectedTurnLeft == 0)
                 {
                     Fight.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_KICKED_DUE_TO_DISCONNECTION, Name));
-
                     if (Fight.FightQuit(this) == FightActionResultEnum.RESULT_END)
                         return FightActionResultEnum.RESULT_END;
                 }
@@ -1211,10 +1238,8 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     Fight.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_DISCONNECT_TURN_REMAIN, Name, DisconnectedTurnLeft));
                 }
-
                 DisconnectedTurnLeft--;
             }
-
             return base.EndTurn();
         }
 
@@ -1226,7 +1251,6 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (!IsSpectating)
             {
-
                 if (IsFighterDead)
                 {
                     switch (Fight.Type)
@@ -1335,7 +1359,7 @@ namespace Codebreak.Service.World.Game.Entity
             if (Life >= MaxLife)
                 return;
             m_regenTimer = timer;
-            m_lastRegenTime = Environment.TickCount;
+            m_lastRegenTime = UpdateTime;
             base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(timer));
         }
 
@@ -1346,7 +1370,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (Life >= MaxLife || m_lastRegenTime == -1)
                 return;
-            var lifeRestored = (int)Math.Floor((Environment.TickCount - m_lastRegenTime) / m_regenTimer);
+            var lifeRestored = (int)Math.Floor((UpdateTime - m_lastRegenTime) / m_regenTimer);
             if (Life + lifeRestored > MaxLife)
                 lifeRestored = MaxLife - Life;
             Life += lifeRestored;
@@ -1607,18 +1631,14 @@ namespace Codebreak.Service.World.Game.Entity
                     return false;
                 }
             }
-
             StopRegeneration();
-
             if (CurrentAction != null)
                 AbortAction(CurrentAction.Type, Id);
             if (HasGameAction(GameActionTypeEnum.MAP))
                 AbortAction(GameActionTypeEnum.MAP);
             if (GuildMember != null)
                 GuildMember.CharacterDisconnected();
-
             Dispose();
-
             if (Merchant)
             {
                 WorldService.Instance.AddMessage(() =>
@@ -1627,7 +1647,6 @@ namespace Codebreak.Service.World.Game.Entity
                     merchant.StartAction(GameActionTypeEnum.MAP);
                 });
             }
-
             return true;
         }
 
@@ -1669,7 +1688,6 @@ namespace Codebreak.Service.World.Game.Entity
         public void SetAway()
         {
             Away = Away == false;
-
             if (Away)
                 base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY));
             else
@@ -1737,6 +1755,70 @@ namespace Codebreak.Service.World.Game.Entity
             if(GuildMember != null)
             {
                 GuildMember.Guild.SafeDispatch(message);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RideMount()
+        {
+            if(m_mount != null && !RidingMount)
+            {   
+                if(Level < 60)
+                {
+                    base.Dispatch(WorldMessage.MOUNT_EQUIP_ERROR(MountEquipErrorEnum.UNKNOW_ERROR));
+                    return;
+                }
+                if(m_mount.Maturity < m_mount.Template.MaxMaturity)
+                {
+                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_MOUNT_MATURITY_LOW));
+                    return;
+                }
+                if(Inventory.Items.Any(item => item.Slot == ItemSlotEnum.SLOT_PET))
+                {
+                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PET_ALREADY_EQUIPPED));
+                    return;
+                }
+
+                RidingMount = true;
+                base.CachedBuffer = true;
+                base.Dispatch(WorldMessage.MOUNT_RIDING_START());
+                RefreshOnMap();
+                base.CachedBuffer = false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendMountEquipped()
+        {
+            if (m_mount != null)
+            {
+                base.Dispatch(WorldMessage.MOUNT_EQUIP(m_mount.SerializeAs_MountInfos()));
+            }
+        }
+
+        public void SendMountXpShare()
+        {
+            if(m_mount != null)
+            {
+                base.Dispatch(WorldMessage.MOUNT_EXPERIENCE_SHARED(m_mount.XPSharePercent));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UnrideMount()
+        {
+            if(m_mount != null && RidingMount)
+            {
+                base.Dispatch(WorldMessage.MOUNT_UNEQUIP());
+                base.Dispatch(WorldMessage.MOUNT_RIDING_STOP());
+                RidingMount = false;
+                RefreshOnMap();
             }
         }
                 
@@ -2169,40 +2251,136 @@ namespace Codebreak.Service.World.Game.Entity
 
                 case OperatorEnum.OPERATOR_ADD:
                 case OperatorEnum.OPERATOR_REFRESH:
+                    //if (HasGameAction(GameActionTypeEnum.MAP))
+                    //{
+                    //    message.Append(CellId).Append(';');
+                    //    message.Append(Orientation).Append(';'); ;
+                    //    message.Append((int)Type).Append(';');
+                    //    message.Append(Id).Append(';');
+                    //    message.Append(Name).Append(';');
+                    //    message.Append((int)Breed);
+                    //    if (TitleId != 0)
+                    //    {
+                    //        message.Append(",");
+                    //        message.Append(TitleId).Append('*');
+                    //        message.Append(TitleParams);//  Goule de %1 = Goule de Tamere ?
+                    //    }
+                    //    message.Append(';');
+                    //    message.Append(SkinBase).Append('^');
+                    //    message.Append(SkinSizeBase).Append(';');
+
+                    //    message.Append(Sex).Append(';');
+
+                    //    message.Append(AlignmentId).Append(',');
+                    //    message.Append(AlignmentId).Append(',');
+                    //    if (AlignmentEnabled)                        
+                    //        message.Append(AlignmentLevel).Append(',');                        
+                    //    else                        
+                    //        message.Append('0').Append(',');                        
+                    //    message.Append(Id + Level).Append(';');
+
+                    //    message.Append(HexColor1).Append(';');
+                    //    message.Append(HexColor2).Append(';');
+                    //    message.Append(HexColor3).Append(';');
+
+                    //    Inventory.SerializeAs_ActorLookMessage(message);
+                    //    message.Append(';');
+                    //    message.Append(Aura).Append(';');
+                    //    message.Append(m_lastEmoteId).Append(';'); // DisplayEmotes
+                    //    message.Append(360000).Append(';'); // EmotesTimer
+                    //    if (m_guildDisplayInfos != null && GuildMember.Guild.IsActive)
+                    //    {
+                    //        message.Append(m_guildDisplayInfos).Append(';');
+                    //    }
+                    //    else
+                    //    {
+                    //        message.Append("").Append(';'); // GuildName
+                    //        message.Append("").Append(';'); // GuildEmblem
+                    //    }
+                    //    message.Append(Util.EncodeBase36(EntityRestriction)).Append(';');
+                    //}
+                    //else if (HasGameAction(GameActionTypeEnum.FIGHT))
+                    //{
+                    //    message.Append(Cell.Id).Append(';');
+                    //    message.Append(Orientation).Append(';'); // Direction
+                    //    message.Append((int)Type).Append(';');
+                    //    message.Append(Id).Append(';');
+                    //    message.Append(Name).Append(';');
+                    //    message.Append((int)Breed).Append(';');
+                    //    message.Append(Skin).Append('^');
+                    //    message.Append(SkinSize).Append(';');
+                    //    message.Append(Sex).Append(';');
+                    //    message.Append(Level).Append(';');
+
+                    //    message.Append(AlignmentId).Append(',');
+                    //    message.Append(AlignmentId).Append(',');
+                    //    if (AlignmentEnabled)
+                    //        message.Append(AlignmentLevel).Append(',');
+                    //    else
+                    //        message.Append('0').Append(',');
+                    //    message.Append(Id + Level).Append(';');
+
+                    //    message.Append(HexColor1).Append(';');
+                    //    message.Append(HexColor2).Append(';');
+                    //    message.Append(HexColor3).Append(';');
+                    //    Inventory.SerializeAs_ActorLookMessage(message);
+                    //    message.Append(';');
+                    //    message.Append(Life).Append(';');
+                    //    message.Append(AP).Append(';');
+                    //    message.Append(MP).Append(';');
+                    //    switch (Fight.Type)
+                    //    {
+                    //        case FightTypeEnum.TYPE_CHALLENGE:
+                    //        case FightTypeEnum.TYPE_AGGRESSION:
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentNeutral) + Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPNeutral)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentEarth) + Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPEarth)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentFire) + Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPFire)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentWater) + Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPWater)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentAir) + Statistics.GetTotal(EffectEnum.AddReduceDamagePercentPvPAir)).Append(';');
+                    //            break;
+
+                    //        default:
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentNeutral)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentEarth)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentFire)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentWater)).Append(';');
+                    //            message.Append(Statistics.GetTotal(EffectEnum.AddReduceDamagePercentAir)).Append(';');
+                    //            break;
+                    //    }
+                    //    message.Append(Statistics.GetTotal(EffectEnum.AddAPDodge)).Append(';');
+                    //    message.Append(Statistics.GetTotal(EffectEnum.AddMPDodge)).Append(';');
+                    //    message.Append(Team.Id).Append(';');
+                    //}
+                    message.Append(Cell.Id).Append(';');
+                    message.Append(Orientation).Append(';'); // Direction
+                    message.Append((int)Type).Append(';');
+                    message.Append(Id).Append(';');
+                    message.Append(Name).Append(';');
+                    message.Append((int)Breed);
+                    if (TitleId != 0)
+                    {
+                        message.Append(",");
+                        message.Append(TitleId).Append('*');
+                        message.Append(TitleParams);//  Goule de %1 = Goule de Tamere ?
+                    }
+                    message.Append(Skin).Append('^');
+                    message.Append(SkinSize).Append(';');
+                    message.Append(Sex).Append(';');
+                    message.Append(Level).Append(';');
+                    message.Append(AlignmentId).Append(',');
+                    message.Append(AlignmentId).Append(',');
+                    if (AlignmentEnabled)
+                        message.Append(AlignmentLevel).Append(',');
+                    else
+                        message.Append('0').Append(',');
+                    message.Append(Id + Level).Append(';');
+                    message.Append(HexColor1).Append(';');
+                    message.Append(HexColor2).Append(';');
+                    message.Append(HexColor3).Append(';');
+                    Inventory.SerializeAs_ActorLookMessage(message);
+                    message.Append(';');
                     if (HasGameAction(GameActionTypeEnum.MAP))
                     {
-                        message.Append(CellId).Append(';');
-                        message.Append(Orientation).Append(';'); ;
-                        message.Append((int)Type).Append(';');
-                        message.Append(Id).Append(';');
-                        message.Append(Name).Append(';');
-                        message.Append((int)Breed);
-                        if (TitleId != 0)
-                        {
-                            message.Append(",");
-                            message.Append(TitleId).Append('*');
-                            message.Append(TitleParams);//  Goule de %1 = Goule de Tamere ?
-                        }
-                        message.Append(';');
-                        message.Append(SkinBase).Append('^');
-                        message.Append(SkinSizeBase).Append(';');
-
-                        message.Append(Sex).Append(';');
-
-                        message.Append(AlignmentId).Append(',');
-                        message.Append(AlignmentId).Append(',');
-                        if (AlignmentEnabled)                        
-                            message.Append(AlignmentLevel).Append(',');                        
-                        else                        
-                            message.Append('0').Append(',');                        
-                        message.Append(Id + Level).Append(';');
-
-                        message.Append(HexColor1).Append(';');
-                        message.Append(HexColor2).Append(';');
-                        message.Append(HexColor3).Append(';');
-
-                        Inventory.SerializeAs_ActorLookMessage(message);
-                        message.Append(';');
                         message.Append(Aura).Append(';');
                         message.Append(m_lastEmoteId).Append(';'); // DisplayEmotes
                         message.Append(360000).Append(';'); // EmotesTimer
@@ -2216,34 +2394,9 @@ namespace Codebreak.Service.World.Game.Entity
                             message.Append("").Append(';'); // GuildEmblem
                         }
                         message.Append(Util.EncodeBase36(EntityRestriction)).Append(';');
-                        message.Append("").Append(';'); // MountLightInfos
                     }
                     else if (HasGameAction(GameActionTypeEnum.FIGHT))
                     {
-                        message.Append(Cell.Id).Append(';');
-                        message.Append(Orientation).Append(';'); // Direction
-                        message.Append((int)Type).Append(';');
-                        message.Append(Id).Append(';');
-                        message.Append(Name).Append(';');
-                        message.Append((int)Breed).Append(';');
-                        message.Append(Skin).Append('^');
-                        message.Append(SkinSize).Append(';');
-                        message.Append(Sex).Append(';');
-                        message.Append(Level).Append(';');
-
-                        message.Append(AlignmentId).Append(',');
-                        message.Append(AlignmentId).Append(',');
-                        if (AlignmentEnabled)
-                            message.Append(AlignmentLevel).Append(',');
-                        else
-                            message.Append('0').Append(',');
-                        message.Append(Id + Level).Append(';');
-
-                        message.Append(HexColor1).Append(';');
-                        message.Append(HexColor2).Append(';');
-                        message.Append(HexColor3).Append(';');
-                        Inventory.SerializeAs_ActorLookMessage(message);
-                        message.Append(';');
                         message.Append(Life).Append(';');
                         message.Append(AP).Append(';');
                         message.Append(MP).Append(';');
@@ -2269,8 +2422,11 @@ namespace Codebreak.Service.World.Game.Entity
                         message.Append(Statistics.GetTotal(EffectEnum.AddAPDodge)).Append(';');
                         message.Append(Statistics.GetTotal(EffectEnum.AddMPDodge)).Append(';');
                         message.Append(Team.Id).Append(';');
-                        message.Append("").Append(';'); // MountLightInfos
                     }
+                    if (m_mount != null && RidingMount)
+                        message.Append(m_mount.SerializeAs_MountLightInfos()).Append(';');
+                    else
+                        message.Append("").Append(';'); // MountLightInfos
                     break;
             }
         }

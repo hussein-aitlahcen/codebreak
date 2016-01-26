@@ -15,7 +15,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public sealed class NonPlayerCharacterEntity : EntityBase
+    public sealed class NonPlayerCharacterEntity : AbstractEntity
     {
         /// <summary>
         /// 

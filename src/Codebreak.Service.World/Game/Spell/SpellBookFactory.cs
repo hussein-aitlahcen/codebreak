@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Spell
 {
     public sealed class SpellBookFactory : Singleton<SpellBookFactory>
     {
-        public SpellBook Create(EntityBase entity)
+        public SpellBook Create(AbstractEntity entity)
         {
             switch (entity.Type)
             {

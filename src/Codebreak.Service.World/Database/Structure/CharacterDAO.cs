@@ -378,6 +378,15 @@ namespace Codebreak.Service.World.Database.Structure
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int EquippedMount
+        {
+            get;
+            set;
+        }
+
         #region Unmapped
 
         private CharacterAlignmentDAO m_alignment;
@@ -455,7 +464,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <param name="message"></param>
         public void SerializeAs_ActorLookMessage(StringBuilder message)
         {
-            var items = new List<InventoryItemDAO>(InventoryItemRepository.Instance.GetByOwner((int)EntityTypeEnum.TYPE_CHARACTER, Id));
+            var items = new List<ItemDAO>(InventoryItemRepository.Instance.GetByOwner((int)EntityTypeEnum.TYPE_CHARACTER, Id));
             var weapon = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_WEAPON);
             var hat = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_HAT);
             var cape = items.Find(entry => entry.Slot == ItemSlotEnum.SLOT_CAPE);

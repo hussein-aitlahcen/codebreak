@@ -155,6 +155,8 @@ namespace Codebreak.Service.World.Network
         ERROR_SERVER_BETA = 225,
         ERROR_SERVER_WELCOME = 89,
 
+        ERROR_PET_ALREADY_EQUIPPED = 88,
+
         ERROR_NOT_ENOUGH_KAMAS_TO_PAY_MERCHANT_MODE_TAXE = 76,
         ERROR_NOT_ENOUGH_ITEMS_TO_BE_MERCHANT = 23,
         ERROR_TOO_MANY_MERCHANT_ON_MAP = 25,
@@ -164,6 +166,8 @@ namespace Codebreak.Service.World.Network
         ERROR_FIGHTER_RECONNECTED = 184,
         ERROR_FIGHT_WAITING_PLAYERS = 29,
         ERROR_FIGHTER_KICKED_DUE_TO_DISCONNECTION = 30,
+
+        ERROR_MOUNT_MATURITY_LOW = 176,
 
         ERROR_GUILD_BOSS_LEFT_NEW_BOSS = 199,
     }
@@ -213,6 +217,15 @@ namespace Codebreak.Service.World.Network
         OPERATOR_REFRESH = '~',
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum MountEquipErrorEnum
+    {
+        INVENTORY_NOT_EMPTY = '-',
+        ALREADY_HAVE_ONE = '+',
+        UNKNOW_ERROR = 'r',
+    }
 
     /// <summary>
     /// 
@@ -679,7 +692,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static string GAME_MAP_INFORMATIONS(OperatorEnum operation, params EntityBase[] entities)
+        public static string GAME_MAP_INFORMATIONS(OperatorEnum operation, params AbstractEntity[] entities)
         {
             var message = new StringBuilder("GM", entities.Count() * 100);
             foreach (var actor in entities)
@@ -887,7 +900,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="actor"></param>
         /// <returns></returns>
-        public static string ENTITY_OBJECT_ACTUALIZE(EntityBase entity)
+        public static string ENTITY_OBJECT_ACTUALIZE(AbstractEntity entity)
         {
             var message = new StringBuilder("Oa");
             message.Append(entity.Id);
@@ -902,7 +915,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static string OBJECT_ADD_SUCCESS(InventoryItemDAO item)
+        public static string OBJECT_ADD_SUCCESS(ItemDAO item)
         {
             return "OAKO"  + item.ToString();
         }
@@ -961,7 +974,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static string OBJECT_UPDATE(InventoryItemDAO item)
+        public static string OBJECT_UPDATE(ItemDAO item)
         {
             var message = new StringBuilder("OC;");
             item.SerializeAs_BagContent(message);
@@ -2248,7 +2261,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public static string EXCHANGE_PERSONAL_SHOP_ITEMS_LIST(IEnumerable<InventoryItemDAO> items)
+        public static string EXCHANGE_PERSONAL_SHOP_ITEMS_LIST(IEnumerable<ItemDAO> items)
         {
             var message = new StringBuilder("EL");
             foreach(var item in items)
@@ -2267,7 +2280,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public static string EXCHANGE_STORAGE_ITEMS_LIST(IEnumerable<InventoryItemDAO> items, long kamas)
+        public static string EXCHANGE_STORAGE_ITEMS_LIST(IEnumerable<ItemDAO> items, long kamas)
         {
             var message = new StringBuilder("EL");
             foreach (var item in items)
@@ -2572,7 +2585,7 @@ namespace Codebreak.Service.World.Network
         /// <param name="set"></param>
         /// <param name="items"></param>
         /// <returns></returns>
-        public static string ITEM_SET(ItemSetDAO set, IEnumerable<InventoryItemDAO> items)
+        public static string ITEM_SET(ItemSetDAO set, IEnumerable<ItemDAO> items)
         {
             if (set == null)
                 return "";
@@ -2587,7 +2600,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public static string OBJECT_CHANGE(IEnumerable<InventoryItemDAO> items)
+        public static string OBJECT_CHANGE(IEnumerable<ItemDAO> items)
         {
             var message = new StringBuilder("OCK");
             foreach (var item in items)
@@ -2761,5 +2774,73 @@ namespace Codebreak.Service.World.Network
         {
             return "Ea" + reason;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="percentage"></param>
+        /// <returns></returns>
+        public static string MOUNT_EXPERIENCE_SHARED(int percentage)
+            => "Rx" + percentage;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string MOUNT_NAME(string name)
+            => "Rn" + name;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string MOUNT_RIDING_START()
+            => "Rr+";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string MOUNT_RIDING_STOP()
+            => "Rr-";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="defaultPrice"></param>
+        /// <returns></returns>
+        public static string PADDOCK_BUY_START(int defaultPrice)
+            => "RD|" + defaultPrice;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string PADDOCK_BUY_LEAVE()
+            => "Rv";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string MOUNT_UNEQUIP()
+            => "Re-";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="informations"></param>
+        /// <returns></returns>
+        public static string MOUNT_EQUIP(string informations)
+            => "Re+" + informations;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns></returns>
+        public static string MOUNT_EQUIP_ERROR(MountEquipErrorEnum error)
+            => "ReE" + (char)error;
     }
 }

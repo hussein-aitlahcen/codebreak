@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        public override bool ProcessItem(Entity.CharacterEntity character, Database.Structure.InventoryItemDAO item, Stats.GenericEffect effect, long targetId, int targetCell)
+        public override bool ProcessItem(Entity.CharacterEntity character, Database.Structure.ItemDAO item, Stats.GenericEffect effect, long targetId, int targetCell)
         {
             return Process(character, new Dictionary<string, string>() { { "alignmentId", effect.Value1.ToString() } });
         }

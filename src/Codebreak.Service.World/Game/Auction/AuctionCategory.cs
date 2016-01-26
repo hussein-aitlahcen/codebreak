@@ -152,7 +152,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool IsValidForThisCategory(InventoryItemDAO item)
+        public bool IsValidForThisCategory(ItemDAO item)
         {
             AuctionEntry auction = FirstOrDefault();
             if (auction == null)

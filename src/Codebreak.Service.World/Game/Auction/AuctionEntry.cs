@@ -85,7 +85,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        public InventoryItemDAO Item
+        public ItemDAO Item
         {
             get
             {
@@ -116,7 +116,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        private InventoryItemDAO m_item;
+        private ItemDAO m_item;
 
         /// <summary>
         /// 
@@ -127,7 +127,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// 
         /// </summary>
         /// <param name="record"></param>
-        public AuctionEntry(AuctionHouseEntryDAO record, InventoryItemDAO item = null)
+        public AuctionEntry(AuctionHouseEntryDAO record, ItemDAO item = null)
         {
             m_databaseRecord = record;
             m_item = item;

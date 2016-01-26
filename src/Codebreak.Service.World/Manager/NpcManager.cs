@@ -38,7 +38,6 @@ namespace Codebreak.Service.World.Manager
                 m_npcByMap[npcInstance.MapId].Add(npcInstance);
                 npcCount++;
             }
-
             Logger.Info("NpcManager : " + npcCount + " NpcInstance loaded.");
         }
 

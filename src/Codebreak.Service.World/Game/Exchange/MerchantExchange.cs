@@ -76,7 +76,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="templateId"></param>
         /// <param name="quantity"></param>
-        public override void BuyItem(EntityBase actor, long itemId, int quantity)
+        public override void BuyItem(AbstractEntity actor, long itemId, int quantity)
         {         
             if(!Merchant.HasGameAction(Action.GameActionTypeEnum.MAP))
             {

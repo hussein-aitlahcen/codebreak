@@ -26,7 +26,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public abstract List<InventoryItemDAO> Items
+        public abstract List<ItemDAO> Items
         {
             get;
         }
@@ -49,7 +49,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public virtual void OnItemAdded(InventoryItemDAO item)
+        public virtual void OnItemAdded(ItemDAO item)
         {
         }
 
@@ -57,7 +57,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public virtual void OnOwnerChange(InventoryItemDAO item)
+        public virtual void OnOwnerChange(ItemDAO item)
         {
         }
 
@@ -108,7 +108,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="item"></param>
         /// <param name="merge"></param>
         /// <returns></returns>
-        public bool AddItem(InventoryItemDAO item, bool merge = true)
+        public bool AddItem(ItemDAO item, bool merge = true)
         {
             if (Items.Contains(item))
                 return false;
@@ -129,14 +129,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool TryMerge(InventoryItemDAO item)
+        public bool TryMerge(ItemDAO item)
         {
             var sameItem = Items.Find(
                 entry => entry.TemplateId == item.TemplateId && 
                     entry.StringEffects == item.StringEffects && 
                     entry.Id != item.Id &&
                     entry.SlotId == item.SlotId &&
-                    !InventoryItemDAO.IsEquipedSlot(entry.Slot));
+                    !ItemDAO.IsEquipedSlot(entry.Slot));
             
             if(sameItem != null)
             {
@@ -155,7 +155,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="quantity"></param>
         /// <param name="slot"></param>
         /// <returns></returns>
-        public InventoryItemDAO MoveQuantity(InventoryItemDAO item, int quantity, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
+        public ItemDAO MoveQuantity(ItemDAO item, int quantity, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
         {
             if(quantity >= item.Quantity)            
                 return RemoveItem(item.Id, item.Quantity);                        
@@ -211,7 +211,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="id"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public virtual IEnumerable<InventoryItemDAO> RemoveItems()
+        public virtual IEnumerable<ItemDAO> RemoveItems()
         {
             foreach (var item in Items.ToArray())
             {
@@ -228,7 +228,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="id"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public virtual InventoryItemDAO RemoveItem(long itemId, int quantity = 1)
+        public virtual ItemDAO RemoveItem(long itemId, int quantity = 1)
         {
             var item = Items.Find(entry => entry.Id == itemId);
             if (item == null)
@@ -254,7 +254,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public InventoryItemDAO GetItem(long id)
+        public ItemDAO GetItem(long id)
         {
             return Items.Find(item => item.Id == id);
         }

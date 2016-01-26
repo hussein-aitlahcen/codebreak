@@ -22,9 +22,9 @@ namespace Codebreak.Service.World.Manager
         /// <param name="monster"></param>
         /// <param name="rate"></param>
         /// <returns></returns>
-        public List<InventoryItemDAO> GetDrops(long prospection, MonsterEntity monster, double rate)
+        public List<ItemDAO> GetDrops(long prospection, MonsterEntity monster, double rate)
         {
-            var drops = new List<InventoryItemDAO>();
+            var drops = new List<ItemDAO>();
             foreach(var drop in monster.Grade.Template.Drops)
             {
                 for (int i = 0; i < drop.Max; i++)
@@ -66,12 +66,12 @@ namespace Codebreak.Service.World.Manager
         /// <param name="totalProspection"></param>
         /// <param name="drops"></param>
         /// <returns></returns>
-        public Dictionary<FighterBase, List<InventoryItemDAO>> Distribute(IEnumerable<FighterBase> fighters, long totalProspection, List<InventoryItemDAO> drops)
+        public Dictionary<FighterBase, List<ItemDAO>> Distribute(IEnumerable<FighterBase> fighters, long totalProspection, List<ItemDAO> drops)
         {
-            var distributed = new Dictionary<FighterBase, List<InventoryItemDAO>>();
+            var distributed = new Dictionary<FighterBase, List<ItemDAO>>();
             var orderedPlayers = fighters.OrderBy(player => player.Prospection);   
             foreach (var player in fighters)
-                distributed.Add(player, new List<InventoryItemDAO>());
+                distributed.Add(player, new List<ItemDAO>());
             while(drops.Count > 0)
             {
                 foreach(var player in fighters)

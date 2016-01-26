@@ -135,10 +135,10 @@ namespace Codebreak.Service.World.Game.Fight
         private long m_droppersTotalPP;
         private long m_losersTotalLevel;
         private long m_kamasLoot;
-        private Dictionary<FighterBase, List<InventoryItemDAO>> m_distributedDrops = new Dictionary<FighterBase,List<InventoryItemDAO>>();
+        private Dictionary<FighterBase, List<ItemDAO>> m_distributedDrops = new Dictionary<FighterBase,List<ItemDAO>>();
         private Dictionary<FighterBase, long> m_distributedExp = new Dictionary<FighterBase, long>();
         private List<FighterBase> m_droppers = new List<FighterBase>();
-        private List<InventoryItemDAO> m_itemLoot = new List<InventoryItemDAO>();
+        private List<ItemDAO> m_itemLoot = new List<ItemDAO>();
 
         /// <summary>
         /// 

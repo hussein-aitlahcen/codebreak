@@ -83,7 +83,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public virtual int AddItem(EntityBase actor, long guid, int quantity, long price = -1)
+        public virtual int AddItem(AbstractEntity actor, long guid, int quantity, long price = -1)
         {
             return 0;
         }
@@ -94,7 +94,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public virtual int RemoveItem(EntityBase actor, long guid, int quantity)
+        public virtual int RemoveItem(AbstractEntity actor, long guid, int quantity)
         {
             return 0;
         }
@@ -104,7 +104,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="quantity"></param>
-        public virtual long MoveKamas(EntityBase actor, long quantity)
+        public virtual long MoveKamas(AbstractEntity actor, long quantity)
         {
             return 0;
         }
@@ -115,7 +115,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="id"></param>
         /// <param name="quantity"></param>
-        public virtual void BuyItem(EntityBase actor, long id, int quantity)
+        public virtual void BuyItem(AbstractEntity actor, long id, int quantity)
         {
         }
 
@@ -126,7 +126,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="id"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public virtual void SellItem(EntityBase actor, long id, int quantity, long price = -1)
+        public virtual void SellItem(AbstractEntity actor, long id, int quantity, long price = -1)
         {
         }
     }

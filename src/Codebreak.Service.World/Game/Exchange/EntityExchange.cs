@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        bool Validate(EntityBase entity);
+        bool Validate(AbstractEntity entity);
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Game.Exchange
          /// <summary>
         /// 
         /// </summary>
-        protected EntityBase m_local, m_distant;
+        protected AbstractEntity m_local, m_distant;
 
         /// <summary>
         /// 
@@ -70,7 +70,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="local"></param>
         /// <param name="distant"></param>
-        public EntityExchange(ExchangeTypeEnum type, EntityBase local, EntityBase distant)
+        public EntityExchange(ExchangeTypeEnum type, AbstractEntity local, AbstractEntity distant)
             : base(type)
         {            
             m_local = local;
@@ -102,7 +102,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override int AddItem(EntityBase entity, long guid, int quantity, long price = -1)
+        public override int AddItem(AbstractEntity entity, long guid, int quantity, long price = -1)
         {
             if (quantity < 1)
                 return 0;
@@ -155,7 +155,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <returns></returns>
-        private int GetQuantity(EntityBase entity, long guid)
+        private int GetQuantity(AbstractEntity entity, long guid)
         {
             if (m_exchangedItems[entity.Id].ContainsKey(guid))
                 return m_exchangedItems[entity.Id][guid];
@@ -170,7 +170,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override int RemoveItem(EntityBase entity, long guid, int quantity)
+        public override int RemoveItem(AbstractEntity entity, long guid, int quantity)
         {
             if (quantity < 1)
                 return 0;
@@ -231,7 +231,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="quantity"></param>
-        public override long MoveKamas(EntityBase entity, long quantity)
+        public override long MoveKamas(AbstractEntity entity, long quantity)
         {
             if (quantity < 0)
                 return 0;
@@ -276,7 +276,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual bool Validate(EntityBase entity)
+        public virtual bool Validate(AbstractEntity entity)
         {
             m_validated[entity.Id] = m_validated[entity.Id] == false; // inverse de la valeur actuelle
 
