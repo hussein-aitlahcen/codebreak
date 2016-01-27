@@ -2043,10 +2043,11 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void RefreshOnMap()
         {
+            var message = WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REFRESH, this);
             if (HasGameAction(GameActionTypeEnum.MAP))
-            {
-                Map.SafeDispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REFRESH, this));
-            }
+                Map.SafeDispatch(message);
+            else
+                Fight.SafeDispatch(message);            
         }
 
         /// <summary>
