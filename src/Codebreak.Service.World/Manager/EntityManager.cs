@@ -135,7 +135,7 @@ namespace Codebreak.Service.World.Manager
         public MountEntity CreateMount(MountDAO mountDAO)
         {
             var mount = new MountEntity(mountDAO);
-            m_mountById.Add(mount.Id, mount);
+            m_mountById.Add(mount.UniqueId, mount);
             return mount;
         }
         

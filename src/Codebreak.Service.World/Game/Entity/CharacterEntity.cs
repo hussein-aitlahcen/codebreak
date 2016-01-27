@@ -1013,13 +1013,21 @@ namespace Codebreak.Service.World.Game.Entity
             if(EquippedMount != -1)
             {
                 var mount = EntityManager.Instance.GetMountById(EquippedMount);
-                if(mount.OwnerId == Id)
+                if (mount != null)
                 {
-                    m_mount = mount;
+                    if (mount.OwnerId == Id)
+                    {
+                        m_mount = mount;
+                    }
+                    else
+                    {
+                        Logger.Info("CharacterEntity::() mount equipped by not owned " + Name);
+                    }
                 }
                 else
                 {
-                    Logger.Info("CharacterEntity::() mount equipped by not owned " + Name);
+                    Logger.Info("CharacterEntity::() unkw mount equipped " + Name);
+                    EquippedMount = -1;
                 }
             }
                         
@@ -1760,34 +1768,38 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public void RideMount()
+        public void MountRideUnride()
         {
-            if(m_mount != null && !RidingMount)
-            {   
-                if(Level < 60)
+            if (m_mount != null)
+            {
+                RidingMount = RidingMount == false;
+                if (RidingMount)
                 {
-                    base.Dispatch(WorldMessage.MOUNT_EQUIP_ERROR(MountEquipErrorEnum.UNKNOW_ERROR));
-                    return;
+                    if (Level < 60)
+                    {
+                        base.Dispatch(WorldMessage.MOUNT_EQUIP_ERROR(MountEquipErrorEnum.UNKNOW_ERROR));
+                        return;
+                    }
+                    if (!m_mount.Ridable)
+                    {
+                        base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_MOUNT_MATURITY_LOW));
+                        return;
+                    }
+                    if (Inventory.Items.Any(item => item.Slot == ItemSlotEnum.SLOT_PET))
+                    {
+                        base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PET_ALREADY_EQUIPPED));
+                        return;
+                    }                    
+                    base.Dispatch(WorldMessage.MOUNT_RIDING_START());
                 }
-                if(m_mount.Maturity < m_mount.Template.MaxMaturity)
+                else
                 {
-                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_MOUNT_MATURITY_LOW));
-                    return;
+                    base.Dispatch(WorldMessage.MOUNT_RIDING_STOP());
                 }
-                if(Inventory.Items.Any(item => item.Slot == ItemSlotEnum.SLOT_PET))
-                {
-                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PET_ALREADY_EQUIPPED));
-                    return;
-                }
-
-                RidingMount = true;
-                base.CachedBuffer = true;
-                base.Dispatch(WorldMessage.MOUNT_RIDING_START());
                 RefreshOnMap();
-                base.CachedBuffer = false;
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1806,21 +1818,7 @@ namespace Codebreak.Service.World.Game.Entity
                 base.Dispatch(WorldMessage.MOUNT_EXPERIENCE_SHARED(m_mount.XPSharePercent));
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void UnrideMount()
-        {
-            if(m_mount != null && RidingMount)
-            {
-                base.Dispatch(WorldMessage.MOUNT_UNEQUIP());
-                base.Dispatch(WorldMessage.MOUNT_RIDING_STOP());
-                RidingMount = false;
-                RefreshOnMap();
-            }
-        }
-                
+                        
         /// <summary>
         /// 
         /// </summary>

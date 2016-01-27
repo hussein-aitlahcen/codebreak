@@ -36,14 +36,29 @@ namespace Codebreak.Service.World.Frame
 
                         case 'd':
                             return ObjectDelete;
-
-                        default:
-                            return null;
                     }
+                    break;
 
-                default:
-                    return null;
+                case 'R':
+                    switch (message[1])
+                    {
+                        case 'r':
+                            return MountRide;     
+                    }
+                    break;
             }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="message"></param>
+        private void MountRide(CharacterEntity character, string message)
+        {
+            character.AddMessage(character.MountRideUnride);
         }
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.Entity
         TOUGH = 16,
         INLOVE = 32,
         PRECOCIOUS = 64,
-        PRONE = 128,
+        GENETIC_PRONE = 128,
         CHAMELEON = 256,
     }
 
@@ -37,6 +37,7 @@ namespace Codebreak.Service.World.Game.Entity
         public const int MAX_SERENITY = 10000;
         public const int MAX_STAMINA = 10000;
         public const int MAX_LOVE = 10000;
+        public const int MAX_ENERGY = 2000;
 
         private static long NextId = -10000;
         
@@ -121,7 +122,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             get
             {
-                return string.Empty;
+                return ",";
             }
         }
 
@@ -173,7 +174,7 @@ namespace Codebreak.Service.World.Game.Entity
 
         // TODO: fecondation.hours + 1
         public string SerializedPregnancyTime =>
-            "??h??m";
+            "-1";
 
         public bool Fecondable =>
             !Pregnant &&
@@ -184,9 +185,10 @@ namespace Codebreak.Service.World.Game.Entity
         
         public bool Pregnant => m_fecondation == null;
 
-        public bool Mountable => Maturity == Template.MaxMaturity && !Wild;
+        public bool Ridable => Maturity == Template.MaxMaturity && !Wild;
 
         public int XPSharePercent => m_record.XPSharePercent;
+        public long UniqueId => m_record.Id;
         public long OwnerId => m_record.OwnerId;
         public int Reproduction => m_record.Reproduction;
         public bool Castrated => m_record.Castrated;
@@ -194,6 +196,7 @@ namespace Codebreak.Service.World.Game.Entity
         public int MaxPods => Template.DefaultPods + Template.PodsPerLevel * Level;
         public bool Wild => m_record.Wild;
         public int Tired => m_record.Tired;
+        public long Energy => m_record.Energy;
         public long Stamina => m_record.Stamina;
         public long Maturity => m_record.Maturity;
         public long Love => m_record.Love;
@@ -277,24 +280,53 @@ namespace Codebreak.Service.World.Game.Entity
             var message = new StringBuilder();
             message.Append(Id).Append(':');
             message.Append(TemplateId).Append(':');
+
             // TODO : ANCESTORS
             message.Append(string.Empty).Append(':');
+
+            // TODO : CAPACITIES
             message.Append(Capacities).Append(':');
+
             message.Append(Name).Append(':');
             message.Append(Sex ? "1" : "0").Append(':');
-            message.Append(Experience).Append(',').Append(ExperienceFloorCurrent).Append(',').Append(ExperienceFloorNext).Append(':');
+
+            message.Append(Experience).Append(',')
+                .Append(ExperienceFloorCurrent).Append(',')
+                .Append(ExperienceFloorNext).Append(':');
+
             message.Append(Level).Append(':');
-            message.Append(Mountable ? "1" : "0").Append(':');
+            message.Append(Ridable ? "1" : "0").Append(':');
             message.Append(MaxPods).Append(':');
             message.Append(Wild ? "1" : "0").Append(':');
-            message.Append(Stamina).Append(',').Append(MAX_STAMINA);
-            message.Append(Serenity).Append(MIN_SERENITY).Append(',').Append(MAX_SERENITY).Append(':');
-            message.Append(Love).Append(MAX_LOVE).Append(':');
+
+            message.Append(Stamina).Append(',')
+                .Append(MAX_STAMINA).Append(':');
+
+            message.Append(Maturity).Append(',')
+                .Append(Template.MaxMaturity).Append(':');
+
+            message.Append(Energy).Append(',')
+                .Append(MAX_ENERGY).Append(':');
+
+            message.Append(Serenity)
+                .Append(',')
+                .Append(MIN_SERENITY)
+                .Append(',')
+                .Append(MAX_SERENITY).Append(':');
+
+            message.Append(Love).Append(',')
+                .Append(MAX_LOVE).Append(':');
+
             message.Append(SerializedPregnancyTime).Append(':');
             message.Append(Fecondable ? "1" : "0").Append(':');
             message.Append(GetStatistics().ToItemStats()).Append(':');
-            message.Append(Tired).Append(',').Append(MAX_TIRED).Append(':');
-            message.Append(Castrated ? "-1" : Reproduction.ToString()).Append(',').Append(MAX_REPRODUCTION).Append(':');
+
+            message.Append(Tired).Append(',')
+                .Append(MAX_TIRED).Append(':');
+
+            message.Append(Castrated ? "-1" : Reproduction.ToString()).Append(',')
+                .Append(MAX_REPRODUCTION).Append(':');
+
             return message.ToString();
         }
 
