@@ -1773,9 +1773,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (m_mount != null)
             {                
-                RidingMount = RidingMount == false;
-                CachedBuffer = true;
-                if (RidingMount)
+                if (!RidingMount)
                 {
                     if (Level < 60)
                     {
@@ -1791,15 +1789,18 @@ namespace Codebreak.Service.World.Game.Entity
                     {
                         base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PET_ALREADY_EQUIPPED));
                         return;
-                    }                    
+                    }
+                    RidingMount = true;           
                     base.Dispatch(WorldMessage.MOUNT_RIDING_START());
                     Statistics.Merge(StatsType.TYPE_ITEM, m_mount.GetStatistics());
                 }
                 else
                 {
+                    RidingMount = false;
                     base.Dispatch(WorldMessage.MOUNT_RIDING_STOP());
                     Statistics.UnMerge(StatsType.TYPE_ITEM, m_mount.GetStatistics());
                 }
+                CachedBuffer = true;
                 SendAccountStats();
                 RefreshOnMap();
                 CachedBuffer = false;

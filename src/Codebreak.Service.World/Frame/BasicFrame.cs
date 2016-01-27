@@ -1034,7 +1034,12 @@ namespace Codebreak.Service.World.Frame
             if (channel.Length == 1)
             {
                 if (messageData.Length > 2)                
-                    messageContent = messageContent + "|" + messageData[2];                
+                    messageContent = messageContent + "|" + messageData[2];              
+                if(!Enum.IsDefined(typeof(ChatChannelEnum), channel))
+                {
+                    character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
+                    return;
+                }
                 character.AddMessage(() => character.DispatchChatMessage((ChatChannelEnum)channel[0], messageContent));                
             }
             else
