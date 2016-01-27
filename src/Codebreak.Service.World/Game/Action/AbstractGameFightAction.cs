@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public abstract class GameFightActionBase : GameActionBase
+    public abstract class AbstractGameFightAction : AbstractGameAction
     {
         /// <summary>
         /// 
@@ -47,7 +47,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="type"></param>
         /// <param name="fighter"></param>
         /// <param name="timeout"></param>
-        public GameFightActionBase(GameActionTypeEnum type, FighterBase fighter, long duration)
+        public AbstractGameFightAction(GameActionTypeEnum type, FighterBase fighter, long duration)
             : base(type, fighter, duration)
         {
             Fighter = fighter;

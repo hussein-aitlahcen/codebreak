@@ -11,16 +11,27 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameShopExchangeAction : AbstractGameExchangeAction
+    public abstract class AbstractGameAuctionHouseAction : AbstractGameExchangeAction
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="buyer"></param>
-        /// <param name="shop"></param>
-        public GameShopExchangeAction(CharacterEntity character, NonPlayerCharacterEntity npc)
-            : base(new ShopExchange(character, npc), character, npc)
+        public AuctionHouseExchange AuctionExchange
         {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="character"></param>
+        /// <param name="npc"></param>
+        public AbstractGameAuctionHouseAction(AuctionHouseExchange exchange, CharacterEntity character, NonPlayerCharacterEntity npc)
+            : base(exchange, character, npc)
+        {
+            AuctionExchange = exchange;
         }
 
         /// <summary>

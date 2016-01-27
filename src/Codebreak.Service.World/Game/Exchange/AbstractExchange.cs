@@ -30,7 +30,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public abstract class ExchangeBase : MessageDispatcher
+    public abstract class AbstractExchange : MessageDispatcher
     {
         /// <summary>
         /// 
@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// 
         /// </summary>
         /// <param name="type"></param>
-        public ExchangeBase(ExchangeTypeEnum type)
+        public AbstractExchange(ExchangeTypeEnum type)
         {
             Type = type;
         }

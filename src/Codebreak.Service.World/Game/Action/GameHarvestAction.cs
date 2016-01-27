@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameHarvestAction : GameActionBase
+    public sealed class GameHarvestAction : AbstractGameAction
     {
         /// <summary>
         /// 

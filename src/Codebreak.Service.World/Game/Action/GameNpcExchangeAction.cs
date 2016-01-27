@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameNpcExchangeAction : GameExchangeActionBase
+    public sealed class GameNpcExchangeAction : AbstractGameExchangeAction
     {
         /// <summary>
         /// 

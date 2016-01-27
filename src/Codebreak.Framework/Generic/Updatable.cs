@@ -220,11 +220,8 @@ namespace Codebreak.Framework.Generic
             }
 
             Action msg = null;
-            int size = m_messagesQueue.Count;
-            int i = 0;
-            while (i < size && m_messagesQueue.TryDequeue(out msg))
+            while (m_messagesQueue.TryDequeue(out msg))
             {
-                i++;
                 try
                 {
                     msg();

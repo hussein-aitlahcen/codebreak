@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public abstract class EntityExchange : ExchangeBase, IValidableExchange
+    public abstract class EntityExchange : AbstractExchange, IValidableExchange
     {
          /// <summary>
         /// 

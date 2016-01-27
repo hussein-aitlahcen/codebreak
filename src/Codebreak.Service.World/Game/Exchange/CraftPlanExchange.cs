@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public sealed class CraftPlanExchange : ExchangeBase, IValidableExchange, IRetryableExchange
+    public sealed class CraftPlanExchange : AbstractExchange, IValidableExchange, IRetryableExchange
     {
         private const int LOOP_OK = 1;
         private const int LOOP_INTERUPT = 2;
@@ -84,7 +84,7 @@ namespace Codebreak.Service.World.Game.Exchange
             m_plan = plan;
             Character = character;
             Skill = (CraftSkill)skill;
-            Job = Character.CharacterJobs.GetJob(skill.SkillId);
+            Job = Character.CharacterJobs.GetJob(skill.Id);
             MaxCase = Job.CraftMaxCase;
         }
 
@@ -93,7 +93,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         protected override string SerializeAs_ExchangeCreate()
         {
-            return MaxCase + ";" + (int)Skill.SkillId;
+            return MaxCase + ";" + (int)Skill.Id;
         }
 
         /// <summary>

@@ -846,13 +846,13 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public GameFightActionBase CurrentAction
+        public AbstractGameFightAction CurrentAction
         {
             get
             {
                 if (CurrentFighter != null)
-                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is GameFightActionBase)
-                        return (GameFightActionBase)CurrentFighter.CurrentAction;
+                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is AbstractGameFightAction)
+                        return (AbstractGameFightAction)CurrentFighter.CurrentAction;
                 return null;
             }
         }

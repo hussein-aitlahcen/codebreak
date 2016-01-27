@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public class StorageExchange : ExchangeBase
+    public class StorageExchange : AbstractExchange
     {
         /// <summary>
         /// 

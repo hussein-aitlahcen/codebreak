@@ -246,8 +246,8 @@ namespace Codebreak.Service.World.Game.Entity
         public GenericStats GetStatistics()
         {
             var statistics = new GenericStats();
-            foreach(var effect in Template.RandomEffects)            
-                statistics.AddBase(effect.Type, effect.Random * Level);
+            foreach (var effect in Template.RandomEffects)            
+                statistics.AddEffect(effect.Type, effect.Random * Level);            
             return statistics;         
         }
 

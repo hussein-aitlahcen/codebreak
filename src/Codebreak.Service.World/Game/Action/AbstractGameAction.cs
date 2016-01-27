@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public abstract class GameActionBase
+    public abstract class AbstractGameAction
     {
         /// <summary>
         /// 
@@ -62,7 +62,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="type"></param>
         /// <param name="entity"></param>
         /// <param name="duration"></param>
-        public GameActionBase(GameActionTypeEnum type, AbstractEntity entity, long duration = -1)
+        public AbstractGameAction(GameActionTypeEnum type, AbstractEntity entity, long duration = -1)
         {
             Type = type;
             Entity = entity;

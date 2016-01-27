@@ -39,7 +39,7 @@ namespace Codebreak.Service.World.Manager
                     JobIdEnum.JOB_NONE,
                     new BasicSkill(SkillIdEnum.SKILL_ACCEDER),
                     new BasicSkill(SkillIdEnum.SKILL_ACHETER),
-                    new BasicSkill(SkillIdEnum.SKILL_ACHETER_1),
+                    new BasicSkill(SkillIdEnum.SKILL_ACHETER_ENCLOS),
                     new BasicSkill(SkillIdEnum.SKILL_ACTIONNER),
                     new BasicSkill(SkillIdEnum.SKILL_CONCASSER_DES_RESSOURCES),
                     new BasicSkill(SkillIdEnum.SKILL_CONSULTER),

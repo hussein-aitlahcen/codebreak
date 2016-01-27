@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Action
 {
-    public sealed class GameFightWeaponAction : GameFightActionBase
+    public sealed class GameFightWeaponAction : AbstractGameFightAction
     {
         /// <summary>
         /// 

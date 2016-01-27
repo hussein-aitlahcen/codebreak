@@ -10,6 +10,7 @@ using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Interactive.Type;
 using Codebreak.Service.World.Game.Job;
+using Codebreak.Service.World.Game.Mount;
 using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Manager;
@@ -1771,8 +1772,9 @@ namespace Codebreak.Service.World.Game.Entity
         public void MountRideUnride()
         {
             if (m_mount != null)
-            {
+            {                
                 RidingMount = RidingMount == false;
+                CachedBuffer = true;
                 if (RidingMount)
                 {
                     if (Level < 60)
@@ -1791,12 +1793,16 @@ namespace Codebreak.Service.World.Game.Entity
                         return;
                     }                    
                     base.Dispatch(WorldMessage.MOUNT_RIDING_START());
+                    Statistics.Merge(StatsType.TYPE_ITEM, m_mount.GetStatistics());
                 }
                 else
                 {
                     base.Dispatch(WorldMessage.MOUNT_RIDING_STOP());
+                    Statistics.UnMerge(StatsType.TYPE_ITEM, m_mount.GetStatistics());
                 }
+                SendAccountStats();
                 RefreshOnMap();
+                CachedBuffer = false;
             }
         }
         
@@ -1826,6 +1832,16 @@ namespace Codebreak.Service.World.Game.Entity
         {
             CurrentAction = new GameGuildCreationAction(this);
             StartAction(GameActionTypeEnum.GUILD_CREATE);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="paddock"></param>
+        public void ExchangePaddock(Paddock paddock)
+        {
+            CurrentAction = new GameMountStorageExchangeAction(this, paddock);
+            StartAction(GameActionTypeEnum.EXCHANGE);
         }
 
         /// <summary>

@@ -15,7 +15,6 @@ namespace Codebreak.Service.World.Database.Structure
         [Key]
         public int MapId { get; set; }
         public int GuildId { get; set; }
-        public int CellId { get; set; }
         public long DefaultPrice { get; set; }
         public long Price { get; set; }
         public int MountPlace { get; set; }

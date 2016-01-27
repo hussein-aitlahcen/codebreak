@@ -2842,5 +2842,18 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string MOUNT_EQUIP_ERROR(MountEquipErrorEnum error)
             => "ReE" + (char)error;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="price"></param>
+        /// <param name="size"></param>
+        /// <param name="items"></param>
+        /// <param name="guildName"></param>
+        /// <param name="guildEmblem"></param>
+        /// <returns></returns>
+        public static string PADDOCK_INFORMATIONS(int owner, long price, int size, int items, string guildName, string guildEmblem)
+            => "Rp" + owner + ";" + price + ";" + size + ";" + items + ";" + guildName + ";" + guildEmblem;       
     }
 }

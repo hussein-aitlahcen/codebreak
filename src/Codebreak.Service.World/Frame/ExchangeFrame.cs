@@ -185,14 +185,14 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
+                var exchangeAction = character.CurrentAction as AbstractGameAuctionHouseAction;
                 if (exchangeAction == null)
                 {
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;
                 }
 
-                var middlePrice = ((GameAuctionHouseActionBase)exchangeAction).AuctionExchange.Npc.AuctionHouse.GetMiddlePrice(templateId);
+                var middlePrice = ((AbstractGameAuctionHouseAction)exchangeAction).AuctionExchange.Npc.AuctionHouse.GetMiddlePrice(templateId);
 
                 character.Dispatch(WorldMessage.AUCTION_HOUSE_MIDDLE_PRICE(templateId, middlePrice));
             });
@@ -236,7 +236,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
+                var exchangeAction = character.CurrentAction as AbstractGameAuctionHouseAction;
                 if (exchangeAction == null)
                 {
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -270,7 +270,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
+                var exchangeAction = character.CurrentAction as AbstractGameAuctionHouseAction;
                 if (exchangeAction == null)
                 {
                     character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -304,7 +304,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
                     
-                    var exchangeAction = character.CurrentAction as GameAuctionHouseActionBase;
+                    var exchangeAction = character.CurrentAction as AbstractGameAuctionHouseAction;
                     if (exchangeAction == null)
                     {
                         character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
@@ -502,7 +502,7 @@ namespace Codebreak.Service.World.Frame
                         return;
                     }
 
-                    var action = character.CurrentAction as GameExchangeActionBase;
+                    var action = character.CurrentAction as AbstractGameExchangeAction;
                     var exchange = action.Exchange as IValidableExchange;
                     if(exchange == null)
                     {
@@ -563,7 +563,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                ((GameExchangeActionBase)character.CurrentAction).Exchange.SellItem(character, itemId, quantity);
+                ((AbstractGameExchangeAction)character.CurrentAction).Exchange.SellItem(character, itemId, quantity);
             });
         }
 
@@ -611,7 +611,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                ((GameExchangeActionBase)character.CurrentAction).Exchange.BuyItem(character, templateId, quantity);
+                ((AbstractGameExchangeAction)character.CurrentAction).Exchange.BuyItem(character, templateId, quantity);
             });
         }
 
@@ -638,7 +638,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                ((GameExchangeActionBase)character.CurrentAction).Exchange.MoveKamas(character, kamas);
+                ((AbstractGameExchangeAction)character.CurrentAction).Exchange.MoveKamas(character, kamas);
             });
         }
 
@@ -696,9 +696,9 @@ namespace Codebreak.Service.World.Frame
                 }
                 
                 if (add)                
-                    ((GameExchangeActionBase)character.CurrentAction).Exchange.AddItem(character, itemId, quantity, price);                
+                    ((AbstractGameExchangeAction)character.CurrentAction).Exchange.AddItem(character, itemId, quantity, price);                
                 else                
-                    ((GameExchangeActionBase)character.CurrentAction).Exchange.RemoveItem(character, itemId, quantity);                
+                    ((AbstractGameExchangeAction)character.CurrentAction).Exchange.RemoveItem(character, itemId, quantity);                
             });
         }
 
@@ -726,7 +726,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var action = character.CurrentAction as GameExchangeActionBase;
+                var action = character.CurrentAction as AbstractGameExchangeAction;
                 var exchange = action.Exchange as IRetryableExchange;
                 if (exchange == null)
                 {
@@ -754,7 +754,7 @@ namespace Codebreak.Service.World.Frame
                     return;
                 }
 
-                var action = character.CurrentAction as GameExchangeActionBase;
+                var action = character.CurrentAction as AbstractGameExchangeAction;
                 var exchange = action.Exchange as IRetryableExchange;
                 if (exchange == null)
                 {

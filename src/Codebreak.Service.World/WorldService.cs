@@ -88,6 +88,7 @@ namespace Codebreak.Service.World
             AreaManager.Instance.Initialize();
             NpcManager.Instance.Initialize();
             SpawnManager.Instance.Initialize();
+            PaddockManager.Instance.Initialize();
             MapManager.Instance.Initialize();
             GuildManager.Instance.Initialize();
             EntityManager.Instance.Initialize();

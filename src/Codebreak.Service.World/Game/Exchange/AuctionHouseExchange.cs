@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Exchange
 {
-    public abstract class AuctionHouseExchange : ExchangeBase
+    public abstract class AuctionHouseExchange : AbstractExchange
     {
         /// <summary>
         /// 

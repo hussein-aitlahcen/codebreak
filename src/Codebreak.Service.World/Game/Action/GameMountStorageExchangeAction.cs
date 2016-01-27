@@ -1,5 +1,6 @@
 ﻿using Codebreak.Service.World.Game.Entity;
 using Codebreak.Service.World.Game.Exchange;
+using Codebreak.Service.World.Game.Mount;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,27 +12,16 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public abstract class GameAuctionHouseActionBase : GameExchangeActionBase
+    public sealed class GameMountStorageExchangeAction : AbstractGameExchangeAction
     {
         /// <summary>
         /// 
         /// </summary>
-        public AuctionHouseExchange AuctionExchange
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="exchange"></param>
         /// <param name="character"></param>
-        /// <param name="npc"></param>
-        public GameAuctionHouseActionBase(AuctionHouseExchange exchange, CharacterEntity character, NonPlayerCharacterEntity npc)
-            : base(exchange, character, npc)
+        /// <param name="paddock"></param>
+        public GameMountStorageExchangeAction(CharacterEntity character, Paddock paddock)
+            : base(new MountStorageExchange(), character)
         {
-            AuctionExchange = exchange;
         }
 
         /// <summary>
@@ -39,7 +29,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         public override void Start()
         {
-            base.Accept();
+            Exchange.Create();
         }
 
         /// <summary>

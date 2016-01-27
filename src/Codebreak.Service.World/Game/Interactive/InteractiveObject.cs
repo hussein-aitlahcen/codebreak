@@ -265,7 +265,7 @@ namespace Codebreak.Service.World.Game.Interactive
         /// <param name="skillId"></param>
         public virtual void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
-            character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("Interactive object not implemented. Will be usable soon."));
+            character.Dispatch(WorldMessage.SERVER_INFO_MESSAGE("Interactive object not yet implemented. It will be done soon."));
         }
     }
 }

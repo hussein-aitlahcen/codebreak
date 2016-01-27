@@ -125,6 +125,9 @@ namespace Codebreak.Service.World.Manager
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_DOLOMITE, (map, cellId) => new HarvestableResource(map, cellId, 7033, 1000 *  60 *  1, 1000 *  60 *  1, 10));
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_SILICATE, (map, cellId) => new HarvestableResource(map, cellId, 7032, 1000 *  60 *  1, 1000 *  60 *  1, 10));
 
+            // Enclos 
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLOS, (map, cellId) => new PaddockDoor(map, cellId));
+
             // GFX
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
             AddInteractiveGfx(7003, InteractiveObjectIdEnum.INTERACTIVE_SCIE);

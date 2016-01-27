@@ -17,6 +17,8 @@ using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Game.Spawn;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Interactive;
+using System.Threading;
+using Codebreak.Service.World.Game.Mount;
 
 namespace Codebreak.Service.World.Game.Map
 {
@@ -29,11 +31,7 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         private static string HASH_CELL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private static object SynckLock = new object();
+        
 
         /// <summary>
         /// 
@@ -47,8 +45,7 @@ namespace Codebreak.Service.World.Game.Map
         {
             get
             {
-                lock (SynckLock)
-                    return m_NextMonsterId--;
+                return Interlocked.Decrement(ref m_NextMonsterId);
             }
         }
 
@@ -279,15 +276,18 @@ namespace Codebreak.Service.World.Game.Map
             }
         }
 
+        public Paddock Paddock => m_paddock;
+
         /// <summary>
         /// 
-        /// </summary>
+        /// </summary>       
         private Dictionary<long, AbstractEntity> m_entityById;
         private Dictionary<string, AbstractEntity> m_entityByName;
         private Dictionary<int, MapCell> m_cellById;
         private List<MapCell> m_cells;
         private List<InteractiveObject> m_interactiveObjects;
         private SubAreaInstance m_subArea;
+        private Paddock m_paddock;
         private bool m_subInstance;
         private int m_playerCount;
         private bool m_initialized;
@@ -328,6 +328,8 @@ namespace Codebreak.Service.World.Game.Map
             m_entityById = new Dictionary<long, AbstractEntity>();
             m_entityByName = new Dictionary<string, AbstractEntity>();
             m_initialized = false;
+
+            m_paddock = PaddockManager.Instance.GetByMapId(Id);
 
             FightManager = new FightManager(this);
             SubArea.AddUpdatable(this);
@@ -606,15 +608,7 @@ namespace Codebreak.Service.World.Game.Map
                         m_entityByName.Add(entity.Name.ToLower(), entity);
                         
                         AddHandler(entity.Dispatch);
-
-                        entity.CachedBuffer = true;
-                        entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, Entities.ToArray()));
-                        entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
-                        entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
-                        entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
-                        foreach (var fight in FightManager.Fights)                        
-                            fight.SendMapFightInfos(entity);                        
-                        entity.CachedBuffer = false;
+                        SendAllInformations(entity); 
                     }
                 }
                 else
@@ -624,6 +618,68 @@ namespace Codebreak.Service.World.Game.Map
                     WorldService.Instance.AddUpdatable(entity);
                 }
             });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendAllInformations(AbstractEntity entity)
+        {
+            entity.CachedBuffer = true;
+
+            // Before showing up we span all required base entities
+            SendMapInformations(entity);
+            SendInteractiveData(entity);
+            SendPaddockInformations(entity);
+            entity.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
+
+            // Sub data that arent necessary to be instantly shown
+            SendFightCount(entity);
+            SendFightsInformations(entity);
+
+            entity.CachedBuffer = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendFightsInformations(AbstractEntity entity)
+        {
+            foreach (var fight in FightManager.Fights)
+                fight.SendMapFightInfos(entity);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendFightCount(AbstractEntity entity) 
+            => entity.Dispatch(WorldMessage.FIGHT_COUNT(FightManager.FightCount));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendMapInformations(AbstractEntity entity) 
+            => entity.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, Entities.ToArray()));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendInteractiveData(AbstractEntity entity) 
+            => entity.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME(m_interactiveObjects));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SendPaddockInformations(AbstractEntity entity)
+        {
+            if (m_paddock != null)
+                m_paddock.SendInformations(entity);
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ShopExchange : ExchangeBase
+    public sealed class ShopExchange : AbstractExchange
     {
         /// <summary>
         /// 

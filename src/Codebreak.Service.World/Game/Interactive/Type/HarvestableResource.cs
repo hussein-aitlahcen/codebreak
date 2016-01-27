@@ -131,7 +131,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <param name="skill"></param>
         public override void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
-            switch (skill.SkillId)
+            switch (skill.Id)
             {
                 case SkillIdEnum.SKILL_COUPER_BAMBOU:
                 case SkillIdEnum.SKILL_COUPER_BAMBOUSACRE:
@@ -187,7 +187,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
                 case SkillIdEnum.SKILL_COLLECTER_MANGANESE:
                 case SkillIdEnum.SKILL_COLLECTER_DOLOMITE:
                 case SkillIdEnum.SKILL_COLLECTER_SILICATE:
-                    Harvest(character, skill.SkillId);
+                    Harvest(character, skill.Id);
                     break;
             }
         }

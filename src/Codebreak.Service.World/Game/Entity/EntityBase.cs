@@ -295,7 +295,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public GameActionBase CurrentAction
+        public AbstractGameAction CurrentAction
         {
             get;
             set;
