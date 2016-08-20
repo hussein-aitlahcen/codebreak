@@ -19,16 +19,17 @@ namespace Codebreak.Framework.Network
         where TServer : TcpServerBase<TServer, TClient>, new()
         where TClient : TcpClientBase<TClient>, new()
     {
+        public const int MAX_CLIENT = 10000;
+
         /// <summary>
         /// 
         /// </summary>
-        private Socket m_socket;
-        private ObjectPool<SocketAsyncEventArgs> m_sendPool;
-        private ObjectPool<SocketAsyncEventArgs> m_recvPool;
-        private BufferManager m_bufferManager;
-        private ConcurrentStack<int> m_freeId;
-        private ConcurrentDictionary<int, TClient> m_clients;
-        public const int MAX_CLIENT = 10000;
+        private readonly Socket m_socket;
+        private readonly ObjectPool<SocketAsyncEventArgs> m_sendPool;
+        private readonly ObjectPool<SocketAsyncEventArgs> m_recvPool;
+        private readonly BufferManager m_bufferManager;
+        private readonly ConcurrentStack<int> m_freeId;
+        private readonly ConcurrentDictionary<int, TClient> m_clients;
 
         /// <summary>
         /// 
@@ -60,13 +61,7 @@ namespace Codebreak.Framework.Network
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<TClient> Clients
-        {
-            get
-            {
-                return m_clients.Values;
-            }
-        }
+        public IEnumerable<TClient> Clients => m_clients.Values;
 
         /// <summary>
         /// 
@@ -81,7 +76,7 @@ namespace Codebreak.Framework.Network
             m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             m_clients = new ConcurrentDictionary<int, TClient>();
             m_freeId = new ConcurrentStack<int>();
-            for (int i = maxClient; i > 0; i--)
+            for (var i = maxClient; i > 0; i--)
                 m_freeId.Push(i);
         }
 
@@ -166,7 +161,7 @@ namespace Codebreak.Framework.Network
         /// <param name="saea"></param>
         private void ProcessDisconnected(SocketAsyncEventArgs saea)
         {
-            Disconnect((TClient)saea.UserToken);
+            Disconnect(saea);
         }
 
         /// <summary>
@@ -231,10 +226,12 @@ namespace Codebreak.Framework.Network
             StartAccept(saea);
 
             // create new client
-            var client = new TClient();
-            client.Socket = socket;
-            client.Ip = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
-            client.Server = this;
+            var client = new TClient
+            {
+                Socket = socket,
+                Ip = ((IPEndPoint) socket.RemoteEndPoint).Address.ToString(),
+                Server = this
+            };
 
             // add the client
             if (AddClient(client))
@@ -248,7 +245,7 @@ namespace Codebreak.Framework.Network
             else
             {
                 // server busy
-                Disconnect(client);
+                client.Socket.Dispose();
             }
         }
 
@@ -258,16 +255,16 @@ namespace Codebreak.Framework.Network
         /// <param name="saea"></param>
         private void ProcessReceived(SocketAsyncEventArgs saea)
         {
-            var client = (TClient)saea.UserToken;
-
             // client disconnected
             if(saea.BytesTransferred == 0)
             {
                 saea.Completed -= IOCompleted;
-                Disconnect(client);
+                Disconnect(saea);
                 return;
             }
-            
+
+            var client = (TClient)saea.UserToken;
+
             // raise event
             OnDataReceived(client, saea.Buffer, saea.Offset, saea.BytesTransferred);
             
@@ -288,25 +285,13 @@ namespace Codebreak.Framework.Network
         /// 
         /// </summary>
         /// <param name="client"></param>
-        public void Disconnect(TClient client)
+        public void Disconnect(SocketAsyncEventArgs saea)
         {
+            var client = (TClient) saea.UserToken;
+            m_recvPool.Push(saea);
             if (client == null)
                 return;
-            
-            var socket = client.Socket;            
-            socket.Shutdown(SocketShutdown.Both);
-            if (socket.Connected) 
-                socket.Disconnect(false);
-
-            if (client.Id != -1)
-            {
-                m_clients.TryRemove(client.Id, out client);
-                if (client != null)
-                {
-                    m_freeId.Push(client.Id);
-                    OnClientDisconnected(client);
-                }
-            }
+            Disconnect(client);
         }
 
         /// <summary>
@@ -322,6 +307,31 @@ namespace Codebreak.Framework.Network
             var saea = m_sendPool.Pop();
             saea.SetBuffer(data, 0, data.Length);
             AsyncSafe(client.Socket.SendAsync, saea);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        public void Disconnect(TClient client)
+        {
+            var socket = client.Socket;
+            try
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Dispose();
+            }
+            catch { }
+
+            if (client.Id != -1)
+            {
+                m_clients.TryRemove(client.Id, out client);
+                if (client != null)
+                {
+                    m_freeId.Push(client.Id);
+                    OnClientDisconnected(client);
+                }
+            }
         }
 
         /// <summary>
