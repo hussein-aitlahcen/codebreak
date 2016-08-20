@@ -24,6 +24,9 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(SpellBookEntryRepository.Instance);
             base.AddRepository(GuildRepository.Instance);
             base.AddRepository(TaxCollectorRepository.Instance);
+            base.AddRepository(PaddockRepository.Instance);
+            base.AddRepository(MountTemplateRepository.Instance);
+            base.AddRepository(MountRepository.Instance);
             base.AddRepository(CharacterWaypointRepository.Instance);
             base.AddRepository(CharacterGuildRepository.Instance);
             base.AddRepository(CharacterAlignmentRepository.Instance);
@@ -52,8 +55,8 @@ namespace Codebreak.Service.World.Database
             base.AddRepository(FightActionRepository.Instance);
 
             // OLD DATA
-            base.AddRepository(MonstersRepository.Instance);
-            base.AddRepository(SortsRepository.Instance);
+            //base.AddRepository(MonstersRepository.Instance);
+            //base.AddRepository(SortsRepository.Instance);
                         
             base.LoadAll(string.IsNullOrWhiteSpace(dbConnection) ? WorldConfig.WORLD_DB_CONNECTION : dbConnection);
             

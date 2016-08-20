@@ -58,7 +58,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override bool Validate(EntityBase entity)
+        public override bool Validate(AbstractEntity entity)
         {
             if(m_reward != null)
             {
@@ -84,7 +84,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public override int AddItem(EntityBase entity, long guid, int quantity, long price = -1)
+        public override int AddItem(AbstractEntity entity, long guid, int quantity, long price = -1)
         {            
             var added = base.AddItem(entity, guid, quantity, price);
             if(added > 0)
@@ -110,7 +110,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override int RemoveItem(EntityBase entity, long guid, int quantity)
+        public override int RemoveItem(AbstractEntity entity, long guid, int quantity)
         {
             var removed = base.RemoveItem(entity, guid, quantity);
             if (removed > 0)
@@ -135,7 +135,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public override long MoveKamas(EntityBase entity, long quantity)
+        public override long MoveKamas(AbstractEntity entity, long quantity)
         {
             var moved = base.MoveKamas(entity, quantity);
 

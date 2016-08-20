@@ -50,13 +50,13 @@ namespace Codebreak.Service.World.Game.Job.Skill
             var maxCase = job.CraftMaxCase;            
             if(maxCase > 2)
             {
-                message.Append((int)SkillId).Append('~');
+                message.Append((int)Id).Append('~');
                 message.Append(maxCase - 2).Append('~'); // param1
                 message.Append("").Append('~'); // param2
                 message.Append("").Append('~'); // param3
                 message.Append("100,"); // param4
             }
-            message.Append((int)SkillId).Append('~');
+            message.Append((int)Id).Append('~');
             message.Append(maxCase).Append('~'); // param1
             message.Append("").Append('~'); // param2
             message.Append("").Append('~'); // param3

@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameMapTeleportAction : GameActionBase
+    public sealed class GameMapTeleportAction : AbstractGameAction
     {
         /// <summary>
         /// 
@@ -47,7 +47,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="entity"></param>
         /// <param name="mapId"></param>
         /// <param name="cellId"></param>
-        public GameMapTeleportAction(EntityBase entity, int mapId, int cellId)
+        public GameMapTeleportAction(AbstractEntity entity, int mapId, int cellId)
             : base(GameActionTypeEnum.MAP_TELEPORT, entity)
         {
             MapId = mapId;

@@ -23,8 +23,7 @@ namespace Codebreak.Service.World.Database.Repository
         {
             return base.FindAll(spawn => spawn.Type == type && spawn.ZoneId == id);
         }
-
-
+        
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
         }

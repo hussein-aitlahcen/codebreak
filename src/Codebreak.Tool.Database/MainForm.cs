@@ -133,7 +133,7 @@ namespace Codebreak.Tool.Database
         /// <param name="action"></param>
         private void SafeExecute(Action action)
         {
-            base.Invoke((Action)action);
+            Invoke(action);
         }
 
         /// <summary>

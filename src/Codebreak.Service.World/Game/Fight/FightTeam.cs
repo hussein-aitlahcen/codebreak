@@ -549,7 +549,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="entity"></param>
-        public void SendMapFightInfos(EntityBase entity)
+        public void SendMapFightInfos(AbstractEntity entity)
         {
             entity.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_ADD, LeaderId, Fighters.ToArray()));
             foreach (var option in m_blockedOption)            

@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
-        public SkillIdEnum SkillId
+        public SkillIdEnum Id
         {
             get;
             private set;
@@ -25,7 +25,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <summary>
         /// 
         /// </summary>
-        public int ObtainLevel
+        public int RequiredLevel
         {
             get;
             private set;
@@ -44,10 +44,10 @@ namespace Codebreak.Service.World.Game.Job
         /// 
         /// </summary>
         /// <param name="skillId"></param>
-        public JobSkill(SkillIdEnum skillId, int obtainLevel = 1, params int[] tools)
+        public JobSkill(SkillIdEnum id, int requiredLevel = 1, params int[] tools)
         {
-            SkillId = skillId;
-            ObtainLevel = obtainLevel;
+            Id = id;
+            RequiredLevel = requiredLevel;
             Tools = new List<int>(tools);
         }
 
@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <param name="message"></param>
         public virtual void SerializeAs_SkillListMessage(CharacterJobDAO job, StringBuilder message)
         {
-            message.Append((int)SkillId).Append('~');
+            message.Append((int)Id).Append('~');
             message.Append("").Append('~'); // param1
             message.Append("").Append('~'); // param2
             message.Append("").Append('~'); // param3

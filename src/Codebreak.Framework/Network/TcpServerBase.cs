@@ -161,7 +161,8 @@ namespace Codebreak.Framework.Network
         /// <param name="saea"></param>
         private void ProcessDisconnected(SocketAsyncEventArgs saea)
         {
-            Disconnect(saea);
+            m_recvPool.Push(saea);
+            Disconnect((TClient)saea.UserToken);
         }
 
         /// <summary>

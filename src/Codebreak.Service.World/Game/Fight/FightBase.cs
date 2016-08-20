@@ -846,13 +846,13 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public GameFightActionBase CurrentAction
+        public AbstractGameFightAction CurrentAction
         {
             get
             {
                 if (CurrentFighter != null)
-                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is GameFightActionBase)
-                        return (GameFightActionBase)CurrentFighter.CurrentAction;
+                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is AbstractGameFightAction)
+                        return (AbstractGameFightAction)CurrentFighter.CurrentAction;
                 return null;
             }
         }
@@ -1571,7 +1571,7 @@ namespace Codebreak.Service.World.Game.Fight
                     case FightLoopStateEnum.STATE_PROCESS_EFFECT:
                         if (m_processingTargets.Count > 0)
                         {
-                            var castInfos = m_processingTargets.First();
+                            var castInfos = m_processingTargets.First.Value;
                             m_processingTargets.RemoveFirst();
 
                             CurrentProcessingFighter = castInfos.Target;
@@ -1818,7 +1818,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         /// <param name="cellId"></param>
         /// <returns></returns>
-        public bool CanUseWeapon(FighterBase fighter, InventoryItemDAO weapon, int cellId)
+        public bool CanUseWeapon(FighterBase fighter, ItemDAO weapon, int cellId)
         {
             var template = weapon.Template;
 
@@ -2452,7 +2452,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="cellId"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public void Move(EntityBase entity, int cellId, string path)
+        public void Move(AbstractEntity entity, int cellId, string path)
         {
             AddMessage(() =>
             {
@@ -2540,7 +2540,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="actor"></param>
         /// <param name="path"></param>
         /// <param name="cellId"></param>
-        public void MovementFinish(EntityBase entity, MovementPath movementPath, int cellId)
+        public void MovementFinish(AbstractEntity entity, MovementPath movementPath, int cellId)
         {
             var fighter = (FighterBase)entity;
 
@@ -2555,7 +2555,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public void SendMapFightInfos(EntityBase entity)
+        public void SendMapFightInfos(AbstractEntity entity)
         {
             if (State == FightStateEnum.STATE_PLACEMENT)
             {

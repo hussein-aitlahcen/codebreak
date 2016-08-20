@@ -1,4 +1,5 @@
-﻿using Codebreak.Framework.Generic;
+﻿using System.Linq;
+using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Repository;
 
 namespace Codebreak.Service.World.Manager
@@ -21,6 +22,40 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class ExperienceManager : Singleton<ExperienceManager>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="experience"></param>
+        /// <returns></returns>
+        public int GetLevel(ExperienceTypeEnum type, long experience)
+        {
+            int x = 1;
+            while(GetFloor(x, type) < experience)
+            {
+                x++;
+            }
+            return x;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="experience"></param>
+        /// <returns></returns>
+        public long GetFlootCurrent(ExperienceTypeEnum type, long experience)
+            => GetFloor(GetLevel(type, experience), type);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="experience"></param>
+        /// <returns></returns>
+        public long GetFloorNext(ExperienceTypeEnum type, long experience)
+            => GetFloor(GetLevel(type, experience) + 1, type);
+
         /// <summary>
         /// 
         /// </summary>

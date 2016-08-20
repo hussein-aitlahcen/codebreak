@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
         /// <returns></returns>
-        bool ProcessItem(CharacterEntity character, InventoryItemDAO item, GenericEffect effect, long targetId, int targetCell);
+        bool ProcessItem(CharacterEntity character, ItemDAO item, GenericEffect effect, long targetId, int targetCell);
 
         /// <summary>
         /// 

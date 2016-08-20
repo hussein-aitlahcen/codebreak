@@ -163,12 +163,10 @@ namespace Codebreak.Service.World.Manager
                 {
                     var value = m_accountByTicket.ElementAt(i).Value;
                     var elapsed = WorldService.Instance.LastUpdate - value.Time;
-                    if (elapsed >= WorldConfig.RPC_ACCOUNT_TICKET_TIMEOUT)
-                    {
-                        Logger.Debug("Ticket timed out : " + value.Ticket);
-                        m_accountByTicket.Remove(value.Ticket);
-                        RPCManager.Instance.AccountDisconnected(value.Id);
-                    }
+                    if (elapsed < WorldConfig.RPC_ACCOUNT_TICKET_TIMEOUT) continue;
+                    Logger.Debug("Ticket timed out : " + value.Ticket);
+                    m_accountByTicket.Remove(value.Ticket);
+                    RPCManager.Instance.AccountDisconnected(value.Id);
                 }
             }
         }

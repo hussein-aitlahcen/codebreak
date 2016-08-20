@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Job.Skill
             var weaponId = -1;
             if (weapon != null)
                 weaponId = weapon.TemplateId;
-            return ObtainLevel <= level && (Tools.Count == 0 || Tools.Contains(weaponId));
+            return RequiredLevel <= level && (Tools.Count == 0 || Tools.Contains(weaponId));
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Game.Job.Skill
         /// <param name="message"></param>
         public override void SerializeAs_SkillListMessage(Database.Structure.CharacterJobDAO job, StringBuilder message)
         {
-            message.Append((int)SkillId).Append('~');
+            message.Append((int)Id).Append('~');
             message.Append(job.HarvestMinQuantity).Append('~'); // param1
             message.Append(job.HarvestMaxQuantity).Append('~'); // param2
             message.Append("").Append('~'); // param3

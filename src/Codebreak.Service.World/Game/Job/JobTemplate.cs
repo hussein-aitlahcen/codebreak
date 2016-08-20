@@ -64,7 +64,7 @@ namespace Codebreak.Service.World.Game.Job
     {
         SKILL_ACCEDER = 175,
         SKILL_ACHETER = 97,
-        SKILL_ACHETER_1 = 176,
+        SKILL_ACHETER_ENCLOS = 176,
         SKILL_ACTIONNER = 179,
         SKILL_AMELIORER_DES_BOTTES = 163,
         SKILL_AMELIORER_UN_ANNEAU = 168,
@@ -263,7 +263,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <returns></returns>
         public bool HasSkill(CharacterEntity character, int id, int level)
         {
-            return m_skills.Any(skill => (int)skill.SkillId == id && skill.Usable(character, level));
+            return m_skills.Any(skill => (int)skill.Id == id && skill.Usable(character, level));
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace Codebreak.Service.World.Game.Job
         /// <returns></returns>
         public JobSkill GetSkill(CharacterEntity character, int id, int level)
         {
-            return m_skills.Find(skill => (int)skill.SkillId == id && skill.Usable(character, level));
+            return m_skills.Find(skill => (int)skill.Id == id && skill.Usable(character, level));
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace Codebreak.Service.World.Game.Job
             message.Append((int)Id).Append(';');
             foreach(var skill in m_skills)
             {
-                if(skill.ObtainLevel <= job.Level)
+                if(skill.RequiredLevel <= job.Level)
                 {
                     skill.SerializeAs_SkillListMessage(job, message);
                     message.Append(',');

@@ -58,7 +58,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="actor"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public override long MoveKamas(EntityBase actor, long quantity)
+        public override long MoveKamas(AbstractEntity actor, long quantity)
         {
             // On ne peux que retirer des kamas
             if (quantity > 0)
@@ -75,7 +75,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="quantity"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public override int AddItem(EntityBase actor, long guid, int quantity, long price = -1)
+        public override int AddItem(AbstractEntity actor, long guid, int quantity, long price = -1)
         {
             return 0; // should not be able to add an item
         }
@@ -87,7 +87,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        public override int RemoveItem(EntityBase actor, long guid, int quantity)
+        public override int RemoveItem(AbstractEntity actor, long guid, int quantity)
         {
             var item = Storage.GetItem(guid);
             if(item == null)

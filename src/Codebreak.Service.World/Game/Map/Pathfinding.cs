@@ -747,7 +747,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="currentCell"></param>
         /// <param name="encodedPath"></param>
         /// <returns></returns>
-        public static MovementPath IsValidPath(EntityBase entity, MapInstance map, int currentCell, string encodedPath)
+        public static MovementPath IsValidPath(AbstractEntity entity, MapInstance map, int currentCell, string encodedPath)
         {
             var decodedPath = DecodePath(map, currentCell, encodedPath);
             if(decodedPath.TransitCells.Count == 0)
@@ -827,7 +827,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="direction"></param>
         /// <param name="endCell"></param>
         /// <returns></returns>
-        public static int IsValidLine(EntityBase entity, MapInstance map, MovementPath finalPath, int beginCell, int direction, int endCell, int finalCell)
+        public static int IsValidLine(AbstractEntity entity, MapInstance map, MovementPath finalPath, int beginCell, int direction, int endCell, int finalCell)
         {
             var length = -1;
             var actualCell = beginCell;

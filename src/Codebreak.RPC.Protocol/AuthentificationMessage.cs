@@ -30,6 +30,15 @@ namespace Codebreak.RPC.Protocol
         /// <summary>
         /// 
         /// </summary>
+        public string RemoteIp
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public AuthentificationMessage()
         {
         }
@@ -38,9 +47,10 @@ namespace Codebreak.RPC.Protocol
         /// 
         /// </summary>
         /// <param name="password"></param>
-        public AuthentificationMessage(string password)
+        public AuthentificationMessage(string password, string remoteIp)
         {
             Password = password;
+            RemoteIp = remoteIp;
         }
 
         /// <summary>
@@ -49,6 +59,7 @@ namespace Codebreak.RPC.Protocol
         public override void Deserialize()
         {
             Password = base.ReadString();
+            RemoteIp = base.ReadString();
         }
 
         /// <summary>
@@ -57,6 +68,7 @@ namespace Codebreak.RPC.Protocol
         public override void Serialize()
         {
             base.WriteString(Password);
+            base.WriteString(RemoteIp);
         }
     }
 }

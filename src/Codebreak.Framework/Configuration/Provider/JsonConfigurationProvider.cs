@@ -121,8 +121,6 @@ namespace Codebreak.Framework.Configuration.Providers
             }
             catch (Exception)
             {
-                file.Dispose();
-
                 if (File.Exists(Path))
                     File.Delete(Path);
 

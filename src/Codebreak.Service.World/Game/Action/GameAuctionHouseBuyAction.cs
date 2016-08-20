@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameAuctionHouseBuyAction : GameAuctionHouseActionBase
+    public sealed class GameAuctionHouseBuyAction : AbstractGameAuctionHouseAction
     {
         /// <summary>
         /// 

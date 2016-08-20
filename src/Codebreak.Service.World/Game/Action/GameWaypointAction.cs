@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameWaypointAction : GameActionBase
+    public sealed class GameWaypointAction : AbstractGameAction
     {
         /// <summary>
         /// 

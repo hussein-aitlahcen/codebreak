@@ -13,7 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>a781b434</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
@@ -38,17 +39,25 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="ExpressionEvaluator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=90d9f15d622e2348, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ExpressionEvaluator.2.0.2.0\lib\net40\ExpressionEvaluator.dll</HintPath>
+    <Reference Include="ExpressionEvaluator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=90d9f15d622e2348, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ExpressionEvaluator.2.0.4.0\lib\net40\ExpressionEvaluator.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.9.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MySql.Data.6.9.6\lib\net45\MySql.Data.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="PropertyChanged">
-      <HintPath>..\..\packages\PropertyChanged.Fody.1.49.0\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PropertyChanged, Version=1.51.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PropertyChanged.Fody.1.51.3\lib\dotnet\PropertyChanged.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,12 +68,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="log4net">
-      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\CharacterCommand.cs" />
@@ -95,11 +98,14 @@
     <Compile Include="Database\Repository\MapTriggerRepository.cs" />
     <Compile Include="Database\Repository\MonsterGradeRepository.cs" />
     <Compile Include="Database\Repository\MonsterRepository.cs" />
+    <Compile Include="Database\Repository\MountRepository.cs" />
+    <Compile Include="Database\Repository\MountTemplateRepository.cs" />
     <Compile Include="Database\Repository\NpcInstanceRepository.cs" />
     <Compile Include="Database\Repository\NpcQuestionRepository.cs" />
     <Compile Include="Database\Repository\NpcResponseRepository.cs" />
     <Compile Include="Database\Repository\NpcTemplateRepository.cs" />
     <Compile Include="Database\Repository\OLD.cs" />
+    <Compile Include="Database\Repository\PaddockRepository.cs" />
     <Compile Include="Database\Repository\SocialRelationRepository.cs" />
     <Compile Include="Database\Repository\SpellBookEntryRepository.cs" />
     <Compile Include="Database\Repository\TaxCollectorRepository.cs" />
@@ -118,7 +124,7 @@
     <Compile Include="Database\Structure\ExperienceTemplateDAO.cs" />
     <Compile Include="Database\Structure\FightActionDAO.cs" />
     <Compile Include="Database\Structure\GuildDAO.cs" />
-    <Compile Include="Database\Structure\InventoryItemDAO.cs" />
+    <Compile Include="Database\Structure\ItemDAO.cs" />
     <Compile Include="Database\Structure\ItemSetDAO.cs" />
     <Compile Include="Database\Structure\ItemTemplateDAO.cs" />
     <Compile Include="Database\Structure\MapTemplateDAO.cs" />
@@ -128,11 +134,14 @@
     <Compile Include="Database\Structure\MonsterRaceDAO.cs" />
     <Compile Include="Database\Structure\MonsterSpawnDAO.cs" />
     <Compile Include="Database\Structure\MonsterSuperRaceDAO.cs" />
+    <Compile Include="Database\Structure\MountDAO.cs" />
+    <Compile Include="Database\Structure\MountTemplateDAO.cs" />
     <Compile Include="Database\Structure\NpcInstanceDAO.cs" />
     <Compile Include="Database\Structure\NpcQuestionDAO.cs" />
     <Compile Include="Database\Structure\NpcResponseDAO.cs" />
     <Compile Include="Database\Structure\NpcTemplateDAO.cs" />
     <Compile Include="Database\Structure\OLD.cs" />
+    <Compile Include="Database\Structure\PaddockDAO.cs" />
     <Compile Include="Database\Structure\SocialRelationDAO.cs" />
     <Compile Include="Database\Structure\SpellBookEntryDAO.cs" />
     <Compile Include="Database\Structure\SubAreaDAO.cs" />
@@ -144,6 +153,7 @@
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
+    <Compile Include="Game\ActionEffect\ActionList.cs" />
     <Compile Include="Game\ActionEffect\AddBoostEffect.cs" />
     <Compile Include="Game\ActionEffect\AddEnergyEffect.cs" />
     <Compile Include="Game\ActionEffect\AddExperienceEffect.cs" />
@@ -166,18 +176,19 @@
     <Compile Include="Game\ActionEffect\ResetStatsEffect.cs" />
     <Compile Include="Game\ActionEffect\StartFightEffect.cs" />
     <Compile Include="Game\ActionEffect\TeleportEffect.cs" />
-    <Compile Include="Game\Action\GameActionBase.cs" />
+    <Compile Include="Game\Action\AbstractGameAction.cs" />
     <Compile Include="Game\Action\GameActionTypeEnum.cs" />
-    <Compile Include="Game\Action\GameAuctionHouseActionBase.cs" />
+    <Compile Include="Game\Action\AbstractGameAuctionHouseAction.cs" />
     <Compile Include="Game\Action\GameAuctionHouseBuyAction.cs" />
     <Compile Include="Game\Action\GameAuctionHouseSellAction.cs" />
     <Compile Include="Game\Action\GameChallengeRequestAction.cs" />
     <Compile Include="Game\Action\GameCraftPlanExchangeAction.cs" />
     <Compile Include="Game\Action\GameHarvestAction.cs" />
     <Compile Include="Game\Action\GameMerchantExchangeAction.cs" />
+    <Compile Include="Game\Action\GameMountStorageExchangeAction.cs" />
     <Compile Include="Game\Action\GameNpcDialogAction.cs" />
-    <Compile Include="Game\Action\GameExchangeActionBase.cs" />
-    <Compile Include="Game\Action\GameFightActionBase.cs" />
+    <Compile Include="Game\Action\AbstractGameExchangeAction.cs" />
+    <Compile Include="Game\Action\AbstractGameFightAction.cs" />
     <Compile Include="Game\Action\GameFightMovementAction.cs" />
     <Compile Include="Game\Action\GameFightSpellAction.cs" />
     <Compile Include="Game\Action\GameFightWeaponAction.cs" />
@@ -200,28 +211,30 @@
     <Compile Include="Game\Auction\AuctionHouseInstance.cs" />
     <Compile Include="Game\Condition\ConditionParser.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
-    <Compile Include="Game\Entity\BankInventory.cs" />
-    <Compile Include="Game\Entity\CharacterInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\BankInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\CharacterInventory.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
-    <Compile Include="Game\Entity\EntityInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\EntityInventory.cs" />
     <Compile Include="Game\Entity\EntityBase.cs" />
-    <Compile Include="Game\Entity\InventoryBag.cs" />
+    <Compile Include="Game\Entity\Inventory\InventoryBag.cs" />
     <Compile Include="Game\Entity\MerchantEntity.cs" />
     <Compile Include="Game\Entity\MonsterEntity.cs" />
     <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
+    <Compile Include="Game\Entity\MountEntity.cs" />
     <Compile Include="Game\Entity\NonPlayerCharacterEntity.cs" />
-    <Compile Include="Game\Entity\PersistentInventory.cs" />
-    <Compile Include="Game\Entity\StorageInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\PersistentInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\StorageInventory.cs" />
     <Compile Include="Game\Entity\TaxCollectorEntity.cs" />
-    <Compile Include="Game\Entity\TaxCollectorInventory.cs" />
+    <Compile Include="Game\Entity\Inventory\TaxCollectorInventory.cs" />
     <Compile Include="Game\Exchange\AuctionHouseBuyExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseExchange.cs" />
     <Compile Include="Game\Exchange\AuctionHouseSellExchange.cs" />
     <Compile Include="Game\Exchange\CraftPlanExchange.cs" />
     <Compile Include="Game\Exchange\MerchantExchange.cs" />
+    <Compile Include="Game\Exchange\MountStorageExchange.cs" />
     <Compile Include="Game\Exchange\PersonalShopExchange.cs" />
     <Compile Include="Game\Exchange\EntityExchange.cs" />
-    <Compile Include="Game\Exchange\ExchangeBase.cs" />
+    <Compile Include="Game\Exchange\AbstractExchange.cs" />
     <Compile Include="Game\Exchange\NpcExchange.cs" />
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
     <Compile Include="Game\Exchange\ShopExchange.cs" />
@@ -325,6 +338,7 @@
     <Compile Include="Game\Interactive\InteractiveObject.cs" />
     <Compile Include="Game\Interactive\Type\CraftPlan.cs" />
     <Compile Include="Game\Interactive\Type\HarvestableResource.cs" />
+    <Compile Include="Game\Interactive\Type\PaddockDoor.cs" />
     <Compile Include="Game\Interactive\Type\Pheonix.cs" />
     <Compile Include="Game\Interactive\Type\TrashCan.cs" />
     <Compile Include="Game\Interactive\Type\Waypoint.cs" />
@@ -339,6 +353,8 @@
     <Compile Include="Game\Map\MapCell.cs" />
     <Compile Include="Game\Map\MapInstance.cs" />
     <Compile Include="Game\Map\Pathfinding.cs" />
+    <Compile Include="Game\Mount\Fecondation.cs" />
+    <Compile Include="Game\Mount\Paddock.cs" />
     <Compile Include="Game\Party\PartyInstance.cs" />
     <Compile Include="Game\Spawn\SpawnQueue.cs" />
     <Compile Include="Game\Spell\SpellBook.cs" />
@@ -360,6 +376,7 @@
     <Compile Include="Frame\MapFrame.cs" />
     <Compile Include="Frame\InventoryFrame.cs" />
     <Compile Include="Frame\SpellFrame.cs" />
+    <Compile Include="Game\Stats\RandomStatistics.cs" />
     <Compile Include="Manager\ClientManager.cs" />
     <Compile Include="Manager\ActionEffectManager.cs" />
     <Compile Include="Manager\AreaManager.cs" />
@@ -374,6 +391,7 @@
     <Compile Include="Manager\JobManager.cs" />
     <Compile Include="Manager\MapManager.cs" />
     <Compile Include="Manager\NpcManager.cs" />
+    <Compile Include="Manager\PaddockManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Manager\SpawnManager.cs" />
@@ -409,7 +427,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
-    <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -419,9 +436,9 @@
       <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Activez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est le suivant : {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Fody.1.28.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Fody.1.28.0\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
   </Target>
-  <Import Project="..\..\packages\Fody.1.28.0\build\Fody.targets" Condition="Exists('..\..\packages\Fody.1.28.0\build\Fody.targets')" />
+  <Import Project="..\..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

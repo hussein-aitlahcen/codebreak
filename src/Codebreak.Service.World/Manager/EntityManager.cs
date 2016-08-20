@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Game.Action;
@@ -24,6 +25,7 @@ namespace Codebreak.Service.World.Manager
         private Dictionary<string, CharacterEntity> m_characterByName;
         
         private Dictionary<long, TaxCollectorEntity> m_taxCollectorById;
+        private Dictionary<long, MountEntity> m_mountById;
 
         /// <summary>
         /// 
@@ -49,6 +51,8 @@ namespace Codebreak.Service.World.Manager
             m_characterByPseudo = new Dictionary<string, CharacterEntity>();
             
             m_taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
+
+            m_mountById = new Dictionary<long, MountEntity>();
         }
 
         /// <summary>
@@ -58,7 +62,9 @@ namespace Codebreak.Service.World.Manager
         {
             foreach(var character in CharacterRepository.Instance.All)            
                 if(character.Merchant)                
-                    EntityManager.Instance.CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
+                    CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
+            foreach (var mount in MountRepository.Instance.All)
+                CreateMount(mount);
         }
         
         /// <summary>
@@ -119,6 +125,18 @@ namespace Codebreak.Service.World.Manager
             m_merchantByName.Add(merchant.Name.ToLower(), merchant);
             m_merchantByAccount.Add(merchant.AccountId, merchant);
             return merchant;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mountDAO"></param>
+        /// <returns></returns>
+        public MountEntity CreateMount(MountDAO mountDAO)
+        {
+            var mount = new MountEntity(mountDAO);
+            m_mountById.Add(mount.UniqueId, mount);
+            return mount;
         }
         
         /// <summary>
@@ -270,5 +288,17 @@ namespace Codebreak.Service.World.Manager
                 return m_merchantByName[name];
             return null;
         }    
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MountEntity GetMountById(long id)
+        {
+            if (m_mountById.ContainsKey(id))
+                return m_mountById[id];
+            return null;
+        }
     }
 }

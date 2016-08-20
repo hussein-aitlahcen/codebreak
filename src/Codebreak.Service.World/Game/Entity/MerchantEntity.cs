@@ -51,7 +51,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             return exchangeType == ExchangeTypeEnum.EXCHANGE_MERCHANT;
         }
-        
+                
         /// <summary>
         /// 
         /// </summary>

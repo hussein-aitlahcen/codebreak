@@ -27,6 +27,12 @@ namespace Codebreak.Service.Auth.RPC
             set;
         }
 
+        public string RemoteIp
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -35,7 +41,10 @@ namespace Codebreak.Service.Auth.RPC
             get;
             set;
         }
-
+                
+        /// <summary>
+        /// 
+        /// </summary>
         public List<long> Players
         {
             get;

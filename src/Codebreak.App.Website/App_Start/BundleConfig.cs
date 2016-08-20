@@ -9,7 +9,7 @@ namespace Codebreak.App.Website
         public static void RegisterBundles(BundleCollection bundles)
         {
             var appBundle = new ScriptBundle("~/bundles/app").Include(
-                        "~/Content/js/app.js");
+                        "~/Content/js/site/app.js");
             appBundle.Transforms.Clear();
 
             bundles.Add(appBundle);
@@ -50,42 +50,31 @@ namespace Codebreak.App.Website
                         "~/Content/js/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
-                        "~/Content/css/bootstrap*"));
+                        "~/Content/css/bs/bootstrap*"));
 
             // APP css base
             bundles.Add(new StyleBundle("~/Content/app").Include(
-                        "~/Content/css/loading-bar.css",
-                        "~/Content/css/app.css",
-                        "~/Content/css/font-awesome.css"));
+                        "~/Content/css/bs/loading-bar.css",
+                        "~/Content/css/site/app.css",
+                        "~/Content/css/bs/font-awesome.css"));
 
             bundles.Add(new StyleBundle("~/Content/chat").Include(
-                        "~/Content/css/chat.css"));
+                        "~/Content/css/site/chat.css"));
 
             bundles.Add(new StyleBundle("~/Content/home").Include(
-                        "~/Content/css/home.css"));
+                        "~/Content/css/site/home.css"));
 
             bundles.Add(new StyleBundle("~/Content/ladder").Include(
-                        "~/Content/css/ladder.css"));
+                        "~/Content/css/site/ladder.css"));
 
             bundles.Add(new StyleBundle("~/Content/social").Include(
-                        "~/Content/css/social.css"));
+                        "~/Content/css/site/social.css"));
 
             bundles.Add(new StyleBundle("~/Content/team").Include(
-                        "~/Content/css/team.css"));
+                        "~/Content/css/site/team.css"));
             
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
-                        "~/Content/themes/base/jquery.ui.core.css",
-                        "~/Content/themes/base/jquery.ui.resizable.css",
-                        "~/Content/themes/base/jquery.ui.selectable.css",
-                        "~/Content/themes/base/jquery.ui.accordion.css",
-                        "~/Content/themes/base/jquery.ui.autocomplete.css",
-                        "~/Content/themes/base/jquery.ui.button.css",
-                        "~/Content/themes/base/jquery.ui.dialog.css",
-                        "~/Content/themes/base/jquery.ui.slider.css",
-                        "~/Content/themes/base/jquery.ui.tabs.css",
-                        "~/Content/themes/base/jquery.ui.datepicker.css",
-                        "~/Content/themes/base/jquery.ui.progressbar.css",
-                        "~/Content/themes/base/jquery.ui.theme.css"));
+                        "~/Content/css/bs/base/*.css"));
         }
     }
 }

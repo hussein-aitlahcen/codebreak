@@ -1,0 +1,255 @@
+﻿
+/* Shared */
+.highlight {
+    -webkit-animation: highlight-fade 1s ease-in 1;
+    animation: highlight-fade 1s ease-in 1;
+}
+
+@-webkit-keyframes highlight-fade {   
+   0% {background: #F2FFA6;}
+   100% {background: white;}
+}
+
+@keyframes highlight-fade {
+   0% {background: #F2FFA6;}
+   100% {background: white;}
+}
+
+/* Layers level */
+.z-layer-1 {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 1.5px 4px rgba(0, 0, 0, 0.24),
+        0 1.5px 6px rgba(0, 0, 0, 0.12);
+}
+
+.z-layer-2 {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.23),
+        0 3px 12px rgba(0, 0, 0, 0.16);
+}
+
+.z-layer-3 {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.23),
+        0 10px 40px rgba(0, 0, 0, 0.19);
+}
+
+.z-layer-4 {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 10px 20px rgba(0, 0, 0, 0.22),
+        0 14px 56px rgba(0, 0, 0, 0.25);
+}
+
+.z-layer-5 {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 15px 24px rgba(0, 0, 0, 0.22),
+        0 19px 76px rgba(0, 0, 0, 0.3);
+}
+
+.bg-gray {
+    background-color: gray;
+}
+
+hr { 
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border: 1px solid #D9D9D9;
+} 
+
+.green {
+    color: green;
+}
+
+.contained {
+    padding: 30px;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.btn-info {
+    background-color: #546BA8;
+}
+
+.btn-info:hover {
+    background-color: #C1022D;
+}
+
+/* Navbar */
+.navbar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.navbar-default .navbar-brand {
+  color: #687074;
+  font-weight: bold;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: black;
+  background-color: transparent;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #687074;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: black;
+  background-color: transparent;
+}
+
+html * {
+}
+
+
+/* Body */
+body {
+    padding-top: 10px;
+    font-family:"Open Sans",helvetica,arial !important;
+}
+
+/* Footer */
+footer {
+    color: gray;
+	margin-top: 50px;
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+footer h4 {
+    color: #646464;
+}
+
+/* Copyright */
+.copyright, footer {
+    width: 100%;
+}
+
+.copyright {
+    padding-top: 30px;
+    padding-bottom: 30px;
+	background: #3e4753;
+    border: 1.5px solid black;
+}
+
+.copyright a {    
+    color: #CCCCCC;
+    font-size: 0.8em;
+}
+
+.copyright a:hover {    
+    color: white;
+    font-size: 0.8em;
+}
+
+/* Language selection */
+.lang-selection:hover {
+    color: black;
+}
+
+.lang-selection {
+    color: gray;
+}
+
+/* Breadcrum */
+.breadcrumbs {
+    margin-top: -12px;
+	padding-bottom: 10px;
+}
+
+.breadcrumbs h1 {
+	color: #686868;
+	font-size: 30px;
+	margin-top: 12px;
+}
+
+.breadcrumb { 
+    top: 10px;
+    position: relative;
+	background: none;
+}
+
+/* Content */
+.content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background:
+        url('/Content/img/dofus/breeds/sacrier.png') no-repeat right center,
+        url('/Content/img/dofus/breeds/iop.jpg') no-repeat left center;
+    background-size: 25% auto, 13% auto;
+}
+
+#main-content {
+    background-color: white;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.btn-register-validate, .btn-login-validate {
+    width: 100%;
+}
+
+.alert {
+    color: black;
+}
+
+
+/* Loader-spin */
+.loader-spin {
+    z-index: 10;
+    position: fixed;
+    top: 5px;
+    left: 5px;
+}
+
+/* Loading bar */
+#loading-bar .bar {
+    -webkit-transition: width 350ms;
+    -moz-transition: width 350ms;
+    -o-transition: width 350ms;
+    transition: width 350ms;
+    background: #29d;
+    position: fixed;
+    z-index: 10002;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-bottom-right-radius: 1px;
+    border-top-right-radius: 1px;
+}
+
+#loading-bar-spinner {
+    display: block;
+    position: fixed;
+    z-index: 10002;
+    top: 35px;
+    left: 20px;
+}
+
+#loading-bar-spinner .spinner-icon {
+    width: 30px;
+    height: 30px;
+    border: solid 2px transparent;
+    border-top-color: #29d;
+    border-left-color: #29d;
+    border-radius: 20px;
+    -webkit-animation: loading-bar-spinner 400ms linear infinite;
+    -moz-animation: loading-bar-spinner 400ms linear infinite;
+    -ms-animation: loading-bar-spinner 400ms linear infinite;
+    -o-animation: loading-bar-spinner 400ms linear infinite;
+    animation: loading-bar-spinner 400ms linear infinite;
+}

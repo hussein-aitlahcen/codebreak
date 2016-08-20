@@ -23,7 +23,7 @@ namespace Codebreak.Tool.Convert
         private static string OUTPUT_TRIGGER_FOLDER = "./trigger/output/";
         private static string OUTPUT_TRIGGER_FILE = OUTPUT_TRIGGER_FOLDER + "result.sql";
         private static string REAL_TRIGGER_QUERY = "insert into maptrigger values ('{0}', '{1}', '', '2005:mapId={2},cellId={3}');";
-        private static string REGEX_TRIGGER_QUERY = @"VALUES \('(?<MapId>[0-9]*)', '(?<CellId>[0-9]*)'.*'(?<NextMapId>[0-9]*),(?<NextCellId>[0-9]*)'";
+        private static string REGEX_TRIGGER_QUERY = @"VALUES\((?<MapId>[0-9]*), (?<CellId>[0-9]*).*'(?<NextMapId>[0-9]*),(?<NextCellId>[0-9]*)'";
 
         private static string INPUT_JSON_FOLDER = "./json/input/";
         private static string OUTPUT_JSON_FOLDER = "./json/output/";

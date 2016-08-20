@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <summary>
         /// 
         /// </summary>
-        private int m_clients;
+        private int m_craftersCount;
 
         /// <summary>
         /// 
@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// <param name="skill"></param>
         public override void UseWithSkill(CharacterEntity character, JobSkill skill)
         {
-            switch(skill.SkillId)
+            switch(skill.Id)
             {
                 case SkillIdEnum.SKILL_SCIER:
                 case SkillIdEnum.SKILL_COUDRE_UN_CHAPEAU:
@@ -91,7 +91,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         {
             character.CraftStart(this, skill);
 
-            m_clients++;
+            m_craftersCount++;
 
             base.UpdateFrame(FRAME_CRAFTING, FRAME_CRAFTING, true);
         }
@@ -101,9 +101,9 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         /// </summary>
         public void StopCraft()
         {
-            m_clients--;
+            m_craftersCount--;
 
-            if (m_clients == 0)
+            if (m_craftersCount == 0)
                 base.UpdateFrame(FRAME_STOP_CRAFT, FRAME_NORMAL, true);
         }
     }

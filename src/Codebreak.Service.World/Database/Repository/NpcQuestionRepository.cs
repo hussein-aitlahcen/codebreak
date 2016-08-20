@@ -55,7 +55,9 @@ namespace Codebreak.Service.World.Database.Repository
         /// <returns></returns>
         public NpcQuestionDAO GetById(int questionId)
         {
-            return m_questionById[questionId];
+            if(m_questionById.ContainsKey(questionId))
+                return m_questionById[questionId];
+            return null;
         }
         
         public override void UpdateAll(MySql.Data.MySqlClient.MySqlConnection connection, MySql.Data.MySqlClient.MySqlTransaction transaction)

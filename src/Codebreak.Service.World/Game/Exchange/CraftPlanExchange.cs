@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public sealed class CraftPlanExchange : ExchangeBase, IValidableExchange, IRetryableExchange
+    public sealed class CraftPlanExchange : AbstractExchange, IValidableExchange, IRetryableExchange
     {
         private const int LOOP_OK = 1;
         private const int LOOP_INTERUPT = 2;
@@ -84,7 +84,7 @@ namespace Codebreak.Service.World.Game.Exchange
             m_plan = plan;
             Character = character;
             Skill = (CraftSkill)skill;
-            Job = Character.CharacterJobs.GetJob(skill.SkillId);
+            Job = Character.CharacterJobs.GetJob(skill.Id);
             MaxCase = Job.CraftMaxCase;
         }
 
@@ -93,7 +93,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         protected override string SerializeAs_ExchangeCreate()
         {
-            return MaxCase + ";" + (int)Skill.SkillId;
+            return MaxCase + ";" + (int)Skill.Id;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public override int AddItem(EntityBase entity, long guid, int quantity, long price = -1)
+        public override int AddItem(AbstractEntity entity, long guid, int quantity, long price = -1)
         {
             var item = Character.Inventory.GetItem(guid);
             if (item == null)
@@ -156,7 +156,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <param name="entity"></param>
         /// <param name="guid"></param>
         /// <param name="quantity"></param>
-        public override int RemoveItem(EntityBase entity, long guid, int quantity)
+        public override int RemoveItem(AbstractEntity entity, long guid, int quantity)
         {
             if (m_caseItems.ContainsKey(guid))
             {
@@ -214,7 +214,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public bool Validate(EntityBase entity)
+        public bool Validate(AbstractEntity entity)
         {
             Character.CachedBuffer = true;
 

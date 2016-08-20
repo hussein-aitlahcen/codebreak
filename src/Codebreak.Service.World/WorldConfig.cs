@@ -261,6 +261,9 @@ namespace Codebreak.Service.World
         public static string RPC_IP = "127.0.0.1";
 
         [Configurable()]
+        public static string RPC_REMOTE_IP = "127.0.0.1";
+
+        [Configurable()]
         public static int RPC_PORT = 4321;
 
         [Configurable()]

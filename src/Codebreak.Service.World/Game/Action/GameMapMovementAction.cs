@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Action
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameMapMovementAction : GameActionBase
+    public sealed class GameMapMovementAction : AbstractGameAction
     {
         /// <summary>
         /// 
@@ -65,7 +65,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="path"></param>
-        public GameMapMovementAction(EntityBase entity, MovementPath path)
+        public GameMapMovementAction(AbstractEntity entity, MovementPath path)
             : base(GameActionTypeEnum.MAP_MOVEMENT, entity, (long)path.MovementTime)
         {
             Path = path;

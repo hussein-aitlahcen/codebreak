@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Database.Repository
     /// <summary>
     /// 
     /// </summary>
-    public sealed class InventoryItemRepository : Repository<InventoryItemRepository, InventoryItemDAO>
+    public sealed class InventoryItemRepository : Repository<InventoryItemRepository, ItemDAO>
     {
         /// <summary>
         /// 
@@ -37,7 +37,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public override void OnObjectAdded(InventoryItemDAO item)
+        public override void OnObjectAdded(ItemDAO item)
         {
             if (item.Id >= m_nextItemId)
                 m_nextItemId = item.Id + 1;
@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        public InventoryItemDAO GetById(long itemId)
+        public ItemDAO GetById(long itemId)
         {
             return Find(item => item.Id == itemId);
         }
@@ -59,7 +59,7 @@ namespace Codebreak.Service.World.Database.Repository
         /// <param name="ownerType"></param>
         /// <param name="ownerId"></param>
         /// <returns></returns>
-        public IEnumerable<InventoryItemDAO> GetByOwner(int ownerType, long ownerId)
+        public IEnumerable<ItemDAO> GetByOwner(int ownerType, long ownerId)
         {
             return FindAll(item => item.OwnerType == ownerType && item.OwnerId == ownerId);
         }
@@ -108,9 +108,9 @@ namespace Codebreak.Service.World.Database.Repository
         /// 
         /// </summary>
         /// <returns></returns>
-        public InventoryItemDAO Create(int templateId, long ownerId, int quantity, GenericStats statistics, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
+        public ItemDAO Create(int templateId, long ownerId, int quantity, GenericStats statistics, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
         {
-            var instance = new InventoryItemDAO();
+            var instance = new ItemDAO();
             instance.Id = NextItemId;
             instance.OwnerId = -1;
             instance.TemplateId = templateId;

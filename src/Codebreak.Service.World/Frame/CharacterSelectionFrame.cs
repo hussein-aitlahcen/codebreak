@@ -108,30 +108,10 @@ namespace Codebreak.Service.World.Frame
             client.CurrentCharacter = character;
             client.CurrentCharacter.AddMessage(() =>
             {
-                client.FrameManager.RemoveFrame(CharacterSelectionFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
-
-                client.CurrentCharacter.CachedBuffer = true;
-                client.CurrentCharacter.Dispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
-                client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.SpellBook));
-                client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
-                client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
-                client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST()); 
-                if (client.CurrentCharacter.GuildMember != null)
-                    client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.GuildMember.Guild, client.CurrentCharacter.GuildMember.Power));
-                if(client.CurrentCharacter.AlignmentEnabled)
-                    client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
-                client.CurrentCharacter.Dispatch(WorldMessage.JOB_SKILL(client.CurrentCharacter.CharacterJobs));
-                client.CurrentCharacter.Dispatch(WorldMessage.JOB_XP(client.CurrentCharacter.CharacterJobs.Jobs));
-                client.CurrentCharacter.Dispatch(WorldMessage.EMOTES_LIST(client.CurrentCharacter.EmoteCapacity));
-                client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
-                client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(client.CurrentCharacter.Restriction));
-                client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
-                client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
-                client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
-                client.CurrentCharacter.CachedBuffer = false;
+                CharacterConnectSend(client);
             });
         }
 
@@ -493,56 +473,62 @@ namespace Codebreak.Service.World.Frame
             WorldService.Instance.AddUpdatable(client.CurrentCharacter);
 
             client.CurrentCharacter.AddMessage(() =>
-                {
-                    client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
-                    client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
-                    client.CurrentCharacter.FrameManager.AddFrame(SpellFrame.Instance);
-                    client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
+            {
+                client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
+                client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
+                client.CurrentCharacter.FrameManager.AddFrame(SpellFrame.Instance);
+                client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
+                CharacterConnectSend(client);
+                client.Account.LastConnectionTime = DateTime.Now;
+                client.Account.LastConnectionIP = client.Ip;
+            });
+        }
 
-                    client.CurrentCharacter.CachedBuffer = true;
-                    client.CurrentCharacter.Dispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
-                    client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.SpellBook));
-                    client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
-                    client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
-                    client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST()); 
-                    if (client.CurrentCharacter.AlignmentEnabled)
-                        client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
-                    client.CurrentCharacter.Dispatch(WorldMessage.EMOTES_LIST(client.CurrentCharacter.EmoteCapacity));
-                    client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
-                    client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(client.CurrentCharacter.Restriction));
-                    client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
-                    if (client.CurrentCharacter.GuildMember != null)
-                        client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.GuildMember.Guild, client.CurrentCharacter.GuildMember.Power));
-                    client.CurrentCharacter.Dispatch(WorldMessage.JOB_SKILL(client.CurrentCharacter.CharacterJobs));
-                    client.CurrentCharacter.Dispatch(WorldMessage.JOB_XP(client.CurrentCharacter.CharacterJobs.Jobs));
-                    client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
-                    client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
-                    client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
-                        (
-                            InformationTypeEnum.INFO,
-                            InformationEnum.INFO_BASIC_LAST_CONNECTION,
-                            client.Account.LastConnectionTime.Year.ToString(),
-                            client.Account.LastConnectionTime.Month.ToString(),
-                            client.Account.LastConnectionTime.Day.ToString(),
-                            client.Account.LastConnectionTime.Hour.ToString(),
-                            client.Account.LastConnectionTime.Minute.ToString(),
-                            client.Account.LastConnectionIP
-                        ));
-                    client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
-                        (
-                            InformationTypeEnum.INFO,
-                            InformationEnum.INFO_BASIC_CURRENT_IP,
-                            client.Ip
-                        ));
-                    client.CurrentCharacter.Dispatch(WorldMessage.FRIENDS_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Friends));
-                    client.CurrentCharacter.Dispatch(WorldMessage.ENNEMIES_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Ennemies));
-                    client.CurrentCharacter.Inventory.SendSets();
-                    client.CurrentCharacter.Dispatch(WorldMessage.SERVER_INFO_MESSAGE(EntityManager.Instance.OnlinePlayers + " player(s) connected."));
-                    client.CurrentCharacter.CachedBuffer = false;
-
-                    client.Account.LastConnectionTime = DateTime.Now;
-                    client.Account.LastConnectionIP = client.Ip;
-                });
+        private void CharacterConnectSend(WorldClient client)
+        {
+            client.FrameManager.RemoveFrame(CharacterSelectionFrame.Instance);
+            client.CurrentCharacter.CachedBuffer = true;
+            client.CurrentCharacter.Dispatch(WorldMessage.CHARACTER_SELECTION_SUCCESS(client.CurrentCharacter));
+            client.CurrentCharacter.Dispatch(WorldMessage.SPELLS_LIST(client.CurrentCharacter.SpellBook));
+            client.CurrentCharacter.Dispatch(WorldMessage.BASIC_DATE());
+            client.CurrentCharacter.Dispatch(WorldMessage.BASIC_TIME());
+            client.CurrentCharacter.Dispatch(WorldMessage.AREAS_LIST());
+            if (client.CurrentCharacter.AlignmentEnabled)
+                client.CurrentCharacter.Dispatch(WorldMessage.SPECIALISATION_SET(client.CurrentCharacter.AlignmentId));
+            client.CurrentCharacter.Dispatch(WorldMessage.EMOTES_LIST(client.CurrentCharacter.EmoteCapacity));
+            client.CurrentCharacter.Dispatch(WorldMessage.CHAT_ENABLED_CHANNELS());
+            client.CurrentCharacter.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(client.CurrentCharacter.Restriction));
+            client.CurrentCharacter.Dispatch(WorldMessage.INVENTORY_WEIGHT(0, 2000));
+            if (client.CurrentCharacter.GuildMember != null)
+                client.CurrentCharacter.Dispatch(WorldMessage.GUILD_STATS(client.CurrentCharacter.GuildMember.Guild, client.CurrentCharacter.GuildMember.Power));
+            client.CurrentCharacter.Dispatch(WorldMessage.JOB_SKILL(client.CurrentCharacter.CharacterJobs));
+            client.CurrentCharacter.Dispatch(WorldMessage.JOB_XP(client.CurrentCharacter.CharacterJobs.Jobs));
+            client.CurrentCharacter.Dispatch(WorldMessage.FRIENDS_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Friends));
+            client.CurrentCharacter.Dispatch(WorldMessage.ENNEMIES_LIST_ON_CONNECT(client.CurrentCharacter, client.CurrentCharacter.Ennemies));
+            client.CurrentCharacter.SendMountEquipped();
+            client.CurrentCharacter.SendMountXpShare();
+            client.CurrentCharacter.Inventory.SendSets();
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_WELCOME));
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_SERVER_BETA));
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
+                (
+                    InformationTypeEnum.INFO,
+                    InformationEnum.INFO_BASIC_LAST_CONNECTION,
+                    client.Account.LastConnectionTime.Year.ToString(),
+                    client.Account.LastConnectionTime.Month.ToString(),
+                    client.Account.LastConnectionTime.Day.ToString(),
+                    client.Account.LastConnectionTime.Hour.ToString(),
+                    client.Account.LastConnectionTime.Minute.ToString(),
+                    client.Account.LastConnectionIP
+                ));
+            client.CurrentCharacter.Dispatch(WorldMessage.INFORMATION_MESSAGE
+                (
+                    InformationTypeEnum.INFO,
+                    InformationEnum.INFO_BASIC_CURRENT_IP,
+                    client.Ip
+                ));
+            client.CurrentCharacter.Dispatch(WorldMessage.SERVER_INFO_MESSAGE(EntityManager.Instance.OnlinePlayers + " player(s) connected."));
+            client.CurrentCharacter.CachedBuffer = false;
         }
     }
 }
