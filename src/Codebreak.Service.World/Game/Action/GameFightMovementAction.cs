@@ -28,7 +28,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="path"></param>
-        public GameFightMovementAction(FighterBase entity, MovementPath path)
+        public GameFightMovementAction(AbstractFighter entity, MovementPath path)
             : base(GameActionTypeEnum.MAP_MOVEMENT, entity, entity.Type == EntityTypeEnum.TYPE_CHARACTER ? 5000 : (long)path.MovementTime)
         {
             Path = path;

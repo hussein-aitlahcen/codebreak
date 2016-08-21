@@ -102,26 +102,23 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public override IEnumerable<ItemDAO> RemoveItems()
         {
+            CachedBuffer = true;
             foreach (var item in Items.ToArray())
             {
                 if (item.IsEquiped)
-                    if (item.IsBoostEquiped)
-                        Entity.Statistics.UnMerge(StatsType.TYPE_BOOST, item.Statistics);
-                    else
-                        Entity.Statistics.UnMerge(StatsType.TYPE_ITEM, item.Statistics);
-
+                    Entity.Statistics.UnMerge(item.IsBoostEquiped ? StatsType.TYPE_BOOST : StatsType.TYPE_ITEM,
+                        item.Statistics);
                 item.SlotId = (int)ItemSlotEnum.SLOT_INVENTORY;
-
                 yield return base.RemoveItem(item.Id, item.Quantity);
             }
-
+            CachedBuffer = false;
             m_entityLookRefresh = true;
         }    
  
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="itemId"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
         public override ItemDAO RemoveItem(long itemId, int quantity = 1)
@@ -141,6 +138,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="item"></param>
         /// <param name="slot"></param>
+        /// <param name="quantity"></param>
         public void MoveItem(ItemDAO item, ItemSlotEnum slot, int quantity = 1)
         {
             if (slot == item.Slot)
@@ -172,13 +170,13 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     Entity.MovementHandler.Dispatch(WorldMessage.ENTITY_OBJECT_ACTUALIZE(Entity));
 
-                    base.CachedBuffer = true;
+                    CachedBuffer = true;
                     if (!merged)
-                        base.Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, item.SlotId));
-                    base.Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
+                        Dispatch(WorldMessage.OBJECT_MOVE_SUCCESS(item.Id, item.SlotId));
+                    Dispatch(WorldMessage.ACCOUNT_STATS((CharacterEntity)Entity));
                     if (item.Template.SetId != 0)                    
-                        base.Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));                    
-                    base.CachedBuffer = false;
+                        Dispatch(WorldMessage.ITEM_SET(item.Template.Set, Items.Where(entry => entry.Template.SetId == item.Template.SetId && entry.IsEquiped)));                    
+                    CachedBuffer = false;
                 }
                 return;
             }

@@ -601,13 +601,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// </summary>
         /// <returns></returns>
         [ProtoIgnore]
-        public Dictionary<EffectEnum, GenericEffect> Effects
-        {
-            get
-            {
-                return m_effects;
-            }
-        }
+        public Dictionary<EffectEnum, GenericEffect> Effects => m_effects;
 
         /// <summary>
         /// 

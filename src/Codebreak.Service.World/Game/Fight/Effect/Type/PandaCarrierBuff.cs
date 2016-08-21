@@ -11,14 +11,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PandaCarrierBuff : BuffBase
+    public sealed class PandaCarrierBuff : AbstractSpellBuff
     { 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
-        public PandaCarrierBuff(CastInfos castInfos, FighterBase target)
+        public PandaCarrierBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_ENDMOVE, DecrementType.TYPE_ENDMOVE)
         {
             Caster.StateManager.AddState(this);

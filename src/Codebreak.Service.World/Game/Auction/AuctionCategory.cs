@@ -65,13 +65,7 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return FirstOrDefault() == null;
-            }
-        }
+        public bool IsEmpty => FirstOrDefault() == null;
 
         /// <summary>
         /// 

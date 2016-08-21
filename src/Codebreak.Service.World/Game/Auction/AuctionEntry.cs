@@ -19,68 +19,32 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        public long ItemId
-        {
-            get
-            {
-                return m_databaseRecord.ItemId;
-            }
-        }
+        public long ItemId => m_databaseRecord.ItemId;
 
         /// <summary>
         /// 
         /// </summary>
-        public int AuctionHouseId
-        {
-            get
-            {
-                return m_databaseRecord.AuctionHouseId;
-            }
-        }
+        public int AuctionHouseId => m_databaseRecord.AuctionHouseId;
 
         /// <summary>
         /// 
         /// </summary>
-        public long OwnerId
-        {
-            get
-            {
-                return m_databaseRecord.OwnerId;
-            }
-        }
+        public long OwnerId => m_databaseRecord.OwnerId;
 
         /// <summary>
         /// 
         /// </summary>
-        public long Price
-        {
-            get
-            {
-                return m_databaseRecord.Price;
-            }
-        }
+        public long Price => m_databaseRecord.Price;
 
         /// <summary>
         /// 
         /// </summary>
-        public DateTime ExpireDate
-        {
-            get
-            {
-                return m_databaseRecord.ExpireDate;
-            }
-        }
+        public DateTime ExpireDate => m_databaseRecord.ExpireDate;
 
         /// <summary>
         /// 
         /// </summary>
-        public int HoursLeft
-        {
-            get
-            {
-                return (int)Math.Floor(ExpireDate.Subtract(DateTime.Now).TotalHours);
-            }
-        }
+        public int HoursLeft => (int)Math.Floor(ExpireDate.Subtract(DateTime.Now).TotalHours);
 
         /// <summary>
         /// 

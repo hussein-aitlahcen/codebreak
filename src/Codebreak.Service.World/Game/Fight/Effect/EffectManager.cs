@@ -17,14 +17,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<EffectEnum, EffectBase> m_effects;
+        private Dictionary<EffectEnum, AbstractSpellEffect> m_effects;
 
         /// <summary>
         /// 
         /// </summary>
         public EffectManager()
         {
-            m_effects = new Dictionary<EffectEnum, EffectBase>();
+            m_effects = new Dictionary<EffectEnum, AbstractSpellEffect>();
 
             // Dégats
             m_effects.Add(EffectEnum.SelfDamage, new SelfDamageEffect());

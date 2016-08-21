@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class StatueChallenge : ChallengeBase
+    public sealed class StatueChallenge : AbstractChallenge
     {
         private int m_cellId;
 
@@ -33,7 +33,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void BeginTurn(FighterBase fighter)
+        public override void BeginTurn(AbstractFighter fighter)
         {
             m_cellId = fighter.Cell.Id;
         }
@@ -42,7 +42,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void EndTurn(FighterBase fighter)
+        public override void EndTurn(AbstractFighter fighter)
         {
             if (fighter.Cell.Id != m_cellId)
                 base.OnFailed(fighter.Name);

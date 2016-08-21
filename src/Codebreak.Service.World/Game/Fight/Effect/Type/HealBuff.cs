@@ -9,14 +9,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class HealBuff : BuffBase
+    public sealed class HealBuff : AbstractSpellBuff
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
-        public HealBuff(CastInfos castInfos, FighterBase target)
+        public HealBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_BEGINTURN, DecrementType.TYPE_ENDTURN)
         {
         }

@@ -491,7 +491,7 @@ namespace Codebreak.Service.World.Frame
                     character.MovementHandler.Move(character, character.CellId, message.Substring(5));
                     break;
                 case FieldTypeEnum.TYPE_FIGHT:
-                    var fighter = (FighterBase)character;
+                    var fighter = (AbstractFighter)character;
                     fighter.Fight.Move(character, fighter.Cell.Id, message.Substring(5));
                     break;
             }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class BarbarianChallenge : ChallengeBase
+    public sealed class BarbarianChallenge : AbstractChallenge
     {
         /// <summary>
         /// 
@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="castInfos"></param>
-        public override void CheckSpell(FighterBase fighter, Effect.CastInfos castInfos)
+        public override void CheckSpell(AbstractFighter fighter, Effect.CastInfos castInfos)
         {
             base.OnFailed(fighter.Name);
         }

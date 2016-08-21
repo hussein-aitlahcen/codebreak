@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AnachoriteChallenge : ChallengeBase
+    public sealed class AnachoriteChallenge : AbstractChallenge
     {
         /// <summary>
         /// 
@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void EndTurn(FighterBase fighter)
+        public override void EndTurn(AbstractFighter fighter)
         {
             var aroundFighters = Pathfinding.GetFightersNear(fighter.Fight, fighter.Cell.Id);
             if(aroundFighters.Where(f => f.Team == fighter.Team).Count() > 0)            

@@ -47,7 +47,7 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        public Updatable()
+        protected Updatable()
         {
             m_messagesQueue = new LockFreeQueue<Action>();
             m_subUpdatableObjects = new List<Updatable>();
@@ -113,9 +113,7 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dispather"></param>
-        /// <param name="callback"></param>
-        /// <returns></returns>
+        /// <param name="messages"></param>
         public void AddLinkedMessages(params System.Action[] messages)
         {
             AddMessage(() =>
@@ -129,9 +127,8 @@ namespace Codebreak.Framework.Generic
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dispather"></param>
-        /// <param name="callback"></param>
-        /// <returns></returns>
+        /// <param name="index"></param>
+        /// <param name="messages"></param>
         public void AddLinkedMessages(int index = 0, params System.Action[] messages)
         {
             AddMessage(() =>

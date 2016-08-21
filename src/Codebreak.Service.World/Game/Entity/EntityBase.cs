@@ -100,7 +100,6 @@ namespace Codebreak.Service.World.Game.Entity
         public long Id
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -200,56 +199,31 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public int ReflectDamage
-        {
-            get
-            {
-                return 
-                    ((1 + (Statistics.GetTotal(EffectEnum.AddWisdom) / 100))
-                    * Statistics.GetTotal(EffectEnum.AddReflectDamage)) + Statistics.GetTotal(EffectEnum.AddReflectDamageItem);
-            }
-        }
+        public int ReflectDamage => ((1 + (Statistics.GetTotal(EffectEnum.AddWisdom) / 100))
+                                     * Statistics.GetTotal(EffectEnum.AddReflectDamage)) + Statistics.GetTotal(EffectEnum.AddReflectDamageItem);
 
         /// <summary>
         /// 
         /// </summary>
-        public int MaxLife
-        {
-            get
-            {
-                return BaseLife + Statistics.GetTotal(EffectEnum.AddVitality) + Statistics.GetTotal(EffectEnum.AddLife);
-            }
-        }
+        public int MaxLife => BaseLife + Statistics.GetTotal(EffectEnum.AddVitality) + Statistics.GetTotal(EffectEnum.AddLife);
 
         /// <summary>
         /// 
         /// </summary>
-        public int Initiative
-        {
-            get
-            {
-                return 1 + (int)Math.Floor((
-                        Statistics.GetTotal(EffectEnum.AddStrength) +
-                        Statistics.GetTotal(EffectEnum.AddChance) +
-                        Statistics.GetTotal(EffectEnum.AddIntelligence) +
-                        Statistics.GetTotal(EffectEnum.AddAgility) +
-                        Statistics.GetTotal(EffectEnum.AddInitiative)) *
-                        ((double)Life / MaxLife)
-                    );
-            }
-        }
+        public int Initiative => 1 + (int)Math.Floor((
+            Statistics.GetTotal(EffectEnum.AddStrength) +
+            Statistics.GetTotal(EffectEnum.AddChance) +
+            Statistics.GetTotal(EffectEnum.AddIntelligence) +
+            Statistics.GetTotal(EffectEnum.AddAgility) +
+            Statistics.GetTotal(EffectEnum.AddInitiative)) *
+                                                     ((double)Life / MaxLife)
+            );
 
         /// <summary>
         /// 
         /// </summary>
-        public int Prospection
-        {
-            get
-            {
-                return 1 + (int)Math.Floor((double)(Statistics.GetTotal(EffectEnum.AddChance) / 10)) + Statistics.GetTotal(EffectEnum.AddProspection);
-            }
-        }
-                        
+        public int Prospection => 1 + (int)Math.Floor((double)(Statistics.GetTotal(EffectEnum.AddChance) / 10)) + Statistics.GetTotal(EffectEnum.AddProspection);
+
         /// <summary>
         /// 
         /// </summary>
@@ -284,13 +258,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public virtual IMovementHandler MovementHandler
-        {
-            get
-            {
-                return Map;
-            }
-        }
+        public virtual IMovementHandler MovementHandler => Map;
 
         /// <summary>
         /// 
@@ -378,26 +346,43 @@ namespace Codebreak.Service.World.Game.Entity
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public AbstractEntity(EntityTypeEnum type, long id)
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="type"></param>
+       /// <param name="id"></param>
+        protected AbstractEntity(EntityTypeEnum type, long id)
         {
             Id = id;
             Type = type;
             Orientation = 1;
 
-            m_chatByChannel = new Dictionary<ChatChannelEnum, ChatChannelData>();
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GENERAL, new ChatChannelData(() => MovementHandler == null ? default(Action<string>) : MovementHandler.Dispatch));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_RECRUITMENT, new ChatChannelData(() => Map == null ? default(Action<string>) : WorldService.Instance.Dispatcher.SafeDispatch));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_DEALING, new ChatChannelData(() => Map == null ? default(Action<string>) : WorldService.Instance.Dispatcher.SafeDispatch));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ADMIN, new ChatChannelData(() => null));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_ALIGNMENT, new ChatChannelData(() => null));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GROUP, new ChatChannelData(() => null));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_GUILD,new ChatChannelData(() => null));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_TEAM, new ChatChannelData(() => null));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, new ChatChannelData(() => base.Dispatch));
-            m_chatByChannel.Add(ChatChannelEnum.CHANNEL_PRIVATE_SEND, new ChatChannelData(() => base.Dispatch));            
+           m_chatByChannel = new Dictionary<ChatChannelEnum, ChatChannelData>
+           {
+               {
+                   ChatChannelEnum.CHANNEL_GENERAL,
+                   new ChatChannelData(
+                       () => MovementHandler == null ? default(Action<string>) : MovementHandler.Dispatch)
+               },
+               {
+                   ChatChannelEnum.CHANNEL_RECRUITMENT,
+                   new ChatChannelData(
+                       () => Map == null ? default(Action<string>) : WorldService.Instance.Dispatcher.SafeDispatch)
+               },
+               {
+                   ChatChannelEnum.CHANNEL_DEALING,
+                   new ChatChannelData(
+                       () => Map == null ? default(Action<string>) : WorldService.Instance.Dispatcher.SafeDispatch)
+               },
+               {ChatChannelEnum.CHANNEL_ADMIN, new ChatChannelData(() => null)},
+               {ChatChannelEnum.CHANNEL_ALIGNMENT, new ChatChannelData(() => null)},
+               {ChatChannelEnum.CHANNEL_GROUP, new ChatChannelData(() => null)},
+               {ChatChannelEnum.CHANNEL_GUILD, new ChatChannelData(() => null)},
+               {ChatChannelEnum.CHANNEL_TEAM, new ChatChannelData(() => null)},
+               {ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, new ChatChannelData(() => Dispatch)},
+               {ChatChannelEnum.CHANNEL_PRIVATE_SEND, new ChatChannelData(() => Dispatch)}
+           };
+
         }
 
         /// <summary>
@@ -453,7 +438,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 if (message.Equals(channelData.LastMessage, StringComparison.OrdinalIgnoreCase))
                 {
-                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CHAT_SAME_MESSAGE));
+                    Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_CHAT_SAME_MESSAGE));
                     return false;
                 }
 
@@ -461,7 +446,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 if (UpdateTime < channelData.NextTime)
                 {
-                    base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_CHAT_SPAM_RESTRICTED, Math.Ceiling((channelData.NextTime - UpdateTime) * 0.001)));
+                    Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_CHAT_SPAM_RESTRICTED, Math.Ceiling((channelData.NextTime - UpdateTime) * 0.001)));
                     return false;
                 }
 
@@ -662,8 +647,7 @@ namespace Codebreak.Service.World.Game.Entity
             switch(actionType)
             {
                 case GameActionTypeEnum.MAP:
-                    if(Map != null)
-                        Map.DestroyEntity(this);
+                    Map?.DestroyEntity(this);
                     break;
             }
         }
@@ -685,8 +669,7 @@ namespace Codebreak.Service.World.Game.Entity
             switch(actionType)
             {
                 case GameActionTypeEnum.MAP:
-                    if(Map != null)
-                        Map.DestroyEntity(this);
+                    Map?.DestroyEntity(this);
                     break;
              }
         }

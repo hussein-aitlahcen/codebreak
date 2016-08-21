@@ -16,15 +16,9 @@ namespace Codebreak.Service.World.Command
     {
         private static readonly string[] m_aliases = { "world", "w" };
 
-        public override string[] Aliases
-        {
-            get { return m_aliases; }
-        }
+        public override string[] Aliases => m_aliases;
 
-        public override string Description
-        {
-            get { return "World management commands."; }
-        }
+        public override string Description => "World management commands.";
 
         protected override void Process(WorldCommandContext context)
         {
@@ -41,21 +35,9 @@ namespace Codebreak.Service.World.Command
                 "addfightcell"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Add a fight cell to the map.";
-                }
-            }
+            public override string Description => "Add a fight cell to the map.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -91,21 +73,9 @@ namespace Codebreak.Service.World.Command
                 "addfightaction"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Add a fight action to the map.";
-                }
-            }
+            public override string Description => "Add a fight action to the map.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -147,21 +117,9 @@ namespace Codebreak.Service.World.Command
                 "addstaticmonster"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Add a monster spawn to the map.";
-                }
-            }
+            public override string Description => "Add a monster spawn to the map.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -199,21 +157,9 @@ namespace Codebreak.Service.World.Command
                 "savemap"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Save the map.";
-                }
-            }
+            public override string Description => "Save the map.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -244,21 +190,9 @@ namespace Codebreak.Service.World.Command
                 "save"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Save the world.";
-                }
-            }
+            public override string Description => "Save the world.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {

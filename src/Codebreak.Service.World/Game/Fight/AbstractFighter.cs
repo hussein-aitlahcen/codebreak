@@ -17,57 +17,33 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public abstract class FighterBase : AbstractEntity, IFightObstacle, IDisposable
+    public abstract class AbstractFighter : AbstractEntity, IFightObstacle, IDisposable
     {
 
         #region IFightObstacle
         /// <summary>
         /// 
         /// </summary>
-        public FightObstacleTypeEnum  ObstacleType
-        {
-            get
-            {
-                return FightObstacleTypeEnum.TYPE_FIGHTER;
-            }
-        }
+        public FightObstacleTypeEnum  ObstacleType => FightObstacleTypeEnum.TYPE_FIGHTER;
 
         /// <summary>
         /// 
         /// </summary>
-        public int Priority
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public int Priority => 0;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool CanGoThrough
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool CanGoThrough => false;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool CanStack
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool CanStack => false;
 
         #endregion
 
-        #region EntityBase
+        #region AbstractEntity
                
         /// <summary>
         /// 
@@ -82,7 +58,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public override abstract int BaseLife
+        public abstract override int BaseLife
         {
             get;
         }
@@ -90,7 +66,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public override abstract  int CellId
+        public abstract override  int CellId
         {
             get;
             set;
@@ -99,7 +75,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public override abstract string Name
+        public abstract override string Name
         {
             get;
         }
@@ -107,15 +83,14 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public override abstract int Level
+        public abstract override int Level
         {
             get;
-            set;
         }
 
         #endregion
 
-        #region FighterBase
+        #region AbstractFighter
 
         /// <summary>
         /// 
@@ -141,7 +116,6 @@ namespace Codebreak.Service.World.Game.Fight
         public abstract int SkinBase
         {
             get;
-            set;
         }
 
         /// <summary>
@@ -150,7 +124,6 @@ namespace Codebreak.Service.World.Game.Fight
         public abstract int SkinSizeBase
         {
             get;
-            set;
         }
 
         /// <summary>
@@ -216,7 +189,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public FightBase Fight
+        public AbstractFight Fight
         {
             get;
             protected set;
@@ -234,37 +207,22 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool IsLeader
-        {
-            get
-            {
-                if (Team == null)
-                    return false;
-                return Team.LeaderId == Id;
-            }
-        }
+        public bool IsLeader => Team?.LeaderId == Id;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsFighterDead
-        {
-            get
-            {
-                return Life <= 0;
-            }
-        }
+        public bool IsFighterDead => DeclaredDead || Life <= 0;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool CanBeginTurn
-        {
-            get
-            {
-                return !IsFighterDead && Fight != null;
-            }
-        }
+        public bool CanBeginTurn => !IsFighterDead && Fight != null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract bool CanDrop { get; }
 
         /// <summary>
         /// 
@@ -287,73 +245,37 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public int MaxAP
-        {
-            get
-            {
-                return Statistics.GetTotal(EffectEnum.AddAP);
-            }
-        }
+        public int MaxAP => Statistics.GetTotal(EffectEnum.AddAP);
 
         /// <summary>
         /// 
         /// </summary>
-        public int MaxMP
-        {
-            get
-            {
-                return Statistics.GetTotal(EffectEnum.AddMP);
-            }
-        }
+        public int MaxMP => Statistics.GetTotal(EffectEnum.AddMP);
 
         /// <summary>
         /// 
         /// </summary>
-        public int AP
-        {
-            get
-            {
-                return MaxAP - UsedAP;
-            }
-        }
+        public int AP => MaxAP - UsedAP;
 
         /// <summary>
         /// 
         /// </summary>
-        public int MP
-        {
-            get
-            {
-                return MaxMP - UsedMP;
-            }
-        }
+        public int MP => MaxMP - UsedMP;
 
         /// <summary>
         /// 
         /// </summary>
-        public int APDodge
-        {
-            get
-            {
-                return (int)Math.Floor((double)Statistics.GetTotal(EffectEnum.AddWisdom) / 4) + Statistics.GetTotal(EffectEnum.AddAPDodge);
-            }
-        }
+        public int APDodge => (int)Math.Floor((double)Statistics.GetTotal(EffectEnum.AddWisdom) / 4) + Statistics.GetTotal(EffectEnum.AddAPDodge);
 
         /// <summary>
         /// 
         /// </summary>
-        public int MPDodge
-        {
-            get
-            {
-                return (int)Math.Floor((double)Statistics.GetTotal(EffectEnum.AddWisdom) / 4) + Statistics.GetTotal(EffectEnum.AddAPDodge);
-            }
-        }
+        public int MPDodge => (int)Math.Floor((double)Statistics.GetTotal(EffectEnum.AddWisdom) / 4) + Statistics.GetTotal(EffectEnum.AddAPDodge);
 
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase Invocator
+        public AbstractFighter Invocator
         {
             get;
             set;
@@ -411,21 +333,17 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public virtual int AlignmentId
-        {
-            get
-            {
-                return (int)AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
-            }
-            set
-            {
-            }
-        }
+        public abstract int AlignmentId { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase(EntityTypeEnum type, long id, bool staticInvocation = false)
+        public bool DeclaredDead { get; private set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        protected AbstractFighter(EntityTypeEnum type, long id, bool staticInvocation = false)
             : base(type, id)
         {
             StaticInvocation = staticInvocation;
@@ -473,12 +391,13 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public virtual void JoinFight(FightBase fight, FightTeam team)
+        public virtual void JoinFight(AbstractFight fight, FightTeam team)
         {
             BuffManager = new BuffEffectManager(this);
             StateManager = new FighterStateManager(this);
             SpellManager = new SpellCastManager();
 
+            DeclaredDead = false;
             Orientation = 1;
             Skin = SkinBase;
             SkinSize = SkinSizeBase;
@@ -729,11 +648,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Caster"></param>
+        /// <param name="caster"></param>
         /// <param name="lostPoint"></param>
         /// <param name="mp"></param>
         /// <returns></returns>
-        public int CalculDodgeAPMP(FighterBase caster, int lostPoint, bool mp = false)
+        public int CalculDodgeAPMP(AbstractFighter caster, int lostPoint, bool mp = false)
         {
             var reality = 0;
 
@@ -800,6 +719,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void OnDeath()
         {
+            DeclaredDead = true;
+
             if (Cell != null)
             {
                 Cell.RemoveObject(this);
@@ -881,17 +802,7 @@ namespace Codebreak.Service.World.Game.Fight
 
             base.StartAction(actionType);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="actionType"></param>
-        /// <param name="args"></param>
-        public override void StopAction(GameActionTypeEnum actionType, params object[] args)
-        {
-            base.StopAction(actionType, args);
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -915,7 +826,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="operation"></param>
         /// <param name="message"></param>
-        public override abstract void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message);
+        public abstract override void SerializeAs_GameMapInformations(OperatorEnum operation, StringBuilder message);
         
         /// <summary>
         /// 

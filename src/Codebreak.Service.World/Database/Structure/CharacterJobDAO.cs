@@ -85,15 +85,9 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
-        public long ExperienceFloorCurrent
-        {
-            get
-            {
-                return ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.JOB);
-            }
-        }
+        public long ExperienceFloorCurrent => ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.JOB);
 
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -165,37 +159,19 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
-        public int HarvestMinQuantity
-        {
-            get
-            {
-                return GeneratedMinQuantity(Level);
-            }
-        }
+        public int HarvestMinQuantity => GeneratedMinQuantity(Level);
 
         /// <summary>
         /// 
         /// </summary>
         [Write(false)]
-        public int HarvestMaxQuantity
-        {
-            get
-            {
-                return GeneratedMaxQuantity(Level);
-            }
-        }
+        public int HarvestMaxQuantity => GeneratedMaxQuantity(Level);
 
         /// <summary>
         /// 
         /// </summary>
         [Write(false)]
-        public int HarvestDuration
-        {
-            get
-            {
-                return HarvestTime(Level);
-            }
-        }
+        public int HarvestDuration => HarvestTime(Level);
 
         /// <summary>
         /// 

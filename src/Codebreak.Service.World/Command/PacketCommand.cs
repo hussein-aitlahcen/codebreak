@@ -11,15 +11,9 @@ namespace Codebreak.Service.World.Command
     {
         private static readonly string[] m_aliases = { "packet" };
 
-        public override string[] Aliases
-        {
-            get { return m_aliases; }
-        }
+        public override string[] Aliases => m_aliases;
 
-        public override string Description
-        {
-            get { return "Packet management commands."; }
-        }
+        public override string Description => "Packet management commands.";
 
         protected override void Process(WorldCommandContext context)
         {
@@ -36,21 +30,9 @@ namespace Codebreak.Service.World.Command
                 "send"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Send a packet. Arguments : %rawString%";
-                }
-            }
+            public override string Description => "Send a packet. Arguments : %rawString%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {

@@ -17,14 +17,8 @@ namespace Codebreak.Service.World.Game.Map
     {
         public int Id;
 
-        public bool Walkable
-        {
-            get
-            {
-                return m_walkable && (InteractiveObjectId == 0 || (InteractiveObject != null && InteractiveObject.CanWalkThrough));
-            }
-        }
-        
+        public bool Walkable => m_walkable && (InteractiveObjectId == 0 || (InteractiveObject != null && InteractiveObject.CanWalkThrough));
+
         public bool LineOfSight;
         public int InteractiveObjectId;
 

@@ -13,8 +13,9 @@ using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
 using Codebreak.Framework.Generic;
 using Codebreak.Service.World.Database.Structure;
-using Codebreak.Service.World.Game.Fight.Challenges;
+using Codebreak.Service.World.Game.Fight.Challenge;
 using Codebreak.Service.World.Game.Fight.AI;
+using Codebreak.Service.World.Game.Fight.Ending;
 using Codebreak.Service.World.Game.Stats;
 
 namespace Codebreak.Service.World.Game.Fight
@@ -65,9 +66,9 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public enum FightEndStateEnum
     {
-        STATE_INIT_CALCULATION,
-        STATE_PROCESS_CALCULATION,
-        STATE_END_CALCULATION,
+        STATE_END_INITIALIZE,
+        STATE_END_EXECUTE_BEHAVIORS,
+        STATE_END_SUCCESS,
         STATE_END_ERROR,
         STATE_ENDED,
     }
@@ -133,13 +134,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public string Message
-        {
-            get
-            {
-                return m_message.ToString();
-            }
-        }
+        public string Message => m_message.ToString();
 
         /// <summary>
         /// 
@@ -174,7 +169,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="guildxp"></param>
         /// <param name="mountxp"></param>
         /// <param name="items"></param>
-        public void AddResult(FighterBase fighter,
+        public void AddResult(AbstractFighter fighter,
             FightEndTypeEnum type = FightEndTypeEnum.END_LOSER,
             bool leave = false,
             long kamas = 0,
@@ -382,14 +377,13 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_FIGHTER)
             {
-                var fighter = (FighterBase)fightObject;
+                var fighter = (AbstractFighter)fightObject;
 
                 for (int i = FightObjects.Count - 1; i > -1; i--)
                 {
-                    if (FightObjects[i] is FightActivableObject)
+                    var activableObject = FightObjects[i] as FightActivableObject;
+                    if (activableObject != null)
                     {
-                        var activableObject = (FightActivableObject)FightObjects[i];
-
                         if (activableObject.ActivationType == ActiveType.ACTIVE_ENDMOVE)
                         {
                             if (!fighter.IsFighterDead)
@@ -422,13 +416,13 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <returns></returns>
-        public FightActionResultEnum BeginTurn(FighterBase fighter)
+        public FightActionResultEnum BeginTurn(AbstractFighter fighter)
         {
             for (int i = FightObjects.Count - 1; i > -1; i--)
             {
-                if (FightObjects[i] is FightActivableObject)
+                var activableObject = FightObjects[i] as FightActivableObject;
+                if (activableObject != null)
                 {
-                    var activableObject = (FightActivableObject)FightObjects[i];
                     if (activableObject.ActivationType == ActiveType.ACTIVE_BEGINTURN)
                     {
                         activableObject.LoadTargets(fighter);
@@ -450,7 +444,7 @@ namespace Codebreak.Service.World.Game.Fight
         }
     }
 
-    public abstract class FightBase : MessageDispatcher, IMovementHandler, IDisposable
+    public abstract class AbstractFight : MessageDispatcher, IMovementHandler, IDisposable
     {
         /// <summary>
         /// 
@@ -458,19 +452,12 @@ namespace Codebreak.Service.World.Game.Fight
         public FightTypeEnum Type
         {
             get;
-            private set;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public FieldTypeEnum FieldType
-        {
-            get
-            {
-                return FieldTypeEnum.TYPE_FIGHT;
-            }
-        }
+        public FieldTypeEnum FieldType => FieldTypeEnum.TYPE_FIGHT;
 
         /// <summary>
         /// 
@@ -523,7 +510,6 @@ namespace Codebreak.Service.World.Game.Fight
         public long Id
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -538,7 +524,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase CurrentFighter
+        public AbstractFighter CurrentFighter
         {
             get;
             private set;
@@ -547,7 +533,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase CurrentProcessingFighter
+        public AbstractFighter CurrentProcessingFighter
         {
             get;
             set;
@@ -604,7 +590,6 @@ namespace Codebreak.Service.World.Game.Fight
         public long TurnTime
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -613,7 +598,6 @@ namespace Codebreak.Service.World.Game.Fight
         public long StartTime
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -632,13 +616,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool LoopTimedout
-        {
-            get
-            {
-                return NextLoopTimeout <= UpdateTime;
-            }
-        }
+        public bool LoopTimedout => NextLoopTimeout <= UpdateTime;
 
         /// <summary>
         /// 
@@ -671,13 +649,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool TurnTimedout
-        {
-            get
-            {
-                return NextTurnTimeout <= UpdateTime;
-            }
-        }
+        public bool TurnTimedout => NextTurnTimeout <= UpdateTime;
 
         /// <summary>
         /// 
@@ -697,13 +669,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool SubActionTimedout
-        {
-            get
-            {
-                return NextSubActionTimeout <= UpdateTime;
-            }
-        }
+        public bool SubActionTimedout => NextSubActionTimeout <= UpdateTime;
 
         /// <summary>
         /// 
@@ -749,13 +715,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool SynchronizationTimedout
-        {
-            get
-            {
-                return NextSynchroTimeout <= UpdateTime;
-            }
-        }
+        public bool SynchronizationTimedout => NextSynchroTimeout <= UpdateTime;
 
         /// <summary>
         /// 
@@ -775,24 +735,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public string FightPlaces
-        {
-            get
-            {
-                return Team0.Places + "|" + Team1.Places;
-            }
-        }
+        public string FightPlaces => 
+            Team0.Places + "|" + Team1.Places;
 
         /// <summary>
         /// 
         /// </summary>
-        private bool IsAllReady
-        {
-            get
-            {
-                return Fighters.OfType<CharacterEntity>().All(fighter => fighter.TurnReady || fighter.IsFighterDead);
-            }
-        }
+        private bool IsAllReady => 
+            Fighters.OfType<CharacterEntity>().All(fighter => fighter.TurnReady || fighter.IsFighterDead);
+         
 
         /// <summary>
         /// 
@@ -819,43 +770,20 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<FighterBase> Fighters
-        {
-            get
-            {
-                foreach (var fighter in Team0.Fighters)
-                    yield return fighter;
-                foreach (var fighter in Team1.Fighters)
-                    yield return fighter;
-            }
-        }
+        public IEnumerable<AbstractFighter> Fighters => 
+            Team0.Fighters.Concat(Team1.Fighters);
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<FighterBase> AliveFighters
-        {
-            get
-            {
-                foreach (var fighter in Fighters)
-                    if (!fighter.IsFighterDead)
-                        yield return fighter;
-            }
-        }
+        public IEnumerable<AbstractFighter> AliveFighters => 
+            Fighters.Where(fighter => !fighter.IsFighterDead);
 
         /// <summary>
         /// 
         /// </summary>
-        public AbstractGameFightAction CurrentAction
-        {
-            get
-            {
-                if (CurrentFighter != null)
-                    if(CurrentFighter.CurrentAction != null && CurrentFighter.CurrentAction is AbstractGameFightAction)
-                        return (AbstractGameFightAction)CurrentFighter.CurrentAction;
-                return null;
-            }
-        }
+        public AbstractGameFightAction CurrentAction => 
+            CurrentFighter?.CurrentAction as AbstractGameFightAction;
 
         /// <summary>
         /// 
@@ -900,20 +828,45 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        protected IEnumerable<FighterBase> m_winnersFighter, m_losersFighter;
-        protected FightTeam m_winnersTeam, m_losersTeam;
-        private long m_loopTimeout, m_turnTimeout, m_subActionTimeout, m_synchronizationTimeout;
-        private Dictionary<FighterBase, List<FightActivableObject>> m_activableObjects;
-        private LinkedList<CastInfos> m_processingTargets;
-        private int m_currentApCost;
+        public bool IsNeutralAgression
+        {
+            get;
+            protected set;
+        }
+
+        public int ChallengeXpBonus => Math.Max(1, (int)Math.Round((double)(100 + WinnerTeam.SucceededChallenges.Sum(challenge => challenge.BasicXpBonus + challenge.TeamXpBonus)) / 100));
+        public int ChallengeLootBonus => ChallengeXpBonus;
+        public List<AbstractFighter> WinnerFighters { get; private set; }
+        public List<AbstractFighter> LoserFighters { get; private set; }
+        public FightTeam WinnerTeam { get; private set; }
+        public FightTeam LoserTeam { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="mapInstance"></param>
-        public FightBase(FightTypeEnum type, MapInstance  mapInstance, long id, long team0LeaderId, int team0Alignment, int team0FlagCell, long team1LeaderId, int team1Alignment, int team1FlagCell, long startTimeout, long turnTime, bool cancelButton = false, bool canWinHonor = false)
+        private long m_loopTimeout, m_turnTimeout, m_subActionTimeout, m_synchronizationTimeout;
+        private Dictionary<AbstractFighter, List<FightActivableObject>> m_activableObjects;
+        private LinkedList<CastInfos> m_processingTargets;
+        private int m_currentApCost;
+        private readonly Queue<AbstractEndingBehavior> m_endingBehaviors; 
+        
+        protected AbstractFight(FightTypeEnum type, 
+            MapInstance  mapInstance, 
+            long id, 
+            long team0LeaderId, 
+            int team0Alignment,
+            int team0FlagCell, 
+            long team1LeaderId, 
+            int team1Alignment,
+            int team1FlagCell, 
+            long startTimeout, 
+            long turnTime, 
+            bool cancelButton = false, 
+            bool canWinHonor = false,
+            params AbstractEndingBehavior[] endingBehaviors)
         {
-            m_activableObjects = new Dictionary<FighterBase, List<FightActivableObject>>();
+            m_endingBehaviors = new Queue<AbstractEndingBehavior>(endingBehaviors);
+            m_activableObjects = new Dictionary<AbstractFighter, List<FightActivableObject>>();
             m_processingTargets = new LinkedList<CastInfos>();
             m_currentApCost = -1;
 
@@ -939,18 +892,18 @@ namespace Codebreak.Service.World.Game.Fight
             Team0.OpponentTeam = Team1;
             Team1.OpponentTeam = Team0;
             
-            base.AddUpdatable(SpectatorTeam);
-            base.AddUpdatable(Team0);
-            base.AddUpdatable(Team1);
-            base.AddHandler(SpectatorTeam.Dispatch);
-            base.AddHandler(Team0.Dispatch);
-            base.AddHandler(Team1.Dispatch);
+            AddUpdatable(SpectatorTeam);
+            AddUpdatable(Team0);
+            AddUpdatable(Team1);
+            AddHandler(SpectatorTeam.Dispatch);
+            AddHandler(Team0.Dispatch);
+            AddHandler(Team1.Dispatch);
         }
         
         /// <summary>
         /// 
         /// </summary>
-        protected void Start()
+        public void Start()
         {
             AddMessage(() =>
                 {
@@ -1059,14 +1012,15 @@ namespace Codebreak.Service.World.Game.Fight
 
                         character.JoinSpectator(this);
 
-                        SendFightJoinInfos(character);                        
+                        SendFightJoinInfos(character);
                     });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="client"></param>
+        /// <param name="character"></param>
+        /// <param name="teamId"></param>
         public void TryJoin(CharacterEntity character, long teamId)
         {
             AddMessage(() =>
@@ -1090,7 +1044,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return;
                     }
 
-                    FightTeam team = teamId == Team0.LeaderId ? Team0 : Team1;
+                    var team = teamId == Team0.LeaderId ? Team0 : Team1;
 
                     if (!team.CanJoinBeforeStart(character))
                     {
@@ -1108,7 +1062,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="team"></param>
-        public void JoinFight(FighterBase fighter, FightTeam team)
+        public void JoinFight(AbstractFighter fighter, FightTeam team)
         {
             if (team.FreePlace == null)
                 return;
@@ -1119,7 +1073,7 @@ namespace Codebreak.Service.World.Game.Fight
                     OnCharacterJoin(fighter as CharacterEntity, team);
 
                 fighter.JoinFight(this, team);
-                base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
+                Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, fighter));
             }
 
             if (fighter.MapId == Map.Id)
@@ -1132,7 +1086,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         /// <param name="team"></param>
         /// <param name="cellId"></param>
-        public FightActionResultEnum SummonFighter(FighterBase fighter, FightTeam team, int cellId)
+        public FightActionResultEnum SummonFighter(AbstractFighter fighter, FightTeam team, int cellId)
         {
             fighter.JoinFight(this, team);
             fighter.TurnReady = true;
@@ -1145,9 +1099,9 @@ namespace Codebreak.Service.World.Game.Fight
             fighter.SerializeAs_GameMapInformations(OperatorEnum.OPERATOR_ADD, message);
                       
             if (fighter.Invocator != null)
-                base.Dispatch(WorldMessage.GAME_ACTION(fighter.StaticInvocation ? EffectEnum.InvocationStatic : EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
+                Dispatch(WorldMessage.GAME_ACTION(fighter.StaticInvocation ? EffectEnum.InvocationStatic : EffectEnum.Invocation, fighter.Invocator.Id, message.ToString()));
             else
-                base.Dispatch("GM|" + message.ToString());
+                Dispatch("GM|" + message.ToString());
 
             switch(State)
             {
@@ -1158,7 +1112,7 @@ namespace Codebreak.Service.World.Game.Fight
                 case FightStateEnum.STATE_FIGHTING:
                     fighter.TurnReady = true;
                     TurnProcessor.SummonFighter(fighter);
-                    base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                    Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
                     break;
             }
 
@@ -1169,7 +1123,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void FighterDisconnect(FighterBase fighter)
+        public void FighterDisconnect(AbstractFighter fighter)
         {
             AddMessage(() =>
             {
@@ -1191,7 +1145,7 @@ namespace Codebreak.Service.World.Game.Fight
                 if (fighter.DisconnectedTurnLeft == 0)
                     fighter.DisconnectedTurnLeft = WorldConfig.FIGHT_DISCONNECTION_TURN;
 
-                base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_DISCONNECTED, fighter.Name, fighter.DisconnectedTurnLeft));
+                Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_DISCONNECTED, fighter.Name, fighter.DisconnectedTurnLeft));
             });
         }
 
@@ -1202,15 +1156,18 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="killerId"></param>
         /// <param name="force"></param>
         /// <returns></returns>
-        public FightActionResultEnum TryKillFighter(FighterBase fighter, long killerId, bool force = false, bool quit = false)
+        public FightActionResultEnum TryKillFighter(AbstractFighter fighter, long killerId, bool force = false, bool quit = false)
         {
             if (LoopState == FightLoopStateEnum.STATE_ENDED ||
                 LoopState == FightLoopStateEnum.STATE_WAIT_END ||
                 LoopState == FightLoopStateEnum.STATE_INIT)
                 return FightActionResultEnum.RESULT_NOTHING;
 
-            if (force)            
-                fighter.Life = 0;            
+            if (fighter.DeclaredDead)
+                return FightActionResultEnum.RESULT_DEATH;
+
+            if (force)
+                fighter.Life = 0;
 
             if (fighter.IsFighterDead)
             {
@@ -1218,26 +1175,26 @@ namespace Codebreak.Service.World.Game.Fight
 
                 if (quit)
                 {
-                    base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
+                    Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, fighter));
                 }
                 else
                 {
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_KILL, killerId, fighter.Id.ToString()));
+                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_KILL, killerId, fighter.Id.ToString()));
                 }
 
                 fighter.OnDeath();
                 Team0.CheckDeath(fighter);
                 Team1.CheckDeath(fighter);
 
-                foreach (var invocation in fighter.Team.AliveFighters.Where(ally => ally.Invocator == fighter))                
+                foreach (var invocation in fighter.Team.AliveFighters.Where(ally => ally.Invocator == fighter))
                     TryKillFighter(invocation, invocation.Id, true);
 
                 if (fighter.Invocator != null)
                 {
                     TurnProcessor.RemoveFighter(fighter);
-                    base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                    Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
                 }
-                
+
                 if (State != FightStateEnum.STATE_PLACEMENT)
                     NextLoopTimeout = CurrentLoopTimeout + 1300; // time delayed because of the death
 
@@ -1251,8 +1208,8 @@ namespace Codebreak.Service.World.Game.Fight
                 return FightActionResultEnum.RESULT_DEATH;
             }
 
-            if (WillFinish())            
-                return FightActionResultEnum.RESULT_END;            
+            if (WillFinish())
+                return FightActionResultEnum.RESULT_END;
 
             return FightActionResultEnum.RESULT_NOTHING;
         }
@@ -1262,13 +1219,13 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void FighterReady(FighterBase fighter)
+        public void FighterReady(AbstractFighter fighter)
         {
             AddMessage(() =>
             {
                 fighter.TurnReady = fighter.TurnReady == false;
 
-                base.Dispatch(WorldMessage.FIGHT_READY(fighter.Id, fighter.TurnReady));
+                Dispatch(WorldMessage.FIGHT_READY(fighter.Id, fighter.TurnReady));
             });
         }
 
@@ -1277,7 +1234,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="cellId"></param>
-        public void FighterPlacementChange(FighterBase fighter, int cellId)
+        public void FighterPlacementChange(AbstractFighter fighter, int cellId)
         {
             AddMessage(() =>
             {
@@ -1293,7 +1250,7 @@ namespace Codebreak.Service.World.Game.Fight
                     if (cell.CanWalk)
                     {
                         fighter.SetCell(cell);
-                        base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(fighter));
+                        Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(fighter));
                     }
                 }
             });
@@ -1304,8 +1261,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         private void SetAllUnReady()
         {
-            foreach (var fighter in Fighters)           
-                fighter.TurnReady = false;            
+            foreach (var fighter in Fighters)
+                fighter.TurnReady = false;
         }
 
         /// <summary>
@@ -1321,14 +1278,14 @@ namespace Codebreak.Service.World.Game.Fight
 
                 Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
 
-                base.CachedBuffer = true;
-                base.Dispatch(WorldMessage.FIGHT_STARTS());
-                base.Dispatch(WorldMessage.FIGHT_TURN_MIDDLE(Fighters));
-                base.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
-                base.Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
+                CachedBuffer = true;
+                Dispatch(WorldMessage.FIGHT_STARTS());
+                Dispatch(WorldMessage.FIGHT_TURN_MIDDLE(Fighters));
+                Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
+                Dispatch(WorldMessage.FIGHT_TURN_LIST(TurnProcessor.FighterOrder));
                 Team0.SendChallengeInfos();
                 Team1.SendChallengeInfos();
-                base.CachedBuffer = false;
+                CachedBuffer = false;
 
                 State = FightStateEnum.STATE_FIGHTING;
                 NextLoopTimeout = -1;
@@ -1411,7 +1368,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <returns></returns>
-        public bool HasLeft(FighterBase fighter)
+        public bool HasLeft(AbstractFighter fighter)
         {
             return !Fighters.Contains(fighter);
         }
@@ -1454,10 +1411,10 @@ namespace Codebreak.Service.World.Game.Fight
                     }
                 }
 
-                base.CachedBuffer = true;
-                base.Dispatch(WorldMessage.FIGHT_TURN_FINISHED(CurrentFighter.Id));
-                base.Dispatch(WorldMessage.FIGHT_TURN_READY(CurrentFighter.Id));
-                base.CachedBuffer = false;
+                CachedBuffer = true;
+                Dispatch(WorldMessage.FIGHT_TURN_FINISHED(CurrentFighter.Id));
+                Dispatch(WorldMessage.FIGHT_TURN_READY(CurrentFighter.Id));
+                CachedBuffer = false;
 
                 SetAllUnReady();
 
@@ -1479,16 +1436,16 @@ namespace Codebreak.Service.World.Game.Fight
 
             if (GetWinners() != null)
             {
-                m_winnersTeam = GetWinners();
-                m_winnersFighter = m_winnersTeam.Fighters.Where(f => f.Invocator == null);
+                WinnerTeam = GetWinners();
+                WinnerFighters = WinnerTeam.Fighters.ToList();
 
-                m_losersTeam = m_winnersTeam.OpponentTeam;
-                m_losersFighter = m_losersTeam.Fighters.Where(f => f.Invocator == null);
+                LoserTeam = WinnerTeam.OpponentTeam;
+                LoserFighters = LoserTeam.Fighters.ToList();
 
                 LoopState = FightLoopStateEnum.STATE_WAIT_END;
 
                 if(CurrentAction != null)
-                    base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+                    Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
 
                 return true;
             }
@@ -1501,7 +1458,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="cellId"></param>
         /// <returns></returns>
-        public FighterBase GetFighterOnCell(int cellId)
+        public AbstractFighter GetFighterOnCell(int cellId)
         {
             return AliveFighters.FirstOrDefault(fighter => fighter.Cell != null && fighter.Cell.Id == cellId);
         }
@@ -1514,7 +1471,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             if (!Team0.HasSomeoneAlive)
                 return Team1;
-            else if (!Team1.HasSomeoneAlive)
+            if (!Team1.HasSomeoneAlive)
                 return Team0;
             return null;
         }
@@ -1547,7 +1504,7 @@ namespace Codebreak.Service.World.Game.Fight
                             var fighters = AliveFighters.OfType<CharacterEntity>().Where(fighter => !fighter.TurnReady);
                             var fightersName = string.Join(", ", fighters.Select(fighter => fighter.Name));
 
-                            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_WAITING_PLAYERS, fightersName));
+                            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHT_WAITING_PLAYERS, fightersName));
 
                             MiddleTurn();
                             BeginTurn();
@@ -1627,11 +1584,11 @@ namespace Codebreak.Service.World.Game.Fight
                             // THAT WAS THE FUCKING FIX, NICE CLIENT WAITING FOR THAT TO REFHRESH PLAYER STATE !!!!!!!!!!!! ANKAMAAAAAAAAARGHHHHHHHH
                             if (m_currentApCost != -1)
                             {
-                                base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + m_currentApCost));
+                                Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, CurrentFighter.Id, CurrentFighter.Id + ",-" + m_currentApCost));
                                 m_currentApCost = -1;
                             }
 
-                            base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+                            Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
 
                             if (LoopState == FightLoopStateEnum.STATE_WAIT_END)
                                 break;
@@ -1684,11 +1641,12 @@ namespace Codebreak.Service.World.Game.Fight
                         break;
 
                     case FightLoopStateEnum.STATE_WAIT_AI:
-                        if (CurrentFighter is AIFighter)
+                        var aiFighter = CurrentFighter as AIFighter;
+                        if (aiFighter != null)
                         {
                             try
                             {
-                                ((AIFighter)CurrentFighter).CurrentBrain.OnUpdate();
+                                aiFighter.CurrentBrain.OnUpdate();
                             }
                             catch (Exception ex)
                             {
@@ -1702,19 +1660,24 @@ namespace Codebreak.Service.World.Game.Fight
                     case FightLoopStateEnum.STATE_WAIT_END:
                         switch (LoopEndState)
                         {
-                            case FightEndStateEnum.STATE_INIT_CALCULATION:
-                                LoopEndState = FightEndStateEnum.STATE_PROCESS_CALCULATION;
+                            case FightEndStateEnum.STATE_END_INITIALIZE:
+                                LoopEndState = FightEndStateEnum.STATE_END_EXECUTE_BEHAVIORS;
                                 Team0.FightEnd();
                                 Team1.FightEnd();
-                                InitEndCalculation();
                                 break;
 
-                            case FightEndStateEnum.STATE_PROCESS_CALCULATION:
-                                LoopEndState = FightEndStateEnum.STATE_END_CALCULATION;
-                                ApplyEndCalculation();
+                            case FightEndStateEnum.STATE_END_EXECUTE_BEHAVIORS:
+                                if (m_endingBehaviors.Count > 0)
+                                {
+                                    m_endingBehaviors.Dequeue().Execute(this);
+                                }
+                                else
+                                {
+                                    LoopEndState = FightEndStateEnum.STATE_END_SUCCESS;
+                                }
                                 break;
 
-                            case FightEndStateEnum.STATE_END_CALCULATION:
+                            case FightEndStateEnum.STATE_END_SUCCESS:
                                 if (LoopTimedout)
                                 {
                                     FightEnd();
@@ -1738,9 +1701,11 @@ namespace Codebreak.Service.World.Game.Fight
             }
             catch(Exception ex)
             {
-                LoopState = FightLoopStateEnum.STATE_WAIT_END;
-                LoopEndState = FightEndStateEnum.STATE_END_ERROR;
-
+                if (LoopState != FightLoopStateEnum.STATE_ENDED)
+                {
+                    LoopState = FightLoopStateEnum.STATE_WAIT_END;
+                    LoopEndState = FightEndStateEnum.STATE_END_ERROR;
+                }
                 Logger.Error("Fight ended error : type=" + Type + " message="+ ex.ToString());
             }
         }
@@ -1750,10 +1715,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="spellLevel"></param>
+        /// <param name="spellId"></param>
         /// <param name="cellId"></param>
-        /// <param name="targets"></param>
+        /// <param name="castCell"></param>
         /// <returns></returns>
-        public FightSpellLaunchResultEnum CanLaunchSpell(FighterBase fighter, SpellLevel spellLevel, int spellId, int cellId, int castCell)
+        public FightSpellLaunchResultEnum CanLaunchSpell(AbstractFighter fighter, SpellLevel spellLevel, int spellId, int cellId, int castCell)
         {
             if(LoopState != FightLoopStateEnum.STATE_WAIT_TURN && LoopState != FightLoopStateEnum.STATE_WAIT_AI)            
                 return FightSpellLaunchResultEnum.RESULT_ERROR;
@@ -1818,7 +1784,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         /// <param name="cellId"></param>
         /// <returns></returns>
-        public bool CanUseWeapon(FighterBase fighter, ItemDAO weapon, int cellId)
+        public bool CanUseWeapon(AbstractFighter fighter, ItemDAO weapon, int cellId)
         {
             var template = weapon.Template;
 
@@ -1866,7 +1832,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="cellId"></param>
-        public void TryUseWeapon(FighterBase fighter, int cellId, int actionTime = 5000)
+        public void TryUseWeapon(AbstractFighter fighter, int cellId, int actionTime = 5000)
         {
             AddMessage(() =>
                 {
@@ -1913,7 +1879,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                     fighter.UsedAP += weaponTemplate.APCost;
 
-                    base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
+                    Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
 
                     var failure = false;
                     if (weaponTemplate.CFRate != 0)
@@ -1929,11 +1895,11 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if(failure)
                     {
-                        base.CachedBuffer = true;
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_WEAPON_FAILURE, fighter.Id, weaponTemplate.Id.ToString()));
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + weaponTemplate.APCost));
-                        base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
-                        base.CachedBuffer = false;
+                        CachedBuffer = true;
+                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_WEAPON_FAILURE, fighter.Id, weaponTemplate.Id.ToString()));
+                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + weaponTemplate.APCost));
+                        Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+                        CachedBuffer = false;
 
                         CurrentFighter.TurnPass = true;
                         return;
@@ -1954,20 +1920,20 @@ namespace Codebreak.Service.World.Game.Fight
                     }
 
                     if(criticalHit)                   
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
+                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, "0"));
 
                     var effects = weapon.Statistics.WeaponEffects;
-                    var targetLists = new List<Tuple<GenericEffect, List<FighterBase>>>();
+                    var targetLists = new List<Tuple<GenericEffect, List<AbstractFighter>>>();
 
                     foreach (var effect in effects)
                     {
-                        var targetList = new List<FighterBase>();
+                        var targetList = new List<AbstractFighter>();
                         foreach (var currentCellId in CellZone.GetCells(Map, cellId, fighter.Cell.Id, weaponTemplate.RangeType))
                         {
                             var fightCell = GetCell(currentCellId);
                             if (fightCell != null)
                             {
-                                foreach(var fighterObject in fightCell.FightObjects.OfType<FighterBase>())
+                                foreach(var fighterObject in fightCell.FightObjects.OfType<AbstractFighter>())
                                 {
                                     if (fighter == fighterObject)
                                         continue;
@@ -2048,7 +2014,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighter"></param>
         /// <param name="spellId"></param>
         /// <param name="castCellId"></param>
-        public void TryLaunchSpell(FighterBase fighter, int spellId, int castCellId, int actionTime = 5000)
+        public void TryLaunchSpell(AbstractFighter fighter, int spellId, int castCellId, int actionTime = 5000)
         {
             AddMessage(() =>
             {
@@ -2115,11 +2081,11 @@ namespace Codebreak.Service.World.Game.Fight
 
                     if (isEchec)
                     {
-                        base.CachedBuffer = true;
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_FAILURE, fighter.Id, spellId.ToString()));
-                        base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
-                        base.Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
-                        base.CachedBuffer = false;
+                        CachedBuffer = true;
+                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_FAILURE, fighter.Id, spellId.ToString()));
+                        Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + spellLevel.APCost));
+                        Dispatch(WorldMessage.FIGHT_ACTION_FINISHED(CurrentFighter.Id));
+                        CachedBuffer = false;
 
                         if (spellLevel.IsECSEndTurn == 1)
                         {
@@ -2150,15 +2116,15 @@ namespace Codebreak.Service.World.Game.Fight
                 }
                 
                 if (isCritic)                
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, spellId.ToString()));                
+                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_CRITICAL_HIT, fighter.Id, spellId.ToString()));                
 
                 var effects = isCritic ? spellLevel.CriticalEffects : spellLevel.Effects;
-                var targetLists = new Dictionary<SpellEffect, List<FighterBase>>();
-                int effectIndex = 0;
+                var targetLists = new Dictionary<SpellEffect, List<AbstractFighter>>();
+                var effectIndex = 0;
 
                 foreach (var effect in effects)
                 {
-                    targetLists.Add(effect, new List<FighterBase>());
+                    targetLists.Add(effect, new List<AbstractFighter>());
 
                     var targetType = spellLevel.Template.Targets != null ? spellLevel.Template.Targets.Count > effectIndex ? spellLevel.Template.Targets[effectIndex] : -1 : -1;
 
@@ -2169,7 +2135,7 @@ namespace Codebreak.Service.World.Game.Fight
                             var fightCell = GetCell(currentCellId);
                             if (fightCell != null)
                             {
-                                foreach (var fighterObject in fightCell.FightObjects.OfType<FighterBase>())
+                                foreach (var fighterObject in fightCell.FightObjects.OfType<AbstractFighter>())
                                 {
                                     if (targetType != -1)
                                     {
@@ -2295,26 +2261,23 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="winnerTeam"></param>
-        /// <param name="looserTeam"></param>
-        private void FightEnd()
+        protected virtual void FightEnd()
         {
-            if (State == FightStateEnum.STATE_PLACEMENT)            
-                Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));            
+            if (State == FightStateEnum.STATE_PLACEMENT)
+                Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
 
             State = FightStateEnum.STATE_ENDED;
             LoopState = FightLoopStateEnum.STATE_ENDED;
-            
-            base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
 
-            foreach (var fighter in m_winnersTeam.Fighters.ToArray())
-            {
-                if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
-                    fighter.AddMessage(() => Map.FightManager.ExecuteFightActions(Type, FightStateEnum.STATE_ENDED, fighter as CharacterEntity));  
-                fighter.EndFight(true);              
-            }
+            foreach (var fighter in LoserFighters)
+                Result.AddResult(fighter);
 
-            foreach (var fighter in m_losersTeam.Fighters.ToArray())
+            Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
+
+            foreach (var fighter in WinnerTeam.Fighters.ToArray())
+                fighter.EndFight(true);
+
+            foreach (var fighter in LoserTeam.Fighters.ToArray())
                 fighter.EndFight();
 
             foreach (var spectator in SpectatorTeam.Spectators.ToArray())
@@ -2324,7 +2287,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        private void FightEndError()
+        protected virtual void FightEndError()
         {
             if (State == FightStateEnum.STATE_PLACEMENT)
                 Map.Dispatch(WorldMessage.FIGHT_FLAG_DESTROY(Id));
@@ -2332,7 +2295,7 @@ namespace Codebreak.Service.World.Game.Fight
             State = FightStateEnum.STATE_ENDED;
             LoopState = FightLoopStateEnum.STATE_ENDED;
 
-            base.Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
+            Dispatch(WorldMessage.FIGHT_END_RESULT(Result));
 
             foreach (var fighter in Fighters.ToArray())
             {
@@ -2350,8 +2313,6 @@ namespace Codebreak.Service.World.Game.Fight
         private void FightEnded()
         {
             Map.FightManager.Remove(this);
-
-            Dispose();
         }
 
         /// <summary>
@@ -2364,13 +2325,13 @@ namespace Codebreak.Service.World.Game.Fight
 
             Cells.Clear();
             Cells = null;
-
+            
             SpectatorTeam = null;
             Team0 = null;
             Team1 = null;
 
             CurrentFighter = null;
-            CurrentProcessingFighter = null;            
+            CurrentProcessingFighter = null;
             CurrentSubAction = null;
 
             TurnProcessor.Dispose();
@@ -2383,10 +2344,12 @@ namespace Codebreak.Service.World.Game.Fight
 
             m_activableObjects.Clear();
             m_activableObjects = null;
-            m_losersFighter = null;
-            m_winnersFighter = null;
-            m_winnersTeam = null;
-            m_losersTeam = null;
+            WinnerTeam = null;
+            LoserTeam = null;
+            WinnerFighters.Clear();
+            WinnerFighters = null;
+            LoserFighters.Clear();
+            LoserFighters = null;
             m_processingTargets.Clear();
             m_processingTargets = null;
 
@@ -2411,8 +2374,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="cell"></param>
+        /// <param name="cellId"></param>
         /// <returns></returns>
         public bool CanPutObject(int cellId)
         {
@@ -2427,7 +2389,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="obj"></param>
-        public void AddActivableObject(FighterBase caster, FightActivableObject obj)
+        public void AddActivableObject(AbstractFighter caster, FightActivableObject obj)
         {
             if (!m_activableObjects.ContainsKey(caster))
                 m_activableObjects.Add(caster, new List<FightActivableObject>());
@@ -2437,13 +2399,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public bool CanAbortMovement
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool CanAbortMovement => false;
 
         /// <summary>
         /// 
@@ -2468,7 +2424,7 @@ namespace Codebreak.Service.World.Game.Fight
                     return;
                 }
 
-                var fighter = (FighterBase)entity;
+                var fighter = (AbstractFighter)entity;
                 var movementPath = Pathfinding.IsValidPath(this, fighter, fighter.Cell.Id, path);
 
                 //
@@ -2490,10 +2446,10 @@ namespace Codebreak.Service.World.Game.Fight
                 // Si tacle
                 if (tacledChance != -1 && !CurrentFighter.StateManager.HasState(FighterStateEnum.STATE_ROOTED))
                 {
-                    base.CachedBuffer = true;
+                    CachedBuffer = true;
 
                     // XX A été taclé
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_TACLE, fighter.Id));
+                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_TACLE, fighter.Id));
 
                     // perte d'ap
                     var lostAP = (fighter.AP * tacledChance / 100) - 1;
@@ -2506,7 +2462,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                     fighter.UsedAP += lostAP;
 
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + lostAP));
+                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PA_LOST, fighter.Id, fighter.Id + ",-" + lostAP));
 
                     var lostMP = fighter.MP;
 
@@ -2518,15 +2474,15 @@ namespace Codebreak.Service.World.Game.Fight
 
                     fighter.UsedMP += lostMP;
 
-                    base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + lostMP));
-                    base.CachedBuffer = false;
+                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + lostMP));
+                    CachedBuffer = false;
 
                     return;
                 }
 
                 LoopState = FightLoopStateEnum.STATE_WAIT_ACTION;
 
-                base.Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
+                Dispatch(WorldMessage.FIGHT_ACTION_START(CurrentFighter.Id));
 
                 CurrentFighter.Team.CheckMovement(fighter, fighter.Cell.Id, movementPath.EndCell, movementPath.MovementLength);
 
@@ -2537,16 +2493,16 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="path"></param>
+        /// <param name="entity"></param>
+        /// <param name="movementPath"></param>
         /// <param name="cellId"></param>
         public void MovementFinish(AbstractEntity entity, MovementPath movementPath, int cellId)
         {
-            var fighter = (FighterBase)entity;
+            var fighter = (AbstractFighter)entity;
 
             fighter.UsedMP += movementPath.MovementLength;
 
-            base.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + movementPath.MovementLength));
+            Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_PM_LOST, fighter.Id, fighter.Id + ",-" + movementPath.MovementLength));
 
             fighter.Orientation = movementPath.GetDirection(movementPath.LastStep);
             fighter.SetCell(GetCell(cellId));
@@ -2568,16 +2524,15 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
-        public void SendFightJoinInfos(FighterBase fighter)
+        /// <param name="fighter"></param>
+        public void SendFightJoinInfos(AbstractFighter fighter)
         {
             if (fighter.Type == EntityTypeEnum.TYPE_CHARACTER)
             {
                 fighter.CachedBuffer = true;
-                if(fighter.IsSpectating)
-                    fighter.Dispatch(WorldMessage.FIGHT_JOIN_SUCCESS((int)FightStateEnum.STATE_FIGHTING, false, false, true, 0)); // GameJoin
-                else
-                    fighter.Dispatch(WorldMessage.FIGHT_JOIN_SUCCESS((int)State, CancelButton, true, false, StartTime - UpdateTime)); // GameJoin
+                fighter.Dispatch(fighter.IsSpectating
+                    ? WorldMessage.FIGHT_JOIN_SUCCESS((int) FightStateEnum.STATE_FIGHTING, false, false, true, 0)
+                    : WorldMessage.FIGHT_JOIN_SUCCESS((int) State, CancelButton, true, false, StartTime - UpdateTime));
                 fighter.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_ADD, AliveFighters.ToArray()));
 
                 switch (State)
@@ -2588,7 +2543,7 @@ namespace Codebreak.Service.World.Game.Fight
                         {
                             fighter.IsDisconnected = false;
                             fighter.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
-                            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_RECONNECTED, fighter.Name));
+                            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_RECONNECTED, fighter.Name));
                         }
                         else
                         {
@@ -2603,14 +2558,14 @@ namespace Codebreak.Service.World.Game.Fight
                     case FightStateEnum.STATE_FIGHTING:
                         if(fighter.IsSpectating)
                         {
-                            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_SPECTATOR_JOINED, fighter.Name));
+                            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_FIGHT_SPECTATOR_JOINED, fighter.Name));
                         }
                         else if (fighter.IsDisconnected)
                         {
                             fighter.IsDisconnected = false;
                             fighter.Team.SendChallengeInfos(fighter);
                             fighter.Dispatch(WorldMessage.GAME_DATA_SUCCESS());
-                            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_RECONNECTED, fighter.Name));
+                            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_FIGHTER_RECONNECTED, fighter.Name));
                         }                        
                         fighter.Dispatch(WorldMessage.FIGHT_COORDINATE_INFORMATIONS(AliveFighters.ToArray()));
                         fighter.Dispatch(WorldMessage.FIGHT_STARTS());
@@ -2638,7 +2593,7 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             foreach (var fighter in Fighters.OfType<AIFighter>())
-                fighter.TurnReady = true;                
+                fighter.TurnReady = true;
         }
 
         /// <summary>
@@ -2648,31 +2603,23 @@ namespace Codebreak.Service.World.Game.Fight
         public virtual void OnCharacterJoin(CharacterEntity character, FightTeam team)
         {
         }
-        
+
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="actor"></param>
+        /// <param name="character"></param>
         /// <returns></returns>
         public abstract bool CanJoin(CharacterEntity character);
         
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
+        /// <param name="character"></param>
+        /// <param name="kick"></param>
+        /// <returns></returns>
         public abstract FightActionResultEnum FightQuit(CharacterEntity character, bool kick = false);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public abstract void InitEndCalculation();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public abstract void ApplyEndCalculation();
-
+        
         /// <summary>
         /// 
         /// </summary>

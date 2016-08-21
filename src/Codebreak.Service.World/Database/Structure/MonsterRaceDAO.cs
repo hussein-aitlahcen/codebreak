@@ -48,12 +48,6 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
-        public List<MonsterDAO> Monsters
-        {
-            get
-            {
-                return m_monsters;
-            }
-        }
+        public List<MonsterDAO> Monsters => m_monsters;
     }
 }

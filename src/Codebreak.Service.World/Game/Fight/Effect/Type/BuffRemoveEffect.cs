@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class BuffRemoveEffect : EffectBase
+    public sealed class BuffRemoveEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 

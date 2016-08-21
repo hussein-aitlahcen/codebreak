@@ -26,14 +26,8 @@ namespace Codebreak.Service.World.Game.Party
         /// <summary>
         /// 
         /// </summary>
-        public int MemberCount
-        {
-            get
-            {
-                return m_memberById.Count;
-            }
-        }
-        
+        public int MemberCount => m_memberById.Count;
+
         /// <summary>
         /// 
         /// </summary>

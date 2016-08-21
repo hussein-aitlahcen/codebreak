@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class TaxCollectorFight : FightBase, IDisposable
+    public sealed class TaxCollectorFight : AbstractFight, IDisposable
     {
         /// <summary>
         /// 
@@ -60,8 +60,7 @@ namespace Codebreak.Service.World.Game.Fight
             JoinFight(Attacker, Team0);
             JoinFight(TaxCollector, Team1);
 
-            base.AddTimer(WorldConfig.PVT_TELEPORT_DEFENDERS_TIMEOUT, TeleportDefenders, true);
-            base.Start();
+            AddTimer(WorldConfig.PVT_TELEPORT_DEFENDERS_TIMEOUT, TeleportDefenders, true);
         }
 
         /// <summary>
@@ -91,7 +90,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
+        /// <param name="character"></param>
+        /// <param name="team"></param>
         public override void OnCharacterJoin(CharacterEntity character, FightTeam team)
         {
             TaxCollector.Guild.TaxCollectorAttackerJoin(TaxCollector.Id, character);
@@ -100,7 +100,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fighter"></param>
+        /// <param name="character"></param>
         /// <returns></returns>
         public override bool CanJoin(CharacterEntity character)
         {
@@ -121,24 +121,21 @@ namespace Codebreak.Service.World.Game.Fight
             switch (State)
             {
                 case FightStateEnum.STATE_PLACEMENT:
-                    if (base.TryKillFighter(character, character.Id, true, true) == FightActionResultEnum.RESULT_END)
-                    {
+                    if (TryKillFighter(character, character.Id, true, true) == FightActionResultEnum.RESULT_END)
                         return FightActionResultEnum.RESULT_END;
-                    }
-                    else
+                    
+                    if (kick)
                     {
-                        if (kick)
-                        {
-                            character.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, character.Team.LeaderId, character));
-                            character.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, character));
-                            character.EndFight(true);
-                            character.Dispatch(WorldMessage.FIGHT_LEAVE());
-                        }
-
-                        TaxCollector.Guild.TaxColectorAttackerLeave(TaxCollector.Id, character);
-
-                        return FightActionResultEnum.RESULT_NOTHING;
+                        character.Fight.Dispatch(WorldMessage.FIGHT_FLAG_UPDATE(OperatorEnum.OPERATOR_REMOVE, character.Team.LeaderId, character));
+                        character.Fight.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, character));
+                        character.EndFight(true);
+                        character.Dispatch(WorldMessage.FIGHT_LEAVE());
                     }
+
+                    TaxCollector.Guild.TaxColectorAttackerLeave(TaxCollector.Id, character);
+
+                    return FightActionResultEnum.RESULT_NOTHING;
+                    
 
                 case FightStateEnum.STATE_FIGHTING:
                     if (character.IsSpectating)
@@ -162,30 +159,7 @@ namespace Codebreak.Service.World.Game.Fight
 
             return FightActionResultEnum.RESULT_NOTHING;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void InitEndCalculation()
-        {
-            foreach (var fighter in m_winnersFighter)
-            {
-                Result.AddResult(fighter, FightEndTypeEnum.END_WINNER);
-            }
-
-            foreach (var player in m_losersFighter.OfType<CharacterEntity>())
-            {
-                Result.AddResult(player);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void ApplyEndCalculation()
-        {
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

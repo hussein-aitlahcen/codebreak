@@ -21,12 +21,9 @@ namespace Codebreak.Service.World.Command
             "character"
         };
 
-        public override string[] Aliases { get { return _aliases; } }
+        public override string[] Aliases => _aliases;
 
-        public override string Description
-        {
-            get { return "Character management commands.";  }
-        }
+        public override string Description => "Character management commands.";
 
         protected override bool CanExecute(WorldCommandContext context)
         {
@@ -48,18 +45,9 @@ namespace Codebreak.Service.World.Command
                 "title"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Change your character title. Arguments : %titleId%"; }
-            }
+            public override string Description => "Change your character title. Arguments : %titleId%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -91,18 +79,9 @@ namespace Codebreak.Service.World.Command
                 "size"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Change your character skin. Arguments : %skinId%"; }
-            }
+            public override string Description => "Change your character skin. Arguments : %skinId%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -114,7 +93,7 @@ namespace Codebreak.Service.World.Command
                 int size = 0;
                 if (Int32.TryParse(context.TextCommandArgument.NextWord(), out size))
                 {
-                    context.Character.SkinSizeBase = size;
+                    context.Character.DatabaseRecord.SkinSize = size;
                     context.Character.RefreshOnMap();
                 }
                 else
@@ -134,18 +113,9 @@ namespace Codebreak.Service.World.Command
                 "effect"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Apply a specified effect to your character. Arguments : %effectId"; }
-            }
+            public override string Description => "Apply a specified effect to your character. Arguments : %effectId";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -181,18 +151,9 @@ namespace Codebreak.Service.World.Command
                 "skin"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Modify the player skin."; }
-            }
+            public override string Description => "Modify the player skin.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -204,7 +165,7 @@ namespace Codebreak.Service.World.Command
                 int skinId = 0;
                 if(Int32.TryParse(context.TextCommandArgument.NextWord(), out skinId))
                 {
-                    context.Character.SkinBase = skinId;
+                    context.Character.DatabaseRecord.Skin = skinId;
                     context.Character.RefreshOnMap();
                 }
                 else
@@ -224,18 +185,9 @@ namespace Codebreak.Service.World.Command
                 "warn"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Warn a player. Arguments : %playerName%"; }
-            }
+            public override string Description => "Warn a player. Arguments : %playerName%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -272,18 +224,9 @@ namespace Codebreak.Service.World.Command
                 "emote"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Play an emote on the map. Arguments %emoteId%"; }
-            }
+            public override string Description => "Play an emote on the map. Arguments %emoteId%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -314,18 +257,9 @@ namespace Codebreak.Service.World.Command
                 "alignmentreset"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Reset your character alignment."; }
-            }
+            public override string Description => "Reset your character alignment.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -348,18 +282,9 @@ namespace Codebreak.Service.World.Command
                 "alignment"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Set a new alignment to your character. Arguments : %alignmentId%"; }
-            }
+            public override string Description => "Set a new alignment to your character. Arguments : %alignmentId%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -388,18 +313,9 @@ namespace Codebreak.Service.World.Command
                 "addhonor"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Will honor your character. Arguments : %honorValue%"; }
-            }
+            public override string Description => "Will honor your character. Arguments : %honorValue%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -429,18 +345,9 @@ namespace Codebreak.Service.World.Command
                 "kick"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Kick a player. Arguments : %playerName% %reason%"; }
-            }
+            public override string Description => "Kick a player. Arguments : %playerName% %reason%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -484,18 +391,9 @@ namespace Codebreak.Service.World.Command
                 "life"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Restore your life."; }
-            }
+            public override string Description => "Restore your life.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -519,18 +417,9 @@ namespace Codebreak.Service.World.Command
                 "guild"  
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Open a guild creation panel"; }
-            }
+            public override string Description => "Open a guild creation panel";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -560,21 +449,9 @@ namespace Codebreak.Service.World.Command
                 "teleme"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Teleport a player to your location. Arguments : %playerName%";
-                }
-            }
+            public override string Description => "Teleport a player to your location. Arguments : %playerName%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -627,21 +504,9 @@ namespace Codebreak.Service.World.Command
                 "teleto"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Teleport yourself to a player location. Arguments : %playerName%";
-                }
-            }
+            public override string Description => "Teleport yourself to a player location. Arguments : %playerName%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -693,21 +558,9 @@ namespace Codebreak.Service.World.Command
                 "resetspell"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Reset the spells of a player. Arguments : %playerName%";
-                }
-            }
+            public override string Description => "Reset the spells of a player. Arguments : %playerName%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -744,21 +597,9 @@ namespace Codebreak.Service.World.Command
                 "tele"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Teleport yourself at the desired location. Arguments : %mapId% %cellId%";
-                }
-            }
+            public override string Description => "Teleport yourself at the desired location. Arguments : %mapId% %cellId%";
 
             protected override bool CanExecute(WorldCommandContext context)
             {
@@ -832,15 +673,9 @@ namespace Codebreak.Service.World.Command
                 "online"
             };
 
-            public override string[] Aliases
-            {
-                get { return _aliases; }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Check out whos online."; }
-            }
+            public override string Description => "Check out whos online.";
 
             protected override void Process(WorldCommandContext context)
             {
@@ -874,15 +709,9 @@ namespace Codebreak.Service.World.Command
                 "level"
             };
 
-            public override string[] Aliases
-            {
-                get { return _aliases; }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Level up your character. Arguments : %level%"; }
-            }
+            public override string Description => "Level up your character. Arguments : %level%";
 
             protected override void Process(WorldCommandContext context)
             {
@@ -921,15 +750,9 @@ namespace Codebreak.Service.World.Command
                 "winfight"
             };
 
-            public override string[] Aliases
-            {
-                get { return _aliases; }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Win the current fight in the favor of your team."; }
-            }
+            public override string Description => "Win the current fight in the favor of your team.";
 
             protected override void Process(WorldCommandContext context)
             {
@@ -954,15 +777,9 @@ namespace Codebreak.Service.World.Command
                 "winfightto"
             };
 
-            public override string[] Aliases
-            {
-                get { return _aliases; }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Win the current fight in the choosen player favor."; }
-            }
+            public override string Description => "Win the current fight in the choosen player favor.";
 
             protected override void Process(WorldCommandContext context)
             {
@@ -995,15 +812,9 @@ namespace Codebreak.Service.World.Command
                 "kamas"
             };
 
-            public override string[] Aliases
-            {
-                get { return _aliases; }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Add some kamas to your invotentory. Arguments : %kamas%"; }
-            }
+            public override string Description => "Add some kamas to your invotentory. Arguments : %kamas%";
 
             protected override void Process(WorldCommandContext context)
             {
@@ -1029,15 +840,9 @@ namespace Codebreak.Service.World.Command
                 "item"
             };
 
-            public override string[] Aliases
-            {
-                get { return _aliases; }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get { return "Add an item in your inventory, with max jet. Arguments : %templateId%"; }
-            }
+            public override string Description => "Add an item in your inventory, with max jet. Arguments : %templateId%";
 
             protected override void Process(WorldCommandContext context)
             {

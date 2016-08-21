@@ -48,13 +48,7 @@ namespace Codebreak.Service.World.Game.Area
         /// <summary>
         /// 
         /// </summary>
-        public int Id
-        {
-            get
-            {
-                return m_subAreaRecord.Id;
-            }
-        }
+        public int Id => m_subAreaRecord.Id;
 
         /// <summary>
         /// 
@@ -103,7 +97,7 @@ namespace Codebreak.Service.World.Game.Area
         /// 
         /// </summary>
         /// <param name="method"></param>
-        public override void AddHandler(Action<string> method)
+        public new void AddHandler(Action<string> method)
         {
             IOQueue.AddMessage(() => base.AddHandler(method));
         }

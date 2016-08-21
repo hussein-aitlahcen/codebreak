@@ -28,13 +28,7 @@ namespace Codebreak.Service.World.RPC
         /// <summary>
         /// 
         /// </summary>
-        public static RPCManager Instance
-        {
-            get
-            {
-                return Singleton<RPCManager>.Instance;
-            }
-        }
+        public static RPCManager Instance => Singleton<RPCManager>.Instance;
 
         /// <summary>
         /// 

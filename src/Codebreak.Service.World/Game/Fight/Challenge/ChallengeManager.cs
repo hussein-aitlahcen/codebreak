@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
@@ -37,14 +37,14 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        private List<Func<ChallengeBase>> m_challengeGenerator;
+        private List<Func<AbstractChallenge>> m_challengeGenerator;
         
         /// <summary>
         /// 
         /// </summary>
         public ChallengeManager()
         {
-            m_challengeGenerator = new List<Func<ChallengeBase>>();
+            m_challengeGenerator = new List<Func<AbstractChallenge>>();
             m_challengeGenerator.Add(() => new ZombieChallenge());
             m_challengeGenerator.Add(() => new AnachoriteChallenge());
             m_challengeGenerator.Add(() => new AbnegationChallenge());
@@ -64,9 +64,9 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<ChallengeBase> Generate(int length)
+        public List<AbstractChallenge> Generate(int length)
         {
-            List<ChallengeBase> challenges = new List<ChallengeBase>();
+            List<AbstractChallenge> challenges = new List<AbstractChallenge>();
             while (challenges.Count < length)
             {
                 var challenge = m_challengeGenerator[Util.Next(0, m_challengeGenerator.Count)]();

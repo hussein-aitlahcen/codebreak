@@ -9,14 +9,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SkinChangeBuff : BuffBase
+    public sealed class SkinChangeBuff : AbstractSpellBuff
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
-        public SkinChangeBuff(CastInfos castInfos, FighterBase target)
+        public SkinChangeBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_STATS, DecrementType.TYPE_ENDTURN)
         {
             var damageValue = 0;

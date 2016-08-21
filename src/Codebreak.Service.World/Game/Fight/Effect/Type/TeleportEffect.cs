@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class TeleportEffect : EffectBase
+    public sealed class TeleportEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 

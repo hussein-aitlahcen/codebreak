@@ -18,25 +18,13 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         [ProtoIgnore]
-        public int Total
-        {
-            get
-            {
-                return Base + Items + Dons + Boosts;
-            }
-        }
+        public int Total => Base + Items + Dons + Boosts;
 
         /// <summary>
         /// 
         /// </summary>
         [ProtoIgnore]
-        public EffectEnum EffectType
-        {
-            get
-            {
-                return (EffectEnum)Id;
-            }
-        }
+        public EffectEnum EffectType => (EffectEnum)Id;
 
         /// <summary>
         /// 
@@ -56,13 +44,7 @@ namespace Codebreak.Service.World.Game.Stats
         /// 
         /// </summary>
         [ProtoIgnore]
-        public int RandomJet
-        {
-            get
-            {
-                return Util.NextJet(Value1, Value2);
-            }
-        }
+        public int RandomJet => Util.NextJet(Value1, Value2);
 
         /// <summary>
         /// 

@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class TransposeEffect : EffectBase
+    public sealed class TransposeEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 

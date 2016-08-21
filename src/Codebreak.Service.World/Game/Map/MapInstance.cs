@@ -41,24 +41,12 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        private static long NextMonsterId
-        {
-            get
-            {
-                return Interlocked.Decrement(ref m_NextMonsterId);
-            }
-        }
+        private static long NextMonsterId => Interlocked.Decrement(ref m_NextMonsterId);
 
         /// <summary>
         /// 
         /// </summary>
-        public FieldTypeEnum FieldType
-        {
-            get
-            {
-                return FieldTypeEnum.TYPE_MAP;
-            }
-        }
+        public FieldTypeEnum FieldType => FieldTypeEnum.TYPE_MAP;
 
         public Pathmaker Pathmaker
         {
@@ -190,35 +178,17 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<AbstractEntity> Entities
-        {
-            get
-            {
-                return m_entityById.Values;
-            }
-        }
+        public IEnumerable<AbstractEntity> Entities => m_entityById.Values;
 
         /// <summary>
         /// 
         /// </summary>
-        public List<MapCell> Cells
-        {
-            get
-            {
-                return m_cells;
-            }
-        }
+        public List<MapCell> Cells => m_cells;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool CanAbortMovement
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool CanAbortMovement => true;
 
         /// <summary>
         /// 
@@ -257,24 +227,12 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public int PlayerCount
-        {
-            get
-            {
-                return m_playerCount;
-            }
-        }
+        public int PlayerCount => m_playerCount;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<InteractiveObject> InteractiveObjects
-        {
-            get
-            {
-                return m_interactiveObjects;
-            }
-        }
+        public IEnumerable<InteractiveObject> InteractiveObjects => m_interactiveObjects;
 
         public Paddock Paddock => m_paddock;
 

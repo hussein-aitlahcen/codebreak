@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ReprieveChallenge : ChallengeBase
+    public sealed class ReprieveChallenge : AbstractChallenge
     {
         /// <summary>
         /// 
@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void CheckDeath(FighterBase fighter)
+        public override void CheckDeath(AbstractFighter fighter)
         {
             if (fighter.Id == TargetId)
             {

@@ -11,15 +11,9 @@ namespace Codebreak.Service.World.Command
     {
         private static readonly string[] m_aliases = { "monster", "m" };
 
-        public override string[] Aliases
-        {
-            get { return m_aliases; }
-        }
+        public override string[] Aliases => m_aliases;
 
-        public override string Description
-        {
-            get { return "Monsters management commands"; }
-        }
+        public override string Description => "Monsters management commands";
 
         protected override void Process(WorldCommandContext context)
         {
@@ -36,21 +30,9 @@ namespace Codebreak.Service.World.Command
                 "spawn"
             };
 
-            public override string[] Aliases
-            {
-                get
-                {
-                    return _aliases;
-                }
-            }
+            public override string[] Aliases => _aliases;
 
-            public override string Description
-            {
-                get
-                {
-                    return "Spawn a monsters group.";
-                }
-            }
+            public override string Description => "Spawn a monsters group.";
 
             protected override bool CanExecute(WorldCommandContext context)
             {

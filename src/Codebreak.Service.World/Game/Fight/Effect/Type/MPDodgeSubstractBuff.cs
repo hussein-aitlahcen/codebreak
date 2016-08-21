@@ -11,14 +11,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class MPDodgeSubstractBuff : BuffBase
+    public sealed class MPDodgeSubstractBuff : AbstractSpellBuff
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="CastInfos"></param>
         /// <param name="Target"></param>
-        public MPDodgeSubstractBuff(CastInfos CastInfos, FighterBase Target)
+        public MPDodgeSubstractBuff(CastInfos CastInfos, AbstractFighter Target)
             : base(CastInfos, Target, ActiveType.ACTIVE_STATS, DecrementType.TYPE_ENDTURN)
         {
         }

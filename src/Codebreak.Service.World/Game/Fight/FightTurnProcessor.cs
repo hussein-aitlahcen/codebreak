@@ -11,26 +11,20 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class FightTurnProcessor : IDisposable
     {
-        private List<FighterBase> m_fighterTurns = new List<FighterBase>();
-        private FighterBase m_currentFighter;
+        private List<AbstractFighter> m_fighterTurns = new List<AbstractFighter>();
+        private AbstractFighter m_currentFighter;
         private int m_currentIndex;
 
         /// <summary>
         /// 
         /// </summary>
-        public List<FighterBase> FighterOrder
-        {
-            get
-            {
-                return m_fighterTurns;
-            }
-        }
+        public List<AbstractFighter> FighterOrder => m_fighterTurns;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void SummonFighter(FighterBase fighter)
+        public void SummonFighter(AbstractFighter fighter)
         {
             var index = m_fighterTurns.IndexOf(fighter.Invocator) + 1;
             if (index == 0)
@@ -42,7 +36,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public void RemoveFighter(FighterBase fighter)
+        public void RemoveFighter(AbstractFighter fighter)
         {
             var index = m_fighterTurns.IndexOf(fighter);
             if (index == -1)
@@ -56,7 +50,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="fighters"></param>
-        public void InitTurns(IEnumerable<FighterBase> fighters)
+        public void InitTurns(IEnumerable<AbstractFighter> fighters)
         {
             var team1 = fighters.Where(Fighter => Fighter.Team.Id == 0).ToList();
             var team2 = fighters.Where(Fighter => Fighter.Team.Id == 1).ToList();
@@ -100,7 +94,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <returns></returns>
-        public FighterBase NextFighter
+        public AbstractFighter NextFighter
         {
             get
             {

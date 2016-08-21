@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class EcaflipChanceEffect : EffectBase
+    public sealed class EcaflipChanceEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 

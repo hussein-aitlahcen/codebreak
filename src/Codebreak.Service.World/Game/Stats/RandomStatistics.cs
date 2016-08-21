@@ -12,7 +12,8 @@ namespace Codebreak.Service.World.Game.Stats
         public EffectEnum Type { get; }
         public int Minimum { get; }
         public int Maximum { get; }
-        public int Random { get { return Util.NextJet(Minimum, Maximum); } }
+        public int Random => Util.NextJet(Minimum, Maximum);
+
         public RandomEffect(EffectEnum type, int min, int max)
         {
             Type = type;

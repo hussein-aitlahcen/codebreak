@@ -36,7 +36,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
     /// <summary>
     /// 
     /// </summary>
-    public abstract class BuffBase
+    public abstract class AbstractSpellBuff
     {
         /// <summary>
         ///
@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         ///
         /// </summary>
-        public FighterBase Caster
+        public AbstractFighter Caster
         {
             get;
             set;
@@ -77,7 +77,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         ///
         /// </summary>
-        public FighterBase Target
+        public AbstractFighter Target
         {
             get;
             set;
@@ -115,7 +115,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// 
         /// </summary>
         /// <param name="Effect"></param>
-        public BuffBase(CastInfos castInfos, FighterBase target, ActiveType activeType, DecrementType decrementType)
+        public AbstractSpellBuff(CastInfos castInfos, AbstractFighter target, ActiveType activeType, DecrementType decrementType)
         {
             CastInfos = castInfos;
             Duration = target.Fight.CurrentFighter == target ? castInfos.Duration + 1 : castInfos.Duration;

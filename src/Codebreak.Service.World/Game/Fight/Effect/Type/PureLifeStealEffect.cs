@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PureLifeStealEffect : EffectBase
+    public sealed class PureLifeStealEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 

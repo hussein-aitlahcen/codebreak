@@ -19,13 +19,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return "MonsterGroup_" + Id;
-            }
-        }
+        public override string Name => "MonsterGroup_" + Id;
 
         /// <summary>
         /// 
@@ -116,13 +110,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<MonsterEntity> Monsters
-        {
-            get
-            {
-                return m_monsters;
-            }
-        }
+        public IEnumerable<MonsterEntity> Monsters => m_monsters;
 
         /// <summary>
         /// 

@@ -45,12 +45,6 @@ namespace Codebreak.Service.World.Database.Structure
         
         [Write(false)]
         [DoNotNotify]
-        public SocialRelationTypeEnum Type
-        {
-            get
-            {
-                return (SocialRelationTypeEnum)TypeId;
-            }
-        }
+        public SocialRelationTypeEnum Type => (SocialRelationTypeEnum)TypeId;
     }
 }

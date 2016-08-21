@@ -37,24 +37,12 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<long> ConnectedAccounts
-        {
-            get
-            {
-                return m_clientByAccount.Keys;
-            }
-        }
+        public IEnumerable<long> ConnectedAccounts => m_clientByAccount.Keys;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<WorldClient> Clients
-        {
-            get
-            {
-                return m_clientByAccount.Values;
-            }
-        }
+        public IEnumerable<WorldClient> Clients => m_clientByAccount.Values;
 
         /// <summary>
         /// 

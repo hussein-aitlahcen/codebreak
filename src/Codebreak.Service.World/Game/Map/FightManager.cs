@@ -23,9 +23,9 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, FightBase> m_fightList;
-        private List<FightActionDAO> m_fightActions;
-        private MapInstance m_map;
+        private readonly Dictionary<long, AbstractFight> m_fightList;
+        private readonly List<FightActionDAO> m_fightActions;
+        private readonly MapInstance m_map;
         private long m_fightId = 1;
 
         /// <summary>
@@ -40,14 +40,8 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<FightBase> Fights
-        {
-            get
-            {
-                return m_fightList.Values;
-            }
-        }
-        
+        public IEnumerable<AbstractFight> Fights => m_fightList.Values;
+
         /// <summary>
         /// 
         /// </summary>
@@ -56,7 +50,7 @@ namespace Codebreak.Service.World.Game.Map
             m_map = map;
             m_map.AddUpdatable(this);
             m_map.SubArea.AddHandler(base.Dispatch);
-            m_fightList = new Dictionary<long, FightBase>();
+            m_fightList = new Dictionary<long, AbstractFight>();
             m_fightActions = new List<FightActionDAO>(FightActionRepository.Instance.GetById(ZoneTypeEnum.TYPE_MAP, m_map.Id));
         }
 
@@ -155,7 +149,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         /// <param name="fightType"></param>
         /// <param name="state"></param>
-        /// <param name="characters"></param>
+        /// <param name="character"></param>
         public void ExecuteFightActions(FightTypeEnum fightType, FightStateEnum state, CharacterEntity character)
         {
             foreach(var fightAction in m_fightActions.Where(faction => faction.Fight == fightType && faction.State == state))
@@ -175,37 +169,35 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         /// <param name="fightId"></param>
         /// <returns></returns>
-        public FightBase GetFight(long fightId)
-        {
-            if (m_fightList.ContainsKey(fightId))
-                return m_fightList[fightId];
-            return null;
-        }
+        public AbstractFight GetFight(long fightId) => 
+            m_fightList.ContainsKey(fightId) ? m_fightList[fightId] : null;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fight"></param>
-        private void Add(FightBase fight)
+        private void Add(AbstractFight fight)
         {
+            fight.Start();
             FightCount++;
             m_fightList.Add(fight.Id, fight);
             m_map.Dispatch(WorldMessage.FIGHT_COUNT(FightCount));
-            base.AddHandler(fight.Dispatch);
-            base.AddUpdatable(fight);
+            AddHandler(fight.Dispatch);
+            AddUpdatable(fight);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fight"></param>
-        public void Remove(FightBase fight)
+        public void Remove(AbstractFight fight)
         {
             FightCount--;
             m_fightList.Remove(fight.Id);
             m_map.Dispatch(WorldMessage.FIGHT_COUNT(FightCount));
-            base.RemoveHandler(fight.Dispatch);
-            base.RemoveUpdatable(fight);
+            RemoveHandler(fight.Dispatch);
+            RemoveUpdatable(fight);
+            fight.Dispose();
         }
     }
 }

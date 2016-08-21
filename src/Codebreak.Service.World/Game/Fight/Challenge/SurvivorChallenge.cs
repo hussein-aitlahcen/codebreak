@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SurvivorChallenge : ChallengeBase
+    public sealed class SurvivorChallenge : AbstractChallenge
     {
         /// <summary>
         /// 
@@ -31,7 +31,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void EndTurn(FighterBase fighter)
+        public override void EndTurn(AbstractFighter fighter)
         {
             if(fighter.Team.AliveFighters.Count() != fighter.Team.Fighters.Count)            
                 base.OnFailed(fighter.Name);            

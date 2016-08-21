@@ -66,9 +66,9 @@ namespace Codebreak.Service.World.Manager
         /// <param name="totalProspection"></param>
         /// <param name="drops"></param>
         /// <returns></returns>
-        public Dictionary<FighterBase, List<ItemDAO>> Distribute(IEnumerable<FighterBase> fighters, long totalProspection, List<ItemDAO> drops)
+        public Dictionary<AbstractFighter, List<ItemDAO>> Distribute(IEnumerable<AbstractFighter> fighters, long totalProspection, List<ItemDAO> drops)
         {
-            var distributed = new Dictionary<FighterBase, List<ItemDAO>>();
+            var distributed = new Dictionary<AbstractFighter, List<ItemDAO>>();
             var orderedPlayers = fighters.OrderBy(player => player.Prospection);   
             foreach (var player in fighters)
                 distributed.Add(player, new List<ItemDAO>());

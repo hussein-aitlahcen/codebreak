@@ -156,13 +156,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         [Write(false)]
         [DoNotNotify]
-        public ItemSlotEnum Slot
-        {
-            get
-            {
-                return (ItemSlotEnum)SlotId;
-            }
-        }
+        public ItemSlotEnum Slot => (ItemSlotEnum)SlotId;
 
         /// <summary>
         /// 
@@ -170,13 +164,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>        
         [Write(false)]
         [DoNotNotify]
-        public bool IsEquiped
-        {
-            get
-            {
-                return IsEquipedSlot(Slot);
-            }
-        }
+        public bool IsEquiped => IsEquipedSlot(Slot);
 
         /// <summary>
         /// 
@@ -184,13 +172,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>        
         [Write(false)]
         [DoNotNotify]
-        public bool IsBoostEquiped
-        {
-            get
-            {
-                return IsBoostSlot(Slot);
-            }
-        }
+        public bool IsBoostEquiped => IsBoostSlot(Slot);
 
         /// <summary>
         /// 

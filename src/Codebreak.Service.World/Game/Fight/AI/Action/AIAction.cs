@@ -20,13 +20,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action
     {
         protected static ILog Logger = LogManager.GetLogger(typeof(AIAction));
 
-        public bool Timedout
-        {
-            get
-            {
-                return m_timeout <= Fighter.Fight.UpdateTime;
-            }
-        }
+        public bool Timedout => m_timeout <= Fighter.Fight.UpdateTime;
 
         private long m_timeout;
         public long Timeout
@@ -43,7 +37,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action
             private set;
         }
 
-        public FightBase Fight
+        public AbstractFight Fight
         {
             get;
             private set;

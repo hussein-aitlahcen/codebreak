@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public abstract class ChallengeBase : MessageDispatcher
+    public abstract class AbstractChallenge : MessageDispatcher
     {
         /// <summary>
         /// 
@@ -98,7 +98,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase Target
+        public AbstractFighter Target
         {
             get;
             protected set;
@@ -109,7 +109,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         /// <param name="id"></param>
         /// <param name="fight"></param>
-        public ChallengeBase(ChallengeTypeEnum type)
+        public AbstractChallenge(ChallengeTypeEnum type)
         {
             Id = (int)type;
             Success = false;
@@ -128,7 +128,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public virtual void BeginTurn(FighterBase fighter)
+        public virtual void BeginTurn(AbstractFighter fighter)
         {
 
         }
@@ -137,7 +137,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public virtual void EndTurn(FighterBase fighter)
+        public virtual void EndTurn(AbstractFighter fighter)
         {
 
         }
@@ -147,7 +147,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="castInfos"></param>
-        public virtual void CheckSpell(FighterBase fighter, CastInfos castInfos)
+        public virtual void CheckSpell(AbstractFighter fighter, CastInfos castInfos)
         {
         }
 
@@ -157,7 +157,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="beginCell"></param>
         /// <param name="endCell"></param>
         /// <param name="length"></param>
-        public virtual void CheckMovement(FighterBase fighter, int beginCell, int endCell, int length)
+        public virtual void CheckMovement(AbstractFighter fighter, int beginCell, int endCell, int length)
         {
         }
 
@@ -166,7 +166,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="weaponTemplate"></param>
-        public virtual void CheckWeapon(FighterBase fighter, ItemTemplateDAO weaponTemplate)
+        public virtual void CheckWeapon(AbstractFighter fighter, ItemTemplateDAO weaponTemplate)
         {
 
         }
@@ -175,7 +175,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public virtual void CheckDeath(FighterBase fighter)
+        public virtual void CheckDeath(AbstractFighter fighter)
         {
 
         }

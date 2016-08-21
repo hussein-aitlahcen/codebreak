@@ -10,9 +10,9 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ReflectSpellBuff : BuffBase
+    public sealed class ReflectSpellBuff : AbstractSpellBuff
     {
-        public ReflectSpellBuff(CastInfos castInfos, FighterBase target)
+        public ReflectSpellBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_ATTACKED_AFTER_JET, DecrementType.TYPE_ENDTURN)
         {
         }

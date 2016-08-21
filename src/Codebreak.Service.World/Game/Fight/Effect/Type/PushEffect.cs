@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PushEffect : EffectBase
+    public sealed class PushEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 
@@ -57,7 +57,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <param name="direction"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static FightActionResultEnum ApplyPush(CastInfos castInfos, FighterBase target, int direction, int length)
+        public static FightActionResultEnum ApplyPush(CastInfos castInfos, AbstractFighter target, int direction, int length)
         {
             var currentCell = target.Cell;
             
@@ -122,7 +122,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <param name="length"></param>
         /// <param name="currentLength"></param>
         /// <returns></returns>
-        private static FightActionResultEnum ApplyPushBackDamages(CastInfos castInfos, FighterBase target, int length, int currentLength)
+        private static FightActionResultEnum ApplyPushBackDamages(CastInfos castInfos, AbstractFighter target, int length, int currentLength)
         {
             var damageCoef = Util.Next(9, 17);
             double levelCoef = castInfos.Caster.Level / 50;

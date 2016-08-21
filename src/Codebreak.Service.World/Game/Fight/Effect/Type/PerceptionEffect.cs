@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PerceptionEffect : EffectBase
+    public sealed class PerceptionEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 
@@ -35,7 +35,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
                             }
                             else if (fightObject.ObstacleType == FightObstacleTypeEnum.TYPE_FIGHTER)
                             {
-                                var fighter = (FighterBase)fightObject;
+                                var fighter = (AbstractFighter)fightObject;
                                 if(fighter.Team != castInfos.Caster.Team)
                                 {
                                     if(fighter.StateManager.HasState(FighterStateEnum.STATE_STEALTH))

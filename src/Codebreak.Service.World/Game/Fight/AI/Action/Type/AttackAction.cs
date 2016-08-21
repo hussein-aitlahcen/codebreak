@@ -32,13 +32,13 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
             set;
         }
 
-        private Dictionary<int, Dictionary<int, Dictionary<SpellEffect, List<FighterBase>>>> TargetList
+        private Dictionary<int, Dictionary<int, Dictionary<SpellEffect, List<AbstractFighter>>>> TargetList
         {
             get;
             set;
         }
 
-        private IEnumerable<FighterBase> WeakestEnnemies
+        private IEnumerable<AbstractFighter> WeakestEnnemies
         {
             get;
             set;
@@ -99,22 +99,22 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                     return AIActionResult.RUNNING;
 
                 case AttackStateEnum.STATE_CALCULATE_EFFECT_TARGETS:
-                    TargetList = new Dictionary<int, Dictionary<int, Dictionary<SpellEffect, List<FighterBase>>>>();
+                    TargetList = new Dictionary<int, Dictionary<int, Dictionary<SpellEffect, List<AbstractFighter>>>>();
                     foreach(var castInfos in CastCellList)
                     {
                         var castCell = castInfos.Key;
-                        TargetList.Add(castCell, new Dictionary<int, Dictionary<SpellEffect, List<FighterBase>>>());
+                        TargetList.Add(castCell, new Dictionary<int, Dictionary<SpellEffect, List<AbstractFighter>>>());
                         foreach(var spellLevel in castInfos.Value)
                         {
                             if (spellLevel == null || spellLevel.Effects == null)
                                 continue;
 
-                            TargetList[castCell].Add(spellLevel.SpellId, new Dictionary<SpellEffect, List<FighterBase>>());
+                            TargetList[castCell].Add(spellLevel.SpellId, new Dictionary<SpellEffect, List<AbstractFighter>>());
 
                             int effectIndex = 0;
                             foreach (var effect in spellLevel.Effects)
                             {
-                                TargetList[castCell][spellLevel.SpellId].Add(effect, new List<FighterBase>());
+                                TargetList[castCell][spellLevel.SpellId].Add(effect, new List<AbstractFighter>());
 
                                 var targetType = spellLevel.Template.Targets != null ? spellLevel.Template.Targets.Count > effectIndex ? spellLevel.Template.Targets[effectIndex] : -1 : -1;
 
@@ -125,7 +125,7 @@ namespace Codebreak.Service.World.Game.Fight.AI.Action.Type
                                         var fightCell = Fight.GetCell(currentCellId);
                                         if (fightCell != null)
                                         {
-                                            foreach (var fighterObject in fightCell.FightObjects.OfType<FighterBase>())
+                                            foreach (var fighterObject in fightCell.FightObjects.OfType<AbstractFighter>())
                                             {
                                                 if (targetType != -1)
                                                 {

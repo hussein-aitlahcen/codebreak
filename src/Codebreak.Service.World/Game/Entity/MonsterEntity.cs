@@ -29,13 +29,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int BaseLife
-        {
-            get
-            {
-                return Grade.MaxLife;
-            }
-        }
+        public override int BaseLife => Grade.MaxLife;
 
         /// <summary>
         /// 
@@ -49,53 +43,33 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return Grade.MonsterId.ToString();
-            }
-        }
+        public override string Name => Grade.MonsterId.ToString();
 
         /// <summary>
         /// 
         /// </summary>
         public override int Level
         {
-            get
-            {
-                return Grade.Level;
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return Grade.Level; }
+            set {  }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinBase
-        {
-            get
-            {
-                return Grade.Template.GfxId;
-            }
-            set { }
-        }
+        public override int SkinBase => Grade.Template.GfxId;
 
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinSizeBase
-        {
-            get
-            {
-                return Grade.Template.SkinSize;
-            }
-            set { }
-        }
-        
+        public override int SkinSizeBase => Grade.Template.SkinSize;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanDrop => 
+            Invocator != null && Grade.Id == WorldConfig.LIVING_CHEST_ID;
+
         /// <summary>
         /// 
         /// </summary>
@@ -126,19 +100,16 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int AlignmentId
-        {
-            get
-            {
-                return Grade.Template.Alignment;
-            }
-        }
+        public override int AlignmentId => Grade.Template.Alignment;
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="monsterGrade"></param>
-        public MonsterEntity(long id, MonsterGradeDAO monsterGrade, FighterBase invocator = null, bool staticInvocation = false)
+        /// <param name="invocator"></param>
+        /// <param name="staticInvocation"></param>
+        public MonsterEntity(long id, MonsterGradeDAO monsterGrade, AbstractFighter invocator = null, bool staticInvocation = false)
             : base(EntityTypeEnum.TYPE_MONSTER_FIGHTER, id, staticInvocation)
         {
             Grade = monsterGrade;

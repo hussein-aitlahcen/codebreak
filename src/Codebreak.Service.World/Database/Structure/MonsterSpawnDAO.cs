@@ -39,13 +39,7 @@ namespace Codebreak.Service.World.Database.Structure
         /// 
         /// </summary>
         [Write(false)]
-        public ZoneTypeEnum Type
-        {
-            get
-            {
-                return (ZoneTypeEnum)ZoneType;
-            }
-        }
+        public ZoneTypeEnum Type => (ZoneTypeEnum)ZoneType;
 
         /// <summary>
         /// 

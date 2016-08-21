@@ -17,13 +17,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        public override bool CanAbort
-        {
-            get 
-            { 
-                return true; 
-            }
-        }
+        public override bool CanAbort => true;
 
         /// <summary>
         /// 

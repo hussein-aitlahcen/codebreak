@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class DamageLifePercentEffect : EffectBase
+    public sealed class DamageLifePercentEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 

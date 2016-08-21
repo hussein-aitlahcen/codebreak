@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AbnegationChallenge : ChallengeBase
+    public sealed class AbnegationChallenge : AbstractChallenge
     {
         /// <summary>
         /// 
@@ -34,7 +34,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="castInfos"></param>
-        public override void CheckSpell(FighterBase fighter, CastInfos castInfos)
+        public override void CheckSpell(AbstractFighter fighter, CastInfos castInfos)
         {
             if(castInfos.EffectType == EffectEnum.AddLife && castInfos.Target != null && castInfos.Target.Team == fighter.Team)            
                 base.OnFailed(fighter.Name);            

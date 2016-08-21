@@ -15,13 +15,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        public override bool CanAbort
-        {
-            get 
-            {
-                return false;
-            }
-        }
+        public override bool CanAbort => false;
 
         /// <summary>
         /// 
@@ -35,7 +29,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase Fighter
+        public AbstractFighter Fighter
         {
             get;
             private set;
@@ -47,7 +41,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="type"></param>
         /// <param name="fighter"></param>
         /// <param name="timeout"></param>
-        public AbstractGameFightAction(GameActionTypeEnum type, FighterBase fighter, long duration)
+        public AbstractGameFightAction(GameActionTypeEnum type, AbstractFighter fighter, long duration)
             : base(type, fighter, duration)
         {
             Fighter = fighter;

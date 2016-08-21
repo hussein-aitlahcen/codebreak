@@ -103,26 +103,14 @@ namespace Codebreak.Service.World.Database.Structure
         /// <returns></returns>
         [Write(false)]
         [DoNotNotify]
-        public IEnumerable<MonsterGradeDAO> Grades
-        {
-            get
-            {
-                return m_monsterGrades.Values;
-            }
-        }
+        public IEnumerable<MonsterGradeDAO> Grades => m_monsterGrades.Values;
 
         /// <summary>
         /// 
         /// </summary>
         [Write(false)]
         [DoNotNotify]
-        public IEnumerable<DropTemplateDAO> Drops
-        {
-            get
-            {
-                return m_drops;
-            }
-        }
+        public IEnumerable<DropTemplateDAO> Drops => m_drops;
 
         /// <summary>
         /// 

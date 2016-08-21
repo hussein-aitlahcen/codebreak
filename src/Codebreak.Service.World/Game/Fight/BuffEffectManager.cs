@@ -16,38 +16,38 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        private FighterBase m_fighter;
+        private AbstractFighter m_fighter;
 
         /// <summary>
         ///
         /// </summary>
-        private Dictionary<ActiveType, List<BuffBase>> ActiveBuffs = new Dictionary<ActiveType, List<BuffBase>>()
+        private Dictionary<ActiveType, List<AbstractSpellBuff>> ActiveBuffs = new Dictionary<ActiveType, List<AbstractSpellBuff>>()
         {
-            { ActiveType.ACTIVE_ATTACKED_AFTER_JET, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ATTACKED_BEFORE_JET, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ATTACK_AFTER_JET, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ATTACK_BEFORE_JET, new List<BuffBase>() },
-            { ActiveType.ACTIVE_BEGINTURN, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ENDTURN, new List<BuffBase>() },
-            { ActiveType.ACTIVE_ENDMOVE, new List<BuffBase>() },
-            { ActiveType.ACTIVE_STATS, new List<BuffBase>() },
+            { ActiveType.ACTIVE_ATTACKED_AFTER_JET, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_ATTACKED_BEFORE_JET, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_ATTACK_AFTER_JET, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_ATTACK_BEFORE_JET, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_BEGINTURN, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_ENDTURN, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_ENDMOVE, new List<AbstractSpellBuff>() },
+            { ActiveType.ACTIVE_STATS, new List<AbstractSpellBuff>() },
         };
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<DecrementType, List<BuffBase>> DecrementBuffs = new Dictionary<DecrementType, List<BuffBase>>()
+        private Dictionary<DecrementType, List<AbstractSpellBuff>> DecrementBuffs = new Dictionary<DecrementType, List<AbstractSpellBuff>>()
         {
-            { DecrementType.TYPE_BEGINTURN, new List<BuffBase>()},
-            { DecrementType.TYPE_ENDTURN, new List<BuffBase>()},
-            { DecrementType.TYPE_ENDMOVE, new List<BuffBase>()},
+            { DecrementType.TYPE_BEGINTURN, new List<AbstractSpellBuff>()},
+            { DecrementType.TYPE_ENDTURN, new List<AbstractSpellBuff>()},
+            { DecrementType.TYPE_ENDMOVE, new List<AbstractSpellBuff>()},
         };
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public BuffEffectManager(FighterBase fighter)
+        public BuffEffectManager(AbstractFighter fighter)
         {
             m_fighter = fighter;
         }
@@ -56,7 +56,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="Buff"></param>
-        public void AddBuff(BuffBase Buff)
+        public void AddBuff(AbstractSpellBuff Buff)
         {
             ActiveBuffs[Buff.ActiveType].Add(Buff);
             DecrementBuffs[Buff.DecrementType].Add(Buff);
@@ -68,7 +68,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="match"></param>
         public void RemoveState(int state)
         {
-            BuffBase stateBuff = null;
+            AbstractSpellBuff stateBuff = null;
 
             foreach (var buffList in ActiveBuffs.Values)
             {
@@ -89,7 +89,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void RemoveStealth()
         {
-            BuffBase stealthBuff = null;
+            AbstractSpellBuff stealthBuff = null;
 
             foreach (var buffList in ActiveBuffs.Values)
             {
@@ -111,7 +111,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="match"></param>
         public void RemoveSkin()
         {
-            BuffBase skinBuff = null;
+            AbstractSpellBuff skinBuff = null;
 
             foreach (var buffList in ActiveBuffs.Values)
             {
@@ -131,7 +131,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="buff"></param>
-        public void RemoveBuff(BuffBase buff)
+        public void RemoveBuff(AbstractSpellBuff buff)
         {
             ActiveBuffs[buff.ActiveType].Remove(buff);
             DecrementBuffs[buff.DecrementType].Remove(buff);

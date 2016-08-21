@@ -41,13 +41,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override string Name
-        {
-            get 
-            {
-                return Util.EncodeBase36(DatabaseRecord.FirstName) + "," + Util.EncodeBase36(DatabaseRecord.Name);
-            }
-        }
+        public override string Name => Util.EncodeBase36(DatabaseRecord.FirstName) + "," + Util.EncodeBase36(DatabaseRecord.Name);
 
         /// <summary>
         /// 
@@ -66,13 +60,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int BaseLife
-        {
-            get 
-            {
-                return Statistics.GetTotal(EffectEnum.AddVitality);
-            }
-        }
+        public override int BaseLife => Statistics.GetTotal(EffectEnum.AddVitality);
 
         /// <summary>
         /// 
@@ -95,31 +83,13 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinBase
-        {
-            get 
-            { 
-                return DatabaseRecord.Skin;
-            }
-            set
-            {
-            }
-        }
+        public override int SkinBase => DatabaseRecord.Skin;
 
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinSizeBase
-        {
-            get 
-            { 
-                return DatabaseRecord.SkinSize;
-            }
-            set
-            {
-            }
-        }
-               
+        public override int SkinSizeBase => DatabaseRecord.SkinSize;
+
         /// <summary>
         /// 
         /// </summary>
@@ -157,7 +127,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 if (!HasGameAction(GameActionTypeEnum.FIGHT))
                     return false;
-                return (Fight as TaxCollectorFight).CanDefend;
+                return ((TaxCollectorFight)Fight).CanDefend;
             }
         }
 
@@ -208,7 +178,11 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             private set;
         }
-        
+
+        public override int AlignmentId => (int) AlignmentTypeEnum.ALIGNMENT_NEUTRAL;
+
+        public override bool CanDrop => true;
+
         /// <summary>
         /// 
         /// </summary>
@@ -257,7 +231,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="fight"></param>
         /// <param name="team"></param>
-        public override void JoinFight(Fight.FightBase fight, Fight.FightTeam team)
+        public override void JoinFight(Fight.AbstractFight fight, Fight.FightTeam team)
         {
             base.JoinFight(fight, team);
 

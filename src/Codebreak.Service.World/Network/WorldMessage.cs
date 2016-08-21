@@ -1133,7 +1133,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="fight"></param>
         /// <returns></returns>
-        public static string FIGHT_FLAG_DISPLAY(FightBase fight)
+        public static string FIGHT_FLAG_DISPLAY(AbstractFight fight)
         {
             var message = new StringBuilder("Gc+");
             fight.SerializeAs_FightFlag(message);
@@ -1147,7 +1147,7 @@ namespace Codebreak.Service.World.Network
         /// <param name="leaderId"></param>
         /// <param name="fighters"></param>
         /// <returns></returns>
-        public static string FIGHT_FLAG_UPDATE(OperatorEnum ope, long leaderId, params FighterBase[] fighters)
+        public static string FIGHT_FLAG_UPDATE(OperatorEnum ope, long leaderId, params AbstractFighter[] fighters)
         {
             var message = new StringBuilder("Gt").Append(leaderId);
             foreach (var fighter in fighters)
@@ -1211,7 +1211,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="fighters"></param>
         /// <returns></returns>
-        public static string FIGHT_COORDINATE_INFORMATIONS(params FighterBase[] fighters)
+        public static string FIGHT_COORDINATE_INFORMATIONS(params AbstractFighter[] fighters)
         {
             var message = new StringBuilder("GIC");            
             foreach (var fighter in fighters)
@@ -1238,7 +1238,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="fighters"></param>
         /// <returns></returns>
-        public static string FIGHT_TURN_LIST(IEnumerable<FighterBase> fighters)
+        public static string FIGHT_TURN_LIST(IEnumerable<AbstractFighter> fighters)
         {
             var message = new StringBuilder("GTL");
             foreach (var fighter in fighters)
@@ -1265,7 +1265,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="fighters"></param>
         /// <returns></returns>
-        public static string FIGHT_TURN_MIDDLE(IEnumerable<FighterBase> fighters)
+        public static string FIGHT_TURN_MIDDLE(IEnumerable<AbstractFighter> fighters)
         {
             var message = new StringBuilder("GTM");
 
@@ -1347,7 +1347,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="fights"></param>
         /// <returns></returns>
-        public static string FIGHT_LIST(IEnumerable<FightBase> fights)
+        public static string FIGHT_LIST(IEnumerable<AbstractFight> fights)
         {
             var message = new StringBuilder("fL");
             foreach (var fight in fights)            
@@ -1360,7 +1360,7 @@ namespace Codebreak.Service.World.Network
         /// </summary>
         /// <param name="fight"></param>
         /// <returns></returns>
-        public static string FIGHT_DETAILS(FightBase fight)
+        public static string FIGHT_DETAILS(AbstractFight fight)
         {
             var message = new StringBuilder("fD");
             message.Append(fight.Id);
@@ -2011,7 +2011,7 @@ namespace Codebreak.Service.World.Network
         /// <param name="taxCollectorId"></param>
         /// <param name="attackers"></param>
         /// <returns></returns>
-        public static string GUILD_TAXCOLLECTOR_ATTACKER_JOIN(long taxCollectorId, params FighterBase[] attackers)
+        public static string GUILD_TAXCOLLECTOR_ATTACKER_JOIN(long taxCollectorId, params AbstractFighter[] attackers)
         {
             var message = new StringBuilder("gITp+").Append(Util.EncodeBase36(taxCollectorId));
             foreach (var attacker in attackers)

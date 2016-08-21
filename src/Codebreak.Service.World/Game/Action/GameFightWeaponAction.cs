@@ -32,7 +32,7 @@ namespace Codebreak.Service.World.Game.Action
         /// </summary>
         /// <param name="fighter"></param>
         /// <param name="callback"></param>
-        public GameFightWeaponAction(FighterBase fighter, int cellId, long duration, System.Action callback)
+        public GameFightWeaponAction(AbstractFighter fighter, int cellId, long duration, System.Action callback)
             : base(GameActionTypeEnum.FIGHT_WEAPON_USE, fighter, duration)
         {
             Callback = callback;

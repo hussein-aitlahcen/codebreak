@@ -24,25 +24,13 @@ namespace Codebreak.Service.World.Game.Spell
         /// <summary>
         /// 
         /// </summary>
-        public bool Empty
-        {
-            get
-            {
-                return m_spellById.Count == 0;
-            }
-        }
+        public bool Empty => m_spellById.Count == 0;
 
         /// <summary>
         /// 
         /// </summary>
-        public List<SpellBookEntryDAO> Spells
-        {
-            get
-            {
-                return m_spellById.Values.ToList();
-            }
-        }
-       
+        public List<SpellBookEntryDAO> Spells => m_spellById.Values.ToList();
+
         /// <summary>
         /// 
         /// </summary>

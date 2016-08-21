@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Fight.AI
     /// <summary>
     /// 
     /// </summary>
-    public abstract class AIFighter : FighterBase
+    public abstract class AIFighter : AbstractFighter
     {
         /// <summary>
         /// 
@@ -46,6 +46,7 @@ namespace Codebreak.Service.World.Game.Fight.AI
         /// </summary>
         /// <param name="type"></param>
         /// <param name="id"></param>
+        /// <param name="staticInvocation"></param>
         protected AIFighter(EntityTypeEnum type, long id, bool staticInvocation = false) 
             : base(type, id, staticInvocation)
         {
@@ -57,7 +58,7 @@ namespace Codebreak.Service.World.Game.Fight.AI
         /// </summary>
         /// <param name="fight"></param>
         /// <param name="team"></param>
-        public override void JoinFight(FightBase fight, FightTeam team)
+        public override void JoinFight(AbstractFight fight, FightTeam team)
         {
             Life = MaxLife;
 

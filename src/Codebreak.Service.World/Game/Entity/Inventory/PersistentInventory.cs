@@ -44,13 +44,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override List<ItemDAO> Items
-        {
-            get 
-            { 
-                return m_items; 
-            }
-        }
+        public override List<ItemDAO> Items => m_items;
 
         /// <summary>
         /// 

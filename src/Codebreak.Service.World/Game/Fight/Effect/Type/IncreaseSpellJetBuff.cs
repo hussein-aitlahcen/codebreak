@@ -9,14 +9,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class IncreaseSpellJetBuff : BuffBase
+    public sealed class IncreaseSpellJetBuff : AbstractSpellBuff
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
-        public IncreaseSpellJetBuff(CastInfos castInfos, FighterBase target)
+        public IncreaseSpellJetBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_ATTACK_BEFORE_JET, DecrementType.TYPE_ENDTURN)
         {
             Duration += 2;

@@ -30,14 +30,14 @@ namespace Codebreak.Service.World.Game.Fight
     /// </summary>
     public sealed class FighterStateManager : IDisposable
     {
-        private FighterBase m_fighter;
-        private Dictionary<FighterStateEnum, BuffBase> m_states = new Dictionary<FighterStateEnum, BuffBase>();
+        private AbstractFighter m_fighter;
+        private Dictionary<FighterStateEnum, AbstractSpellBuff> m_states = new Dictionary<FighterStateEnum, AbstractSpellBuff>();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="Fighter"></param>
-        public FighterStateManager(FighterBase Fighter)
+        public FighterStateManager(AbstractFighter Fighter)
         {
             m_fighter = Fighter;
         }
@@ -73,7 +73,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="Buff"></param>
-        public void AddState(BuffBase Buff)        
+        public void AddState(AbstractSpellBuff Buff)        
         {
             Buff.CastInfos.SubEffect = EffectEnum.AddState;
 
@@ -110,7 +110,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="Buff"></param>
-        public void RemoveState(BuffBase Buff)
+        public void RemoveState(AbstractSpellBuff Buff)
         {
             if (Buff.Caster.Fight.State == FightStateEnum.STATE_FIGHTING)
             {
@@ -141,7 +141,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public BuffBase FindState(FighterStateEnum state)
+        public AbstractSpellBuff FindState(FighterStateEnum state)
         {
             if (HasState(state))
                 return m_states[state];

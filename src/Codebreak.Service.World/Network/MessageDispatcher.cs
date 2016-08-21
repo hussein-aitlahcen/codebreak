@@ -16,8 +16,8 @@ namespace Codebreak.Service.World.Network
         /// 
         /// </summary>
         private event Action<string> OnMessage;
-        private bool m_cached = false;
-        private StringBuilder m_buffer = null;
+        private int m_cached = 0;
+        private StringBuilder m_buffer = new StringBuilder();
         
         /// <summary>
         /// 
@@ -26,25 +26,21 @@ namespace Codebreak.Service.World.Network
         {
             get
             {
-                return m_cached;
+                return m_cached > 0;
             }
             set
             {
-                if (value != m_cached)
+                m_cached += value ? 1 : -1;
+                if (m_cached == 0)
                 {
-                    m_cached = value;
-
-                    if (m_cached)
-                    {
-                        if (m_buffer == null)
-                            m_buffer = new StringBuilder();
-                    }
-                    else
+                    if (m_buffer.Length > 0)
                     {
                         Dispatch(m_buffer.ToString());
                         m_buffer.Clear();
                     }
                 }
+                if(m_cached < 0)
+                    throw new InvalidOperationException("cached buffer should be >= 0");
             }
         }
 
@@ -65,7 +61,7 @@ namespace Codebreak.Service.World.Network
         /// 
         /// </summary>
         /// <param name="method"></param>
-        public virtual void AddHandler(Action<string> method)
+        public void AddHandler(Action<string> method)
         {
             OnMessage += method;
         }

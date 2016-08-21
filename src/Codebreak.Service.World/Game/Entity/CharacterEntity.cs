@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codebreak.Service.World.Game.Map;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -62,7 +63,7 @@ namespace Codebreak.Service.World.Game.Entity
     /// <summary>
     /// 
     /// </summary>
-    public class CharacterEntity : FighterBase, IDisposable
+    public class CharacterEntity : AbstractFighter, IDisposable
     {
         /// <summary>
         /// 
@@ -86,13 +87,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return DatabaseRecord.Name;
-            }
-        }
+        public override string Name => DatabaseRecord.Name;
 
         /// <summary>
         /// 
@@ -281,13 +276,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public long ExperienceFloorCurrent
-        {
-            get
-            {
-                return ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.CHARACTER);
-            }
-        }
+        public long ExperienceFloorCurrent => ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.CHARACTER);
 
         /// <summary>
         /// 
@@ -306,17 +295,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int AlignmentId
-        {
-            get
-            {
-                return Alignment.AlignmentId;
-            }
-            set
-            {
-                Alignment.AlignmentId = value;
-            }
-        }
+        public override int AlignmentId => Alignment.AlignmentId;
 
         /// <summary>
         /// 
@@ -410,13 +389,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public long AlignmentExperienceFloorCurrent
-        {
-            get
-            {
-                return ExperienceManager.Instance.GetFloor(AlignmentLevel, ExperienceTypeEnum.PVP);
-            }
-        }
+        public long AlignmentExperienceFloorCurrent => ExperienceManager.Instance.GetFloor(AlignmentLevel, ExperienceTypeEnum.PVP);
 
         /// <summary>
         /// 
@@ -451,98 +424,47 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int BaseLife
-        {
-            get
-            {
-                return 50 + (Level * 5);
-            }
-        }
+        public override int BaseLife => 50 + (Level * 5);
 
         /// <summary>
         /// 
         /// </summary>
-        public string HexColor1
-        {
-            get
-            {
-                return DatabaseRecord.HexColor1;
-            }
-        }
+        public string HexColor1 => DatabaseRecord.HexColor1;
 
         /// <summary>
         /// 
         /// </summary>
-        public string HexColor2
-        {
-            get
-            {
-                return DatabaseRecord.HexColor2;
-            }
-        }
+        public string HexColor2 => DatabaseRecord.HexColor2;
 
         /// <summary>
         /// 
         /// </summary>
-        public string HexColor3
-        {
-            get
-            {
-                return DatabaseRecord.HexColor3;
-            }
-        }
+        public string HexColor3 => DatabaseRecord.HexColor3;
 
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinBase
-        {
-            get
-            {
-                return DatabaseRecord.Skin;
-            }
-            set
-            {
-                DatabaseRecord.Skin = value;
-            }
-        }
+        public override int SkinBase => DatabaseRecord.Skin;
 
         /// <summary>
         /// 
         /// </summary>
-        public override int SkinSizeBase
-        {
-            get
-            {
-                return DatabaseRecord.SkinSize;
-            }
-            set
-            {
-                DatabaseRecord.SkinSize = value;
-            }
-        }
+        public override int SkinSizeBase => DatabaseRecord.SkinSize;
 
         /// <summary>
         /// 
         /// </summary>
-        public CharacterBreedEnum Breed
-        {
-            get
-            {
-                return (CharacterBreedEnum)DatabaseRecord.Breed;
-            }
-        }
+        public override bool CanDrop => true;
 
         /// <summary>
         /// 
         /// </summary>
-        public int BreedId
-        {
-            get
-            {
-                return DatabaseRecord.Breed;
-            }
-        }
+        public CharacterBreedEnum Breed => (CharacterBreedEnum)DatabaseRecord.Breed;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int BreedId => DatabaseRecord.Breed;
 
         /// <summary>
         /// 
@@ -616,13 +538,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public long AccountId
-        {
-            get
-            {
-                return DatabaseRecord.AccountId;
-            }
-        }
+        public long AccountId => DatabaseRecord.AccountId;
 
         /// <summary>
         /// 
@@ -902,24 +818,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public bool IsGhost
-        {
-            get
-            {
-                return SkinBase == WorldConfig.GHOST_SKIN_ID;
-            }
-        }
+        public bool IsGhost => SkinBase == WorldConfig.GHOST_SKIN_ID;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsTombestone
-        {
-            get
-            {
-                return SkinBase == (BreedId * 10) + 3;
-            }
-        }
+        public bool IsTombestone => SkinBase == (BreedId * 10) + 3;
 
         /// <summary>
         /// 
@@ -1093,7 +997,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void Reborn()
         {            
-            SkinBase = (BreedId * 10) + Sex;
+            DatabaseRecord.Skin = (BreedId * 10) + Sex;
             Energy = 1000;
             Restriction = (int)PlayerRestrictionEnum.RESTRICTION_NEW_CHARACTER;
             EntityRestriction = 0;
@@ -1128,7 +1032,7 @@ namespace Codebreak.Service.World.Game.Entity
             switch(DeathType)
             {
                 case DeathTypeEnum.TYPE_NORMAL:
-                    SkinBase = WorldConfig.GHOST_SKIN_ID;
+                    DatabaseRecord.Skin = WorldConfig.GHOST_SKIN_ID;
                     CheckRestrictions();
                     if (!DisableAlignment())
                         RefreshOnMap();
@@ -1139,7 +1043,7 @@ namespace Codebreak.Service.World.Game.Entity
                     DeathCount++;
                     if(Level > MaxLevel)
                         MaxLevel = Level;
-                    base.Dispatch(WorldMessage.GAME_OVER());
+                    Dispatch(WorldMessage.GAME_OVER());
                     break;
             }
         }
@@ -1149,7 +1053,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void OnLoseFight(DeathTypeEnum type)
         {
-            DeathType = type;            
+            DeathType = type;
             Life = 1;
 
             switch(type)
@@ -1174,7 +1078,6 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="value"></param>
         public void LoseEnergy()
         {
             var energyLost = Math.Min(Energy, Level * 10);
@@ -1182,16 +1085,16 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
 
             Energy -= energyLost;
-            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ENERGY_LOST, energyLost));
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ENERGY_LOST, energyLost));
 
             if (Energy == 0)
             {
-                SkinBase = (BreedId * 10) + 3;
+                DatabaseRecord.Skin = (BreedId * 10) + 3;
                 CheckRestrictions();
             }
             else if (Energy < 1000)
             {
-                base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_ENERGY_LOW, Energy));
+                Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_ENERGY_LOW, Energy));
             }
         }
                
@@ -1200,7 +1103,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         /// <param name="fight"></param>
         /// <param name="team"></param>
-        public override void JoinFight(FightBase fight, FightTeam team)
+        public override void JoinFight(AbstractFight fight, FightTeam team)
         {
             LifeBeforeFight = Life;
             
@@ -1213,7 +1116,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="fight"></param>
-        public virtual void JoinSpectator(FightBase fight)
+        public virtual void JoinSpectator(AbstractFight fight)
         {
             Fight = fight;
             IsSpectating = true;
@@ -1275,14 +1178,15 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     switch (Fight.Type)
                     {
+                        case FightTypeEnum.TYPE_PVM:
                         case FightTypeEnum.TYPE_AGGRESSION:
                         case FightTypeEnum.TYPE_PVT:
                             OnLoseFight(DeathTypeEnum.TYPE_NORMAL);
                             break;
 
-                        case FightTypeEnum.TYPE_PVM:
-                            OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
-                            break;
+                        //case FightTypeEnum.TYPE_PVM:
+                        //    OnLoseFight(DeathTypeEnum.TYPE_HEROIC);
+                        //    break;
                     }
                 }
 
@@ -1293,7 +1197,7 @@ namespace Codebreak.Service.World.Game.Entity
                         break;
 
                     default:
-                        base.CachedBuffer = true;
+                        CachedBuffer = true;
                         var items = Inventory.Items.FindAll(item => item.IsBoostEquiped);
                         foreach (var item in items)
                         {
@@ -1308,10 +1212,10 @@ namespace Codebreak.Service.World.Game.Entity
                         }
                         if (items.Count > 0)
                         {
-                            base.Dispatch(WorldMessage.OBJECT_CHANGE(items));
+                            Dispatch(WorldMessage.OBJECT_CHANGE(items));
                             SendAccountStats();
                         }
-                        base.CachedBuffer = false;
+                        CachedBuffer = false;
                         break;
                 }               
                
@@ -1325,6 +1229,10 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (IsDisconnected)
                 EntityManager.Instance.RemoveCharacter(this);
+
+            // closure purpose
+            var fightType = Fight.Type;
+            AddMessage(() => Map.FightManager.ExecuteFightActions(fightType, FightStateEnum.STATE_ENDED, this));
 
             base.EndFight(win);
         }
@@ -1564,7 +1472,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="alignment"></param>
+        /// <param name="alignmentId"></param>
         public void SetAlignment(int alignmentId)
         {
             ResetAlignment(alignmentId);
@@ -1575,14 +1483,14 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void ResetAlignment(int alignmentId = 0)
         {
-            AlignmentId = alignmentId;
+            DatabaseRecord.Alignment.AlignmentId = alignmentId;
             AlignmentLevel = 1;
             AlignmentPromotion = 0;
             Honour = 0;
             Dishonour = 0;
             AlignmentEnabled = false;
 
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
         }
 

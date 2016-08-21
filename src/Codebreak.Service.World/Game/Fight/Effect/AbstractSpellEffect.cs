@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
     /// <summary>
     /// 
     /// </summary>
-    public abstract class EffectBase
+    public abstract class AbstractSpellEffect
     {
         /// <summary>
         /// 

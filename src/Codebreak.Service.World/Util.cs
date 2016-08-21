@@ -168,7 +168,7 @@ namespace Codebreak.Service.World
         /// <param name="wisdom"></param>
         /// <param name="ageBonus"></param>
         /// <returns></returns>
-        public static long CalculPVMExperienceTaxCollector(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
+        public static long CalculPVMExperienceTaxCollector(IEnumerable<MonsterEntity> monsters, IEnumerable<AbstractFighter> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
         {
             return (long)(CalculPVMExperience(monsters, droppers, level, wisdom, challengeBonus, ageBonus) * WorldConfig.TAXCOLLECTOR_XP_RATIO);
         }
@@ -182,7 +182,7 @@ namespace Codebreak.Service.World
         /// <param name="wisdom"></param>
         /// <param name="ageBonus"></param>
         /// <returns></returns>
-        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<FighterBase> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
+        public static long CalculPVMExperience(IEnumerable<MonsterEntity> monsters, IEnumerable<AbstractFighter> droppers, int level, int wisdom, int challengeBonus = 0, int ageBonus = 0)
         {
             if (monsters.Count() == 0)
                 return 0;

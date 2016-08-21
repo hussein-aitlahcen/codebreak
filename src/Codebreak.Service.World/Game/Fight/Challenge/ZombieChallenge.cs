@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Fight.Challenges
+namespace Codebreak.Service.World.Game.Fight.Challenge
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ZombieChallenge : ChallengeBase
+    public sealed class ZombieChallenge : AbstractChallenge
     {
         /// <summary>
         /// 
@@ -38,7 +38,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// <param name="beginCell"></param>
         /// <param name="endCell"></param>
         /// <param name="length"></param>
-        public override void CheckMovement(FighterBase fighter, int beginCell, int endCell, int length)
+        public override void CheckMovement(AbstractFighter fighter, int beginCell, int endCell, int length)
         {
             if(length != 1 || m_hasMoved)            
                 base.OnFailed(fighter.Name);            
@@ -50,7 +50,7 @@ namespace Codebreak.Service.World.Game.Fight.Challenges
         /// 
         /// </summary>
         /// <param name="fighter"></param>
-        public override void EndTurn(FighterBase fighter)
+        public override void EndTurn(AbstractFighter fighter)
         {
             if (!m_hasMoved)
                 OnFailed(fighter.Name);

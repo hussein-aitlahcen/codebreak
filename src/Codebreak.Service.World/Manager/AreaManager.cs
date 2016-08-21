@@ -18,35 +18,17 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<SuperAreaInstance> SuperAreas
-        {
-            get
-            {
-                return m_superAreaById.Values;
-            }
-        }
+        public IEnumerable<SuperAreaInstance> SuperAreas => m_superAreaById.Values;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<AreaInstance> Areas
-        {
-            get
-            {
-                return m_areaById.Values;
-            }
-        }
+        public IEnumerable<AreaInstance> Areas => m_areaById.Values;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<SubAreaInstance> SubAreas
-        {
-            get
-            {
-                return m_subAreaById.Values;
-            }
-        }
+        public IEnumerable<SubAreaInstance> SubAreas => m_subAreaById.Values;
 
         /// <summary>
         /// 

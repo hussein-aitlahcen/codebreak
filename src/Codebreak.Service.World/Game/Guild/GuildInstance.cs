@@ -105,79 +105,37 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public long Id
-        {
-            get
-            {
-                return m_record.Id;
-            }
-        }
+        public long Id => m_record.Id;
 
         /// <summary>
         /// 
         /// </summary>
-        public GuildStatistics Statistics
-        {
-            get
-            {
-                return m_record.Statistics;
-            }
-        }
+        public GuildStatistics Statistics => m_record.Statistics;
 
         /// <summary>
         /// 
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_record.Name;
-            }
-        }
+        public string Name => m_record.Name;
 
         /// <summary>
         /// 
         /// </summary>
-        public int SymbolId
-        {
-            get
-            {
-                return m_record.SymbolId;
-            }
-        }
+        public int SymbolId => m_record.SymbolId;
 
         /// <summary>
         /// 
         /// </summary>
-        public int SymbolColor
-        {
-            get
-            {
-                return m_record.SymbolColor;
-            }
-        }
+        public int SymbolColor => m_record.SymbolColor;
 
         /// <summary>
         ///
         /// </summary>
-        public int BackgroundId
-        {
-            get
-            {
-                return m_record.BackgroundId;
-            }
-        }
+        public int BackgroundId => m_record.BackgroundId;
 
         /// <summary>
         /// 
         /// </summary>
-        public int BackgroundColor
-        {
-            get
-            {
-                return m_record.BackgroundColor;
-            }
-        }
+        public int BackgroundColor => m_record.BackgroundColor;
 
         /// <summary>
         /// 
@@ -197,13 +155,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public long ExperienceFloorCurrent
-        {
-            get
-            {
-                return ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.GUILD);
-            }
-        }
+        public long ExperienceFloorCurrent => ExperienceManager.Instance.GetFloor(Level, ExperienceTypeEnum.GUILD);
 
         /// <summary>
         /// 
@@ -278,14 +230,8 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public int TaxCollectorPrice
-        {
-            get
-            {
-                return 1000 + (Level * 100);
-            }
-        }
-                
+        public int TaxCollectorPrice => 1000 + (Level * 100);
+
         /// <summary>
         /// 
         /// </summary>
@@ -489,7 +435,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="attacker"></param>
-        public void TaxCollectorAttackerJoin(long taxCollectorId, FighterBase attacker)
+        public void TaxCollectorAttackerJoin(long taxCollectorId, AbstractFighter attacker)
         {
             m_taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_ATTACKER_JOIN(taxCollectorId, attacker));
         }
@@ -499,7 +445,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// </summary>
         /// <param name="taxCollectorId"></param>
         /// <param name="attacker"></param>
-        public void TaxColectorAttackerLeave(long taxCollectorId, FighterBase attacker)
+        public void TaxColectorAttackerLeave(long taxCollectorId, AbstractFighter attacker)
         {
             m_taxCollectorDispatcher.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_ATTACKER_LEAVE(taxCollectorId, attacker.Id));
         }

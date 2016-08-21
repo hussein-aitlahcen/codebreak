@@ -15,15 +15,9 @@ namespace Codebreak.Service.World.Command
     {
         private static readonly string[] m_aliases = { "help", "h" };
 
-        public override string[] Aliases
-        {
-            get { return m_aliases; }
-        }
+        public override string[] Aliases => m_aliases;
 
-        public override string Description
-        {
-            get { return "Lists the available commands."; }
-        }
+        public override string Description => "Lists the available commands.";
 
         protected override void Process(WorldCommandContext context)
         {

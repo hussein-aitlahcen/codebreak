@@ -136,7 +136,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public List<FighterBase> Targets
+        public List<AbstractFighter> Targets
         {
             get;
             private set;
@@ -145,8 +145,8 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        protected FightBase m_fight;
-        protected FighterBase m_caster;
+        protected AbstractFight m_fight;
+        protected AbstractFighter m_caster;
         protected SpellTemplate m_actionSpell;
         protected SpellLevel m_actionEffect;
         protected int m_spellId;
@@ -177,7 +177,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="duration"></param>
         /// <param name="actionId"></param>
         /// <param name="hide"></param>
-        public FightActivableObject(FightObstacleTypeEnum type, ActiveType activeType, FightBase fight, FighterBase caster, CastInfos castInfos, int cell, int duration, int actionId, bool canGoThrough, bool canStack, bool hide = false)
+        public FightActivableObject(FightObstacleTypeEnum type, ActiveType activeType, AbstractFight fight, AbstractFighter caster, CastInfos castInfos, int cell, int duration, int actionId, bool canGoThrough, bool canStack, bool hide = false)
         {
             m_fight = fight;
             m_caster = caster;
@@ -191,7 +191,7 @@ namespace Codebreak.Service.World.Game.Fight
             CanGoThrough = canGoThrough;
             CanStack = canStack;
             Color = castInfos.Value3;
-            Targets = new List<FighterBase>();
+            Targets = new List<AbstractFighter>();
             Length = Pathfinding.GetDirection(castInfos.RangeType[1]);
             AffectedCells = new List<FightCell>();
             Duration = duration;
@@ -227,7 +227,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="target"></param>
-        public void LoadTargets(FighterBase target)
+        public void LoadTargets(AbstractFighter target)
         {
             if(!Targets.Contains(target))
                 Targets.Add(target);
@@ -237,7 +237,7 @@ namespace Codebreak.Service.World.Game.Fight
                 case ActiveType.ACTIVE_ENDMOVE:
                     foreach (var cell in AffectedCells)
                     {
-                        Targets.AddRange(cell.FightObjects.OfType<FighterBase>().Where(fighter => !Targets.Contains(fighter)));
+                        Targets.AddRange(cell.FightObjects.OfType<AbstractFighter>().Where(fighter => !Targets.Contains(fighter)));
                     }
                     break;
             }
@@ -247,7 +247,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         /// <param name="activator"></param>
-        public void Activate(FighterBase activator)
+        public void Activate(AbstractFighter activator)
         {
             Activated = true;
 

@@ -15,7 +15,7 @@
     <AssemblyName>Codebreak.App.Website</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -228,10 +228,6 @@
     <Compile Include="WebConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\bs\bootstrap-theme.css" />
     <Content Include="Content\css\bs\bootstrap-theme.min.css" />
     <Content Include="Content\css\bs\bootstrap.css" />
@@ -244,8 +240,6 @@
     <Content Include="Content\css\site\team.css" />
     <Content Include="Content\css\bs\font-awesome.css" />
     <Content Include="Content\css\bs\font-awesome.min.css" />
-    <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\img\chat\cliff.png" />
     <Content Include="Content\img\chat\questionmark.png" />
     <Content Include="Content\img\dofus\common\background.png" />
@@ -444,8 +438,6 @@
     <Content Include="Content\css\bs\base\tooltip.css" />
     <Content Include="Content\css\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\css\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\loading-bar.css" />
-    <Content Include="Content\loading-bar.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -549,10 +541,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\lang\fr-FR\translation.json" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\Earthscape.pubxml" />
     <None Include="Properties\PublishProfiles\origin.earthscape.fr.pubxml" />
@@ -2133,7 +2122,9 @@
     <Content Include="scripts\jquery.validate.min.js" />
     <Content Include="scripts\loading-bar.js" />
     <Content Include="scripts\loading-bar.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -2220,7 +2211,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>53011</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53011/</IISUrl>
+          <IISUrl>http://localhost/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

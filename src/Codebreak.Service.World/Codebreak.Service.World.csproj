@@ -255,7 +255,7 @@
     <Compile Include="Game\Fight\Challenge\AppointedVoluntaryChallenge.cs" />
     <Compile Include="Game\Fight\Challenge\BarbarianChallenge.cs" />
     <Compile Include="Game\Fight\Challenge\BoldChallenge.cs" />
-    <Compile Include="Game\Fight\Challenge\ChallengeBase.cs" />
+    <Compile Include="Game\Fight\Challenge\AbstractChallenge.cs" />
     <Compile Include="Game\Fight\Challenge\ChallengeManager.cs" />
     <Compile Include="Game\Fight\Challenge\CirculateChallenge.cs" />
     <Compile Include="Game\Fight\Challenge\PetulantChallenge.cs" />
@@ -265,9 +265,9 @@
     <Compile Include="Game\Fight\Challenge\SurvivorChallenge.cs" />
     <Compile Include="Game\Fight\Challenge\TightsChallenge.cs" />
     <Compile Include="Game\Fight\Challenge\ZombieChallenge.cs" />
-    <Compile Include="Game\Fight\Effect\BuffBase.cs" />
+    <Compile Include="Game\Fight\Effect\AbstractSpellBuff.cs" />
     <Compile Include="Game\Fight\Effect\CastInfos.cs" />
-    <Compile Include="Game\Fight\Effect\EffectBase.cs" />
+    <Compile Include="Game\Fight\Effect\AbstractSpellEffect.cs" />
     <Compile Include="Game\Fight\Effect\EffectManager.cs" />
     <Compile Include="Game\Fight\Effect\Type\DamageLifePercentEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\DamagePerAPBuff.cs" />
@@ -283,6 +283,14 @@
     <Compile Include="Game\Fight\Effect\Type\ReflectSpellBuff.cs" />
     <Compile Include="Game\Fight\Effect\Type\ReflectSpellEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\SelfDamageEffect.cs" />
+    <Compile Include="Game\Fight\Ending\AbstractEndingBehavior.cs" />
+    <Compile Include="Game\Fight\Ending\HonorGainBehavior.cs" />
+    <Compile Include="Game\Fight\Ending\AbstractLootBehavior.cs" />
+    <Compile Include="Game\Fight\Ending\AbstractRegenerateBehavior.cs" />
+    <Compile Include="Game\Fight\Ending\EndingArguments.cs" />
+    <Compile Include="Game\Fight\Ending\LootMonsterBehavior.cs" />
+    <Compile Include="Game\Fight\Ending\RegenerateLosersBehavior.cs" />
+    <Compile Include="Game\Fight\Ending\RegenerateWinnersBehavior.cs" />
     <Compile Include="Game\Fight\FightGlyph.cs" />
     <Compile Include="Game\Fight\Effect\Type\ActivableObjectEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\APDodgeSubstractBuff.cs" />
@@ -321,8 +329,8 @@
     <Compile Include="Game\Fight\Effect\Type\TeleportEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\TransposeEffect.cs" />
     <Compile Include="Game\Fight\FightActivableObject.cs" />
-    <Compile Include="Game\Fight\FightBase.cs" />
-    <Compile Include="Game\Fight\FighterBase.cs" />
+    <Compile Include="Game\Fight\AbstractFight.cs" />
+    <Compile Include="Game\Fight\AbstractFighter.cs" />
     <Compile Include="Game\Fight\FighterStateManager.cs" />
     <Compile Include="Game\Fight\FightTeam.cs" />
     <Compile Include="Game\Fight\FightTrap.cs" />

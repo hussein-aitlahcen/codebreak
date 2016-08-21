@@ -20,14 +20,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return m_npcRecord.Template.ChatName;
-            }
-        }
-                
+        public override string Name => m_npcRecord.Template.ChatName;
+
         /// <summary>
         /// 
         /// </summary>
@@ -67,13 +61,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override int BaseLife
-        {
-            get 
-            { 
-                return 0; 
-            }
-        }
+        public override int BaseLife => 0;
 
         /// <summary>
         /// 
@@ -148,13 +136,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public int TemplateId
-        {
-            get
-            {
-                return m_npcRecord.TemplateId;
-            }
-        }
+        public int TemplateId => m_npcRecord.TemplateId;
 
         /// <summary>
         /// 

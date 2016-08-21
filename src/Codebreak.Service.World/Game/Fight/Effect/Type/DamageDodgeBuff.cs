@@ -11,14 +11,14 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// 
     /// </summary>
-    public sealed class DamageDodgeBuff : BuffBase
+    public sealed class DamageDodgeBuff : AbstractSpellBuff
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="castInfos"></param>
         /// <param name="target"></param>
-        public DamageDodgeBuff(CastInfos castInfos, FighterBase target)
+        public DamageDodgeBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_ATTACKED_BEFORE_JET, DecrementType.TYPE_ENDTURN)
         {
         }

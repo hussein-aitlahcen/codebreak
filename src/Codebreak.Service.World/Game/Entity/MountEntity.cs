@@ -91,13 +91,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return m_record.Name;
-            }
-        }
+        public override string Name => m_record.Name;
 
         /// <summary>
         /// 
@@ -118,13 +112,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        public string Capacities
-        {
-            get
-            {
-                return ",";
-            }
-        }
+        public string Capacities => ",";
 
         /// <summary>
         /// 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Game.Fight.Effect.Type
 {
-    public sealed class DamageBuff : BuffBase
+    public sealed class DamageBuff : AbstractSpellBuff
     {
-        public DamageBuff(CastInfos castInfos, FighterBase target)
+        public DamageBuff(CastInfos castInfos, AbstractFighter target)
             : base(castInfos, target, ActiveType.ACTIVE_ENDTURN, DecrementType.TYPE_ENDTURN)
         {
         }

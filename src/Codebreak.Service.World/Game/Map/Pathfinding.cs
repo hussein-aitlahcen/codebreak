@@ -218,10 +218,7 @@ namespace Codebreak.Service.World.Game.Map
             InnerList.Clear();
         }
 
-        public int Count
-        {
-            get { return InnerList.Count; }
-        }
+        public int Count => InnerList.Count;
 
         public void RemoveLocation(T item)
         {
@@ -279,13 +276,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public int BeginCell
-        {
-            get
-            {
-                return TransitCells.FirstOrDefault();
-            }
-        }
+        public int BeginCell => TransitCells.FirstOrDefault();
 
         /// <summary>
         /// 
@@ -299,35 +290,17 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        public double MovementTime
-        {
-            get
-            {
-                return Pathfinding.GetPathTime(MovementLength, GetDirection(LastStep));
-            }
-        }
+        public double MovementTime => Pathfinding.GetPathTime(MovementLength, GetDirection(LastStep));
 
         /// <summary>
         /// 
         /// </summary>
-        public int LastStep
-        {
-            get
-            {
-                return TransitCells[TransitCells.Count < 2 ? 0 : TransitCells.Count - 2];
-            }
-        }
+        public int LastStep => TransitCells[TransitCells.Count < 2 ? 0 : TransitCells.Count - 2];
 
         /// <summary>
         /// 
         /// </summary>
-        public int EndCell
-        {
-            get
-            {
-                return TransitCells.LastOrDefault();
-            }
-        }
+        public int EndCell => TransitCells.LastOrDefault();
 
         /// <summary>
         /// 
@@ -794,7 +767,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="currentCell"></param>
         /// <param name="encodedPath"></param>
         /// <returns></returns>
-        public static MovementPath IsValidPath(FightBase fight, FighterBase fighter, int currentCell, string encodedPath)
+        public static MovementPath IsValidPath(AbstractFight fight, AbstractFighter fighter, int currentCell, string encodedPath)
         {
             if (encodedPath == "")
                 return null;
@@ -890,7 +863,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="direction"></param>
         /// <param name="endCell"></param>
         /// <returns></returns>
-        public static int IsValidLine(FightBase fight, FighterBase fighter, MovementPath path, int beginCell, int direction, int endCell)
+        public static int IsValidLine(AbstractFight fight, AbstractFighter fighter, MovementPath path, int beginCell, int direction, int endCell)
         {
             var length = -1;
             var actualCell = beginCell;
@@ -929,7 +902,7 @@ namespace Codebreak.Service.World.Game.Map
         ///// </summary>
         ///// <param name="fighter"></param>
         ///// <returns></returns>
-        public static int TryTacle(FighterBase fighter)
+        public static int TryTacle(AbstractFighter fighter)
         {
             var ennemies = Pathfinding.GetEnnemiesNear(fighter.Fight, fighter.Team, fighter.Cell.Id);
 
@@ -945,7 +918,7 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="fighter"></param>
         ///// <param name="nearestEnnemies"></param>
         ///// <returns></returns>
-        private static int TryTacle(FighterBase fighter, IEnumerable<FighterBase> nearestEnnemies)
+        private static int TryTacle(AbstractFighter fighter, IEnumerable<AbstractFighter> nearestEnnemies)
         {
             var fighterAgility = fighter.Statistics.GetTotal(EffectEnum.AddAgility);
             int ennemiesAgility = 0;
@@ -969,7 +942,7 @@ namespace Codebreak.Service.World.Game.Map
         ///// </summary>
         ///// <param name="cellId"></param>
         ///// <returns></returns>
-        public static bool IsStopCell(FightBase fight, FightTeam team, int cellId)
+        public static bool IsStopCell(AbstractFight fight, FightTeam team, int cellId)
         {
             if (fight.GetCell(cellId).HasObject(FightObstacleTypeEnum.TYPE_TRAP))
                 return true;
@@ -987,7 +960,7 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="team"></param>
         ///// <param name="cellId"></param>
         ///// <returns></returns>
-        public static IEnumerable<FighterBase> GetEnnemiesNear(FightBase fight, FightTeam team, int cellId)
+        public static IEnumerable<AbstractFighter> GetEnnemiesNear(AbstractFight fight, FightTeam team, int cellId)
         {
             return GetFightersNear(fight, cellId).Where(fighter => fighter.Team != team);
         }
@@ -999,9 +972,9 @@ namespace Codebreak.Service.World.Game.Map
         ///// <param name="team"></param>
         ///// <param name="cellId"></param>
         ///// <returns></returns>
-        public static List<FighterBase> GetFightersNear(FightBase fight, int cellId)
+        public static List<AbstractFighter> GetFightersNear(AbstractFight fight, int cellId)
         {
-            List<FighterBase> fighters = new List<FighterBase>();
+            List<AbstractFighter> fighters = new List<AbstractFighter>();
             foreach (var direction in Pathfinding.FIGHT_DIRECTIONS)
             {
                 var fighter = fight.GetFighterOnCell(Pathfinding.NextCell(fight.Map, cellId, direction));
@@ -1084,7 +1057,7 @@ namespace Codebreak.Service.World.Game.Map
         }
 
         // Returns the list of points from p0 to p1 
-        private static bool BresenhamLine(FightBase fight, int beginCell, int endCell)
+        private static bool BresenhamLine(AbstractFight fight, int beginCell, int endCell)
         {
             if (beginCell == endCell)
                 return true;
@@ -1094,7 +1067,7 @@ namespace Codebreak.Service.World.Game.Map
             return BresenhamLine(fight, beginCell, endCell, (int)begin.X, (int)begin.Y, (int)end.X, (int)end.Y);
         }
 
-        private static bool BresenhamLine(FightBase fight, int beginCell, int endCell, int x0, int y0, int x1, int y1)
+        private static bool BresenhamLine(AbstractFight fight, int beginCell, int endCell, int x0, int y0, int x1, int y1)
         {
             bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
             if (steep)
@@ -1154,7 +1127,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <param name="beginCell"></param>
         /// <param name="endCell"></param>
         /// <returns></returns>
-        public static bool CheckView(FightBase fight, int beginCell, int endCell)
+        public static bool CheckView(AbstractFight fight, int beginCell, int endCell)
         {
             return BresenhamLine(fight, beginCell, endCell);
 

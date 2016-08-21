@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     ///
     /// </summary>
-    public sealed class HealEffect : EffectBase
+    public sealed class HealEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 
@@ -44,7 +44,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// <param name="CastInfos"></param>
         /// <param name="Heal"></param>
         /// <returns></returns>
-        public static FightActionResultEnum ApplyHeal(CastInfos castInfos, FighterBase target, ref int heal)
+        public static FightActionResultEnum ApplyHeal(CastInfos castInfos, AbstractFighter target, ref int heal)
         {
             var caster = castInfos.Caster;
 

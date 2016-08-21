@@ -19,13 +19,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public long Id
-        {
-            get
-            {
-                return m_character.Id;
-            }
-        }
+        public long Id => m_character.Id;
 
         /// <summary>
         /// 
@@ -63,13 +57,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_character.Name;
-            }
-        }
+        public string Name => m_character.Name;
 
         /// <summary>
         /// 

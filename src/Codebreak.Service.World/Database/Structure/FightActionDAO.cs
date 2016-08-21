@@ -25,13 +25,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
-        public ZoneTypeEnum Zone
-        {
-            get
-            {
-                return (ZoneTypeEnum)ZoneType;
-            }
-        }
+        public ZoneTypeEnum Zone => (ZoneTypeEnum)ZoneType;
 
         [Key]
         public int ZoneId
@@ -48,13 +42,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
-        public FightTypeEnum Fight
-        {
-            get
-            {
-                return (FightTypeEnum)FightType;
-            }
-        }
+        public FightTypeEnum Fight => (FightTypeEnum)FightType;
 
         [Key]
         public int FightState
@@ -64,13 +52,7 @@ namespace Codebreak.Service.World.Database.Structure
         }
 
         [Write(false)]
-        public FightStateEnum State
-        {
-            get
-            {
-                return (FightStateEnum)FightState;
-            }
-        }
+        public FightStateEnum State => (FightStateEnum)FightState;
 
         public string Conditions
         {

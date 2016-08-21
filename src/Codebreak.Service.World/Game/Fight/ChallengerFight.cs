@@ -1,5 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Entity;
-using Codebreak.Service.World.Game.Fight.Challenges;
+using Codebreak.Service.World.Game.Fight.Challenge;
 using Codebreak.Service.World.Game.Map;
 using Codebreak.Service.World.Network;
 using System;
@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ChallengerFight : FightBase, IDisposable
+    public sealed class ChallengerFight : AbstractFight, IDisposable
     {
         /// <summary>
         /// 
@@ -49,8 +49,6 @@ namespace Codebreak.Service.World.Game.Fight
 
             JoinFight(Attacker, Team0);
             JoinFight(Defender, Team1);
-
-            base.Start();
         }
 
         /// <summary>
@@ -120,28 +118,6 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             return FightActionResultEnum.RESULT_NOTHING;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void InitEndCalculation()
-        {
-            foreach (var fighter in m_winnersTeam.Fighters)
-            {
-                Result.AddResult(fighter, FightEndTypeEnum.END_WINNER);
-            }
-            foreach (var fighter in m_losersTeam.Fighters)
-            {
-                Result.AddResult(fighter);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void ApplyEndCalculation()
-        {
         }
 
         /// <summary>

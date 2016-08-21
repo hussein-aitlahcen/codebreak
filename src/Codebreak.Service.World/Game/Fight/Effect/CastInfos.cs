@@ -249,13 +249,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
-        public int RandomJet
-        {
-            get
-            {
-                return (Value2 < Value1 ? Value1 : Util.Next(Value1, Value2 + 1));
-            }
-        }
+        public int RandomJet => (Value2 < Value1 ? Value1 : Util.Next(Value1, Value2 + 1));
 
         /// <summary>
         /// 
@@ -341,7 +335,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase Caster
+        public AbstractFighter Caster
         {
             get;
             set;
@@ -350,7 +344,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
-        public FighterBase Target
+        public AbstractFighter Target
         {
             get;
             set;
@@ -368,7 +362,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <summary>
         /// 
         /// </summary>
-        public FightBase Fight
+        public AbstractFight Fight
         {
             get;
             set;
@@ -412,8 +406,8 @@ namespace Codebreak.Service.World.Game.Fight.Effect
             int value3,
             int chance,
             int duration,
-            FighterBase caster,
-            FighterBase target,
+            AbstractFighter caster,
+            AbstractFighter target,
             string rangeType = "",
             int targetKnownCellId = 0,
             int spellLevel = -1,

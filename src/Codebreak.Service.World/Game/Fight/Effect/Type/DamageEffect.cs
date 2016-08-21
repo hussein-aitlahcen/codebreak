@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
     /// <summary>
     /// Classe de gestion des dommages terre
     /// </summary>
-    public sealed class DamageEffect : EffectBase
+    public sealed class DamageEffect : AbstractSpellEffect
     {
         /// <summary>
         /// 
@@ -47,7 +47,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
         /// </summary>
         /// <param name="CastInfos"></param>
         /// <param name="damageJet"></param>
-        public static FightActionResultEnum ApplyDamages(CastInfos castInfos, FighterBase target, ref int damageJet)
+        public static FightActionResultEnum ApplyDamages(CastInfos castInfos, AbstractFighter target, ref int damageJet)
         {
             var caster = castInfos.Caster;
 

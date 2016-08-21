@@ -629,14 +629,8 @@ namespace Codebreak.Service.World.Game.Spell
         /// 
         /// </summary>
         [ProtoIgnore]
-        public EffectEnum TypeEnum
-        {
-            get
-            {
-                return (EffectEnum)Type;
-            }
-        }
-        
+        public EffectEnum TypeEnum => (EffectEnum)Type;
+
         /// <summary>
         /// 
         /// </summary>

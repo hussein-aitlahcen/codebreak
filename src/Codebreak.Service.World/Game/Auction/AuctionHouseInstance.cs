@@ -38,80 +38,38 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        public int Id
-        {
-            get
-            {
-                return m_databaseRecord.Id;
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public int NpcId
-        {
-            get
-            {
-                return m_databaseRecord.NpcId;
-            }
-        }
+        public int Id => m_databaseRecord.Id;
 
         /// <summary>
         /// 
         /// </summary>
-        public int ItemMaxLevel
-        {
-            get
-            {
-                return m_databaseRecord.ItemMaxLevel;
-            }
-        }
+        public int NpcId => m_databaseRecord.NpcId;
 
         /// <summary>
         /// 
         /// </summary>
-        public int PlayerMaxItem
-        {
-            get
-            {
-                return m_databaseRecord.PlayerMaxItem;
-            }
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public long Timeout
-        {
-            get
-            {
-                return m_databaseRecord.Timeout;
-            }
-        }
+        public int ItemMaxLevel => m_databaseRecord.ItemMaxLevel;
 
         /// <summary>
         /// 
         /// </summary>
-        public int Taxe
-        {
-            get
-            {
-                return m_databaseRecord.Taxe;
-            }
-        }
+        public int PlayerMaxItem => m_databaseRecord.PlayerMaxItem;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<int> AllowedTypes
-        {
-            get
-            {
-                return m_allowedTypes;
-            }
-        }
-    
+        public long Timeout => m_databaseRecord.Timeout;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Taxe => m_databaseRecord.Taxe;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<int> AllowedTypes => m_allowedTypes;
+
         /// <summary>
         /// 
         /// </summary>
