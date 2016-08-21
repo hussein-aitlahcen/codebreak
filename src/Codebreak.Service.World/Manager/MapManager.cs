@@ -14,8 +14,8 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, MapInstance> m_mapById;
-        private Dictionary<int, ObjectPool<MapInstance>> m_multyInstanceById;
+        private readonly Dictionary<int, MapInstance> m_mapById;
+        private readonly Dictionary<int, ObjectPool<MapInstance>> m_multyInstanceById;
         
         /// <summary>
         /// 

@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public abstract class FightActivableObject : IFightObstacle
+    public abstract class AbstractActivableObject : IFightObstacle
     {
         /// <summary>
         /// 
@@ -22,7 +22,6 @@ namespace Codebreak.Service.World.Game.Fight
         public FightObstacleTypeEnum ObstacleType
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace Codebreak.Service.World.Game.Fight
         public int Priority
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -40,7 +38,6 @@ namespace Codebreak.Service.World.Game.Fight
         public ActiveType ActivationType
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -67,7 +64,6 @@ namespace Codebreak.Service.World.Game.Fight
         public bool CanStack
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -130,7 +126,6 @@ namespace Codebreak.Service.World.Game.Fight
         public FightCell Cell
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -139,7 +134,6 @@ namespace Codebreak.Service.World.Game.Fight
         public List<AbstractFighter> Targets
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -159,7 +153,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="team"></param>
+        /// <param name="dispatcher"></param>
         public abstract void Appear(MessageDispatcher dispatcher);
 
         /// <summary>
@@ -170,14 +164,18 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="type"></param>
+        /// <param name="activeType"></param>
         /// <param name="fight"></param>
         /// <param name="caster"></param>
-        /// <param name="effect"></param>
+        /// <param name="castInfos"></param>
         /// <param name="cell"></param>
         /// <param name="duration"></param>
         /// <param name="actionId"></param>
+        /// <param name="canGoThrough"></param>
+        /// <param name="canStack"></param>
         /// <param name="hide"></param>
-        public FightActivableObject(FightObstacleTypeEnum type, ActiveType activeType, AbstractFight fight, AbstractFighter caster, CastInfos castInfos, int cell, int duration, int actionId, bool canGoThrough, bool canStack, bool hide = false)
+        protected AbstractActivableObject(FightObstacleTypeEnum type, ActiveType activeType, AbstractFight fight, AbstractFighter caster, CastInfos castInfos, int cell, int duration, int actionId, bool canGoThrough, bool canStack, bool hide = false)
         {
             m_fight = fight;
             m_caster = caster;

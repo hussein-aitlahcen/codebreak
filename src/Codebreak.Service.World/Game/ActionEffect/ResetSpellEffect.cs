@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ResetSpellEffect : ActionEffectBase<ResetSpellEffect>
+    public sealed class ResetSpellEffect : AbstractActionEffect<ResetSpellEffect>
     {
         /// <summary>
         /// 

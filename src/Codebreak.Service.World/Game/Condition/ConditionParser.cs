@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Game.Condition
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<string, Func<ConditionScope, bool>> m_compiledExpressions;
+        private readonly Dictionary<string, Func<ConditionScope, bool>> m_compiledExpressions;
 
         /// <summary>
         /// 
@@ -52,18 +52,18 @@ namespace Codebreak.Service.World.Game.Condition
                 {
                     if (conditions.Contains("BI")) // inutilisable
                     {
-                        method = new Func<ConditionScope, bool>((scope) => false);
+                        method = scope => false;
                     }
                     else
                     {
-                        Regex hasTemplateRegex = new Regex(@"PO==(?<HasTemplate>[0-9]*)", RegexOptions.None);
-                        Regex notHasTemplateRegex = new Regex(@"PO!=(?<NotHasTemplate>[0-9]*)", RegexOptions.None);
+                        var hasTemplateRegex = new Regex(@"PO==(?<HasTemplate>[0-9]*)", RegexOptions.Compiled);
+                        var notHasTemplateRegex = new Regex(@"PO!=(?<NotHasTemplate>[0-9]*)", RegexOptions.Compiled);
 
                         var subCond = hasTemplateRegex.Replace(conditions, @"character.Inventory.HasTemplate(${HasTemplate})");
                         subCond = notHasTemplateRegex.Replace(subCond, @"character.Inventory.NotHasTemplate(${NotHasTemplate})");
 
                         // Nouvelle
-                        StringBuilder realConditions = new StringBuilder(subCond);
+                        var realConditions = new StringBuilder(subCond);
 
                         // Stats tot
                         realConditions.Replace("CI", "character.Statistics.GetTotal(EffectEnum.AddIntelligence)");

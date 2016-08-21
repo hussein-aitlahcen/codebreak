@@ -45,7 +45,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// 
         /// </summary>
         /// <param name="type"></param>
-        public AbstractExchange(ExchangeTypeEnum type)
+        protected AbstractExchange(ExchangeTypeEnum type)
         {
             Type = type;
         }

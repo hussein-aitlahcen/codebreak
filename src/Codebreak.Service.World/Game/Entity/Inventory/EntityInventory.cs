@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 

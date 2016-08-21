@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ChangeAlignmentEffect : ActionEffectBase<ChangeAlignmentEffect>
+    public sealed class ChangeAlignmentEffect : AbstractActionEffect<ChangeAlignmentEffect>
     {
         /// <summary>
         /// 

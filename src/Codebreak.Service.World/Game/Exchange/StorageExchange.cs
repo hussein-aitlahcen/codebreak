@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codebreak.Service.World.Game.Entity.Inventory;
 
 namespace Codebreak.Service.World.Game.Exchange
 {
@@ -34,7 +35,8 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="inventory"></param>
+        /// <param name="character"></param>
+        /// <param name="storage"></param>
         /// <param name="type"></param>
         public StorageExchange(CharacterEntity character, StorageInventory storage, ExchangeTypeEnum type = ExchangeTypeEnum.EXCHANGE_STORAGE)
             : base(type)

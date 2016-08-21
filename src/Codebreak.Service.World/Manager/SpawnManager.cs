@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class SpawnManager : Singleton<SpawnManager>
     {
-        private Dictionary<ZoneTypeEnum, Dictionary<int, SpawnQueue>> m_spawnQueueById;
+        private readonly Dictionary<ZoneTypeEnum, Dictionary<int, SpawnQueue>> m_spawnQueueById;
 
         /// <summary>
         /// 
@@ -37,7 +37,7 @@ namespace Codebreak.Service.World.Manager
         {
             foreach(var subArea in AreaManager.Instance.SubAreas)
             {
-                if (subArea.Spawns.Count() > 0)
+                if (subArea.Spawns.Any())
                 {
                     var spawnQueue = new SpawnQueue(subArea.Spawns);
                     subArea.AddUpdatable(spawnQueue);

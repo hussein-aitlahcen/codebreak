@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.RPC
         /// <summary>
         /// 
         /// </summary>
-        private AuthServiceRPCConnection m_rpcConnection;
+        private readonly AuthServiceRPCConnection m_rpcConnection;
         
         /// <summary>
         /// 
@@ -40,11 +40,11 @@ namespace Codebreak.Service.World.RPC
             m_rpcConnection = new AuthServiceRPCConnection();
             m_rpcConnection.OnConnectedEvent += () =>
                 {
-                    AddMessage(() => OnConnected());
+                    AddMessage(OnConnected);
                 };
             m_rpcConnection.OnDisconnectedEvent += () =>
                 {
-                    AddMessage(() => OnDisconnected());
+                    AddMessage(OnDisconnected);
                 };
             m_rpcConnection.OnMessageEvent += (message) =>
                 {

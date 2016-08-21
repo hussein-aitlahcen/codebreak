@@ -27,7 +27,7 @@ namespace Codebreak.Service.World.Manager
             var drops = new List<ItemDAO>();
             foreach(var drop in monster.Grade.Template.Drops)
             {
-                for (int i = 0; i < drop.Max; i++)
+                for (var i = 0; i < drop.Max; i++)
                 {
                     if (TryDrop(prospection, drop, rate))
                     {
@@ -68,13 +68,12 @@ namespace Codebreak.Service.World.Manager
         /// <returns></returns>
         public Dictionary<AbstractFighter, List<ItemDAO>> Distribute(IEnumerable<AbstractFighter> fighters, long totalProspection, List<ItemDAO> drops)
         {
-            var distributed = new Dictionary<AbstractFighter, List<ItemDAO>>();
-            var orderedPlayers = fighters.OrderBy(player => player.Prospection);   
-            foreach (var player in fighters)
-                distributed.Add(player, new List<ItemDAO>());
+            var abstractFighters = fighters as AbstractFighter[] ?? fighters.ToArray();
+            var orderedPlayers = abstractFighters.OrderBy(player => player.Prospection);
+            var distributed = abstractFighters.ToDictionary(player => player, player => new List<ItemDAO>());
             while(drops.Count > 0)
             {
-                foreach(var player in fighters)
+                foreach(var player in abstractFighters)
                 {
                     for (int i = drops.Count - 1; i > -1; i--)
                     {

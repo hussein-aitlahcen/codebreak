@@ -16,8 +16,8 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="localEntity"></param>
-        /// <param name="distantEntity"></param>
+        /// <param name="character"></param>
+        /// <param name="taxCollector"></param>
         public GameTaxCollectorExchangeAction(CharacterEntity character, TaxCollectorEntity taxCollector)
             : base(new TaxCollectorExchange(character, taxCollector), character, taxCollector)
         {

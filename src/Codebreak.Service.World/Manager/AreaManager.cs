@@ -11,9 +11,9 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class AreaManager : Singleton<AreaManager>
     {
-        private Dictionary<int, SuperAreaInstance> m_superAreaById;
-        private Dictionary<int, AreaInstance> m_areaById;
-        private Dictionary<int, SubAreaInstance> m_subAreaById;
+        private readonly Dictionary<int, SuperAreaInstance> m_superAreaById;
+        private readonly Dictionary<int, AreaInstance> m_areaById;
+        private readonly Dictionary<int, SubAreaInstance> m_subAreaById;
 
         /// <summary>
         /// 

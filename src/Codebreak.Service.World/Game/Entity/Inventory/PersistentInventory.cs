@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 
     /// </summary>
-    public class PersistentInventory : InventoryBag
+    public class PersistentInventory : AbstractInventory
     {     
         /// <summary>
         /// 
@@ -20,7 +20,6 @@ namespace Codebreak.Service.World.Game.Entity
         public int OwnerType
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -29,7 +28,6 @@ namespace Codebreak.Service.World.Game.Entity
         public long OwnerId
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private List<ItemDAO> m_items;
+        private readonly List<ItemDAO> m_items;
 
         /// <summary>
         /// 

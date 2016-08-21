@@ -14,8 +14,8 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class ActionEffectBase<T> : Singleton<T>, IActionEffect
-        where T : ActionEffectBase<T>, new()
+    public abstract class AbstractActionEffect<T> : Singleton<T>, IActionEffect
+        where T : AbstractActionEffect<T>, new()
     {
         /// <summary>
         /// 

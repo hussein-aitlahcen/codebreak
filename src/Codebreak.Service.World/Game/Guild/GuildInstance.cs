@@ -236,10 +236,10 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         private string m_emblem, m_displayEmblem;
-        private List<GuildMember> m_members;
-        private List<TaxCollectorEntity> m_taxCollectors;
-        private GuildDAO m_record;
-        private MessageDispatcher m_taxCollectorDispatcher;
+        private readonly List<GuildMember> m_members;
+        private readonly List<TaxCollectorEntity> m_taxCollectors;
+        private readonly GuildDAO m_record;
+        private readonly MessageDispatcher m_taxCollectorDispatcher;
 
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="guild"></param>
+        /// <param name="record"></param>
         /// <param name="boss"></param>
         public GuildInstance(GuildDAO record, CharacterEntity boss)
             : this(record, false)
@@ -276,6 +276,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="member"></param>
         /// <param name="taxCollector"></param>
         public void RemoveTaxCollector(GuildMember member, TaxCollectorEntity taxCollector)
         {
@@ -326,6 +327,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="member"></param>
         /// <param name="taxCollector"></param>
         public void FarmTaxCollector(GuildMember member, TaxCollectorEntity taxCollector)
         {
@@ -434,6 +436,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="taxCollectorId"></param>
         /// <param name="attacker"></param>
         public void TaxCollectorAttackerJoin(long taxCollectorId, AbstractFighter attacker)
         {
@@ -454,7 +457,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="taxColectorId"></param>
+        /// <param name="taxCollectorId"></param>
         public void TaxCollectorJoin(GuildMember member, long taxCollectorId)
         {
             var collector = m_taxCollectors.Find(taxCollector => taxCollector.Id == taxCollectorId);
@@ -465,10 +468,9 @@ namespace Codebreak.Service.World.Game.Guild
             }
 
             var character = member.Character;
-            if (character == null)            
+            if (character == null)
                 return;
             
-
             character.AddMessage(() =>
             {
                 if (!character.CanGameAction(GameActionTypeEnum.TAXCOLLECTOR_AGGRESSION))
@@ -503,7 +505,6 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="taxCollectorId"></param>
         public void TaxCollectorLeave(GuildMember member)
         {
             if (member.TaxCollectorJoinedId == -1)
@@ -532,7 +533,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="member"></param>
         public void HireTaxCollector(GuildMember member)
         {       
-            if (member.Character == null)            
+            if (member.Character == null)
                 return;
             
             member.Character.AddMessage(() =>
@@ -728,8 +729,10 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void MemberBoss(CharacterEntity character)
         {
-            var member = new GuildMember(this, character.DatabaseRecord);            
-            member.GuildId = Id;
+            var member = new GuildMember(this, character.DatabaseRecord)
+            {
+                GuildId = Id
+            };
             member.SetBoss();
             member.CharacterConnected(character);
             member.SendGuildStats();
@@ -741,7 +744,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="profilName"></param>
+        /// <param name="profilId"></param>
         /// <param name="rank"></param>
         /// <param name="percent"></param>
         /// <param name="power"></param>
@@ -820,7 +823,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// 
         /// </summary>
         /// <param name="member"></param>
-        /// <param name="kickedMember"></param>
+        /// <param name="kickedMemberName"></param>
         public void MemberKick(GuildMember member, string kickedMemberName)
         {
             if (kickedMemberName != member.Name && !member.HasRight(GuildRightEnum.BAN))
@@ -883,7 +886,7 @@ namespace Codebreak.Service.World.Game.Guild
                 GuildManager.Instance.Destroy(this);
             }
             // new boss
-            else if (!m_members.Any(m => m.Rank == GuildRankEnum.BOSS))
+            else if (m_members.All(m => m.Rank != GuildRankEnum.BOSS))
             {
                 var boss = m_members.OrderBy(m => (int)m.Rank).First();
                 boss.SetBoss();
@@ -896,13 +899,12 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="member"></param>
         public void AddMember(GuildMember member)
         {
-            m_members.Add(member);
-            base.AddHandler(member.Dispatch);
-            
             IsActive = m_members.Count > 0;
+            m_members.Add(member);
+            AddHandler(member.Dispatch);
         }
 
         /// <summary>
@@ -911,10 +913,9 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="member"></param>
         public void RemoveMember(GuildMember member)
         {
-            m_members.Remove(member);
-            base.RemoveHandler(member.Dispatch);
-            
             IsActive = m_members.Count > 0;
+            m_members.Remove(member);
+            RemoveHandler(member.Dispatch);
         }
 
         /// <summary>
@@ -930,10 +931,12 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="memberId"></param>
+        /// <param name="memberName"></param>
         /// <param name="message"></param>
         public void SafeDispatchChatMessage(long memberId, string memberName, string message)
         {
-            base.SafeDispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GUILD, memberId, memberName, message));
+            SafeDispatch(WorldMessage.CHAT_MESSAGE(ChatChannelEnum.CHANNEL_GUILD, memberId, memberName, message));
         }
 
         /// <summary>
@@ -948,7 +951,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="member"></param>
         public void SendBoostInformations(GuildMember member)
         {
             member.Dispatch(WorldMessage.GUILD_BOOST_INFORMATIONS(BoostPoint, TaxCollectorPrice, Statistics));
@@ -973,7 +976,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="member"></param>
         public void SendGeneralInformations(GuildMember member)
         {            
             member.Dispatch(WorldMessage.GUILD_GENERAL_INFORMATIONS(IsActive, Level, ExperienceFloorCurrent, ExperienceFloorNext, Experience));   

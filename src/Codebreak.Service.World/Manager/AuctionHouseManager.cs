@@ -17,8 +17,8 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, AuctionHouseInstance> m_auctionHousesById;
-        private Dictionary<int, AuctionHouseInstance> m_auctionHouseByNpcId;
+        private readonly Dictionary<int, AuctionHouseInstance> m_auctionHousesById;
+        private readonly Dictionary<int, AuctionHouseInstance> m_auctionHouseByNpcId;
 
         /// <summary>
         /// 

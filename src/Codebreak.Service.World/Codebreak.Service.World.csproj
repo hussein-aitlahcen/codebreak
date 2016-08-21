@@ -152,7 +152,7 @@
     <Compile Include="Frame\NpcDialogFrame.cs" />
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
-    <Compile Include="Game\ActionEffect\ActionEffectBase.cs" />
+    <Compile Include="Game\ActionEffect\AbstractActionEffect.cs" />
     <Compile Include="Game\ActionEffect\ActionList.cs" />
     <Compile Include="Game\ActionEffect\AddBoostEffect.cs" />
     <Compile Include="Game\ActionEffect\AddEnergyEffect.cs" />
@@ -215,8 +215,8 @@
     <Compile Include="Game\Entity\Inventory\CharacterInventory.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
     <Compile Include="Game\Entity\Inventory\EntityInventory.cs" />
-    <Compile Include="Game\Entity\EntityBase.cs" />
-    <Compile Include="Game\Entity\Inventory\InventoryBag.cs" />
+    <Compile Include="Game\Entity\AbstractEntity.cs" />
+    <Compile Include="Game\Entity\Inventory\AbstractInventory.cs" />
     <Compile Include="Game\Entity\MerchantEntity.cs" />
     <Compile Include="Game\Entity\MonsterEntity.cs" />
     <Compile Include="Game\Entity\MonsterGroupEntity.cs" />
@@ -233,7 +233,7 @@
     <Compile Include="Game\Exchange\MerchantExchange.cs" />
     <Compile Include="Game\Exchange\MountStorageExchange.cs" />
     <Compile Include="Game\Exchange\PersonalShopExchange.cs" />
-    <Compile Include="Game\Exchange\EntityExchange.cs" />
+    <Compile Include="Game\Exchange\AbstractEntityExchange.cs" />
     <Compile Include="Game\Exchange\AbstractExchange.cs" />
     <Compile Include="Game\Exchange\NpcExchange.cs" />
     <Compile Include="Game\Exchange\PlayerExchange.cs" />
@@ -328,7 +328,7 @@
     <Compile Include="Game\Fight\Effect\Type\StatsStealEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\TeleportEffect.cs" />
     <Compile Include="Game\Fight\Effect\Type\TransposeEffect.cs" />
-    <Compile Include="Game\Fight\FightActivableObject.cs" />
+    <Compile Include="Game\Fight\AbstractActivableObject.cs" />
     <Compile Include="Game\Fight\AbstractFight.cs" />
     <Compile Include="Game\Fight\AbstractFighter.cs" />
     <Compile Include="Game\Fight\FighterStateManager.cs" />

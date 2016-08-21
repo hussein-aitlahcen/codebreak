@@ -144,14 +144,9 @@ namespace Codebreak.Service.World.Game.Fight
         protected override void FightEnd()
         {
             if (WinnerTeam == Team0)
-            {
                 Map.SpawnMonsters();
-            }
             else
-            {
-                foreach(var monster in WinnerFighters)
                 Map.SpawnEntity(MonsterGroup);
-            }
             base.FightEnd();
         }
 
@@ -163,11 +158,9 @@ namespace Codebreak.Service.World.Game.Fight
         {
             message.Append(Id.ToString()).Append(';');
             message.Append(UpdateTime).Append(';');
-
             message.Append("0,");
             message.Append(Team0.AlignmentId).Append(',');
             message.Append(Team0.AliveFighters.Count()).Append(';');
-
             message.Append("1,");
             message.Append(Team0.AlignmentId).Append(',');
             message.Append(Team1.AliveFighters.Count()).Append(';');
@@ -185,12 +178,10 @@ namespace Codebreak.Service.World.Game.Fight
                 var m_serialized = new StringBuilder();
                 m_serialized.Append(Id).Append(';');
                 m_serialized.Append((int)Type).Append('|');
-
                 m_serialized.Append(Team0.LeaderId).Append(';');
                 m_serialized.Append(Team0.FlagCellId).Append(';');
                 m_serialized.Append('0').Append(';');
                 m_serialized.Append(Team0.AlignmentId).Append('|');
-
                 m_serialized.Append(Team1.LeaderId).Append(';');
                 m_serialized.Append(Team1.FlagCellId).Append(';');
                 m_serialized.Append("1").Append(';');
@@ -208,9 +199,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             Character = null;
             MonsterGroup = null;
-            
             m_serializedFlag = null;
-
             base.Dispose();
         }
     }

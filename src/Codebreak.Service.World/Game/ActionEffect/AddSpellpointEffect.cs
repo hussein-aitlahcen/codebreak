@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AddSpellpointEffect : ActionEffectBase<AddSpellpointEffect>
+    public sealed class AddSpellpointEffect : AbstractActionEffect<AddSpellpointEffect>
     {
         /// <summary>
         /// 

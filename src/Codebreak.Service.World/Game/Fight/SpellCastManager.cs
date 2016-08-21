@@ -23,17 +23,6 @@ namespace Codebreak.Service.World.Game.Fight
             m_targets.Clear();
             m_cooldowns.Clear();
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            m_targets.Clear();
-            m_cooldowns.Clear();
-            m_targets = null;
-            m_cooldowns = null;
-        }
         
         /// <summary>
         /// 
@@ -121,6 +110,17 @@ namespace Codebreak.Service.World.Game.Fight
 
             foreach (var cooldown in m_cooldowns.Values)
                 cooldown.Decrement();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            m_targets.Clear();
+            m_cooldowns.Clear();
+            m_targets = null;
+            m_cooldowns = null;
         }
     }
 

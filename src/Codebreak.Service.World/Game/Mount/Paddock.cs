@@ -46,7 +46,7 @@ namespace Codebreak.Service.World.Game.Mount
         public bool Public => GuildId == -1;
 
         private GuildInstance m_guild;
-        private PaddockDAO m_record;
+        private readonly PaddockDAO m_record;
                   
         public Paddock(PaddockDAO record)
         {

@@ -17,12 +17,12 @@ namespace Codebreak.Service.World.Game.Spawn
         /// <summary>
         /// 
         /// </summary>
-        private List<MapInstance> m_maps;
+        private readonly List<MapInstance> m_maps;
         
         /// <summary>
         /// 
         /// </summary>
-        private List<MonsterSpawnDAO> m_monsters;
+        private readonly List<MonsterSpawnDAO> m_monsters;
 
         /// <summary>
         /// 
@@ -37,8 +37,7 @@ namespace Codebreak.Service.World.Game.Spawn
         {
             m_maps = new List<MapInstance>();
             m_monsters = new List<MonsterSpawnDAO>(spawns);
-
-            base.AddTimer(WorldConfig.SPAWN_CHECK_INTERVAL, InternalUpdate);
+            AddTimer(WorldConfig.SPAWN_CHECK_INTERVAL, InternalUpdate);
         }
 
         /// <summary>

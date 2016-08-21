@@ -31,8 +31,8 @@ namespace Codebreak.Service.World.Manager
     public sealed class ClientManager : Singleton<ClientManager>
     {
 
-        private Dictionary<long, WorldClient> m_clientByAccount;
-        private Dictionary<string, AccountTicket> m_accountByTicket;
+        private readonly Dictionary<long, WorldClient> m_clientByAccount;
+        private readonly Dictionary<string, AccountTicket> m_accountByTicket;
 
         /// <summary>
         /// 
@@ -147,7 +147,7 @@ namespace Codebreak.Service.World.Manager
         {
             if (m_accountByTicket.Count > 0)
             {
-                for (int i = m_accountByTicket.Count - 1; i > -1; i--)
+                for (var i = m_accountByTicket.Count - 1; i > -1; i--)
                 {
                     var value = m_accountByTicket.ElementAt(i).Value;
                     var elapsed = WorldService.Instance.LastUpdate - value.Time;

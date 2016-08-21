@@ -17,7 +17,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public abstract class AbstractFighter : AbstractEntity, IFightObstacle, IDisposable
+    public abstract class AbstractFighter : AbstractEntity, IFightObstacle
     {
 
         #region IFightObstacle

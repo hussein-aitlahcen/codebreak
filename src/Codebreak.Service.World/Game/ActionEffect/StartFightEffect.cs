@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class StartFightEffect : ActionEffectBase<StartFightEffect>
+    public sealed class StartFightEffect : AbstractActionEffect<StartFightEffect>
     {
         /// <summary>
         /// SHOULD NEVER BE CALLED EXCEPT IF WE CREATE A NEW ITEM WITH THIS EFFECT

@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PlayerExchange : EntityExchange
+    public sealed class PlayerExchange : AbstractEntityExchange
     {
         /// <summary>
         /// 

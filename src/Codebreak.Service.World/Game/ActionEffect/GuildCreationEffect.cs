@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GuildCreationEffect : ActionEffectBase<GuildCreationEffect>
+    public sealed class GuildCreationEffect : AbstractActionEffect<GuildCreationEffect>
     {
         /// <summary>
         /// SHOULD NEVER BE CALLED EXCEPT IF WE CRRATE A NEW ITEM WITH THIS ACTION

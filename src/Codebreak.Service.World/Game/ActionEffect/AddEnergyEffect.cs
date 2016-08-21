@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AddEnergyEffect : ActionEffectBase<AddEnergyEffect>
+    public sealed class AddEnergyEffect : AbstractActionEffect<AddEnergyEffect>
     {
         /// <summary>
         /// 

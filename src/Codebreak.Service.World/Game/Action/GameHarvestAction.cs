@@ -40,7 +40,8 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         /// <param name="character"></param>
-        /// <param name="harvestableObject"></param>
+        /// <param name="harvestableResource"></param>
+        /// <param name="duration"></param>
         public GameHarvestAction(CharacterEntity character, HarvestableResource harvestableResource, int duration)
             : base(GameActionTypeEnum.SKILL_HARVEST, character, duration)
         {

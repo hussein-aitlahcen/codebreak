@@ -17,8 +17,8 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="buyer"></param>
-        /// <param name="shop"></param>
+        /// <param name="character"></param>
+        /// <param name="npc"></param>
         public GameAuctionHouseSellAction(CharacterEntity character, NonPlayerCharacterEntity npc)
             : base(new AuctionHouseSellExchange(character, npc), character, npc)
         {

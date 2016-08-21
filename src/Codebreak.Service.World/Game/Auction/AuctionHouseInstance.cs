@@ -73,37 +73,37 @@ namespace Codebreak.Service.World.Game.Auction
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, List<AuctionCategory>> m_categoriesByTemplate;
+        private readonly Dictionary<int, List<AuctionCategory>> m_categoriesByTemplate;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, AuctionCategory> m_categoryById;
+        private readonly Dictionary<int, AuctionCategory> m_categoryById;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, List<int>> m_templatesByType;
+        private readonly Dictionary<int, List<int>> m_templatesByType;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, List<AuctionEntry>> m_auctionsByAccount;
+        private readonly Dictionary<long, List<AuctionEntry>> m_auctionsByAccount;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, long> m_templateMiddlePrice;
+        private readonly Dictionary<int, long> m_templateMiddlePrice;
 
         /// <summary>
         /// 
         /// </summary>
-        private List<int> m_allowedTypes;
+        private readonly List<int> m_allowedTypes;
         
         /// <summary>
         /// 
         /// </summary>
-        private AuctionHouseDAO m_databaseRecord;
+        private readonly AuctionHouseDAO m_databaseRecord;
 
         /// <summary>
         /// 
@@ -154,10 +154,9 @@ namespace Codebreak.Service.World.Game.Auction
         /// 
         /// </summary>
         /// <param name="character"></param>
-        /// <param name="itemId"></param>
+        /// <param name="categoryId"></param>
         /// <param name="floorId"></param>
         /// <param name="price"></param>
-        /// <returns></returns>
         public void TryBuy(CharacterEntity character, int categoryId, int floorId, long price)
         {
             Logger.Debug("AuctionHouse::TryBuy categoryId=" + categoryId + " floorId=" + floorId + " price=" + price);
@@ -277,9 +276,7 @@ namespace Codebreak.Service.World.Game.Auction
                 m_templateMiddlePrice.Add(templateId, 0);
             if (!m_categoriesByTemplate.ContainsKey(templateId))
                 return;
-            long total = 0;
-            foreach (var category in m_categoriesByTemplate[templateId])
-                total += category.MiddlePrice;
+            var total = m_categoriesByTemplate[templateId].Sum(category => category.MiddlePrice);
             m_templateMiddlePrice[templateId] = total / Math.Max(1, m_categoriesByTemplate[templateId].Count);
         }
 
@@ -341,7 +338,10 @@ namespace Codebreak.Service.World.Game.Auction
         /// 
         /// </summary>
         /// <param name="character"></param>
-        /// <param name="item"></param>
+        /// <param name="itemId"></param>
+        /// <param name="quantity"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
         public AuctionAddResultEnum TryAdd(CharacterEntity character, long itemId, int quantity, long price)
         {
             Logger.Debug("AuctionHouse::TryAdd itemId=" + itemId + " quantity=" + quantity + " price=" + price);

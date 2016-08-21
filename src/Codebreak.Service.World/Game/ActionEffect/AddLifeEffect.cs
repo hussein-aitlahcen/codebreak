@@ -13,19 +13,18 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AddLifeEffect : ActionEffectBase<AddLifeEffect>
+    public sealed class AddLifeEffect : AbstractActionEffect<AddLifeEffect>
     {
         const int EMOTE_EAT_REST = 17;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="item"></param>
         /// <param name="effect"></param>
         /// <param name="targetId"></param>
         /// <param name="targetCell"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
         public override bool ProcessItem(CharacterEntity character, ItemDAO item, GenericEffect effect, long targetId, int targetCell)
         {            
@@ -42,19 +41,17 @@ namespace Codebreak.Service.World.Game.ActionEffect
                 case ItemTypeEnum.TYPE_PAIN:
                     character.EmoteUse(EMOTE_EAT_REST);
                     break;
-                    
-                default:
-                    break;
             }
                         
-            return Process(character, new Dictionary<string, string>() { { "life", effect.RandomJet.ToString() } });
+            return Process(character, new Dictionary<string, string> { { "life", effect.RandomJet.ToString() } });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="parameters"></param>
+        /// <returns></returns>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
             if (character.Life == character.MaxLife)

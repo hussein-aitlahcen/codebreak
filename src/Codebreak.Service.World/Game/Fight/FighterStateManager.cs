@@ -36,85 +36,85 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Fighter"></param>
-        public FighterStateManager(AbstractFighter Fighter)
+        /// <param name="fighter"></param>
+        public FighterStateManager(AbstractFighter fighter)
         {
-            m_fighter = Fighter;
+            m_fighter = fighter;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="State"></param>
+        /// <param name="state"></param>
         /// <returns></returns>
-        public bool CanState(FighterStateEnum State)
+        public bool CanState(FighterStateEnum state)
         {
-            switch (State)
+            switch (state)
             {
                 case FighterStateEnum.STATE_CARRIED:
                 case FighterStateEnum.STATE_CARRIER:
                     return !HasState(FighterStateEnum.STATE_GRAVITY);
             }
 
-            return !HasState(State);
+            return !HasState(state);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="State"></param>
+        /// <param name="state"></param>
         /// <returns></returns>
-        public bool HasState(FighterStateEnum State)
+        public bool HasState(FighterStateEnum state)
         {
-            return m_states.ContainsKey(State);
+            return m_states.ContainsKey(state);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Buff"></param>
-        public void AddState(AbstractSpellBuff Buff)        
+        /// <param name="buff"></param>
+        public void AddState(AbstractSpellBuff buff)
         {
-            Buff.CastInfos.SubEffect = EffectEnum.AddState;
+            buff.CastInfos.SubEffect = EffectEnum.AddState;
 
-            if (Buff.Caster.Fight.State == FightStateEnum.STATE_FIGHTING)
+            if (buff.Caster.Fight.State == FightStateEnum.STATE_FIGHTING)
             {
-                switch (Buff.CastInfos.EffectType)
+                switch (buff.CastInfos.EffectType)
                 {
                     case EffectEnum.Stealth:
 
                         if (HasState(FighterStateEnum.STATE_STEALTH))
                             return;
 
-                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, m_fighter.Id, m_fighter.Id + "," + Buff.Duration));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.Stealth, m_fighter.Id, m_fighter.Id + "," + buff.Duration));
 
-                        m_states.Add(FighterStateEnum.STATE_STEALTH, Buff);
+                        m_states.Add(FighterStateEnum.STATE_STEALTH, buff);
 
                         return;
 
                     default:
 
-                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, m_fighter.Id, m_fighter.Id + "," + Buff.CastInfos.Value3 + ",1"));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, m_fighter.Id, m_fighter.Id + "," + buff.CastInfos.Value3 + ",1"));
 
                         break;
                 }
 
-                if (HasState((FighterStateEnum)Buff.CastInfos.Value3))
+                if (HasState((FighterStateEnum)buff.CastInfos.Value3))
                     return;
 
-                m_states.Add((FighterStateEnum)Buff.CastInfos.Value3, Buff);
+                m_states.Add((FighterStateEnum)buff.CastInfos.Value3, buff);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Buff"></param>
-        public void RemoveState(AbstractSpellBuff Buff)
+        /// <param name="buff"></param>
+        public void RemoveState(AbstractSpellBuff buff)
         {
-            if (Buff.Caster.Fight.State == FightStateEnum.STATE_FIGHTING)
+            if (buff.Caster.Fight.State == FightStateEnum.STATE_FIGHTING)
             {
-                switch (Buff.CastInfos.EffectType)
+                switch (buff.CastInfos.EffectType)
                 {
                     case EffectEnum.Stealth:
 
@@ -127,13 +127,13 @@ namespace Codebreak.Service.World.Game.Fight
 
                     default:
 
-                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, m_fighter.Id, m_fighter.Id + "," + Buff.CastInfos.Value3 + ",0"));
+                        m_fighter.Fight.Dispatch(WorldMessage.GAME_ACTION(EffectEnum.AddState, m_fighter.Id, m_fighter.Id + "," + buff.CastInfos.Value3 + ",0"));
 
                         break;
                 }
             }
 
-            m_states.Remove((FighterStateEnum)Buff.CastInfos.Value3);
+            m_states.Remove((FighterStateEnum)buff.CastInfos.Value3);
         }
 
         /// <summary>

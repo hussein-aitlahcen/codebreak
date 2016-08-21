@@ -43,10 +43,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         public static ActionList Deserialize(string data)
         {
             var list = new ActionList();
-            foreach(var actionData in data.Split('|'))
-            {
-                list.Add(ActionEntry.Deserialize(actionData));
-            }
+            list.AddRange(data.Split('|').Select(ActionEntry.Deserialize));
             return list;
         }
     }

@@ -185,22 +185,19 @@ namespace Codebreak.Framework.Generic
         {
             UpdateTime += updateDelta;
             
-            foreach (var timer in m_timerList)
+            foreach (var timer in m_timerList.Where(timer => (UpdateTime - timer.LastActivated) >= timer.Delay))
             {
-                if ((UpdateTime - timer.LastActivated) >= timer.Delay)
+                try
                 {
-                    try
-                    {
-                        timer.Tick(UpdateTime);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error("TaskQueue[" + GetType().Name + "] timer update failed [" + timer.GetType().Name + "] : " + ex.ToString());
-                    }
-                    if (timer.OneShot)
-                    {
-                        RemoveTimer(timer);
-                    }
+                    timer.Tick(UpdateTime);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("TaskQueue[" + GetType().Name + "] timer update failed [" + timer.GetType().Name + "] : " + ex.ToString());
+                }
+                if (timer.OneShot)
+                {
+                    RemoveTimer(timer);
                 }
             }
             
@@ -216,7 +213,7 @@ namespace Codebreak.Framework.Generic
                 }
             }
 
-            Action msg = null;
+            Action msg;
             while (m_messagesQueue.TryDequeue(out msg))
             {
                 try

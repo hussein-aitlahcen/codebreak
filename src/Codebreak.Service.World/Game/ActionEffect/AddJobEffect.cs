@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AddJobEffect : ActionEffectBase<AddJobEffect>
+    public sealed class AddJobEffect : AbstractActionEffect<AddJobEffect>
     {
         /// <summary>
         /// 

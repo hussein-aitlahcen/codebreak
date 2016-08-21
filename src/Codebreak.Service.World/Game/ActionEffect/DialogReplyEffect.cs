@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class DialogReplyEffect : ActionEffectBase<DialogReplyEffect>
+    public sealed class DialogReplyEffect : AbstractActionEffect<DialogReplyEffect>
     {
         /// <summary>
         /// 

@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.Map
         public bool LineOfSight;
         public int InteractiveObjectId;
 
-        private bool m_walkable;
+        private readonly bool m_walkable;
 
         /// <summary>
         /// 
@@ -30,7 +30,6 @@ namespace Codebreak.Service.World.Game.Map
         public InteractiveObject InteractiveObject
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -39,29 +38,28 @@ namespace Codebreak.Service.World.Game.Map
         public MapTriggerDAO Trigger
         {
             get;
-            private set;
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="map"></param>
         /// <param name="id"></param>
         /// <param name="data"></param>
-        /// <param name="nextMap"></param>
-        /// <param name="nextCell"></param>
+        /// <param name="trigger"></param>
         public MapCell(MapInstance map, int id, byte[] data, MapTriggerDAO trigger = null)
         {
             Id = id;
             Trigger = trigger;
             m_walkable = ((data[2] & 56) >> 3) > 0;
-            if (!m_walkable && ((data[2] & 56) >> 3) != 0)            
-                return;            
+            if (!m_walkable && ((data[2] & 56) >> 3) != 0)
+                return;
             LineOfSight = (data[0] & 1) == 1;
             if ((data[7] & 2) >> 1 == 1)
             {
                 InteractiveObjectId = ((data[0] & 2) << 12) + ((data[1] & 1) << 12) + (data[8] << 6) + data[9];
-                if (InteractiveObjectManager.Instance.Exists(InteractiveObjectId))                
-                    InteractiveObject = InteractiveObjectManager.Instance.Generate(InteractiveObjectId, map, Id);                
+                if (InteractiveObjectManager.Instance.Exists(InteractiveObjectId))
+                    InteractiveObject = InteractiveObjectManager.Instance.Generate(InteractiveObjectId, map, Id);
             }
         }
 

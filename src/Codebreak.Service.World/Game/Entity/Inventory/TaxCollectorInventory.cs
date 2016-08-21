@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 
@@ -29,7 +29,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private TaxCollectorEntity m_taxCollector;
+        private readonly TaxCollectorEntity m_taxCollector;
 
         /// <summary>
         /// 

@@ -26,20 +26,14 @@ namespace Codebreak.Framework.Network
         private const int BUFF_SIZE = 1024;
         private Socket _socket;
         private SocketAsyncEventArgs m_connectSaea;
-        private BufferManager m_bufferManager;
-        private ObjectPool<SocketAsyncEventArgs> m_saeaSendPool;
-        private ObjectPool<PoolableSocketAsyncEventArgs> m_saeaRecvPool;
+        private readonly BufferManager m_bufferManager;
+        private readonly ObjectPool<SocketAsyncEventArgs> m_saeaSendPool;
+        private readonly ObjectPool<PoolableSocketAsyncEventArgs> m_saeaRecvPool;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool Connected
-        {
-            get
-            {
-                return _socket != null && _socket.Connected;
-            }
-        }
+        public bool Connected => _socket != null && _socket.Connected;
 
         /// <summary>
         /// 
@@ -64,7 +58,7 @@ namespace Codebreak.Framework.Network
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket.NoDelay = true;
-			_socket.Blocking = false;
+            _socket.Blocking = false;
 
             m_connectSaea = new SocketAsyncEventArgs();
             m_connectSaea.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
@@ -169,13 +163,13 @@ namespace Codebreak.Framework.Network
         {
             saea.Completed -= IOCompleted;
 
-			try
-			{
-            	_socket.Shutdown(SocketShutdown.Both);
-			}
-			catch(Exception) 
-			{
-			}
+            try
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+            }
+            catch(Exception) 
+            {
+            }
 
             if (_socket.Connected)
                 _socket.Disconnect(false);

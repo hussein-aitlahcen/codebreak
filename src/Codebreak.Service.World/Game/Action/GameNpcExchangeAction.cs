@@ -16,8 +16,8 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="localEntity"></param>
-        /// <param name="distantEntity"></param>
+        /// <param name="character"></param>
+        /// <param name="npc"></param>
         public GameNpcExchangeAction(CharacterEntity character, NonPlayerCharacterEntity npc)
             : base(new NpcExchange(character, npc), character, npc)
         {

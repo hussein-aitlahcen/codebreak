@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class PaddockManager : Singleton<PaddockManager>
     {
-        private Dictionary<int, Paddock> m_paddockByMap;
+        private readonly Dictionary<int, Paddock> m_paddockByMap;
 
         public PaddockManager()
         {

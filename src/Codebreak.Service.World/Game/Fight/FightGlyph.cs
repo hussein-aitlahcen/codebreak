@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class FightGlyph : FightActivableObject
+    public sealed class FightGlyph : AbstractActivableObject
     {
         /// <summary>
         /// 

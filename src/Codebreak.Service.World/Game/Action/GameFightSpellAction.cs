@@ -70,6 +70,12 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         /// <param name="fighter"></param>
+        /// <param name="cellId"></param>
+        /// <param name="spellId"></param>
+        /// <param name="spellLevel"></param>
+        /// <param name="sprite"></param>
+        /// <param name="spriteInfos"></param>
+        /// <param name="duration"></param>
         /// <param name="callback"></param>
         public GameFightSpellAction(AbstractFighter fighter, int cellId, int spellId, int spellLevel, string sprite, string spriteInfos, long duration, System.Action callback)
             : base(GameActionTypeEnum.FIGHT_SPELL_LAUNCH, fighter, duration)

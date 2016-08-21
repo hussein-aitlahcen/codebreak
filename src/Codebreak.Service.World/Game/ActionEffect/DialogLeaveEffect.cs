@@ -12,12 +12,12 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class DialogLeaveEffect : ActionEffectBase<DialogLeaveEffect>
+    public sealed class DialogLeaveEffect : AbstractActionEffect<DialogLeaveEffect>
     {
         /// <summary>
-        /// SHOULD NEVER BE CALLED
+        /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="item"></param>
         /// <param name="effect"></param>
         /// <param name="targetId"></param>
@@ -31,8 +31,9 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="character"></param>
         /// <param name="parameters"></param>
+        /// <returns></returns>
         public override bool Process(CharacterEntity character, Dictionary<string, string> parameters)
         {
             character.StopAction(Action.GameActionTypeEnum.NPC_DIALOG);

@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AddKamasEffect : ActionEffectBase<AddKamasEffect>
+    public sealed class AddKamasEffect : AbstractActionEffect<AddKamasEffect>
     {
         /// <summary>
         /// 
@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
         /// <returns></returns>
         public override bool ProcessItem(Entity.CharacterEntity character, Database.Structure.ItemDAO item, Stats.GenericEffect effect, long targetId, int targetCell)
         {
-            return Process(character, new Dictionary<string, string>() { { "kamas", effect.RandomJet.ToString() } } );
+            return Process(character, new Dictionary<string, string> { { "kamas", effect.RandomJet.ToString() } } );
         }
 
         /// <summary>

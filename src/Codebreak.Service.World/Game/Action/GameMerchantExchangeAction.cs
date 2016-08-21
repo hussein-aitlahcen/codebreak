@@ -34,8 +34,8 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="buyer"></param>
-        /// <param name="shop"></param>
+        /// <param name="character"></param>
+        /// <param name="merchant"></param>
         public GameMerchantExchangeAction(CharacterEntity character, MerchantEntity merchant)
             : base(new MerchantExchange(character, merchant), character, merchant)
         {

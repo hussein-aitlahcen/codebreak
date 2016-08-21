@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RecallEffect : ActionEffectBase<RecallEffect>
+    public sealed class RecallEffect : AbstractActionEffect<RecallEffect>
     {
         /// <summary>
         /// 

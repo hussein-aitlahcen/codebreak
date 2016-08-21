@@ -10,7 +10,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ResetStatsEffect : ActionEffectBase<ResetStatsEffect>
+    public sealed class ResetStatsEffect : AbstractActionEffect<ResetStatsEffect>
     {
         /// <summary>
         /// 

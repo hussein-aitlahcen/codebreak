@@ -20,7 +20,6 @@ namespace Codebreak.Service.World.Game.Party
         public long Id
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace Codebreak.Service.World.Game.Party
         public void AddMember(CharacterEntity member)
         {
             // new player just joined
-            base.Dispatch(WorldMessage.PARTY_MEMBER_LIST(member));
+            Dispatch(WorldMessage.PARTY_MEMBER_LIST(member));
 
             m_memberById.Add(member.Id, member);
             AddHandler(member.SafeDispatch);
@@ -98,6 +97,7 @@ namespace Codebreak.Service.World.Game.Party
         /// 
         /// </summary>
         /// <param name="member"></param>
+        /// <param name="kickerId"></param>
         public void RemoveMember(CharacterEntity member, string kickerId = "")
         {
             if (m_memberById.ContainsKey(member.Id))
@@ -106,7 +106,7 @@ namespace Codebreak.Service.World.Game.Party
                 m_memberById.Remove(member.Id);
                 RemoveHandler(member.SafeDispatch);
 
-                base.Dispatch(WorldMessage.PARTY_MEMBER_LEFT(member.Id));
+                Dispatch(WorldMessage.PARTY_MEMBER_LEFT(member.Id));
 
                 member.SafeDispatch(WorldMessage.PARTY_LEAVE(kickerId));
 
@@ -117,8 +117,7 @@ namespace Codebreak.Service.World.Game.Party
                 else if (member.Id == m_leader.Id)
                 {
                     m_leader = m_memberById.First().Value;
-
-                    base.Dispatch(WorldMessage.PARTY_SET_LEADER(m_leader.Id));
+                    Dispatch(WorldMessage.PARTY_SET_LEADER(m_leader.Id));
                 }
             }
         }
@@ -128,16 +127,13 @@ namespace Codebreak.Service.World.Game.Party
         /// </summary>
         public override void Dispose()
         {
-            base.Dispatch(WorldMessage.PARTY_LEAVE());
+            Dispatch(WorldMessage.PARTY_LEAVE());
 
             foreach (var member in m_memberById.Values)
-            {
                 member.PartyId = -1;
-            }
-
+            
             m_memberById.Clear();
             m_memberById = null;
-
             m_leader = null;
 
             PartyManager.Instance.RemoveParty(this);

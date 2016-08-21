@@ -112,7 +112,7 @@ namespace Codebreak.Service.World.Frame
                         name = name.Substring(1);
                         target = EntityManager.Instance.GetCharacterByName(name);
                         if (target == null)
-                            target = EntityManager.Instance.GetCharacterByPseudo(name);
+                            target = EntityManager.Instance.GetCharacterByNickname(name);
                     }
                     else
                         target = EntityManager.Instance.GetCharacterByName(name);
@@ -214,7 +214,7 @@ namespace Codebreak.Service.World.Frame
                         name = name.Substring(1);
                         target = EntityManager.Instance.GetCharacterByName(name);
                         if (target == null)
-                            target = EntityManager.Instance.GetCharacterByPseudo(name);
+                            target = EntityManager.Instance.GetCharacterByNickname(name);
                     }
                     else
                         target = EntityManager.Instance.GetCharacterByName(name);

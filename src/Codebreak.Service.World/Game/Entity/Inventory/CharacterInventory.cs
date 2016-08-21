@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 
@@ -19,7 +19,6 @@ namespace Codebreak.Service.World.Game.Entity
         public CharacterEntity Character
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="item"></param>
         public override void OnItemAdded(ItemDAO item)
         {
-            base.Dispatch(WorldMessage.OBJECT_ADD_SUCCESS(item));
+            Dispatch(WorldMessage.OBJECT_ADD_SUCCESS(item));
         }
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="quantity"></param>
         public override void OnItemQuantity(long itemId, int quantity)
         {
-            base.Dispatch(WorldMessage.OBJECT_QUANTITY_UPDATE(itemId, quantity));
+            Dispatch(WorldMessage.OBJECT_QUANTITY_UPDATE(itemId, quantity));
         }
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="itemId"></param>
         public override void OnItemRemoved(long itemId)
         {
-            base.Dispatch(WorldMessage.OBJECT_REMOVE_SUCCESS(itemId));
+            Dispatch(WorldMessage.OBJECT_REMOVE_SUCCESS(itemId));
         }
 
         /// <summary>
@@ -67,7 +66,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="value"></param>
         public override void OnKamasAdded(long value)
         {
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(Character));
+            Dispatch(WorldMessage.ACCOUNT_STATS(Character));
         }
 
         /// <summary>
@@ -76,7 +75,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="value"></param>
         public override void OnKamasSubstracted(long value)
         {
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(Character));
+            Dispatch(WorldMessage.ACCOUNT_STATS(Character));
         }
     }
 }

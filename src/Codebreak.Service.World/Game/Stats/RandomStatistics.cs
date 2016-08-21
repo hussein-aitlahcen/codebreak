@@ -51,12 +51,8 @@ namespace Codebreak.Service.World.Game.Stats
         {
             var statistics = new RandomStatistics();
             if(!string.IsNullOrWhiteSpace(data))
-            {
-                foreach(var effect in data.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    statistics.Add(RandomEffect.Deserialize(effect));
-                }
-            }
+                statistics.AddRange(data.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(RandomEffect.Deserialize));
             return statistics;
         }
     }

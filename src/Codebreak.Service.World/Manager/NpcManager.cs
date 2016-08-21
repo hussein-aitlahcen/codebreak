@@ -15,7 +15,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, List<NpcInstanceDAO>> m_npcByMap;
+        private readonly Dictionary<int, List<NpcInstanceDAO>> m_npcByMap;
 
         /// <summary>
         /// 

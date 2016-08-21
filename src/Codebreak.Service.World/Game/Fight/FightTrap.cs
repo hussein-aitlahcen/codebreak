@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.Fight
     /// <summary>
     /// 
     /// </summary>
-    public sealed class FightTrap : FightActivableObject
+    public sealed class FightTrap : AbstractActivableObject
     {        
         /// <summary>
         /// 

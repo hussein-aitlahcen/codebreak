@@ -25,7 +25,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <returns></returns>
         protected override string SerializeAs_ExchangeCreate()
         {
-            //"etables~park"
+            //TODO: "etables~park"
             return base.SerializeAs_ExchangeCreate();
         }
     }

@@ -2370,7 +2370,7 @@ namespace Codebreak.Service.World.Network
             var message = new StringBuilder("FA");
             message.Append('|');
             message.Append(friend.Pseudo);
-            var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+            var characterFriend = EntityManager.Instance.GetCharacterByNickname(friend.Pseudo);
             if (characterFriend != null)
                 characterFriend.SerializeAs_FriendInformations(playerPseudo, message);
             return message.ToString();
@@ -2424,7 +2424,7 @@ namespace Codebreak.Service.World.Network
             {
                 message.Append('|');
                 message.Append(friend.Pseudo);
-                var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+                var characterFriend = EntityManager.Instance.GetCharacterByNickname(friend.Pseudo);
                 if(characterFriend != null)                
                 {
                     characterFriend.SerializeAs_FriendInformations(character.Account.Pseudo, message);
@@ -2447,7 +2447,7 @@ namespace Codebreak.Service.World.Network
             {
                 message.Append('|');
                 message.Append(friend.Pseudo);
-                var characterFriend = EntityManager.Instance.GetCharacterByPseudo(friend.Pseudo);
+                var characterFriend = EntityManager.Instance.GetCharacterByNickname(friend.Pseudo);
                 if(characterFriend != null)                
                     characterFriend.SerializeAs_FriendInformations(playerPseudo, message);                
             }
@@ -2467,7 +2467,7 @@ namespace Codebreak.Service.World.Network
             {
                 message.Append('|');
                 message.Append(ennemy.Pseudo);
-                var characterEnnemy = EntityManager.Instance.GetCharacterByPseudo(ennemy.Pseudo);
+                var characterEnnemy = EntityManager.Instance.GetCharacterByNickname(ennemy.Pseudo);
                 if (characterEnnemy != null)
                     characterEnnemy.SerializeAs_EnnemyInformations(playerPseudo, message);
             }
@@ -2486,7 +2486,7 @@ namespace Codebreak.Service.World.Network
             {
                 message.Append('|');
                 message.Append(ennemy.Pseudo);
-                var characterEnnemy = EntityManager.Instance.GetCharacterByPseudo(ennemy.Pseudo);
+                var characterEnnemy = EntityManager.Instance.GetCharacterByNickname(ennemy.Pseudo);
                 if (characterEnnemy != null)                
                     characterEnnemy.SerializeAs_EnnemyInformations(character.Account.Pseudo, message);                
             }
@@ -2540,7 +2540,7 @@ namespace Codebreak.Service.World.Network
             var message = new StringBuilder("iA");
             message.Append('|');
             message.Append(ennemy.Pseudo);
-            var characterEnnemy = EntityManager.Instance.GetCharacterByPseudo(ennemy.Pseudo);
+            var characterEnnemy = EntityManager.Instance.GetCharacterByNickname(ennemy.Pseudo);
             if (characterEnnemy != null)
                 characterEnnemy.SerializeAs_EnnemyInformations(playerPseudo, message);
             return message.ToString();

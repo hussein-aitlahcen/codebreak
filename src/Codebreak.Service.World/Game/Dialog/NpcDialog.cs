@@ -72,7 +72,7 @@ namespace Codebreak.Service.World.Game.Dialog
         public void SendQuestion(NpcQuestionDAO question)
         {
             CurrentQuestion = question;
-            m_possibleResponses = CurrentQuestion.ResponseList.Where(response => ConditionParser.Instance.Check(response.Conditions, Character));
+            m_possibleResponses = CurrentQuestion.ResponseList;
             Character.Dispatch(WorldMessage.DIALOG_QUESTION(CurrentQuestion.Id, ApplyParameter(), m_possibleResponses.Select(response => response.Id)));
         }
 
@@ -82,14 +82,15 @@ namespace Codebreak.Service.World.Game.Dialog
         /// <param name="responseId"></param>
         public void ProcessResponse(int responseId)
         {
-            var response = m_possibleResponses.First(entry => entry.Id == responseId);
-            if(response == null)
+            var response = m_possibleResponses
+                .First(entry => entry.Id == responseId);
+            if(response == null || !ConditionParser.Instance.Check(response.Conditions, Character))
             {
                 Character.Dispatch(WorldMessage.BASIC_NO_OPERATION());
                 return;
             }
-            foreach(var action in response.ActionsList)            
-                ActionEffectManager.Instance.ApplyEffect(Character, action.Effect, action.Parameters);            
+            foreach(var action in response.ActionsList)
+                ActionEffectManager.Instance.ApplyEffect(Character, action.Effect, action.Parameters);
         }
 
         /// <summary>

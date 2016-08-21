@@ -22,12 +22,7 @@ namespace Codebreak.Service.World.Frame
             //    return HandleKey;
             return HandleTicket;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name="message"></param>
+        
         //private void HandleKey(WorldClient client, string message)
         //{
         //    client.FrameManager.RemoveFrame(AuthentificationFrame.Instance);
@@ -36,6 +31,7 @@ namespace Codebreak.Service.World.Frame
         //    client.Send(WorldMessage.BASIC_NO_OPERATION());
         //}
 
+        
         /// <summary>
         /// 
         /// </summary>

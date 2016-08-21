@@ -478,11 +478,11 @@ namespace Codebreak.Service.World.Game.Map
             else if (rand < 75)
                 direction = 7;
 
-            var nextCellId = Pathfinding.NextCell(this, cellId, direction);            
+            var nextCellId = Pathfinding.NextCell(this, cellId, direction);
             var cell = GetCell(nextCellId);
-            if(cell != null && cell.Walkable)            
+            if(cell != null && cell.Walkable)
                 if (cell.Walkable)
-                    return nextCellId;            
+                    return nextCellId;
             return -1;
         }
 
@@ -516,7 +516,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public void SpawnMonsters()
         {
-            if (m_monsters.Count() > 0 && FightTeam1Cells.Count > 0)            
+            if (m_monsters.Count > 0 && FightTeam1Cells.Count > 0)
                 SpawnEntity(new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, m_monsters, FightTeam1Cells.Count));            
             m_spawnCounter--;
         }
@@ -526,7 +526,7 @@ namespace Codebreak.Service.World.Game.Map
         /// </summary>
         public void SpawnMonsters(IEnumerable<MonsterSpawnDAO> monsters)
         {
-            if(monsters.Count() > 0)
+            if(monsters.Any())
                 SpawnEntity(new MonsterGroupEntity(NextMonsterId, Id, RandomFreeCell, monsters, FightTeam1Cells.Count));    
         }
 
@@ -650,12 +650,12 @@ namespace Codebreak.Service.World.Game.Map
             {
                 m_entityById.Remove(entity.Id);
 
-                base.RemoveUpdatable(entity);
-                base.Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, entity));
+                RemoveUpdatable(entity);
+                Dispatch(WorldMessage.GAME_MAP_INFORMATIONS(OperatorEnum.OPERATOR_REMOVE, entity));
 
                 if (entity.Type == EntityTypeEnum.TYPE_CHARACTER)
                 {
-                    base.RemoveHandler(entity.Dispatch);
+                    RemoveHandler(entity.Dispatch);
 
                     m_entityByName.Remove(entity.Name.ToLower());
                     m_playerCount--;
@@ -673,6 +673,7 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="character"></param>
+        /// <param name="cellId"></param>
         /// <param name="skillId"></param>
         public void InteractiveExecute(CharacterEntity character, int cellId, int skillId)
         {
@@ -693,6 +694,7 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="entity"></param>
         /// <param name="cellId"></param>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -721,6 +723,7 @@ namespace Codebreak.Service.World.Game.Map
         /// 
         /// </summary>
         /// <param name="character"></param>
+        /// <param name="cellId"></param>
         /// <param name="monsters"></param>
         /// <returns></returns>
         public bool CanBeAggro(CharacterEntity character, int cellId, MonsterGroupEntity monsters)

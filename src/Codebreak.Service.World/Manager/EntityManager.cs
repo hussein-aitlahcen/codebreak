@@ -15,17 +15,17 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class EntityManager : Singleton<EntityManager>
     {
-        private Dictionary<long, MerchantEntity> m_merchantById;
-        private Dictionary<long, MerchantEntity> m_merchantByAccount;
-        private Dictionary<string, MerchantEntity> m_merchantByName;
+        private readonly Dictionary<long, MerchantEntity> m_merchantById;
+        private readonly Dictionary<long, MerchantEntity> m_merchantByAccount;
+        private readonly Dictionary<string, MerchantEntity> m_merchantByName;
 
-        private Dictionary<long, CharacterEntity> m_characterById;
-        private Dictionary<long, CharacterEntity> m_characterByAccount;
-        private Dictionary<string, CharacterEntity> m_characterByPseudo;
-        private Dictionary<string, CharacterEntity> m_characterByName;
+        private readonly Dictionary<long, CharacterEntity> m_characterById;
+        private readonly Dictionary<long, CharacterEntity> m_characterByAccount;
+        private readonly Dictionary<string, CharacterEntity> m_characterByNickname;
+        private readonly Dictionary<string, CharacterEntity> m_characterByName;
         
-        private Dictionary<long, TaxCollectorEntity> m_taxCollectorById;
-        private Dictionary<long, MountEntity> m_mountById;
+        private readonly Dictionary<long, TaxCollectorEntity> m_taxCollectorById;
+        private readonly Dictionary<long, MountEntity> m_mountById;
 
         /// <summary>
         /// 
@@ -48,7 +48,7 @@ namespace Codebreak.Service.World.Manager
             m_characterById = new Dictionary<long, CharacterEntity>();
             m_characterByAccount = new Dictionary<long, CharacterEntity>();
             m_characterByName = new Dictionary<string, CharacterEntity>();
-            m_characterByPseudo = new Dictionary<string, CharacterEntity>();
+            m_characterByNickname = new Dictionary<string, CharacterEntity>();
             
             m_taxCollectorById = new Dictionary<long, TaxCollectorEntity>();
 
@@ -60,7 +60,7 @@ namespace Codebreak.Service.World.Manager
         /// </summary>
         public void Initialize()
         {
-            foreach(var character in CharacterRepository.Instance.All)            
+            foreach(var character in CharacterRepository.Instance.All)
                 if(character.Merchant)                
                     CreateMerchant(character).StartAction(GameActionTypeEnum.MAP);
             foreach (var mount in MountRepository.Instance.All)
@@ -94,6 +94,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="account"></param>
         /// <param name="characterDAO"></param>
         /// <returns></returns>
         public CharacterEntity CreateCharacter(AccountTicket account, CharacterDAO characterDAO)
@@ -107,7 +108,7 @@ namespace Codebreak.Service.World.Manager
             m_characterById.Add(character.Id, character);
             m_characterByName.Add(character.Name.ToLower(), character);
             m_characterByAccount.Add(character.AccountId, character);
-            m_characterByPseudo.Add(account.Pseudo.ToLower(), character);
+            m_characterByNickname.Add(account.Pseudo.ToLower(), character);
             OnlinePlayers++;
             Logger.Info("EntityManager online players : " + OnlinePlayers);            
             return character;
@@ -196,7 +197,7 @@ namespace Codebreak.Service.World.Manager
                     m_characterById.Remove(character.Id);
                     m_characterByName.Remove(character.Name.ToLower());
                     m_characterByAccount.Remove(character.AccountId);
-                    m_characterByPseudo.Remove(character.Account.Pseudo.ToLower());
+                    m_characterByNickname.Remove(character.Account.Pseudo.ToLower());
                     Logger.Info("EntityManager online players : " + OnlinePlayers);
                 });
         }
@@ -228,13 +229,13 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="nickname"></param>
         /// <returns></returns>
-        public CharacterEntity GetCharacterByPseudo(string pseudo)
+        public CharacterEntity GetCharacterByNickname(string nickname)
         {
-            pseudo = pseudo.ToLower();
-            if (m_characterByPseudo.ContainsKey(pseudo))
-                return m_characterByPseudo[pseudo];
+            nickname = nickname.ToLower();
+            if (m_characterByNickname.ContainsKey(nickname))
+                return m_characterByNickname[nickname];
             return null;
         }
 

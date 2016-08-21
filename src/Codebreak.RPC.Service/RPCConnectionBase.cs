@@ -30,7 +30,7 @@ namespace Codebreak.RPC.Service
         /// </summary>
         private int m_messageId;
         private int m_messageLength;
-        private BinaryQueue m_messageData;
+        private readonly BinaryQueue m_messageData;
 
         /// <summary>
         /// 
@@ -61,7 +61,7 @@ namespace Codebreak.RPC.Service
         public void Send(RPCMessageBase message)
         {
             message.Serialize();
-            base.Send(message.Data);
+            Send(message.Data);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Codebreak.RPC.Service
         /// <param name="length"></param>
         protected override void OnBytesRead(byte[] buffer, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            for (var i = offset; i < offset + length; i++)
             {
                 m_messageData.WriteByte(buffer[i]);
             }
@@ -91,9 +91,8 @@ namespace Codebreak.RPC.Service
                 {
                     var message = MessageBuilder.BuildMessage(m_messageId, m_messageData.ReadBytes(m_messageLength));
 
-                    if (OnMessageEvent != null)
-                        OnMessageEvent(message);
-                    
+                    OnMessageEvent?.Invoke(message);
+
                     m_messageId = -1;
                     m_messageLength = -1;
                 }

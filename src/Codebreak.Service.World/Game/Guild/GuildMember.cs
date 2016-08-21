@@ -131,11 +131,12 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        private CharacterDAO m_character;
+        private readonly CharacterDAO m_character;
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="guild"></param>
         /// <param name="character"></param>
         public GuildMember(GuildInstance guild, CharacterDAO character)
         {
@@ -147,7 +148,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="profilName"></param>
+        /// <param name="profilId"></param>
         /// <param name="rank"></param>
         /// <param name="percent"></param>
         /// <param name="power"></param>
@@ -209,7 +210,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// <param name="character"></param>
         public void CharacterConnected(CharacterEntity character)
         {
-            base.AddHandler(character.SafeDispatch);
+            AddHandler(character.SafeDispatch);
             Character = character;
             Character.SetCharacterGuild(this);
         }
@@ -231,9 +232,8 @@ namespace Codebreak.Service.World.Game.Guild
         public void SetBoss()
         {
             Rank = GuildRankEnum.BOSS;
-
-            foreach(var right in RIGHTS)           
-                SetRight(right, true);            
+            foreach(var right in RIGHTS)
+                SetRight(right, true);
         }
 
         /// <summary>
@@ -245,7 +245,6 @@ namespace Codebreak.Service.World.Game.Guild
             XPGiven = 0;
             XPSharePercent = 0;
             Power = 0;
-
             if (Character != null)
             {
                 Character.SetCharacterGuild(null);
@@ -258,11 +257,10 @@ namespace Codebreak.Service.World.Game.Guild
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
         public void CharacterDisconnected()
         {
-            if (Character != null)            
-                base.RemoveHandler(Character.SafeDispatch);            
+            if (Character != null)
+                RemoveHandler(Character.SafeDispatch);
             Character = null;
         }
 
@@ -271,7 +269,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// </summary>
         public void SendGuildStats()
         {
-            base.Dispatch(WorldMessage.GUILD_STATS(Guild, Power));
+            Dispatch(WorldMessage.GUILD_STATS(Guild, Power));
         }
 
         /// <summary>
@@ -302,7 +300,7 @@ namespace Codebreak.Service.World.Game.Guild
         /// </summary>
         public void SendHasNotEnoughRights()
         {
-            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_GUILD_NOT_ENOUGH_RIGHTS));
         }
 
         /// <summary>

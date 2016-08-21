@@ -31,6 +31,8 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         /// <param name="fighter"></param>
+        /// <param name="cellId"></param>
+        /// <param name="duration"></param>
         /// <param name="callback"></param>
         public GameFightWeaponAction(AbstractFighter fighter, int cellId, long duration, System.Action callback)
             : base(GameActionTypeEnum.FIGHT_WEAPON_USE, fighter, duration)

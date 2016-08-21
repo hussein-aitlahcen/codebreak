@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Codebreak.Service.World.Network;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 
     /// </summary>
-    public abstract class InventoryBag : MessageDispatcher, IDisposable
+    public abstract class AbstractInventory : MessageDispatcher
     {
         /// <summary>
         /// 
@@ -158,7 +158,7 @@ namespace Codebreak.Service.World.Game.Entity
         public ItemDAO MoveQuantity(ItemDAO item, int quantity, ItemSlotEnum slot = ItemSlotEnum.SLOT_INVENTORY)
         {
             if(quantity >= item.Quantity)            
-                return RemoveItem(item.Id, item.Quantity);                        
+                return RemoveItem(item.Id, item.Quantity);
             item.Quantity -= quantity;
             OnItemQuantity(item.Id, item.Quantity);
             return item.Clone(quantity);
@@ -205,11 +205,10 @@ namespace Codebreak.Service.World.Game.Entity
             return Items.Any(item => item.TemplateId == templateId && item.IsEquiped);
         }
 
+        
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="quantity"></param>
         /// <returns></returns>
         public virtual IEnumerable<ItemDAO> RemoveItems()
         {
@@ -225,7 +224,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="itemId"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
         public virtual ItemDAO RemoveItem(long itemId, int quantity = 1)
@@ -265,8 +264,8 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="message"></param>
         public void SerializeAs_BagContent(StringBuilder message)
         {
-            foreach (var item in Items)            
-                item.SerializeAs_BagContent(message);            
+            foreach (var item in Items)
+                item.SerializeAs_BagContent(message);
         }
 
         /// <summary>
@@ -274,6 +273,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public override void Dispose()
         {
+            Items.Clear();
             base.Dispose();
         }
     }

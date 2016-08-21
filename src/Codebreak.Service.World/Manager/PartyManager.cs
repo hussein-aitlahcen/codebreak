@@ -20,7 +20,7 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         private long m_nextPartyId;
-        private Dictionary<long, PartyInstance> m_partyById;
+        private readonly Dictionary<long, PartyInstance> m_partyById;
 
         /// <summary>
         /// 
@@ -33,7 +33,8 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="partyId"></param>
+        /// <param name="message"></param>
         public void PartyMessage(long partyId, string message)
         {
             WorldService.Instance.AddMessage(() =>
@@ -47,7 +48,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="character"></param>
         public void PartyLeave(CharacterEntity character)
         {
             if (m_partyById.ContainsKey(character.PartyId))
@@ -69,7 +70,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="partyId"></param>
+        /// <param name="instance"></param>
         public void RemoveParty(PartyInstance instance)
         {
             m_partyById.Remove(instance.Id);

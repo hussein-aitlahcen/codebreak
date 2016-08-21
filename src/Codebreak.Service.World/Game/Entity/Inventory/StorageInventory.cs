@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 
@@ -37,7 +37,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="item"></param>
         public override void OnItemAdded(ItemDAO item)
         {
-            base.Dispatch(WorldMessage.EXCHANGE_STORAGE_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.ToExchangeString()));
+            Dispatch(WorldMessage.EXCHANGE_STORAGE_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_ADD, item.ToExchangeString()));
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="itemId"></param>
         public override void OnItemRemoved(long itemId)
         {
-            base.Dispatch(WorldMessage.EXCHANGE_STORAGE_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, itemId.ToString()));
+            Dispatch(WorldMessage.EXCHANGE_STORAGE_MOVEMENT(ExchangeMoveEnum.MOVE_OBJECT, OperatorEnum.OPERATOR_REMOVE, itemId.ToString()));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="value"></param>
         public override void OnKamasAdded(long value)
         {
-            base.Dispatch(WorldMessage.EXCHANGE_STORAGE_KAMAS_VALUE(Kamas));
+            Dispatch(WorldMessage.EXCHANGE_STORAGE_KAMAS_VALUE(Kamas));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <param name="value"></param>
         public override void OnKamasSubstracted(long value)
         {
-            base.Dispatch(WorldMessage.EXCHANGE_STORAGE_KAMAS_VALUE(Kamas));
+            Dispatch(WorldMessage.EXCHANGE_STORAGE_KAMAS_VALUE(Kamas));
         }
     }
 }

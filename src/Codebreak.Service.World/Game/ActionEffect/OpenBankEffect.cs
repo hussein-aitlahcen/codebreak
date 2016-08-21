@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class OpenBankEffect : ActionEffectBase<OpenBankEffect>
+    public sealed class OpenBankEffect : AbstractActionEffect<OpenBankEffect>
     {
         /// <summary>
         /// 

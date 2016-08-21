@@ -13,7 +13,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// type:kamas:quantity,type:itemId:quantity;type:kamas:quantity|
     /// </summary>
-    public sealed class NpcExchange : EntityExchange
+    public sealed class NpcExchange : AbstractEntityExchange
     {
         /// <summary>
         /// 

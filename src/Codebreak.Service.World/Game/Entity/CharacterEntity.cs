@@ -1,10 +1,13 @@
-﻿using Codebreak.Framework.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Codebreak.Framework.Network;
-using Codebreak.Service.World.Command;
 using Codebreak.Service.World.Database.Repository;
 using Codebreak.Service.World.Database.Structure;
 using Codebreak.Service.World.Frame;
 using Codebreak.Service.World.Game.Action;
+using Codebreak.Service.World.Game.Entity.Inventory;
 using Codebreak.Service.World.Game.Exchange;
 using Codebreak.Service.World.Game.Fight;
 using Codebreak.Service.World.Game.Guild;
@@ -15,12 +18,6 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Codebreak.Service.World.Game.Map;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -48,7 +45,7 @@ namespace Codebreak.Service.World.Game.Entity
         Rest = 262144,
         Champ = 1048576,
         PowerAura = 2097152,
-        VampyrAura = 4194304,
+        VampyrAura = 4194304
     }
 
     /// <summary>
@@ -57,7 +54,7 @@ namespace Codebreak.Service.World.Game.Entity
     public enum DeathTypeEnum
     {
         TYPE_NORMAL = 1,
-        TYPE_HEROIC = 2,
+        TYPE_HEROIC = 2
     }
 
     /// <summary>
@@ -576,7 +573,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 if (Level > 199)
                     return 2;
-                else if (Level > 100)
+                if (Level > 100)
                     return 1;
                 return 0;
             }
@@ -885,8 +882,9 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="power"></param>
+        /// <param name="account"></param>
         /// <param name="characterDAO"></param>
+        /// <param name="type"></param>
         public CharacterEntity(AccountTicket account, CharacterDAO characterDAO, EntityTypeEnum type = EntityTypeEnum.TYPE_CHARACTER)
             : base(type, characterDAO.Id)
         {
@@ -915,27 +913,6 @@ namespace Codebreak.Service.World.Game.Entity
             PersonalShop = new PersistentInventory((int)EntityTypeEnum.TYPE_MERCHANT, Id);
             Relations = SocialRelationRepository.Instance.GetByAccountId(AccountId);
 
-            if(EquippedMount != -1)
-            {
-                var mount = EntityManager.Instance.GetMountById(EquippedMount);
-                if (mount != null)
-                {
-                    if (mount.OwnerId == Id)
-                    {
-                        m_mount = mount;
-                    }
-                    else
-                    {
-                        Logger.Info("CharacterEntity::() mount equipped by not owned " + Name);
-                    }
-                }
-                else
-                {
-                    Logger.Info("CharacterEntity::() unkw mount equipped " + Name);
-                    EquippedMount = -1;
-                }
-            }
-                        
             var guildMember = GuildManager.Instance.GetMember(characterDAO.Guild.GuildId, Id);
             if (guildMember != null)
                 if (type == EntityTypeEnum.TYPE_CHARACTER)
@@ -943,11 +920,34 @@ namespace Codebreak.Service.World.Game.Entity
                 else
                     SetCharacterGuild(guildMember); // Merchant
 
-            base.SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
-            base.SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
+            SetChatChannel(ChatChannelEnum.CHANNEL_GUILD, () => DispatchGuildMessage);
+            SetChatChannel(ChatChannelEnum.CHANNEL_GROUP, () => DispatchPartyMessage);
             
             RefreshPersonalShopTaxe();
             CheckRestrictions();
+            LoadEquippedMount();
+        }
+
+        private void LoadEquippedMount()
+        {
+            if (EquippedMount == -1) return;
+            var mount = EntityManager.Instance.GetMountById(EquippedMount);
+            if (mount != null)
+            {
+                if (mount.OwnerId == Id)
+                {
+                    m_mount = mount;
+                }
+                else
+                {
+                    Logger.Info("CharacterEntity::() mount equipped by not owned " + Name);
+                }
+            }
+            else
+            {
+                Logger.Info("CharacterEntity::() unknow mount equipped " + Name);
+                EquippedMount = -1;
+            }
         }
         
         /// <summary>
@@ -955,7 +955,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void SendAccountStats()
         {
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
         }
 
         /// <summary>
@@ -965,31 +965,31 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (IsTombestone)
             {
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_OBJECT, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_ASSAULT, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK, false);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_DUNGEON_MONSTERS_WHEN_MUTANT, false);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_MONSTERS_ANYWHERE_WHEN_MUTANT, false);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_BE_MERCHANT, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_PRISM, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);                
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, true);
-                base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_EXCHANGE, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_OBJECT, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_ASSAULT, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK, false);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_DUNGEON_MONSTERS_WHEN_MUTANT, false);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_ATTACK_MONSTERS_ANYWHERE_WHEN_MUTANT, false);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_BE_MERCHANT, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_CHALLENGE, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_PRISM, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_INTERACT_WITH_TAX_COLLECTOR, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, false);                
+                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, true);
+                SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TOMBESTONE));
             }
             else if (IsGhost)
             {
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, false);
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_SLOWED, true);
-                base.SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_FORCEWALK, true);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, false);
-                base.SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, true);
-                base.SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
+                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_IS_TOMBESTONE, false);
+                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_SLOWED, true);
+                SetEntityRestriction(EntityRestrictionEnum.RESTRICTION_FORCEWALK, true);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CANT_USE_IO, false);
+                SetPlayerRestriction(PlayerRestrictionEnum.RESTRICTION_CAN_MOVE_IN_ALL_DIRECTIONS, true);
+                SafeDispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_INSTANT, GameMessageEnum.MESSAGE_TRANSFORMED_TO_GHOST_NEED_PHEONIX));
             }
-            base.SafeDispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
+            SafeDispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
         }
 
         /// <summary>
@@ -1002,11 +1002,11 @@ namespace Codebreak.Service.World.Game.Entity
             Restriction = (int)PlayerRestrictionEnum.RESTRICTION_NEW_CHARACTER;
             EntityRestriction = 0;
             RefreshOnMap();
-            base.CachedBuffer = true;
-            base.Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
-            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_JUST_REBORN));
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-            base.CachedBuffer = false;
+            CachedBuffer = true;
+            Dispatch(WorldMessage.ACCOUNT_RESTRICTIONS(Restriction));
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_JUST_REBORN));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            CachedBuffer = false;
         }
 
         /// <summary>
@@ -1015,7 +1015,7 @@ namespace Codebreak.Service.World.Game.Entity
         public void HardResetSpells()
         {
             SpellBook.Reset(Breed);
-            for (int i = 1; i < Level; i++)
+            for (var i = 1; i < Level; i++)
                 SpellBook.GenerateLevelUpSpell(Breed, i);
             SpellPoint = Level - 1;
             CachedBuffer = true;
@@ -1107,7 +1107,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             LifeBeforeFight = Life;
             
-            base.Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME_FIGHT(Map.InteractiveObjects));
+            Dispatch(WorldMessage.INTERACTIVE_DATA_FRAME_FIGHT(Map.InteractiveObjects));
 
             base.JoinFight(fight, team);
         }
@@ -1125,8 +1125,8 @@ namespace Codebreak.Service.World.Game.Entity
             Fight.SpectatorTeam.AddUpdatable(this);
             Fight.SpectatorTeam.AddHandler(Dispatch);
             
-            base.SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
-            base.SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
+            SetChatChannel(ChatChannelEnum.CHANNEL_TEAM, () => Fight.SpectatorTeam.Dispatch);
+            SetChatChannel(ChatChannelEnum.CHANNEL_GENERAL, () => null);
 
             StartAction(GameActionTypeEnum.FIGHT);
         }
@@ -1276,7 +1276,7 @@ namespace Codebreak.Service.World.Game.Entity
                 return;
             m_regenTimer = timer;
             m_lastRegenTime = UpdateTime;
-            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(timer));
+            Dispatch(WorldMessage.LIFE_RESTORE_TIME_START(timer));
         }
 
         /// <summary>
@@ -1292,10 +1292,10 @@ namespace Codebreak.Service.World.Game.Entity
             Life += lifeRestored;
             m_lastRegenTime = -1;
 
-            base.CachedBuffer = true;
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-            base.Dispatch(WorldMessage.LIFE_RESTORE_TIME_FINISH(lifeRestored));
-            base.CachedBuffer = false;
+            CachedBuffer = true;
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            Dispatch(WorldMessage.LIFE_RESTORE_TIME_FINISH(lifeRestored));
+            CachedBuffer = false;
         }
         
         /// <summary>
@@ -1320,10 +1320,10 @@ namespace Codebreak.Service.World.Game.Entity
             if (Dishonour < 0)
                 Dishonour = 0;
 
-            base.CachedBuffer = true;
-            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_DOWN, value));
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-            base.CachedBuffer = false;
+            CachedBuffer = true;
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_DOWN, value));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            CachedBuffer = false;
         }
 
         /// <summary>
@@ -1342,10 +1342,10 @@ namespace Codebreak.Service.World.Game.Entity
             if (Dishonour > 499)
                 Dishonour = 500;
 
-            base.CachedBuffer = true;
-            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_UP, value));
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-            base.CachedBuffer = false;
+            CachedBuffer = true;
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_DISHONOR_UP, value));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            CachedBuffer = false;
         }
 
         /// <summary>
@@ -1375,15 +1375,15 @@ namespace Codebreak.Service.World.Game.Entity
             while (Honour < AlignmentExperienceFloorCurrent && AlignmentLevel > 1)
                 AlignmentLevel--;
 
-            base.CachedBuffer = true;
+            CachedBuffer = true;
             if (currentLevel != AlignmentLevel)
             {
-                base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_DOWN, AlignmentLevel));
+                Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_DOWN, AlignmentLevel));
                 RefreshOnMap();
             }
-            base.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_DOWN, value));
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-            base.CachedBuffer = false;
+            Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_DOWN, value));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            CachedBuffer = false;
         }
 
         /// <summary>
@@ -1410,7 +1410,7 @@ namespace Codebreak.Service.World.Game.Entity
             while (Honour > AlignmentExperienceFloorNext && AlignmentLevel < 10)
                 AlignmentLevel++;
 
-            base.CachedBuffer = true;
+            CachedBuffer = true;
             if (currentLevel != AlignmentLevel)
             {
                 Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_RANK_UP, AlignmentLevel));
@@ -1418,7 +1418,7 @@ namespace Codebreak.Service.World.Game.Entity
             }
             Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.INFO, InformationEnum.INFO_ALIGNMENT_HONOR_UP, value));
             Dispatch(WorldMessage.ACCOUNT_STATS(this));
-            base.CachedBuffer = false;
+            CachedBuffer = false;
         }
 
         /// <summary>
@@ -1439,7 +1439,7 @@ namespace Codebreak.Service.World.Game.Entity
             }
 
             AlignmentEnabled = true;
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
         }
 
@@ -1463,7 +1463,7 @@ namespace Codebreak.Service.World.Game.Entity
             AlignmentEnabled = false;
             if(!force)
                 SubstractHonour((Honour / 100) * 5);
-            base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
+            Dispatch(WorldMessage.ACCOUNT_STATS(this));
             RefreshOnMap();
 
             return true;
@@ -1518,10 +1518,10 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         public void SafeKick(string kicker = "", string reason = "")
         {
-            base.AddMessage(() =>
+            AddMessage(() =>
                 {
                     if (reason != "")
-                        base.Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_ON_DISCONNECT, GameMessageEnum.MESSAGE_KICKED, kicker, reason));
+                        Dispatch(WorldMessage.GAME_MESSAGE(GamePopupTypeEnum.TYPE_ON_DISCONNECT, GameMessageEnum.MESSAGE_KICKED, kicker, reason));
 
                     if (KickEvent != null)
                         KickEvent();
@@ -1605,9 +1605,9 @@ namespace Codebreak.Service.World.Game.Entity
         {
             Away = Away == false;
             if (Away)
-                base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY));
+                Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY));
             else
-                base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_NOT_AWAY_ANYMORE));
+                Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_NOT_AWAY_ANYMORE));
         }
 
         /// <summary>
@@ -1622,12 +1622,12 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 if(whispedCharacter.Away || whispedCharacter.HasEnnemy(Pseudo))
                 {
-                    base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PLAYER_AWAY_MESSAGE, whispedCharacter.Name));
+                    Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PLAYER_AWAY_MESSAGE, whispedCharacter.Name));
                     return false;
                 }
                 if(Away)
                 {
-                    base.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY_PLAYERS_CANT_RESPOND));
+                    Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFO_YOU_ARE_AWAY_PLAYERS_CANT_RESPOND));
                 }
             }
             return base.DispatchChatMessage(channel, message, whispedCharacter);
@@ -1685,27 +1685,27 @@ namespace Codebreak.Service.World.Game.Entity
                 {
                     if (Level < 60)
                     {
-                        base.Dispatch(WorldMessage.MOUNT_EQUIP_ERROR(MountEquipErrorEnum.UNKNOW_ERROR));
+                        Dispatch(WorldMessage.MOUNT_EQUIP_ERROR(MountEquipErrorEnum.UNKNOW_ERROR));
                         return;
                     }
                     if (!m_mount.Ridable)
                     {
-                        base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_MOUNT_MATURITY_LOW));
+                        Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_MOUNT_MATURITY_LOW));
                         return;
                     }
                     if (Inventory.Items.Any(item => item.Slot == ItemSlotEnum.SLOT_PET))
                     {
-                        base.Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PET_ALREADY_EQUIPPED));
+                        Dispatch(WorldMessage.IM_ERROR_MESSAGE(InformationEnum.ERROR_PET_ALREADY_EQUIPPED));
                         return;
                     }
                     RidingMount = true;           
-                    base.Dispatch(WorldMessage.MOUNT_RIDING_START());
+                    Dispatch(WorldMessage.MOUNT_RIDING_START());
                     Statistics.Merge(StatsType.TYPE_ITEM, m_mount.GetStatistics());
                 }
                 else
                 {
                     RidingMount = false;
-                    base.Dispatch(WorldMessage.MOUNT_RIDING_STOP());
+                    Dispatch(WorldMessage.MOUNT_RIDING_STOP());
                     Statistics.UnMerge(StatsType.TYPE_ITEM, m_mount.GetStatistics());
                 }
                 CachedBuffer = true;
@@ -1722,7 +1722,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if (m_mount != null)
             {
-                base.Dispatch(WorldMessage.MOUNT_EQUIP(m_mount.SerializeAs_MountInfos()));
+                Dispatch(WorldMessage.MOUNT_EQUIP(m_mount.SerializeAs_MountInfos()));
             }
         }
 
@@ -1730,7 +1730,7 @@ namespace Codebreak.Service.World.Game.Entity
         {
             if(m_mount != null)
             {
-                base.Dispatch(WorldMessage.MOUNT_EXPERIENCE_SHARED(m_mount.XPSharePercent));
+                Dispatch(WorldMessage.MOUNT_EXPERIENCE_SHARED(m_mount.XPSharePercent));
             }
         }
                         
@@ -1923,11 +1923,11 @@ namespace Codebreak.Service.World.Game.Entity
 
             if (Level != currentLevel)
             {
-                base.CachedBuffer = true;
-                base.Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
-                base.Dispatch(WorldMessage.SPELLS_LIST(SpellBook));
-                base.Dispatch(WorldMessage.ACCOUNT_STATS(this));
-                base.CachedBuffer = false;
+                CachedBuffer = true;
+                Dispatch(WorldMessage.CHARACTER_NEW_LEVEL(Level));
+                Dispatch(WorldMessage.SPELLS_LIST(SpellBook));
+                Dispatch(WorldMessage.ACCOUNT_STATS(this));
+                CachedBuffer = false;
             }
         }
 
@@ -2002,7 +2002,7 @@ namespace Codebreak.Service.World.Game.Entity
 
                 case GameActionTypeEnum.MAP_TELEPORT:
                     StopEmote(); 
-                    base.Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
+                    Dispatch(WorldMessage.GAME_ACTION(actionType, Id));
                     break;
 
                 case GameActionTypeEnum.MAP:
@@ -2116,7 +2116,7 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 case GameActionTypeEnum.MAP_TELEPORT:
                     FrameManager.AddFrame(GameInformationFrame.Instance);
-                    base.Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
+                    Dispatch(WorldMessage.GAME_DATA_MAP(MapId, Map.CreateTime, Map.DataKey));
                     break;
 
                 case GameActionTypeEnum.WAYPOINT:

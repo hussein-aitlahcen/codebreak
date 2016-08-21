@@ -122,6 +122,12 @@ namespace Codebreak.Service.World.Game.Entity
             Invocator = invocator;
         }
 
+        public override void JoinFight(AbstractFight fight, FightTeam team)
+        {
+            Life = MaxLife;
+            base.JoinFight(fight, team);
+        }
+
         /// <summary>
         /// 
         /// </summary>

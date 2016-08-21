@@ -34,13 +34,14 @@ namespace Codebreak.Service.World.Database.Structure
         public int XPSharePercent { get; set; }
 
         private MountTemplateDAO m_template;
+
         [Write(false)]
         public MountTemplateDAO Template
         {
             get
             {
-                if(m_template == null)                
-                    m_template = MountTemplateRepository.Instance.GetById(TemplateId);                
+                if(m_template == null)
+                    m_template = MountTemplateRepository.Instance.GetById(TemplateId);
                 return m_template;
             }
         }

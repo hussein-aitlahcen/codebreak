@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class TeleportEffect : ActionEffectBase<TeleportEffect>
+    public sealed class TeleportEffect : AbstractActionEffect<TeleportEffect>
     {
         /// <summary>
         /// 

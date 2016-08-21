@@ -60,7 +60,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// <returns></returns>
         public override long MoveKamas(AbstractEntity actor, long quantity)
         {
-            // On ne peux que retirer des kamas
+            // Can only remove kamas
             if (quantity > 0)
                 return 0;
 

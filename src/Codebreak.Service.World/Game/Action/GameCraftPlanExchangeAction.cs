@@ -19,6 +19,8 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         /// <param name="character"></param>
+        /// <param name="plan"></param>
+        /// <param name="skill"></param>
         public GameCraftPlanExchangeAction(CharacterEntity character, CraftPlan plan, JobSkill skill)
             : base(new CraftPlanExchange(character, plan, skill), character)
         {

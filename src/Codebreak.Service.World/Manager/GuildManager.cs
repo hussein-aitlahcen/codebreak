@@ -20,12 +20,12 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, GuildInstance> m_guildById;
+        private readonly Dictionary<long, GuildInstance> m_guildById;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<string, GuildInstance> m_guildByName;
+        private readonly Dictionary<string, GuildInstance> m_guildByName;
 
         /// <summary>
         /// 

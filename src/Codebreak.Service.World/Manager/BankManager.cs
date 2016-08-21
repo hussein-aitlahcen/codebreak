@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codebreak.Service.World.Game.Entity.Inventory;
 
 namespace Codebreak.Service.World.Manager
 {
@@ -14,11 +15,12 @@ namespace Codebreak.Service.World.Manager
     /// </summary>
     public sealed class BankManager : Singleton<BankManager>
     {
+
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<long, BankInventory> m_bankByAccountId;
-
+        private readonly Dictionary<long, BankInventory> m_bankByAccountId;
+        
         /// <summary>
         /// 
         /// </summary>

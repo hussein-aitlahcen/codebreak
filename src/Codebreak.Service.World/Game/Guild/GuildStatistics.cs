@@ -51,11 +51,12 @@ namespace Codebreak.Service.World.Game.Guild
         /// <returns></returns>
         public static GuildStatistics Create(GuildDAO guild)
         {
-            var instance = new GuildStatistics();
-            instance.Spells = GuildSpellBook.Create();
-            instance.BaseStatistics = new GenericStats(guild);
-            instance.MaxTaxcollector = 1;
-            return instance;
+            return new GuildStatistics
+            {
+                Spells = GuildSpellBook.Create(),
+                BaseStatistics = new GenericStats(guild),
+                MaxTaxcollector = 1
+            };
         }
 
         /// <summary>

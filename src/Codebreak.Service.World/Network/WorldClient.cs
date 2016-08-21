@@ -53,14 +53,14 @@ namespace Codebreak.Service.World.Network
                 if (m_currentCharacter != null)
                 {
                     m_currentCharacter.RemoveHandler(Send);
-                    m_currentCharacter.KickEvent -= base.Disconnect;
+                    m_currentCharacter.KickEvent -= Disconnect;
                 }
                 m_currentCharacter = value;
                 if (m_currentCharacter != null)
                 {
                     m_currentCharacter.Ip = Ip;
                     m_currentCharacter.AddHandler(Send);
-                    m_currentCharacter.KickEvent += base.Disconnect;
+                    m_currentCharacter.KickEvent += Disconnect;
                 }
             }
         }

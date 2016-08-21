@@ -43,7 +43,7 @@ namespace Codebreak.Service.World.Game.Exchange
     /// <summary>
     /// 
     /// </summary>
-    public abstract class EntityExchange : AbstractExchange, IValidableExchange
+    public abstract class AbstractEntityExchange : AbstractExchange, IValidableExchange
     {
          /// <summary>
         /// 
@@ -70,7 +70,7 @@ namespace Codebreak.Service.World.Game.Exchange
         /// </summary>
         /// <param name="local"></param>
         /// <param name="distant"></param>
-        public EntityExchange(ExchangeTypeEnum type, AbstractEntity local, AbstractEntity distant)
+        public AbstractEntityExchange(ExchangeTypeEnum type, AbstractEntity local, AbstractEntity distant)
             : base(type)
         {            
             m_local = local;

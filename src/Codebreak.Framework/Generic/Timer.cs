@@ -12,12 +12,12 @@ namespace Codebreak.Framework.Generic
     /// </summary>
     public sealed class UpdatableTimer
     {
-        private static ILog Logger = LogManager.GetLogger(typeof(UpdatableTimer));
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(UpdatableTimer));
 
         /// <summary>
         /// 
         /// </summary>
-        private Action m_callback;
+        private readonly Action m_callback;
 
         /// <summary>
         /// 

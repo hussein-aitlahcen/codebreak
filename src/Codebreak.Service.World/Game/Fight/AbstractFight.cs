@@ -381,7 +381,7 @@ namespace Codebreak.Service.World.Game.Fight
 
                 for (int i = FightObjects.Count - 1; i > -1; i--)
                 {
-                    var activableObject = FightObjects[i] as FightActivableObject;
+                    var activableObject = FightObjects[i] as AbstractActivableObject;
                     if (activableObject != null)
                     {
                         if (activableObject.ActivationType == ActiveType.ACTIVE_ENDMOVE)
@@ -420,7 +420,7 @@ namespace Codebreak.Service.World.Game.Fight
         {
             for (int i = FightObjects.Count - 1; i > -1; i--)
             {
-                var activableObject = FightObjects[i] as FightActivableObject;
+                var activableObject = FightObjects[i] as AbstractActivableObject;
                 if (activableObject != null)
                 {
                     if (activableObject.ActivationType == ActiveType.ACTIVE_BEGINTURN)
@@ -845,7 +845,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// 
         /// </summary>
         private long m_loopTimeout, m_turnTimeout, m_subActionTimeout, m_synchronizationTimeout;
-        private Dictionary<AbstractFighter, List<FightActivableObject>> m_activableObjects;
+        private Dictionary<AbstractFighter, List<AbstractActivableObject>> m_activableObjects;
         private LinkedList<CastInfos> m_processingTargets;
         private int m_currentApCost;
         private readonly Queue<AbstractEndingBehavior> m_endingBehaviors; 
@@ -866,7 +866,7 @@ namespace Codebreak.Service.World.Game.Fight
             params AbstractEndingBehavior[] endingBehaviors)
         {
             m_endingBehaviors = new Queue<AbstractEndingBehavior>(endingBehaviors);
-            m_activableObjects = new Dictionary<AbstractFighter, List<FightActivableObject>>();
+            m_activableObjects = new Dictionary<AbstractFighter, List<AbstractActivableObject>>();
             m_processingTargets = new LinkedList<CastInfos>();
             m_currentApCost = -1;
 
@@ -2389,10 +2389,10 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="obj"></param>
-        public void AddActivableObject(AbstractFighter caster, FightActivableObject obj)
+        public void AddActivableObject(AbstractFighter caster, AbstractActivableObject obj)
         {
             if (!m_activableObjects.ContainsKey(caster))
-                m_activableObjects.Add(caster, new List<FightActivableObject>());
+                m_activableObjects.Add(caster, new List<AbstractActivableObject>());
             m_activableObjects[caster].Add(obj);
         }
 

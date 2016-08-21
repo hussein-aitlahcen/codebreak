@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, SpellTemplate> m_templateById = new Dictionary<int, SpellTemplate>();
+        private readonly Dictionary<int, SpellTemplate> m_templateById = new Dictionary<int, SpellTemplate>();
 
         /// <summary>
         /// 
@@ -149,6 +149,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="ownerType"></param>
         /// <param name="ownerId"></param>
         /// <returns></returns>
         public IEnumerable<SpellBookEntryDAO> GetSpells(int ownerType, long ownerId)

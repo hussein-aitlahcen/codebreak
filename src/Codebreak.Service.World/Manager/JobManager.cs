@@ -19,7 +19,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, JobTemplate> m_templateById;
+        private readonly Dictionary<int, JobTemplate> m_templateById;
 
         /// <summary>
         /// 

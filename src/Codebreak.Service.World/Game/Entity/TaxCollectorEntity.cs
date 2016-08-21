@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codebreak.Service.World.Game.Entity.Inventory;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -250,23 +251,19 @@ namespace Codebreak.Service.World.Game.Entity
             {
                 Guild.AddMessage(() =>
                     {
-                        if (!Guild.IsDeleted)
-                        {
-                            StartAction(GameActionTypeEnum.MAP);
-                            Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
-                        }
+                        if (Guild.IsDeleted) return;
+                        StartAction(GameActionTypeEnum.MAP);
+                        Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_SURVIVED(Name, Map.X, Map.Y));
                     });
             }
             else
             {
                 Guild.AddMessage(() =>
                     {
-                        if (!Guild.IsDeleted)
-                        {
-                            Guild.RemoveTaxCollector(this);                           
-                            Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DIED(Name, Map.X, Map.Y));
-                        }
-                    });                
+                        if (Guild.IsDeleted) return;
+                        Guild.RemoveTaxCollector(this);
+                        Guild.Dispatch(WorldMessage.GUILD_TAXCOLLECTOR_DIED(Name, Map.X, Map.Y));
+                    });
             }
 
             Defenders.Clear();
@@ -275,7 +272,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="member"></param>
         public void DefenderJoin(GuildMember member)
         {            
             Defenders.Add(member);

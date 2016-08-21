@@ -94,8 +94,9 @@ namespace Codebreak.Service.World.Game.Map
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="aggressor"></param>
+        /// <param name="monsters"></param>
         /// <param name="victim"></param>
+        /// <returns></returns>
         public bool StartAggression(MonsterGroupEntity monsters, CharacterEntity victim)
         {
             if (CanStartFight(victim))

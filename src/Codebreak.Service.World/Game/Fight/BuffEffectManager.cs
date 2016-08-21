@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        private AbstractFighter m_fighter;
+        private readonly AbstractFighter m_fighter;
 
         /// <summary>
         ///
@@ -65,14 +65,12 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="match"></param>
+        /// <param name="state"></param>
         public void RemoveState(int state)
         {
-            AbstractSpellBuff stateBuff = null;
-
             foreach (var buffList in ActiveBuffs.Values)
             {
-                stateBuff = buffList.Find(buff => buff.CastInfos.SubEffect == EffectEnum.AddState && buff.CastInfos.Value3 == state);
+                var stateBuff = buffList.Find(buff => buff.CastInfos.SubEffect == EffectEnum.AddState && buff.CastInfos.Value3 == state);
                 if (stateBuff != null)
                 {
                     stateBuff.RemoveEffect();
@@ -89,11 +87,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// </summary>
         public void RemoveStealth()
         {
-            AbstractSpellBuff stealthBuff = null;
-
             foreach (var buffList in ActiveBuffs.Values)
             {
-                stealthBuff = buffList.Find(buff => buff.CastInfos.EffectType == EffectEnum.Stealth);
+                var stealthBuff = buffList.Find(buff => buff.CastInfos.EffectType == EffectEnum.Stealth);
                 if (stealthBuff != null)
                 {
                     stealthBuff.RemoveEffect();
@@ -108,14 +104,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="match"></param>
         public void RemoveSkin()
         {
-            AbstractSpellBuff skinBuff = null;
-
             foreach (var buffList in ActiveBuffs.Values)
             {
-                skinBuff = buffList.Find(buff => buff.CastInfos.EffectType == EffectEnum.ChangeSkin);
+                var skinBuff = buffList.Find(buff => buff.CastInfos.EffectType == EffectEnum.ChangeSkin);
                 if (skinBuff != null)
                 {
                     skinBuff.RemoveEffect();
@@ -146,8 +139,8 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_BEGINTURN].ToArray())
             {
                 var result = buff.ApplyEffect(ref damage);
-                if(result != FightActionResultEnum.RESULT_NOTHING)                
-                    return result;                
+                if(result != FightActionResultEnum.RESULT_NOTHING)
+                    return result;
             }            
 
             foreach (var buff in DecrementBuffs[DecrementType.TYPE_BEGINTURN].ToArray())
@@ -162,7 +155,7 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             foreach (var buffList in ActiveBuffs.Values)
-                buffList.RemoveAll(Buff => Buff.DecrementType == DecrementType.TYPE_BEGINTURN && Buff.Duration <= 0);
+                buffList.RemoveAll(buff => buff.DecrementType == DecrementType.TYPE_BEGINTURN && buff.Duration <= 0);
 
             return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
         }
@@ -184,14 +177,14 @@ namespace Codebreak.Service.World.Game.Fight
             }
 
             foreach (var buffList in ActiveBuffs.Values)
-                buffList.RemoveAll(Buff => Buff.DecrementType == DecrementType.TYPE_ENDTURN && Buff.Duration <= 0);
+                buffList.RemoveAll(buff => buff.DecrementType == DecrementType.TYPE_ENDTURN && buff.Duration <= 0);
 
             var damage = 0;
             foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ENDTURN].ToArray())
             {
                 var result = buff.ApplyEffect(ref damage);
                 if (result != FightActionResultEnum.RESULT_NOTHING)
-                    return result;                    
+                    return result;
             }
 
             return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
@@ -206,8 +199,8 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ENDMOVE].ToArray())
             {
                 var result = buff.ApplyEffect(ref damage);
-                if(result != FightActionResultEnum.RESULT_NOTHING)                
-                    return result;                
+                if(result != FightActionResultEnum.RESULT_NOTHING)
+                    return result;
             }
 
             ActiveBuffs[ActiveType.ACTIVE_ENDMOVE].RemoveAll(buff => buff.DecrementType == DecrementType.TYPE_ENDMOVE && buff.Duration <= 0);
@@ -237,8 +230,9 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CastInfos"></param>
-        /// <param name="DamageValue"></param>
+        /// <param name="castInfos"></param>
+        /// <param name="damageValue"></param>
+        /// <returns></returns>
         public FightActionResultEnum OnAttackAfterJet(CastInfos castInfos, ref int damageValue)
         {
             foreach (var buff in ActiveBuffs[ActiveType.ACTIVE_ATTACK_AFTER_JET].ToArray())
@@ -327,7 +321,6 @@ namespace Codebreak.Service.World.Game.Fight
             DecrementBuffs[DecrementType.TYPE_ENDMOVE].Clear();
             DecrementBuffs.Clear();
             DecrementBuffs = null;
-
             foreach (var activeBuffList in ActiveBuffs)
                 activeBuffList.Value.Clear();
             ActiveBuffs.Clear();

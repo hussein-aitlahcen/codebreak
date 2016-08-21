@@ -20,12 +20,12 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, Func<MapInstance, int, InteractiveObject>> m_interactiveById;
+        private readonly Dictionary<int, Func<MapInstance, int, InteractiveObject>> m_interactiveById;
 
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, int> m_interactiveByGfx;
+        private readonly Dictionary<int, int> m_interactiveByGfx;
 
         /// <summary>
         /// 
@@ -337,7 +337,7 @@ namespace Codebreak.Service.World.Manager
         /// 
         /// </summary>
         /// <param name="gfxId"></param>
-        /// <param name="id"></param>
+        /// <param name="interactiveId"></param>
         private void AddInteractiveGfx(int gfxId, InteractiveObjectIdEnum interactiveId)
         {
             m_interactiveByGfx.Add(gfxId, (int)interactiveId);
@@ -346,7 +346,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="gfx"></param>
         /// <returns></returns>
         public bool Exists(int gfx)
         {
@@ -356,7 +356,9 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="gfx"></param>
+        /// <param name="map"></param>
+        /// <param name="cellId"></param>
         /// <returns></returns>
         public InteractiveObject Generate(int gfx, MapInstance map, int cellId)
         {

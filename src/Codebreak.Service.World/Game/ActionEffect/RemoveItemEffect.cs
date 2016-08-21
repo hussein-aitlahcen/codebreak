@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RemoveItemEffect : ActionEffectBase<RemoveItemEffect>
+    public sealed class RemoveItemEffect : AbstractActionEffect<RemoveItemEffect>
     {
         /// <summary>
         /// SHOULD NEVER BE CALLED EXCEPT IF WE CREATE A NEW ITEM WITH THAT ACTION

@@ -52,11 +52,11 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="fighters"></param>
         public void InitTurns(IEnumerable<AbstractFighter> fighters)
         {
-            var team1 = fighters.Where(Fighter => Fighter.Team.Id == 0).ToList();
-            var team2 = fighters.Where(Fighter => Fighter.Team.Id == 1).ToList();
+            var team1 = fighters.Where(fighter => fighter.Team.Id == 0).ToList();
+            var team2 = fighters.Where(fighter => fighter.Team.Id == 1).ToList();
 
-            team1 = team1.OrderByDescending(Fighter => Fighter.Initiative).ToList();
-            team2 = team2.OrderByDescending(Fighter => Fighter.Initiative).ToList();
+            team1 = team1.OrderByDescending(fighter => fighter.Initiative).ToList();
+            team2 = team2.OrderByDescending(fighter => fighter.Initiative).ToList();
 
             foreach (var fighter in team1)
             {
@@ -64,17 +64,16 @@ namespace Codebreak.Service.World.Game.Fight
 
                 if (team2.Count - 1 >= index)
                 {
-                    var OppositeFighter = team2[index];
-
-                    if (OppositeFighter.Initiative > fighter.Initiative)
+                    var pppositeFighter = team2[index];
+                    if (pppositeFighter.Initiative > fighter.Initiative)
                     {
-                        m_fighterTurns.Add(OppositeFighter);
+                        m_fighterTurns.Add(pppositeFighter);
                         m_fighterTurns.Add(fighter);
                     }
                     else
                     {
                         m_fighterTurns.Add(fighter);
-                        m_fighterTurns.Add(OppositeFighter);
+                        m_fighterTurns.Add(pppositeFighter);
                     }
                 }
                 else
@@ -83,10 +82,10 @@ namespace Codebreak.Service.World.Game.Fight
                 }
             }
 
-            foreach (var Fighter in team2)
+            foreach (var fighter in team2)
             {
-                if (!m_fighterTurns.Contains(Fighter))
-                    m_fighterTurns.Add(Fighter);
+                if (!m_fighterTurns.Contains(fighter))
+                    m_fighterTurns.Add(fighter);
             }
         }
 

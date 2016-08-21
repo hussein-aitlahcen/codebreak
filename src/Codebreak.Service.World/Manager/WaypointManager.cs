@@ -16,7 +16,7 @@ namespace Codebreak.Service.World.Manager
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, Waypoint> m_waypointByMap;
+        private readonly Dictionary<int, Waypoint> m_waypointByMap;
 
         /// <summary>
         /// 

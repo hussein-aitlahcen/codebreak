@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codebreak.Service.World.Game.Entity
+namespace Codebreak.Service.World.Game.Entity.Inventory
 {
     /// <summary>
     /// 
@@ -30,12 +30,12 @@ namespace Codebreak.Service.World.Game.Entity
         /// <summary>
         /// 
         /// </summary>
-        private BankDAO m_record;
+        private readonly BankDAO m_record;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="databaseRecord"></param>
         public BankInventory(BankDAO databaseRecord)
             : base((int)EntityTypeEnum.TYPE_BANK, databaseRecord.Id)
         {
