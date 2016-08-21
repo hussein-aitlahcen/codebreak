@@ -1,6 +1,7 @@
 # Codebreak
 Open source Dofus 1.29 emulator
 
+Feel free to contribute, fork and make a pull request !
 
 
 ## Working features
