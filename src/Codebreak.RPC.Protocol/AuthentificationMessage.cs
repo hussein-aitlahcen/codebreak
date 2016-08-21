@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthentificationMessage : RPCMessageBase
+    public sealed class AuthentificationMessage : AbstractRcpMessage
     {
         /// <summary>
         /// 

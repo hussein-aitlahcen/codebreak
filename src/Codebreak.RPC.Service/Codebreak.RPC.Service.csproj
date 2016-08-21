@@ -48,11 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RPCClientBase.cs" />
-    <Compile Include="RPCConnectionBase.cs" />
-    <Compile Include="RPCMessageBase.cs" />
-    <Compile Include="RPCMessageBuilder.cs" />
-    <Compile Include="RPCServiceBase.cs" />
+    <Compile Include="AbstractRpcClient.cs" />
+    <Compile Include="AbstractRcpConnection.cs" />
+    <Compile Include="AbstractRcpMessage.cs" />
+    <Compile Include="RpcMessageBuilder.cs" />
+    <Compile Include="AbstractRpcService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codebreak.Framework\Codebreak.Framework.csproj">

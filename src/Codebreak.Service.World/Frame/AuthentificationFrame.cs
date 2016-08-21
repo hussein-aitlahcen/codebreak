@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthentificationFrame : FrameBase<AuthentificationFrame, WorldClient, string>
+    public sealed class AuthentificationFrame : AbstractNetworkFrame<AuthentificationFrame, WorldClient, string>
     {
         /// <summary>
         /// 

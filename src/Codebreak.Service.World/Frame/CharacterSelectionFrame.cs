@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class CharacterSelectionFrame : FrameBase<CharacterSelectionFrame, WorldClient, string>
+    public sealed class CharacterSelectionFrame : AbstractNetworkFrame<CharacterSelectionFrame, WorldClient, string>
     {
         /// <summary>
         /// 

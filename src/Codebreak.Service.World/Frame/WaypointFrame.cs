@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class WaypointFrame: FrameBase<WaypointFrame, CharacterEntity, string>
+    public sealed class WaypointFrame: AbstractNetworkFrame<WaypointFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

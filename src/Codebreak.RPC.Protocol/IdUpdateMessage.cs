@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class IdUpdateMessage : RPCMessageBase
+    public sealed class IdUpdateMessage : AbstractRcpMessage
     {
         /// <summary>
         /// 

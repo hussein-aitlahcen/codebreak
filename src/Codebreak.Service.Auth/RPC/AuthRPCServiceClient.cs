@@ -7,7 +7,7 @@ namespace Codebreak.Service.Auth.RPC
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthRPCServiceClient : RPCClientBase<AuthRPCServiceClient>
+    public sealed class AuthRPCServiceClient : AbstractRpcClient<AuthRPCServiceClient>
     {
         /// <summary>
         /// 

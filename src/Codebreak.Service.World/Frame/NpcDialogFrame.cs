@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class NpcDialogFrame : FrameBase<NpcDialogFrame, CharacterEntity, string>
+    public sealed class NpcDialogFrame : AbstractNetworkFrame<NpcDialogFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

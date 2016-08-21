@@ -23,8 +23,8 @@ namespace Codebreak.Framework.Network
     /// <typeparam name="TFrame"></typeparam>
     /// <typeparam name="TClient"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public abstract class FrameBase<TFrame, TClient, TMessage> : Singleton<TFrame>, IFrame<TClient, TMessage>
-        where TFrame : FrameBase<TFrame, TClient, TMessage>, new()
+    public abstract class AbstractNetworkFrame<TFrame, TClient, TMessage> : Singleton<TFrame>, IFrame<TClient, TMessage>
+        where TFrame : AbstractNetworkFrame<TFrame, TClient, TMessage>, new()
     {
         public abstract Action<TClient, TMessage> GetHandler(TMessage message);
 

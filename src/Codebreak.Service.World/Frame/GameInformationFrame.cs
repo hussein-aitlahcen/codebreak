@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameInformationFrame : FrameBase<GameInformationFrame, CharacterEntity, string>
+    public sealed class GameInformationFrame : AbstractNetworkFrame<GameInformationFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

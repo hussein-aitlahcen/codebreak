@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameTicketMessage : RPCMessageBase
+    public sealed class GameTicketMessage : AbstractRcpMessage
     {
         /// <summary>
         /// 

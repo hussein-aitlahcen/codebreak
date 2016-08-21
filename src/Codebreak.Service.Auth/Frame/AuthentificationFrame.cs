@@ -8,7 +8,7 @@ namespace Codebreak.Service.Auth.Frames
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthentificationFrame : FrameBase<AuthentificationFrame, AuthClient, string>
+    public sealed class AuthentificationFrame : AbstractNetworkFrame<AuthentificationFrame, AuthClient, string>
     {
         /// <summary>
         /// 

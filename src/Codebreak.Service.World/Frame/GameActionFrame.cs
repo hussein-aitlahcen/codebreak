@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameActionFrame : FrameBase<GameActionFrame, CharacterEntity, string>
+    public sealed class GameActionFrame : AbstractNetworkFrame<GameActionFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

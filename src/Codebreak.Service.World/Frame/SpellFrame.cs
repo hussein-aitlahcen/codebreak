@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class SpellFrame : FrameBase<SpellFrame, CharacterEntity, string>
+    public sealed class SpellFrame : AbstractNetworkFrame<SpellFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

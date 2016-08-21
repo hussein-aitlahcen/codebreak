@@ -3,9 +3,9 @@ using Codebreak.RPC.Service;
 
 namespace Codebreak.Service.World.RPC
 {
-    public sealed class AuthServiceRPCConnection : RPCConnectionBase<WorldMessageBuilder>
+    public sealed class AuthServiceRPCConnection : AbstractRcpConnection<WorldMessageBuilder>
     {
-        protected override void OnMessage(RPCMessageBase message)
+        protected override void OnMessage(AbstractRcpMessage message)
         {
         }
 

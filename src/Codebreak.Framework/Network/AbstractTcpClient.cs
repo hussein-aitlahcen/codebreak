@@ -12,8 +12,8 @@ namespace Codebreak.Framework.Network
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class TcpClientBase<T> 
-        where T : TcpClientBase<T>, new()
+    public abstract class AbstractTcpClient<T> 
+        where T : AbstractTcpClient<T>, new()
     {
         /// <summary>
         /// 
@@ -23,7 +23,7 @@ namespace Codebreak.Framework.Network
         /// <summary>
         /// 
         /// </summary>
-        public TcpClientBase()
+        public AbstractTcpClient()
         {
             Id = -1;
         }

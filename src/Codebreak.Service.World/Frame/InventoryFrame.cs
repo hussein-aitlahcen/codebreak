@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class InventoryFrame : FrameBase<InventoryFrame, CharacterEntity, string>
+    public sealed class InventoryFrame : AbstractNetworkFrame<InventoryFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

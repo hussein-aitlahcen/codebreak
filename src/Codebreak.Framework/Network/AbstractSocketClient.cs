@@ -12,7 +12,7 @@ namespace Codebreak.Framework.Network
     /// <summary>
     /// 
     /// </summary>
-    public abstract class SocketClientBase
+    public abstract class AbstractSocketClient
     {
         /// <summary>
         /// 
@@ -38,7 +38,7 @@ namespace Codebreak.Framework.Network
         /// <summary>
         /// 
         /// </summary>
-        public SocketClientBase()
+        public AbstractSocketClient()
         {
             m_bufferManager = new BufferManager(1024, 1000);
             m_saeaRecvPool = new ObjectPool<PoolableSocketAsyncEventArgs>(() => new PoolableSocketAsyncEventArgs(m_bufferManager));

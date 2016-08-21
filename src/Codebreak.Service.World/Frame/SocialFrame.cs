@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Codebreak.Service.World.Frame
 {
-    public sealed class SocialFrame : FrameBase<SocialFrame, CharacterEntity, string>
+    public sealed class SocialFrame : AbstractNetworkFrame<SocialFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

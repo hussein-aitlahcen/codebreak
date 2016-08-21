@@ -66,7 +66,7 @@ namespace Codebreak.Service.World.RPC
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public void Send(RPCMessageBase message)
+        public void Send(AbstractRcpMessage message)
         {
             AddMessage(() =>
                 {
@@ -131,7 +131,7 @@ namespace Codebreak.Service.World.RPC
         /// 
         /// </summary>
         /// <param name="message"></param>
-        private void OnMessage(RPCMessageBase message)
+        private void OnMessage(AbstractRcpMessage message)
         {
             switch(message.Id)
             {

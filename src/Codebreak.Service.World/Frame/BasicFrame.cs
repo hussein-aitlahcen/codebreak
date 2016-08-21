@@ -18,7 +18,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class BasicFrame : FrameBase<BasicFrame, CharacterEntity, string>
+    public sealed class BasicFrame : AbstractNetworkFrame<BasicFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

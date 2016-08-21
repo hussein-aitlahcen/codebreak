@@ -10,7 +10,7 @@ namespace Codebreak.Service.Auth.Frames
     /// <summary>
     /// 
     /// </summary>
-    public sealed class WorldSelectionFrame : FrameBase<WorldSelectionFrame, AuthClient, string>
+    public sealed class WorldSelectionFrame : AbstractNetworkFrame<WorldSelectionFrame, AuthClient, string>
     {
         /// <summary>
         /// 

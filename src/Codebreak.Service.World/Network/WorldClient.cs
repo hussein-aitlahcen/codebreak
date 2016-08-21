@@ -14,7 +14,7 @@ namespace Codebreak.Service.World.Network
     /// <summary>
     /// 
     /// </summary>
-    public sealed class WorldClient : DofusClient<WorldClient>
+    public sealed class WorldClient : AbstractDofusClient<WorldClient>
     {
         /// <summary>
         /// 

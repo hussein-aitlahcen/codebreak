@@ -6,7 +6,7 @@ namespace Codebreak.Service.Auth.Network
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthClient : DofusClient<AuthClient>
+    public sealed class AuthClient : AbstractDofusClient<AuthClient>
     {
         /// <summary>
         /// 

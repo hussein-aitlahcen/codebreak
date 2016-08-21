@@ -6,7 +6,7 @@ namespace Codebreak.RPC.Service
     /// <summary>
     /// 
     /// </summary>
-    public abstract class RPCMessageBase : BinaryQueue
+    public abstract class AbstractRcpMessage : BinaryQueue
     {
         /// <summary>
         /// 
@@ -46,7 +46,7 @@ namespace Codebreak.RPC.Service
         /// <summary>
         /// 
         /// </summary>
-        protected RPCMessageBase()
+        protected AbstractRcpMessage()
         {
         }
 

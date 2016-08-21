@@ -15,9 +15,9 @@ namespace Codebreak.Framework.Network
     /// </summary>
     /// <typeparam name="TServer"></typeparam>
     /// <typeparam name="TClient"></typeparam>
-    public abstract class TcpServerBase<TServer, TClient> : TaskProcessor<TServer>, IServer<TClient>
-        where TServer : TcpServerBase<TServer, TClient>, new()
-        where TClient : TcpClientBase<TClient>, new()
+    public abstract class AbstractTcpServer<TServer, TClient> : TaskProcessor<TServer>, IServer<TClient>
+        where TServer : AbstractTcpServer<TServer, TClient>, new()
+        where TClient : AbstractTcpClient<TClient>, new()
     {
         public const int MAX_CLIENT = 10000;
 
@@ -67,7 +67,7 @@ namespace Codebreak.Framework.Network
         /// 
         /// </summary>
         /// <param name="maxClient"></param>
-        protected TcpServerBase(int maxClient = MAX_CLIENT)
+        protected AbstractTcpServer(int maxClient = MAX_CLIENT)
             : base(typeof(TServer).Name)
         {
             m_bufferManager = new BufferManager(1024, 20000);
@@ -285,7 +285,7 @@ namespace Codebreak.Framework.Network
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="client"></param>
+        /// <param name="saea"></param>
         public void Disconnect(SocketAsyncEventArgs saea)
         {
             var client = (TClient) saea.UserToken;

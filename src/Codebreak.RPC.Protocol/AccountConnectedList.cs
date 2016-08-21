@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Codebreak.RPC.Protocol
 {
-    public sealed class AccountConnectedList : RPCMessageBase
+    public sealed class AccountConnectedList : AbstractRcpMessage
     {
         /// <summary>
         /// 

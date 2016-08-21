@@ -10,15 +10,15 @@ namespace Codebreak.RPC.Service
     /// <typeparam name="TServer"></typeparam>
     /// <typeparam name="TClient"></typeparam>
     /// <typeparam name="TMessageBuilder"></typeparam>
-    public abstract class RPCService<TServer, TClient, TMessageBuilder> : TcpServerBase<TServer, TClient>
-        where TServer : RPCService<TServer, TClient, TMessageBuilder>, new()
-        where TClient : RPCClientBase<TClient>, new()
-        where TMessageBuilder : RPCMessageBuilder, new ()
+    public abstract class AbstractRpcService<TServer, TClient, TMessageBuilder> : AbstractTcpServer<TServer, TClient>
+        where TServer : AbstractRpcService<TServer, TClient, TMessageBuilder>, new()
+        where TClient : AbstractRpcClient<TClient>, new()
+        where TMessageBuilder : RpcMessageBuilder, new ()
     {
         /// <summary>
         /// 
         /// </summary>
-        public RPCMessageBuilder MessageBuilder
+        public RpcMessageBuilder MessageBuilder
         {
             get;
             private set;
@@ -27,14 +27,14 @@ namespace Codebreak.RPC.Service
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, Action<TClient, RPCMessageBase>> m_handlers;
+        private Dictionary<int, Action<TClient, AbstractRcpMessage>> m_handlers;
 
         /// <summary>
         /// 
         /// </summary>
-        protected RPCService()
+        protected AbstractRpcService()
         {
-            m_handlers = new Dictionary<int, Action<TClient, RPCMessageBase>>();
+            m_handlers = new Dictionary<int, Action<TClient, AbstractRcpMessage>>();
             MessageBuilder = new TMessageBuilder();
         }
 
@@ -43,7 +43,7 @@ namespace Codebreak.RPC.Service
         /// </summary>
         /// <param name="messageId"></param>
         /// <param name="handler"></param>
-        public void RegisterHandler(int messageId, Action<TClient, RPCMessageBase> handler)
+        public void RegisterHandler(int messageId, Action<TClient, AbstractRcpMessage> handler)
         {
             if (m_handlers.ContainsKey(messageId))
                 throw new InvalidOperationException(string.Format("RPCService::RegisterHandler already registered handler for messageId = {0}", messageId));
@@ -56,7 +56,7 @@ namespace Codebreak.RPC.Service
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleMessage(TClient client, RPCMessageBase message)
+        private void HandleMessage(TClient client, AbstractRcpMessage message)
         {
             if (!m_handlers.ContainsKey(message.Id))
                 Logger.Debug(string.Format("RPCService::HandlerMessage unregistered handler for messageId={0}", message.Id));
@@ -122,6 +122,6 @@ namespace Codebreak.RPC.Service
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        protected abstract void OnMessageReceived(TClient client, RPCMessageBase message);
+        protected abstract void OnMessageReceived(TClient client, AbstractRcpMessage message);
     }
 }

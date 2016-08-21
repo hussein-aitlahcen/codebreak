@@ -16,7 +16,7 @@ namespace Codebreak.Service.Auth
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthService : TcpServerBase<AuthService, AuthClient>
+    public sealed class AuthService : AbstractTcpServer<AuthService, AuthClient>
     {
         /// <summary>
         /// 

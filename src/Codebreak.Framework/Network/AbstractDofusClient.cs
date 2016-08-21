@@ -12,8 +12,8 @@ namespace Codebreak.Framework.Network
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class DofusClient<T> : TcpClientBase<T>
-        where T : DofusClient<T>, new()
+    public abstract class AbstractDofusClient<T> : AbstractTcpClient<T>
+        where T : AbstractDofusClient<T>, new()
     {      
         /// <summary>
         /// 
@@ -59,7 +59,7 @@ namespace Codebreak.Framework.Network
         /// <summary>
         /// 
         /// </summary>
-        public DofusClient()
+        public AbstractDofusClient()
         {
             m_messageQueue = new BinaryQueue();
             FrameManager = new FrameManager<T, string>((T)this);

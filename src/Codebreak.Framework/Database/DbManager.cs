@@ -18,12 +18,12 @@ namespace Codebreak.Framework.Database
         /// <summary>
         /// 
         /// </summary>
-        private List<IRepository> m_repositories;
+        private readonly List<IRepository> m_repositories;
 
         /// <summary>
         /// 
         /// </summary>
-        private SqlManager m_sqlMgr;
+        private readonly SqlManager m_sqlMgr;
    
         /// <summary>
         /// 

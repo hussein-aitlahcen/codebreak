@@ -29,7 +29,7 @@ namespace Codebreak.Service.World
     /// <summary>
     /// 
     /// </summary>
-    public class WorldService : TcpServerBase<WorldService, WorldClient>
+    public class WorldService : AbstractTcpServer<WorldService, WorldClient>
     {  
         /// <summary>
         /// 

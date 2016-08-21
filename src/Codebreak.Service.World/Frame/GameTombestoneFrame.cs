@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GameTombestoneFrame : FrameBase<GameTombestoneFrame, CharacterEntity, string>
+    public sealed class GameTombestoneFrame : AbstractNetworkFrame<GameTombestoneFrame, CharacterEntity, string>
     {  /// <summary>
         /// 
         /// </summary>

@@ -9,7 +9,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class MapFrame : FrameBase<MapFrame, CharacterEntity, string>
+    public sealed class MapFrame : AbstractNetworkFrame<MapFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 

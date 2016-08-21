@@ -7,7 +7,7 @@ namespace Codebreak.Service.Auth.RPC
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AuthRPCService : RPCService<AuthRPCService, AuthRPCServiceClient, AuthMessageBuilder>
+    public sealed class AuthRPCService : AbstractRpcService<AuthRPCService, AuthRPCServiceClient, AuthMessageBuilder>
     {
         /// <summary>
         /// 
@@ -69,7 +69,7 @@ namespace Codebreak.Service.Auth.RPC
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        protected override void OnMessageReceived(AuthRPCServiceClient client, RPCMessageBase message)
+        protected override void OnMessageReceived(AuthRPCServiceClient client, AbstractRcpMessage message)
         {
             Logger.Debug("AuthServiceRPC " + (MessageIdEnum)message.Id);
         }
@@ -79,7 +79,7 @@ namespace Codebreak.Service.Auth.RPC
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleAuthentification(AuthRPCServiceClient client, RPCMessageBase message)
+        private void HandleAuthentification(AuthRPCServiceClient client, AbstractRcpMessage message)
         {
             if (client.AuthState != AuthStateEnum.NEGOTIATING)
                 return;
@@ -104,7 +104,7 @@ namespace Codebreak.Service.Auth.RPC
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleGameIdUpdate(AuthRPCServiceClient client, RPCMessageBase message)
+        private void HandleGameIdUpdate(AuthRPCServiceClient client, AbstractRcpMessage message)
         {
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;
@@ -123,7 +123,7 @@ namespace Codebreak.Service.Auth.RPC
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleGameStateUpdate(AuthRPCServiceClient client, RPCMessageBase message)
+        private void HandleGameStateUpdate(AuthRPCServiceClient client, AbstractRcpMessage message)
         {
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;
@@ -142,7 +142,7 @@ namespace Codebreak.Service.Auth.RPC
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleGameAccountDisconnected(AuthRPCServiceClient client, RPCMessageBase message)
+        private void HandleGameAccountDisconnected(AuthRPCServiceClient client, AbstractRcpMessage message)
         {
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;
@@ -159,7 +159,7 @@ namespace Codebreak.Service.Auth.RPC
         /// </summary>
         /// <param name="client"></param>
         /// <param name="message"></param>
-        private void HandleAccountConnectedLists(AuthRPCServiceClient client, RPCMessageBase message)
+        private void HandleAccountConnectedLists(AuthRPCServiceClient client, AbstractRcpMessage message)
         {
             if (client.AuthState != AuthStateEnum.SUCCESS)
                 return;

@@ -15,9 +15,9 @@ namespace Codebreak.Framework.Network
     /// </summary>
     /// <typeparam name="TServer"></typeparam>
     /// <typeparam name="TClient"></typeparam>
-	public abstract class LinuxTcpServerBase<TServer, TClient> : TaskProcessor<TServer>, IServer<TClient>
-		where TServer : LinuxTcpServerBase<TServer, TClient>, new()
-			where TClient : TcpClientBase<TClient>, new()
+	public abstract class AbstractLinuxTcpServer<TServer, TClient> : TaskProcessor<TServer>, IServer<TClient>
+		where TServer : AbstractLinuxTcpServer<TServer, TClient>, new()
+			where TClient : AbstractTcpClient<TClient>, new()
 	{
         /// <summary>
         /// 
@@ -72,7 +72,7 @@ namespace Codebreak.Framework.Network
         /// 
         /// </summary>
         /// <param name="maxClient"></param>
-		protected LinuxTcpServerBase(int maxClient = MAX_CLIENT)
+		protected AbstractLinuxTcpServer(int maxClient = MAX_CLIENT)
 			: base(typeof(TServer).Name)
 		{
 			m_bufferManager = new BufferManager(1024, 20000);

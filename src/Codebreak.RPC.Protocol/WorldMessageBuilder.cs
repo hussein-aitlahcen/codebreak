@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class WorldMessageBuilder : RPCMessageBuilder
+    public sealed class WorldMessageBuilder : RpcMessageBuilder
     {
         /// <summary>
         /// 

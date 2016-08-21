@@ -6,19 +6,19 @@ namespace Codebreak.RPC.Service
     /// <summary>
     /// 
     /// </summary>
-    public abstract class RPCMessageBuilder
+    public abstract class RpcMessageBuilder
     {
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, Func<RPCMessageBase>> m_messageById;
+        private readonly Dictionary<int, Func<AbstractRcpMessage>> m_messageById;
 
         /// <summary>
         /// 
         /// </summary>
-        protected RPCMessageBuilder()
+        protected RpcMessageBuilder()
         {
-            m_messageById = new Dictionary<int, Func<RPCMessageBase>>();
+            m_messageById = new Dictionary<int, Func<AbstractRcpMessage>>();
         }
         
         /// <summary>
@@ -27,7 +27,7 @@ namespace Codebreak.RPC.Service
         /// <typeparam name="T"></typeparam>
         /// <param name="messageId"></param>
         public void Register<T>(int messageId)
-            where T : RPCMessageBase, new()
+            where T : AbstractRcpMessage, new()
         {
             m_messageById.Add(messageId, () => new T());
         }
@@ -38,7 +38,7 @@ namespace Codebreak.RPC.Service
         /// <param name="messageId"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public RPCMessageBase BuildMessage(int messageId, byte[] data)
+        public AbstractRcpMessage BuildMessage(int messageId, byte[] data)
         {
             if(!m_messageById.ContainsKey(messageId))            
                 throw new NotImplementedException(string.Format("RPCMessageBuilder::BuildMessage unknow messageId : {0}", messageId));

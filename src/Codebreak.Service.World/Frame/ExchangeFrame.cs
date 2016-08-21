@@ -10,7 +10,7 @@ using Codebreak.Service.World.Manager;
 
 namespace Codebreak.Service.World.Frame
 {
-    public sealed class ExchangeFrame : FrameBase<ExchangeFrame, CharacterEntity, string>
+    public sealed class ExchangeFrame : AbstractNetworkFrame<ExchangeFrame, CharacterEntity, string>
     {
         public override Action<CharacterEntity, string> GetHandler(string message)
         {

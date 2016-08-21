@@ -59,7 +59,7 @@ namespace Codebreak.Framework.Command
             else
                 message.Append(parent).Append(Aliases.First()).Append(" : ").Append(Description).Append('\n');
             foreach(var subCommand in m_subCommands)            
-                subCommand.Serialize(message, Aliases.First() + " ");            
+                subCommand.Serialize(message, Aliases.First() + " ");
         }
 
         /// <summary>

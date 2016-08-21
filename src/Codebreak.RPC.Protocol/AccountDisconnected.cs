@@ -5,7 +5,7 @@ namespace Codebreak.RPC.Protocol
     /// <summary>
     /// 
     /// </summary>
-    public sealed class AccountDisconnected : RPCMessageBase
+    public sealed class AccountDisconnected : AbstractRcpMessage
     {
         /// <summary>
         /// 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Codebreak.Framework.IO;
 using Codebreak.Framework.Network;
 
@@ -7,17 +7,22 @@ namespace Codebreak.RPC.Service
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TClient"></typeparam>
-    public abstract class RPCClientBase<TClient> : TcpClientBase<TClient>
-        where TClient : RPCClientBase<TClient>, new()
+    /// <typeparam name="TMessageBuilder"></typeparam>
+    public abstract class AbstractRcpConnection<TMessageBuilder> : AbstractSocketClient
+        where TMessageBuilder : RpcMessageBuilder, new()
     {
         /// <summary>
         /// 
         /// </summary>
-        public RPCMessageBuilder MessageBuilder
+        public event Action<AbstractRcpMessage> OnMessageEvent;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public RpcMessageBuilder MessageBuilder
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -25,16 +30,38 @@ namespace Codebreak.RPC.Service
         /// </summary>
         private int m_messageId;
         private int m_messageLength;
-        private BinaryQueue m_messageData;
+        private readonly BinaryQueue m_messageData;
 
         /// <summary>
         /// 
         /// </summary>
-        protected RPCClientBase()
+        protected AbstractRcpConnection()
         {
+            MessageBuilder = new TMessageBuilder();
+
             m_messageId = -1;
             m_messageLength = -1;
             m_messageData = new BinaryQueue();
+
+            OnMessageEvent += OnMessage;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ~AbstractRcpConnection()
+        {
+            OnMessageEvent = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void Send(AbstractRcpMessage message)
+        {
+            message.Serialize();
+            Send(message.Data);
         }
 
         /// <summary>
@@ -43,10 +70,9 @@ namespace Codebreak.RPC.Service
         /// <param name="buffer"></param>
         /// <param name="offset"></param>
         /// <param name="length"></param>
-        /// <returns></returns>
-        public IEnumerable<RPCMessageBase> GetMessages(byte[] buffer, int offset, int length)
+        protected override void OnBytesRead(byte[] buffer, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            for (var i = offset; i < offset + length; i++)
             {
                 m_messageData.WriteByte(buffer[i]);
             }
@@ -63,7 +89,9 @@ namespace Codebreak.RPC.Service
                 }
                 if (m_messageLength != -1 && m_messageId != -1 && m_messageData.Count >= m_messageLength)
                 {
-                    yield return MessageBuilder.BuildMessage(m_messageId, m_messageData.ReadBytes(m_messageLength));
+                    var message = MessageBuilder.BuildMessage(m_messageId, m_messageData.ReadBytes(m_messageLength));
+
+                    OnMessageEvent?.Invoke(message);
 
                     m_messageId = -1;
                     m_messageLength = -1;
@@ -75,11 +103,17 @@ namespace Codebreak.RPC.Service
         /// <summary>
         /// 
         /// </summary>
+        protected abstract override void OnConnected();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected abstract override void OnDisconnected();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="message"></param>
-        public void Send(RPCMessageBase message)
-        {
-            message.Serialize();
-            base.Send(message.Data);
-        }
+        protected abstract void OnMessage(AbstractRcpMessage message);
     }
 }

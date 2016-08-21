@@ -11,7 +11,7 @@ namespace Codebreak.Service.World.Frame
     /// <summary>
     /// 
     /// </summary>
-    public sealed class FightFrame : FrameBase<FightFrame, CharacterEntity, string>
+    public sealed class FightFrame : AbstractNetworkFrame<FightFrame, CharacterEntity, string>
     {
         /// <summary>
         /// 
