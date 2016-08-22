@@ -344,8 +344,10 @@
     <Compile Include="Game\Guild\GuildSpellBook.cs" />
     <Compile Include="Game\Guild\GuildStatistics.cs" />
     <Compile Include="Game\Interactive\InteractiveObject.cs" />
+    <Compile Include="Game\Interactive\Type\Chest.cs" />
     <Compile Include="Game\Interactive\Type\CraftPlan.cs" />
     <Compile Include="Game\Interactive\Type\HarvestableResource.cs" />
+    <Compile Include="Game\Interactive\Type\HouseDoor.cs" />
     <Compile Include="Game\Interactive\Type\PaddockDoor.cs" />
     <Compile Include="Game\Interactive\Type\Pheonix.cs" />
     <Compile Include="Game\Interactive\Type\TrashCan.cs" />

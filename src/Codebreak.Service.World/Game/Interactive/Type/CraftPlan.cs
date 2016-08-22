@@ -12,7 +12,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
     /// <summary>
     /// 
     /// </summary>
-    public class CraftPlan : InteractiveObject
+    public sealed class CraftPlan : InteractiveObject
     {
         /// <summary>
         /// 
@@ -93,7 +93,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
 
             m_craftersCount++;
 
-            base.UpdateFrame(FRAME_CRAFTING, FRAME_CRAFTING, true);
+            UpdateFrame(FRAME_CRAFTING, FRAME_CRAFTING, true);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
             m_craftersCount--;
 
             if (m_craftersCount == 0)
-                base.UpdateFrame(FRAME_STOP_CRAFT, FRAME_NORMAL, true);
+                UpdateFrame(FRAME_STOP_CRAFT, FRAME_NORMAL, true);
         }
     }
 }

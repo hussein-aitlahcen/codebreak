@@ -128,6 +128,12 @@ namespace Codebreak.Service.World.Manager
             // Enclos 
             AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_ENCLOS, (map, cellId) => new PaddockDoor(map, cellId));
 
+            // Porte
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_PORTE, (map, cellId) => new HouseDoor(map, cellId));
+
+            // Coffre
+            AddInteractive(InteractiveObjectIdEnum.INTERACTIVE_COFFRE, (map, cellId) => new Chest(map, cellId));
+
             // GFX
             AddInteractiveGfx(7500, InteractiveObjectIdEnum.INTERACTIVE_FRENE);
             AddInteractiveGfx(7003, InteractiveObjectIdEnum.INTERACTIVE_SCIE);

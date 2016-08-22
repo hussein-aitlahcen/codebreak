@@ -33,7 +33,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         {
             m_paddock = map.Paddock;
             if (m_paddock == null)
-                Logger.Info("PaddockDoor::() null paddock on map " + map.Id);
+                Logger.Info("null paddock on map " + map.Id);
         }
 
         /// <summary>
