@@ -34,9 +34,9 @@ Feel free to contribute, fork and make a pull request !
 The script system allows you to customize the gameplay by adding effects on map triggers, items, npc response, end of fight
 
 
-First, have a look at currently implemented conditions [__HERE__](https://gitlab.com/hussein.ait-lahcen/codebreak/blob/master/src/Codebreak.Service.World/Game/Condition/ConditionParser.cs)
+First, have a look at currently implemented conditions [__HERE__](https://github.com/hussein-aitlahcen/codebreak/blob/master/src/Codebreak.Service.World/Game/Condition/ConditionParser.cs)
 
-Then, check currently implemented effects [__HERE__](https://gitlab.com/hussein.ait-lahcen/codebreak/tree/master/src/Codebreak.Service.World/Game/ActionEffect)
+Then, check currently implemented effects [__HERE__](https://github.com/hussein-aitlahcen/codebreak/tree/master/src/Codebreak.Service.World/Game/ActionEffect)
 
 
 __Now, you can combine both of them to make a gameplay scenario e.g. :__
