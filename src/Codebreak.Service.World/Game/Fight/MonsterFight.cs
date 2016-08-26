@@ -105,7 +105,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
-                    if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
+                    if (TryKillFighter(character, character, true, true) != FightActionResultEnum.RESULT_END)
                     {
                         character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());
@@ -123,7 +123,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
-                    if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
+                    if (TryKillFighter(character, character, true, true) != FightActionResultEnum.RESULT_END)
                     {
                         Result.AddResult(character);
                         character.EndFight();

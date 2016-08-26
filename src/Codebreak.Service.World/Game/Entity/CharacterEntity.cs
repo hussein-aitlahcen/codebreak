@@ -18,6 +18,7 @@ using Codebreak.Service.World.Game.Spell;
 using Codebreak.Service.World.Game.Stats;
 using Codebreak.Service.World.Manager;
 using Codebreak.Service.World.Network;
+using Codebreak.Service.World.Game.Quest;
 
 namespace Codebreak.Service.World.Game.Entity
 {
@@ -563,6 +564,15 @@ namespace Codebreak.Service.World.Game.Entity
             get;
             private set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<CharacterQuest> Quests
+        {
+            get;
+            private set;
+        }
         
         /// <summary>
         /// 
@@ -902,7 +912,8 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInvitedPlayerId = -1;
             GuildInviterPlayerId = -1;
             NotifyOnFriendConnection = true;
-            
+
+            Quests = new List<CharacterQuest>(characterDAO.Quests.Select(record => new CharacterQuest(record)));
             CharacterJobs = new JobBook(this);
             Statistics = new GenericStats(characterDAO);
             SpellBook = SpellBookFactory.Instance.Create(this);

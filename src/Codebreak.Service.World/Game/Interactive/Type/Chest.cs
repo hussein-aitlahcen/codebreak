@@ -21,7 +21,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
         public Chest(MapInstance map, int cellId, bool canWalkThrough = false) 
             : base(map, cellId, canWalkThrough)
         {
-            Logger.Debug(string.Format("chest on mapId: {0}, cellId: {1}", map.Id, cellId));
+            //Logger.Debug(string.Format("chest on mapId: {0}, cellId: {1}", map.Id, cellId));
         }
     }
 }

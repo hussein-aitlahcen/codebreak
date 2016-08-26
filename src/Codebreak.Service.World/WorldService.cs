@@ -72,14 +72,15 @@ namespace Codebreak.Service.World
             CommandManager = new CommandManager<WorldCommandContext>();
             CommandManager.RegisterCommands();
 
-            base.AddUpdatable(Dispatcher = new MessageDispatcher());
-            base.AddUpdatable(RPCManager.Instance);
+            AddUpdatable(Dispatcher = new MessageDispatcher());
+            AddUpdatable(RPCManager.Instance);
 
-            base.AddTimer(WorldConfig.WORLD_SAVE_INTERVAL, SaveWorld);
-            base.AddTimer(WorldConfig.WEB_PLAYERS_CONNECTED_UPDATE_INTERVAL, UpdateOnlinePlayers);
+            AddTimer(WorldConfig.WORLD_SAVE_INTERVAL, SaveWorld);
+            AddTimer(WorldConfig.WEB_PLAYERS_CONNECTED_UPDATE_INTERVAL, UpdateOnlinePlayers);
 
             Crypt.GenerateNetworkKey();            
             WorldDbMgr.Instance.Initialize();
+            QuestManager.Instance.Initialize();
             InteractiveObjectManager.Instance.Initialize();
             JobManager.Instance.Initialize();
             ClientManager.Instance.Initialize();
@@ -94,7 +95,7 @@ namespace Codebreak.Service.World
             EntityManager.Instance.Initialize();
             RPCManager.Instance.Initialize();
             
-            base.Start(WorldConfig.WORLD_SERVICE_IP, WorldConfig.WORLD_SERVICE_PORT);
+            Start(WorldConfig.WORLD_SERVICE_IP, WorldConfig.WORLD_SERVICE_PORT);
         }
 
         #region Network
@@ -173,7 +174,7 @@ namespace Codebreak.Service.World
         /// </summary>
         public void SaveWorld()
         {
-            Stopwatch updateTimer = new Stopwatch();
+            var updateTimer = new Stopwatch();
             WorldService.Instance.AddLinkedMessages( 
                 () => WorldService.Instance.Dispatcher.Dispatch(WorldMessage.INFORMATION_MESSAGE(InformationTypeEnum.ERROR, InformationEnum.ERROR_WORLD_SAVING)),
                 () => RPCManager.Instance.UpdateState(GameStateEnum.STARTING),

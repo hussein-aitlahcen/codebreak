@@ -157,7 +157,7 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buffList in ActiveBuffs.Values)
                 buffList.RemoveAll(buff => buff.DecrementType == DecrementType.TYPE_BEGINTURN && buff.Duration <= 0);
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Codebreak.Service.World.Game.Fight
                     return result;
             }
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Codebreak.Service.World.Game.Fight
 
             ActiveBuffs[ActiveType.ACTIVE_ENDMOVE].RemoveAll(buff => buff.DecrementType == DecrementType.TYPE_ENDMOVE && buff.Duration <= 0);
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Codebreak.Service.World.Game.Fight
                 }
             }
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Codebreak.Service.World.Game.Fight
                 }
             }
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Codebreak.Service.World.Game.Fight
                     return result;
             }
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace Codebreak.Service.World.Game.Fight
                     return result;
             }
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Codebreak.Service.World.Game.Fight
             foreach (var buffList in DecrementBuffs.Values)
                 buffList.RemoveAll(buff => buff.IsDebuffable);
 
-            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter.Id);
+            return m_fighter.Fight.TryKillFighter(m_fighter, m_fighter);
         }
         
         /// <summary>

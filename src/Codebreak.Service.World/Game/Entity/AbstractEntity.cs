@@ -320,6 +320,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// </summary>
         private MapInstance m_map;
         private Dictionary<ChatChannelEnum, ChatChannelData> m_chatByChannel;
+        private HashSet<IEntityListener> m_listeners;
 
         private class ChatChannelData
         {
@@ -347,18 +348,19 @@ namespace Codebreak.Service.World.Game.Entity
             }
         }
 
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="type"></param>
-       /// <param name="id"></param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
         protected AbstractEntity(EntityTypeEnum type, long id)
         {
             Id = id;
             Type = type;
             Orientation = 1;
 
-           m_chatByChannel = new Dictionary<ChatChannelEnum, ChatChannelData>
+            m_listeners = new HashSet<Entity.IEntityListener>();
+            m_chatByChannel = new Dictionary<ChatChannelEnum, ChatChannelData>
            {
                {
                    ChatChannelEnum.CHANNEL_GENERAL,
@@ -383,7 +385,35 @@ namespace Codebreak.Service.World.Game.Entity
                {ChatChannelEnum.CHANNEL_PRIVATE_RECEIVE, new ChatChannelData(() => Dispatch)},
                {ChatChannelEnum.CHANNEL_PRIVATE_SEND, new ChatChannelData(() => Dispatch)}
            };
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        public void AddEventListener(IEntityListener listener)
+        {
+            m_listeners.Add(listener);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        public void RemoveEntityListener(IEntityListener listener)
+        {
+            m_listeners.Remove(listener);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <param name="parameters"></param>
+        public void FireEvent(EntityEventType ev, object parameters)
+        {
+            foreach (var listener in m_listeners)
+                listener.OnEntityEvent(ev, this, parameters);
         }
 
         /// <summary>
@@ -765,6 +795,9 @@ namespace Codebreak.Service.World.Game.Entity
                 Inventory.Dispose();
                 Inventory = null;
             }
+
+            m_listeners.Clear();
+            m_listeners = null;
 
             m_chatByChannel.Clear();
             m_chatByChannel = null;

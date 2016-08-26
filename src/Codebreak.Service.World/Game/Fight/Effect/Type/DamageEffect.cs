@@ -147,7 +147,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect.Type
             castInfos.Fight.Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_DAMAGE, caster.Id, target.Id + ",-" + damageJet));
 
             // check out the death
-            return castInfos.Fight.TryKillFighter(target, caster.Id);
+            return castInfos.Fight.TryKillFighter(target, caster);
         }
     }
 }

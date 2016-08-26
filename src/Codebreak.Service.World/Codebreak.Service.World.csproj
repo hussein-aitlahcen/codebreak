@@ -84,6 +84,7 @@
     <Compile Include="Database\Repository\CharacterAlignmentRepository.cs" />
     <Compile Include="Database\Repository\CharacterGuildRepository.cs" />
     <Compile Include="Database\Repository\CharacterJobRepository.cs" />
+    <Compile Include="Database\Repository\CharacterQuestRepository.cs" />
     <Compile Include="Database\Repository\CharacterRepository.cs" />
     <Compile Include="Database\Repository\CharacterWaypointRepository.cs" />
     <Compile Include="Database\Repository\CraftEntryRepository.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Database\Repository\NpcTemplateRepository.cs" />
     <Compile Include="Database\Repository\OLD.cs" />
     <Compile Include="Database\Repository\PaddockRepository.cs" />
+    <Compile Include="Database\Repository\QuestRepository.cs" />
     <Compile Include="Database\Repository\SocialRelationRepository.cs" />
     <Compile Include="Database\Repository\SpellBookEntryRepository.cs" />
     <Compile Include="Database\Repository\TaxCollectorRepository.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Database\Structure\CharacterDAO.cs" />
     <Compile Include="Database\Structure\CharacterGuildDAO.cs" />
     <Compile Include="Database\Structure\CharacterJobDAO.cs" />
+    <Compile Include="Database\Structure\CharacterQuestDAO.cs" />
     <Compile Include="Database\Structure\CharacterWaypointDAO.cs" />
     <Compile Include="Database\Structure\CraftEntryDAO.cs" />
     <Compile Include="Database\Structure\DropTemplateDAO.cs" />
@@ -142,6 +145,9 @@
     <Compile Include="Database\Structure\NpcTemplateDAO.cs" />
     <Compile Include="Database\Structure\OLD.cs" />
     <Compile Include="Database\Structure\PaddockDAO.cs" />
+    <Compile Include="Database\Structure\QuestDAO.cs" />
+    <Compile Include="Database\Structure\QuestObjectiveDAO.cs" />
+    <Compile Include="Database\Structure\QuestStepDAO.cs" />
     <Compile Include="Database\Structure\SocialRelationDAO.cs" />
     <Compile Include="Database\Structure\SpellBookEntryDAO.cs" />
     <Compile Include="Database\Structure\SubAreaDAO.cs" />
@@ -150,6 +156,7 @@
     <Compile Include="Database\WorldDbMgr.cs" />
     <Compile Include="Frame\GameTombestoneFrame.cs" />
     <Compile Include="Frame\NpcDialogFrame.cs" />
+    <Compile Include="Frame\QuestFrame.cs" />
     <Compile Include="Frame\SocialFrame.cs" />
     <Compile Include="Frame\WaypointFrame.cs" />
     <Compile Include="Game\ActionEffect\AbstractActionEffect.cs" />
@@ -211,6 +218,7 @@
     <Compile Include="Game\Auction\AuctionHouseInstance.cs" />
     <Compile Include="Game\Condition\ConditionParser.cs" />
     <Compile Include="Game\Dialog\NpcDialog.cs" />
+    <Compile Include="Game\Entity\IEntityListener.cs" />
     <Compile Include="Game\Entity\Inventory\BankInventory.cs" />
     <Compile Include="Game\Entity\Inventory\CharacterInventory.cs" />
     <Compile Include="Game\Entity\CharacterEntity.cs" />
@@ -366,6 +374,13 @@
     <Compile Include="Game\Mount\Fecondation.cs" />
     <Compile Include="Game\Mount\Paddock.cs" />
     <Compile Include="Game\Party\PartyInstance.cs" />
+    <Compile Include="Game\Quest\CharacterQuest.cs" />
+    <Compile Include="Game\Quest\Impl\FindNpcObjective.cs" />
+    <Compile Include="Game\Quest\Impl\GenericObjective.cs" />
+    <Compile Include="Game\Quest\Impl\KillMonsterObjective.cs" />
+    <Compile Include="Game\Quest\Quest.cs" />
+    <Compile Include="Game\Quest\AbstractQuestObjective.cs" />
+    <Compile Include="Game\Quest\QuestStep.cs" />
     <Compile Include="Game\Spawn\SpawnQueue.cs" />
     <Compile Include="Game\Spell\SpellBook.cs" />
     <Compile Include="Game\Spell\SpellBookFactory.cs" />
@@ -403,6 +418,7 @@
     <Compile Include="Manager\NpcManager.cs" />
     <Compile Include="Manager\PaddockManager.cs" />
     <Compile Include="Manager\PartyManager.cs" />
+    <Compile Include="Manager\QuestManager.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Manager\SpawnManager.cs" />
     <Compile Include="Manager\SpellManager.cs" />

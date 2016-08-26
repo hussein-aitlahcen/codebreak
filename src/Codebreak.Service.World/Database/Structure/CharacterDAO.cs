@@ -391,6 +391,15 @@ namespace Codebreak.Service.World.Database.Structure
 
         private CharacterAlignmentDAO m_alignment;
         private CharacterGuildDAO m_guild;
+        private List<CharacterQuestDAO> m_quests = new List<CharacterQuestDAO>();
+
+        [Write(false)]
+        public List<CharacterQuestDAO> Quests => m_quests;
+
+        public void AddQuest(CharacterQuestDAO quest)
+        {
+            m_quests.Add(quest);
+        }
 
         [Write(false)]
         [DoNotNotify]

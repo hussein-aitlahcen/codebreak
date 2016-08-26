@@ -316,8 +316,8 @@ namespace Codebreak.Service.World.Game.Map
                 var cell = new MapCell(this, id, cellData, triggers.Find(trigger => trigger.CellId == id));
                 if(cell.InteractiveObject != null)
                 {
-                    base.AddUpdatable(cell.InteractiveObject);
-                    cell.InteractiveObject.AddHandler(base.Dispatch);
+                    AddUpdatable(cell.InteractiveObject);
+                    cell.InteractiveObject.AddHandler(Dispatch);
                     m_interactiveObjects.Add(cell.InteractiveObject);
                 }
                 m_cellById.Add(id, cell);
@@ -431,6 +431,7 @@ namespace Codebreak.Service.World.Game.Map
                 return;
 
             Move(entity, entity.CellId, Pathmaker.FindPathAsString(entity.CellId, cellId, false));
+
             entity.StopAction(GameActionTypeEnum.MAP_MOVEMENT);
         }
 

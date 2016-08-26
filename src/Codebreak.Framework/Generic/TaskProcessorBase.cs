@@ -102,8 +102,6 @@ namespace Codebreak.Framework.Generic
                 m_running = false;
                 m_queueTimer.Reset();
                 LastUpdate = 0;
-
-                Logger.Info("TaskQueue[" + Name + "] stopped.");
             });
         }
         /// <summary>
@@ -208,9 +206,7 @@ namespace Codebreak.Framework.Generic
         /// 
         /// </summary>
         private void InternalStart()
-        {
-            Logger.Info("TaskQueue[" + Name + "] started.");
-            
+        {            
             InternalUpdate();
         }
 

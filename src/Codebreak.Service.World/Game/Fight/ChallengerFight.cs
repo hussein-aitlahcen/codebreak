@@ -94,7 +94,7 @@ namespace Codebreak.Service.World.Game.Fight
                     {
                         foreach (var teamFighter in character.Team.Fighters)
                         {
-                            if (base.TryKillFighter(teamFighter, teamFighter.Id, true, true) == FightActionResultEnum.RESULT_END)
+                            if (base.TryKillFighter(teamFighter, teamFighter, true, true) == FightActionResultEnum.RESULT_END)
                             {
                                 return FightActionResultEnum.RESULT_END;
                             }
@@ -119,7 +119,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
-                    if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
+                    if (TryKillFighter(character, character, true, true) != FightActionResultEnum.RESULT_END)
                     {
                         character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());

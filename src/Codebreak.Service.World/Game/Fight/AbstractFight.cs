@@ -1156,7 +1156,7 @@ namespace Codebreak.Service.World.Game.Fight
         /// <param name="killerId"></param>
         /// <param name="force"></param>
         /// <returns></returns>
-        public FightActionResultEnum TryKillFighter(AbstractFighter fighter, long killerId, bool force = false, bool quit = false)
+        public FightActionResultEnum TryKillFighter(AbstractFighter fighter, AbstractFighter killer, bool force = false, bool quit = false)
         {
             if (LoopState == FightLoopStateEnum.STATE_ENDED ||
                 LoopState == FightLoopStateEnum.STATE_WAIT_END ||
@@ -1179,15 +1179,17 @@ namespace Codebreak.Service.World.Game.Fight
                 }
                 else
                 {
-                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_KILL, killerId, fighter.Id.ToString()));
+                    Dispatch(WorldMessage.GAME_ACTION(GameActionTypeEnum.FIGHT_KILL, killer.Id, fighter.Id.ToString()));
                 }
+                
+                fighter.OnDeath(killer);
+                killer.OnKill(fighter);
 
-                fighter.OnDeath();
                 Team0.CheckDeath(fighter);
                 Team1.CheckDeath(fighter);
 
                 foreach (var invocation in fighter.Team.AliveFighters.Where(ally => ally.Invocator == fighter))
-                    TryKillFighter(invocation, invocation.Id, true);
+                    TryKillFighter(invocation, invocation, true);
 
                 if (fighter.Invocator != null)
                 {

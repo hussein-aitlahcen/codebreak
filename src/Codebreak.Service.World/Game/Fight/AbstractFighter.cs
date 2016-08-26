@@ -717,15 +717,26 @@ namespace Codebreak.Service.World.Game.Fight
         /// <summary>
         /// 
         /// </summary>
-        public void OnDeath()
+        /// <param name="fighter"></param>
+        public virtual void OnKill(AbstractFighter target)
         {
-            DeclaredDead = true;
+            FireEvent(EntityEventType.FIGHT_KILL, target);
+        }
 
-            if (Cell != null)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnDeath(AbstractFighter killer)
+        {
+            if (!DeclaredDead)
             {
-                Cell.RemoveObject(this);
+                DeclaredDead = true;
+                if (Cell != null)
+                {
+                    Cell.RemoveObject(this);
 
-                Cell = null;
+                    Cell = null;
+                }
             }
         }
 
@@ -762,7 +773,7 @@ namespace Codebreak.Service.World.Game.Fight
                     return buffResult;
 
                 if (Fight.LoopState != FightLoopStateEnum.STATE_ENDED)
-                    return Fight.TryKillFighter(this, Id);
+                    return Fight.TryKillFighter(this, this);
             }
 
             if (Fight.State != FightStateEnum.STATE_FIGHTING)

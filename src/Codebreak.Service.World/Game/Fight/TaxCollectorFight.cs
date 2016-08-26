@@ -121,7 +121,7 @@ namespace Codebreak.Service.World.Game.Fight
             switch (State)
             {
                 case FightStateEnum.STATE_PLACEMENT:
-                    if (TryKillFighter(character, character.Id, true, true) == FightActionResultEnum.RESULT_END)
+                    if (TryKillFighter(character, character, true, true) == FightActionResultEnum.RESULT_END)
                         return FightActionResultEnum.RESULT_END;
                     
                     if (kick)
@@ -146,7 +146,7 @@ namespace Codebreak.Service.World.Game.Fight
                         return FightActionResultEnum.RESULT_NOTHING;
                     }
 
-                    if (TryKillFighter(character, character.Id, true, true) != FightActionResultEnum.RESULT_END)
+                    if (TryKillFighter(character, character, true, true) != FightActionResultEnum.RESULT_END)
                     {
                         character.EndFight();
                         character.Dispatch(WorldMessage.FIGHT_LEAVE());

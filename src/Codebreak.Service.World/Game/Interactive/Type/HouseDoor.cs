@@ -22,7 +22,7 @@ namespace Codebreak.Service.World.Game.Interactive.Type
             : base(map, cellId, canWalkThrough)
         {
             // TODO: implement houses
-            Logger.Debug(string.Format("house door on mapId: {0}, cellId: {1}", map.Id, cellId));
+            //Logger.Debug(string.Format("house door on mapId: {0}, cellId: {1}", map.Id, cellId));
         }
     }
 }

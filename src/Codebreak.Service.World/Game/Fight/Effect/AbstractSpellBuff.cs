@@ -172,7 +172,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <param name="ActiveType"></param>
         public virtual FightActionResultEnum ApplyEffect(ref int damageValue, CastInfos damageInfos = null)
         {
-            return Caster.Fight.TryKillFighter(Target, Caster.Id);
+            return Caster.Fight.TryKillFighter(Target, Caster);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace Codebreak.Service.World.Game.Fight.Effect
         /// <returns></returns>
         public virtual FightActionResultEnum RemoveEffect()
         {
-            return Caster.Fight.TryKillFighter(Target, Caster.Id);
+            return Caster.Fight.TryKillFighter(Target, Caster);
         }
 
         /// <summary>
