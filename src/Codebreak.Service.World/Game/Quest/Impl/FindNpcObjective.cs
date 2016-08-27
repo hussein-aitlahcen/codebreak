@@ -24,5 +24,10 @@ namespace Codebreak.Service.World.Game.Quest.Impl
                 Logger.Warn("Quest::FindNpcObjective wrong parameter type, param=" + record.Parameters);
             }
         }
+
+        public override bool Done(string value)
+        {
+            return int.Parse(value) == NpcTemplateId;
+        }
     }
 }

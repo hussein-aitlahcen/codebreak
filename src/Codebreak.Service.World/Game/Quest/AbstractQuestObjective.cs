@@ -33,6 +33,8 @@ namespace Codebreak.Service.World.Game.Quest
             m_record = record;
         }
 
+        public abstract bool Done(string value);
+
         public static AbstractQuestObjective FromRecord(QuestObjectiveDAO record)
         {
             switch ((QuestObjectiveType)record.Type)

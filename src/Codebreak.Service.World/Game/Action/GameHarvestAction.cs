@@ -17,23 +17,13 @@ namespace Codebreak.Service.World.Game.Action
         /// 
         /// </summary>
         public override bool CanAbort => true;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CharacterEntity Character
-        {
-            get;
-            private set;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
         public HarvestableResource HarvestableResource
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -46,14 +36,6 @@ namespace Codebreak.Service.World.Game.Action
             : base(GameActionTypeEnum.SKILL_HARVEST, character, duration)
         {
             HarvestableResource = harvestableResource;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void Start()
-        {
-            base.Start();
         }
 
         /// <summary>

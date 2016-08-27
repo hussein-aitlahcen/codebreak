@@ -24,5 +24,10 @@ namespace Codebreak.Service.World.Game.Quest.Impl
                 Logger.Warn("Quest::KillMonsterObjective wrong parameter type, param=" + record.Parameters);
             }
         }
+
+        public override bool Done(string value)
+        {
+            return int.Parse(value) >= Count;
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace Codebreak.Service.World.Frame
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<int, EffectEnum> m_statById = new Dictionary<int, EffectEnum>()
+        private readonly Dictionary<int, EffectEnum> m_statById = new Dictionary<int, EffectEnum>()
         {
             {10, EffectEnum.AddStrength},
             {11, EffectEnum.AddVitality},
@@ -1034,8 +1034,8 @@ namespace Codebreak.Service.World.Frame
             if (channel.Length == 1)
             {
                 if (messageData.Length > 2)                
-                    messageContent = messageContent + "|" + messageData[2];              
-                if(!Enum.IsDefined(typeof(ChatChannelEnum), channel))
+                    messageContent = messageContent + "|" + messageData[2];
+                if(!Enum.IsDefined(typeof(ChatChannelEnum), (int)channel[0]))
                 {
                     character.SafeDispatch(WorldMessage.BASIC_NO_OPERATION());
                     return;

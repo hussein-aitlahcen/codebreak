@@ -14,5 +14,10 @@ namespace Codebreak.Service.World.Game.Quest.Impl
         public GenericObjective(QuestObjectiveDAO record) : base(record)
         {
         }
+
+        public override bool Done(string value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -50,11 +50,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <summary>
         /// 
         /// </summary>
-        public bool IsFinished
-        {
-            get;
-            protected set;
-        }
+        public bool IsFinished { get; protected set; }
 
         /// <summary>
         /// 
@@ -62,7 +58,7 @@ namespace Codebreak.Service.World.Game.Action
         /// <param name="type"></param>
         /// <param name="entity"></param>
         /// <param name="duration"></param>
-        public AbstractGameAction(GameActionTypeEnum type, AbstractEntity entity, long duration = -1)
+        protected AbstractGameAction(GameActionTypeEnum type, AbstractEntity entity, long duration = -1)
         {
             Type = type;
             Entity = entity;

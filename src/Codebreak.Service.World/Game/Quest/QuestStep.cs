@@ -11,9 +11,8 @@ namespace Codebreak.Service.World.Game.Quest
 {
     public sealed class QuestStep
     {
-        private QuestStepDAO m_record;
-
         public int Id => m_record.Id;
+        public int QuestId => m_record.QuestId;
         public int Order => m_record.Order;
         public string Name => m_record.Name;
         public string Description => m_record.Description;
@@ -21,10 +20,11 @@ namespace Codebreak.Service.World.Game.Quest
 
         public List<AbstractQuestObjective> Objectives { get; }
 
+        private readonly QuestStepDAO m_record;
         public QuestStep(QuestStepDAO record)
         {
             m_record = record;
-            Objectives = record.Objectives.Select(objectiveRecord => AbstractQuestObjective.FromRecord(objectiveRecord)).ToList();
+            Objectives = record.Objectives.Select(AbstractQuestObjective.FromRecord).ToList();
 
             QuestManager.Instance.AddStep(this);
         }

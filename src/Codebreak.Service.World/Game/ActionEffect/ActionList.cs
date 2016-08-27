@@ -24,7 +24,7 @@ namespace Codebreak.Service.World.Game.ActionEffect
             var splitted = data.Split(':');
             var effect = (EffectEnum)int.Parse(splitted[0]);
             var parameters = new Dictionary<string, string>();
-            foreach (var parameter in splitted[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var parameter in splitted[1].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var splittedParam = parameter.Split('=');
                 var key = splittedParam[0];

@@ -12,6 +12,7 @@ namespace Codebreak.Service.World.Database.Structure
     {
         [Key]
         public int Id { get; set; }
+        public bool Done { get; set; }
         public int CurrentStepId { get; set; }
         public string SerializedObjectives { get; set; }
     }

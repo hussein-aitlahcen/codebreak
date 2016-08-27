@@ -510,7 +510,10 @@ namespace Codebreak.Service.World.Game.Entity
         /// <returns></returns>
         public bool CanGameAction(GameActionTypeEnum actionType)
         {
-            switch(actionType)
+            if (CurrentAction != null && CurrentAction.Type == GameActionTypeEnum.MAP_MOVEMENT)
+                CurrentAction = null;
+
+            switch (actionType)
             {
                 case GameActionTypeEnum.FIGHT_AGGRESSION:
                     return ((CurrentAction == null || CurrentAction.IsFinished)
@@ -637,9 +640,7 @@ namespace Codebreak.Service.World.Game.Entity
         public virtual void StartAction(GameActionTypeEnum actionType)
         {
             if(CurrentAction != null && CurrentAction.Type == actionType)
-            {
                 CurrentAction.Start();
-            }
 
             switch (actionType)
             {
@@ -687,6 +688,7 @@ namespace Codebreak.Service.World.Game.Entity
         /// 
         /// </summary>
         /// <param name="actionType"></param>
+        /// <param name="args"></param>
         public virtual void AbortAction(GameActionTypeEnum actionType, params object[] args)
         {
             if (CurrentAction != null && CurrentAction.Type == actionType && CurrentAction.CanAbort)

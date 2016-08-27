@@ -108,6 +108,7 @@ namespace Codebreak.Service.World.Frame
             client.CurrentCharacter = character;
             client.CurrentCharacter.AddMessage(() =>
             {
+                client.CurrentCharacter.FrameManager.AddFrame(QuestFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(GameCreationFrame.Instance);
@@ -474,6 +475,7 @@ namespace Codebreak.Service.World.Frame
 
             client.CurrentCharacter.AddMessage(() =>
             {
+                client.CurrentCharacter.FrameManager.AddFrame(QuestFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(BasicFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(SocialFrame.Instance);
                 client.CurrentCharacter.FrameManager.AddFrame(SpellFrame.Instance);

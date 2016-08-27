@@ -913,7 +913,8 @@ namespace Codebreak.Service.World.Game.Entity
             GuildInviterPlayerId = -1;
             NotifyOnFriendConnection = true;
 
-            Quests = new List<CharacterQuest>(characterDAO.Quests.Select(record => new CharacterQuest(record)));
+            Quests = new List<CharacterQuest>(characterDAO.Quests.Select(record => new CharacterQuest(this, record)));
+
             CharacterJobs = new JobBook(this);
             Statistics = new GenericStats(characterDAO);
             SpellBook = SpellBookFactory.Instance.Create(this);
@@ -1725,7 +1726,25 @@ namespace Codebreak.Service.World.Game.Entity
                 CachedBuffer = false;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendQuestsList()
+        {
+            Dispatch(WorldMessage.QUEST_LIST(Quests));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SendQuestsStepsList(int questId)
+        {
+            var quest = Quests.FirstOrDefault(q => q.Id == questId);
+            if(quest != null)
+                Dispatch(WorldMessage.QUEST_STEPS(quest));
+        }
+
         /// <summary>
         /// 
         /// </summary>

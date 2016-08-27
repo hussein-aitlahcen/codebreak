@@ -10,12 +10,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 using Codebreak.Service.World.Game.Guild;
 using Codebreak.Service.World.Game.Auction;
 using Codebreak.Service.World.Manager;
 using Codebreak.Framework.Util;
 using Codebreak.Service.World.Game.Job;
 using Codebreak.Service.World.Game.Interactive;
+using Codebreak.Service.World.Game.Quest;
 
 namespace Codebreak.Service.World.Network
 {
@@ -77,6 +79,10 @@ namespace Codebreak.Service.World.Network
 
         INFO_KAMAS_WON = 45,
         INFO_KAMAS_LOST = 46,
+
+        INFOS_QUEST_NEW = 54, //"Nouvelle quête : <b>%1</b>";
+        INFOS_QUEST_UPDATE = 55,//"Quête mise à jour : <b>%1</b>";
+        INFOS_QUEST_END = 56, //"Quête terminée : <b>%1</b>";
 
         INFO_YOU_ARE_AWAY_PLAYERS_CANT_RESPOND = 72,
 
@@ -2854,6 +2860,55 @@ namespace Codebreak.Service.World.Network
         /// <param name="guildEmblem"></param>
         /// <returns></returns>
         public static string PADDOCK_INFORMATIONS(int owner, long price, int size, int items, string guildName, string guildEmblem)
-            => "Rp" + owner + ";" + price + ";" + size + ";" + items + ";" + guildName + ";" + guildEmblem;       
+            => "Rp" + owner + ";" + price + ";" + size + ";" + items + ";" + guildName + ";" + guildEmblem;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="quests"></param>
+        /// <returns></returns>
+        public static string QUEST_LIST(List<CharacterQuest> quests)
+        {
+            var message = new StringBuilder("QLK");
+            foreach (var quest in quests)
+            {
+                message.Append(quest.Id).Append(';');
+                message.Append(quest.Done ? "1" : "0").Append(';');
+                message.Append("0"); // TODO: nSortOrder
+            }
+            return message.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="quest"></param>
+        /// <returns></returns>
+        public static string QUEST_STEPS(CharacterQuest quest)
+        {
+            var message = new StringBuilder("QS");
+            message.Append(quest.Id).Append('|');
+            message.Append(quest.CurrentStepId).Append('|');
+            foreach (var objective in quest.CurrentStep.Objectives)
+            {
+                message.Append(objective.Id).Append(',');
+                message.Append(objective.Done(quest.GetAdvancement(objective.Id)) ? "1" : "0");
+                message.Append(';');
+            }
+            message.Append('|');
+            foreach (var previousStep in quest.Template.Steps.Where(s => s.Order < quest.CurrentStep.Order))
+            {
+                message.Append(previousStep.Id).Append(';');
+            }
+            message.Append('|');
+            foreach (var nextStep in quest.Template.Steps.Where(s => s.Order > quest.CurrentStep.Order))
+            {
+                message.Append(nextStep.Id).Append(';');
+            }
+            message.Append('|');
+            message.Append(0).Append(';'); // TODO: dialogId
+            message.Append(",,,"); //TODO: dialogParams
+            return message.ToString();
+        }
     }
 }

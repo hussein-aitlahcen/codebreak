@@ -19,7 +19,6 @@ namespace Codebreak.Service.World.Game.Action
         public MerchantEntity Merchant
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -28,7 +27,6 @@ namespace Codebreak.Service.World.Game.Action
         public CharacterEntity Character
         {
             get;
-            private set;
         }
 
         /// <summary>

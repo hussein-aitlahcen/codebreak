@@ -30,12 +30,12 @@ namespace Codebreak.Service.World.Game.ActionEffect
             if(monster == null)
                 return false;
 
-            if(monster.Grades.Count() == 0)
+            if(!monster.Grades.Any())
                 return false;
 
             var grade = monster.Grades.ElementAt(Util.Next(0, monster.Grades.Count()));
 
-            return Process(character, new Dictionary<string, string>() { { "gradeId", grade.Id.ToString() } });
+            return Process(character, new Dictionary<string, string> { { "gradeId", grade.Id.ToString() } });
         }
 
         /// <summary>

@@ -10,10 +10,10 @@ namespace Codebreak.Service.World.Database.Structure
     [Table("areatemplate")]
     public sealed class AreaDAO : DataAccessObject<AreaDAO>
     {
-        [Key]
         /// <summary>
         /// 
         /// </summary>
+        [Key]
         public int Id
         {
             get;

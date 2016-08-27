@@ -23,31 +23,58 @@ namespace Codebreak.Service.World.Game.Quest
         private static char SEPARATOR = ',';
         private static char SUB_SEPARATOR = ':';
 
-        public int CurrentStepId => m_record.CurrentStepId;
+        public int Id => CurrentStep.QuestId;
 
-        private CharacterQuestDAO m_record;
-        private QuestStep m_currentStep;
-
-        private List<ObjectiveAdvancement> m_advancement;
-
-        public CharacterQuest(CharacterQuestDAO record)
+        public bool Done
         {
+            get { return m_record.Done; }
+            private set { m_record.Done = value; }
+        }
+
+        public int CurrentStepId
+        {
+            get { return m_record.CurrentStepId; }
+            private set { m_record.CurrentStepId = value; }
+        }
+
+        public QuestStep CurrentStep
+        {
+            get;
+            private set;
+        }
+
+        public Quest Template => m_template;
+
+        public List<ObjectiveAdvancement> Advancements { get; }
+
+        private readonly CharacterEntity m_character;
+        private readonly CharacterQuestDAO m_record;
+        private Quest m_template;
+        
+        public CharacterQuest(CharacterEntity character, CharacterQuestDAO record)
+        {
+            m_character = character;
             m_record = record;
-            m_advancement = new List<ObjectiveAdvancement>();
+            Advancements = new List<ObjectiveAdvancement>();
+            
+            Initialize();
         }
 
-        private void LoadCurrentStep()
+        private void Initialize()
         {
-            m_currentStep = QuestManager.Instance.GetStep(CurrentStepId);
+            CurrentStep = QuestManager.Instance.GetStep(CurrentStepId);
+            m_template = QuestManager.Instance.GetQuest(Id);
+            m_character.AddEventListener(this);
+            DeserializeObjectives();
         }
-
+        
         private void DeserializeObjectives()
         {
-            m_advancement.Clear();
+            Advancements.Clear();
             foreach(var serializeObjective in m_record.SerializedObjectives.Split(new[] { SEPARATOR }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var data = serializeObjective.Split(new[] { SUB_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
-                m_advancement.Add(new ObjectiveAdvancement
+                Advancements.Add(new ObjectiveAdvancement
                 {
                     Id = int.Parse(data[0]),
                     Value = data[1],
@@ -57,27 +84,63 @@ namespace Codebreak.Service.World.Game.Quest
 
         private void SerializeObjectives()
         {
-            m_record.SerializedObjectives = string.Join(SEPARATOR.ToString(), m_advancement.Select(a => a.Id + SUB_SEPARATOR + a.Value));
+            m_record.SerializedObjectives = string.Join
+                (
+                    SEPARATOR.ToString(), 
+                    Advancements.Select(a => a.Id.ToString() + SUB_SEPARATOR + a.Value)
+                );
         }
 
         private void UpdateObjective<T>(int objectiveId, Func<string, T> transformer, Func<T, T> updater)
         {
-            var advancement = m_advancement.First(a => a.Id == objectiveId);
+            var advancement = Advancements.First(a => a.Id == objectiveId);
             advancement.Value = updater(transformer(advancement.Value)).ToString();
             SerializeObjectives();
+            CheckEnd();
+        }
+
+        public string GetAdvancement(int objectiveId)
+        {
+            return Advancements.First(a => a.Id == objectiveId).Value;
+        }
+
+        private void CheckEnd()
+        {
+            Done = CurrentStep.Objectives.All(objective => objective.Done(GetAdvancement(objective.Id)));
+            if (Done)
+            {
+                foreach (var action in CurrentStep.ActionsList)
+                    ActionEffectManager.Instance.ApplyEffect(m_character, action.Effect, action.Parameters);
+                
+                var nextStep = m_template.Steps.FirstOrDefault(s => s.Order > CurrentStep.Order);
+                if (nextStep != null)
+                {
+                    CurrentStepId = nextStep.Id;
+                    CurrentStep = nextStep;
+                    m_character.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFOS_QUEST_UPDATE, Id));
+                }
+                else
+                {
+                    m_character.Dispatch(WorldMessage.IM_INFO_MESSAGE(InformationEnum.INFOS_QUEST_END, Id));
+                }
+            }
         }
 
         public void OnEntityEvent(EntityEventType ev, AbstractEntity entity, object parameters)
         {
+            if (Done)
+                return;
+
             switch (ev)
             {
                 case EntityEventType.FIGHT_KILL:
                     var monster = parameters as MonsterEntity;
                     if (monster != null)
                     {
-                        foreach (var killMonster in m_currentStep.Objectives.OfType<KillMonsterObjective>())
-                            if (killMonster.MonsterTemplateId == monster.Grade.Template.Id)
-                                UpdateObjective(killMonster.Id, int.Parse, i => i + 1);
+                        foreach (var killMonster in CurrentStep.Objectives
+                            .OfType<KillMonsterObjective>()
+                            .Where(killMonster => killMonster.MonsterTemplateId == monster.Grade.Template.Id))
+                            UpdateObjective(killMonster.Id, int.Parse, i => i + 1);
                     }
                     break;
             }
