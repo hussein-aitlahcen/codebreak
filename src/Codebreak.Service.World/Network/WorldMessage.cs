@@ -2881,22 +2881,16 @@ namespace Codebreak.Service.World.Network
         public static string QUEST_STEPS(CharacterQuest quest)
         {
             var message = new StringBuilder("QS");
-            message.Append(quest.Id).Append('|');
-            message.Append(quest.CurrentStepId).Append('|');
-            foreach (var objective in quest.CurrentStep.Objectives)
-            {
-                message.Append(objective.Id).Append(',');
-                message.Append(objective.Done(quest.GetAdvancement(objective.Id)) ? "1" : "0");
-                message.Append(';');
-            }
+            message.Append(quest.Id).Append('|'); // 0
+            message.Append(quest.CurrentStepId).Append('|'); // 1
+            message.Append(string.Join(";",
+                quest.CurrentStep.Objectives.Select(o => o.Id + "," + (o.Done(quest.GetAdvancement(o.Id)) ? "1" : "0")))); // 2
             message.Append('|');
-            foreach (var previousStep in quest.Template.Steps.Where(s => s.Order < quest.CurrentStep.Order))            
-                message.Append(previousStep.Id).Append(';');            
+            message.Append(string.Join(";", quest.Template.Steps.Where(s => s.Order < quest.CurrentStep.Order))); // 3   
             message.Append('|');
-            foreach (var nextStep in quest.Template.Steps.Where(s => s.Order > quest.CurrentStep.Order))            
-                message.Append(nextStep.Id).Append(';');            
+            message.Append(string.Join(";", quest.Template.Steps.Where(s => s.Order > quest.CurrentStep.Order))); // 4
             message.Append('|');
-            message.Append(0).Append(';'); // TODO: dialogId
+            message.Append(0).Append(';'); // TODO: dialogId // 5
             message.Append(",,,"); //TODO: dialogParams
             return message.ToString();
         }
