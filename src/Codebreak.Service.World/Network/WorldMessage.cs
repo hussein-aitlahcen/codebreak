@@ -2869,14 +2869,8 @@ namespace Codebreak.Service.World.Network
         /// <returns></returns>
         public static string QUEST_LIST(List<CharacterQuest> quests)
         {
-            var message = new StringBuilder("QLK");
-            foreach (var quest in quests)
-            {
-                message.Append(quest.Id).Append(';');
-                message.Append(quest.Done ? "1" : "0").Append(';');
-                message.Append("0").Append('|'); // TODO: nSortOrder
-            }
-            return message.ToString();
+            // Id;Done;SortOrder
+            return "QLK" + string.Join("|", quests.Select(q => q.Id + ";" + (q.Done ? "1" : "0") + ";" + "0"));
         }
 
         /// <summary>
