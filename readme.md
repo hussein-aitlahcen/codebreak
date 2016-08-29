@@ -26,12 +26,13 @@ Feel free to contribute, fork and make a pull request !
     - Player versus monsters
     - Player versus taxcollector
     - Aggression
-- Job (all skills)
+- Job (harvesting, crafting)
+- Quest (not fully implemented yet)
 
 
 
 ## Customization
-The script system allows you to customize the gameplay by adding effects on map triggers, items, npc response, end of fight
+The script system allows you to customize the gameplay by adding effects on map triggers, items, npc response, end of fight and quest steps
 
 
 First, have a look at currently implemented conditions [__HERE__](https://github.com/hussein-aitlahcen/codebreak/blob/master/src/Codebreak.Service.World/Game/Condition/ConditionParser.cs)
