@@ -1,4 +1,5 @@
 ﻿using Codebreak.Service.World.Game.Spell;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,10 +41,19 @@ namespace Codebreak.Service.World.Game.ActionEffect
     /// </summary>
     public sealed class ActionList : List<ActionEntry>
     {
+        private static ILog Logger = LogManager.GetLogger(typeof(ActionList));
+
         public static ActionList Deserialize(string data)
         {
             var list = new ActionList();
-            list.AddRange(data.Split('|').Select(ActionEntry.Deserialize));
+            try
+            {
+                list.AddRange(data.Split('|').Select(ActionEntry.Deserialize));
+            }
+            catch(Exception e)
+            {
+                Logger.Error("ActionList::Deserialize failed, check the script syntax, data=" + data, e);
+            }
             return list;
         }
     }

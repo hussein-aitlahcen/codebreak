@@ -131,18 +131,25 @@ namespace Codebreak.Service.World.Game.Quest
             if (Done)
                 return;
 
-            switch (ev)
+            try
             {
-                case EntityEventType.FIGHT_KILL:
-                    var monster = parameters as MonsterEntity;
-                    if (monster != null)
-                    {
-                        foreach (var killMonster in CurrentStep.Objectives
-                            .OfType<KillMonsterObjective>()
-                            .Where(killMonster => killMonster.MonsterTemplateId == monster.Grade.Template.Id))
-                            UpdateObjective(killMonster.Id, int.Parse, i => i + 1);
-                    }
-                    break;
+                switch (ev)
+                {
+                    case EntityEventType.FIGHT_KILL:
+                        var monster = parameters as MonsterEntity;
+                        if (monster != null)
+                        {
+                            foreach (var killMonster in CurrentStep.Objectives
+                                .OfType<KillMonsterObjective>()
+                                .Where(killMonster => killMonster.MonsterTemplateId == monster.Grade.Template.Id))
+                                UpdateObjective(killMonster.Id, int.Parse, i => i + 1);
+                        }
+                        break;
+                }
+            }
+            catch(Exception e)
+            {
+                Logger.Error("CharacterQuest::OnEntityEvent failed to update quest", e);
             }
         }
     }

@@ -2874,7 +2874,7 @@ namespace Codebreak.Service.World.Network
             {
                 message.Append(quest.Id).Append(';');
                 message.Append(quest.Done ? "1" : "0").Append(';');
-                message.Append("0"); // TODO: nSortOrder
+                message.Append("0").Append('|'); // TODO: nSortOrder
             }
             return message.ToString();
         }
@@ -2896,15 +2896,11 @@ namespace Codebreak.Service.World.Network
                 message.Append(';');
             }
             message.Append('|');
-            foreach (var previousStep in quest.Template.Steps.Where(s => s.Order < quest.CurrentStep.Order))
-            {
-                message.Append(previousStep.Id).Append(';');
-            }
+            foreach (var previousStep in quest.Template.Steps.Where(s => s.Order < quest.CurrentStep.Order))            
+                message.Append(previousStep.Id).Append(';');            
             message.Append('|');
-            foreach (var nextStep in quest.Template.Steps.Where(s => s.Order > quest.CurrentStep.Order))
-            {
-                message.Append(nextStep.Id).Append(';');
-            }
+            foreach (var nextStep in quest.Template.Steps.Where(s => s.Order > quest.CurrentStep.Order))            
+                message.Append(nextStep.Id).Append(';');            
             message.Append('|');
             message.Append(0).Append(';'); // TODO: dialogId
             message.Append(",,,"); //TODO: dialogParams
