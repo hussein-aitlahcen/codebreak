@@ -15,6 +15,8 @@ Feel free to contribute, fork and make a pull request !
 - Auction House
 - Guild
 - Bank
+- Party
+- Dungeon
 - Exchange
     - Player
     - Taxcollector (farm)
